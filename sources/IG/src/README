@@ -1,0 +1,17 @@
+/**********************************************************************
+*
+*    README
+*    ======
+*
+*    This README-file includes information about how to
+*    build the Varkon IG library.
+*
+*    (C)Örebro University 2007-01-07 http://www.tech.oru.se/cad/varkon  
+*
+***********************************************************************/
+
+1. cd to the IG/src directory
+
+2. Type "make -f Makefile.linux" to build the IG library.
+
+/**********************************************************************/

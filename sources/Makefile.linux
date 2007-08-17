@@ -1,0 +1,48 @@
+##########################################################
+#
+#   Makefile.linux
+#   --------------
+#
+#   Top level makefile for xvarkon with GNU/Linux
+#
+#  (C)Microform AB 2006-12-31 J.Kjellander
+#
+##########################################################
+
+
+# Varkon libraries
+
+LIBS  = IG/lib/IGlib.a \
+        PM/lib/PMlib.a \
+        EX/lib/EXlib.a \
+        DB/lib/DBlib.a \
+        WP/lib/WPlib.a \
+        GE/lib/GElib.a
+
+# X11 libraries 
+
+XLIBS = -L/usr/X11R6/lib -lX11 -lXext -lXpm
+
+# OpenGL libraries. You may have to change this line
+# to reflect the location of your OpenGL libs.
+
+GLIBS = -lGL -lGLU
+
+# ODBC libraries. You may have to change this line
+# to reflect the location of your ODBC libs.
+
+ifeq ($(DV3ODBC),TRUE)
+SQLLIBS = -L/usr/lib/unixODBC -lmyodbc3
+endif
+
+# The actual executable, xvarkon.
+
+XVARKON = ../bin/xvarkon
+
+# Targets
+
+$(XVARKON): $(LIBS)
+	cc $(LIBS) $(SQLLIBS) $(XLIBS) $(GLIBS) -lm -o $(XVARKON)
+
+
+##########################################################

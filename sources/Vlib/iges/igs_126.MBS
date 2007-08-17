@@ -1,0 +1,159 @@
+!*********************************************************
+
+ LOCAL GEOMETRY MODULE igs_126(
+   VAR FILE infile,logfile;
+   STRING   dl1*80,dl2*80;
+   INT      ps_ptr;
+   INT      rowlgt;
+   VAR REF  id_ent;
+   VAR INT  status);
+   
+!*      Read data from parameter Section and
+!*      create a Rational B-Spline Curve entity.
+!*
+!*      In: infile  = File to read from.
+!*          logfile = logfilee.
+!*          dl1     = 1st row of Directory Entry Section.
+!*          dl2     = 2nd row of Directory Entry Section.
+!*          ps_ptr  = Pointer to Parameter Section.
+!*
+!*      Out:id_ent  = Identity of Created Entity.
+!*          status  = 0 => Ok
+!*                   -1 => Error
+!*
+!*      (C)2006-09-14, Mohamed Rahayem, Örebro University
+!*
+!*      2007-02-18, MAXPTS, J.Kjellander
+!*
+!*********************************************************
+
+   CONSTANT INT MAXPTS=1000;
+   
+   INT    i,rownumber, x(6),K,M,ncpts,nknots,order;
+   STRING row*132;
+   FLOAT knot(MAXPTS),w(MAXPTS);     
+   VECTOR cpts(MAXPTS);
+
+ BEGINMODULE
+
+!*
+!***Get entity B_spline number in Parameter
+!***Data Section and position file pointer.
+!*
+   rownumber:=ival(substr(dl1,9,8));
+   seek(infile,ps_ptr+(rownumber-1)*rowlgt);
+!*
+!***Read 1:st line and strip "126,".
+!*
+   row:=inlin(infile);
+   row:=substr(row,finds(row,",")+1);
+!*
+!***Read the first six parameters.
+!*
+   for i:=1 to 6 do
+     part(#1,igs_gint(infile,row,x(i),status):SAVE=0);
+   endfor;
+!*
+!***Check status from igs_gint()
+!*
+   if status < 0 then
+     outstr(logfile,"igs_126, Error reading integers in parameter section !");
+     outlin(logfile);
+     outstr(logfile,dl1);
+     outlin(logfile);
+     outstr(logfile,dl2);
+     outlin(logfile);
+     status:=-1;
+     exit();
+   endif;   
+!*
+!**calculate Order,number of control point and
+!**number of values in knot vector.  
+!*  
+   K:= x(1);
+   M:= x(2); 
+   order:= M+1;
+   ncpts:= k+1;
+   nknots:= ncpts + order;
+  
+   if ncpts < 0  or ncpts > MAXPTS then
+     outstr(logfile,"igs_126, This NURBS curve has "+str(ncpts,-1,0)+" controlpoints");
+     outlin(logfile);
+     outstr(logfile,"igs_126, Max number of controlpoints supported="+str(MAXPTS,-1,0));
+     outlin(logfile);
+     outstr(logfile,dl1);
+     outlin(logfile);
+     outstr(logfile,dl2);
+     outlin(logfile);
+     status:=-1;
+     exit();
+   endif;
+!*
+!**Read Knot vector.
+!*   
+   for i:=1 to nknots do
+     part(#2,igs_gflt(infile,row,knot(i),status):SAVE=0);
+   endfor;
+!*
+!***Check status from igs_gflt()
+!*
+   if status < 0 then
+     outstr(logfile,"igs_126, Error in reading Knot vector in parameters section !");
+     outlin(logfile);
+     outstr(logfile,dl1);
+     outlin(logfile);
+     outstr(logfile,dl2);
+     outlin(logfile);
+     status:=-1;
+     exit();
+   endif;  
+!*
+!**Read weights.
+!*      
+   for i:=1 to ncpts do
+     part(#3,igs_gflt(infile,row,w(i),status):SAVE=0);
+   endfor;
+!*
+!***Check status from igs_gflt()
+!*
+   if status < 0 then
+     outstr(logfile,"igs_126, Error in reading weigths in parameters section !");
+     outlin(logfile);
+     outstr(logfile,dl1);
+     outlin(logfile);
+     outstr(logfile,dl2);
+     outlin(logfile);
+     status:=-1;
+     exit();
+   endif;    
+   for i:=1 to ncpts do
+     part(#5,igs_gflt(infile,row,cpts(i).x,status):SAVE=0);
+     part(#6,igs_gflt(infile,row,cpts(i).y,status):SAVE=0);
+     part(#7,igs_gflt(infile,row,cpts(i).z,status):SAVE=0);   
+   endfor;   
+!*
+!***Check status from igs_gflt()
+!*
+   if status < 0 then
+     outstr(logfile,"igs_126, Error in reading control points in parameters section !");
+     outlin(logfile);
+     outstr(logfile,dl1);
+     outlin(logfile);
+     outstr(logfile,dl2);
+     outlin(logfile);
+     status:=-1;
+     exit();
+   endif; 
+!*
+!***Draw B_spline curve 126.
+!*
+   cur_nurbsarr(#8, order, ncpts, cpts, w, knot :SAVE=1);
+   id_ent:=global_ref(#8); 
+!*
+!**END
+!*  
+   status:=0;
+  
+ ENDMODULE
+ 
+!******************************************************* 

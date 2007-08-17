@@ -1,0 +1,73 @@
+!*******************************************************
+
+ MACRO MODULE igs_ssec(
+   VAR FILE infile,logfile;
+   VAR INT  rowlgt;
+   VAR INT  status);
+
+!*      Reads start section.
+!*
+!*      Out: status = 0 => Ok
+!*                   -1 => Not an IGES-file
+!*
+!*      (C)microform ab 1997-12-22 J. Kjellander
+!*             rowlgt   2006-9-20  J.Kjellander ,Örebro University
+!*
+!*******************************************************
+
+   STRING rad*132;
+   INT    nl,nchars;
+
+ BEGINMODULE
+
+!*
+!***HEADER.
+!*
+    outlin(logfile);
+    outstr(logfile,"Start Section");    outlin(logfile);
+    outstr(logfile,"-------------");    outlin(logfile);
+!*
+!***Read a 1:st row and checks how many characters that is used in each row.
+!*
+    rad:=inlin(infile);
+    nchars:=length(rad);
+    rowlgt:=fpos(infile);
+!*
+!***Write to logfilee.
+!*
+    if substr(rad,73,1) <> "S" then
+      outstr(logfile,"This does not seem to be an uncompressed");
+      outlin(logfile);
+      outstr(logfile,"ASCII-formatted IGES-file !");
+      outlin(logfile);
+      status:=-1;
+      exit();
+    else
+      status:=0;
+      nl:=1;
+    endif;
+!*
+!***Read the remainder of the start section.
+!*
+loop:
+    rad:=inlin(infile);
+
+    if substr(rad,73,1) = "S" then
+      nl:=nl+1;
+      goto loop;
+    endif;
+!*
+!***Write to log-file.
+!*
+    outstr(logfile,"Processed "+str(nl,-1,0)+" lines");
+    outlin(logfile);
+!*
+!***Give back the last read row.
+!*
+    seek(infile,fpos(infile)-(rowlgt));
+!*
+!**END
+!*
+ ENDMODULE
+
+!*************************************************************'

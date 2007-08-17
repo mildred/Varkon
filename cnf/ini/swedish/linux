@@ -1,0 +1,524 @@
+!***************************************************************
+!*
+!*    Resursfil f�r VARKON 1.19 f�r Linux.
+!*
+!*    (C)2007 J.Kjellander
+!*
+!*
+!*    Vid uppstart laddar UNIX-versionen av VARKON resurser i
+!*    tur och ordning fr�n f�ljande k�llor:
+!*
+!*    1: H�rdprogrammerade default-v�rden
+!*    2: /usr/lib/X11/app-defaults/Varkon
+!*    3: XENVIRONMENT/Xdefaults
+!*    4: HOME/Xdefaults
+!*    5: Resursbeskrivningar p� kommandoraden
+!*    6: Resursfil vars namn getts p� kommandoraden
+!*
+!***Om samma resurs f�rekommer p� flera av dessa st�llen
+!***g�ller den som sist laddats. Saknas 2,3,4,5 och 6 kommer 1:an
+!***att g�lla, dvs. de v�rden som finns inprogrammerade i systemet
+!***sj�lvt. I resursfil 2 l�gger man normalt s�dana resurser som
+!***skall g�lla alla anv�ndare av systemet. I resursfil 3 kan
+!***man l�gga s�dant som �r gemensamt bara f�r en viss grupp
+!***anv�ndare. I resursfil 4 l�gger man s�nt som �r unikt
+!***f�r en enda anv�ndare och p� kommandoraden slutligen
+!***kan anv�ndaren varje g�ng han startar systemet �ndra
+!***dessa ytterligare. F�ljande optioner kan ges p� kommando-
+!***raden:
+!*
+!*    -fn fontnamn             Textfont f�r menyer etc.
+!*    -font fontnamn           Samma som ovan
+!*    -geometry bxh+x+y        Grafiska f�nstrets storlek och l�ge
+!*    -title f�nsterrubrik     Grafiska f�nstrets rubrik
+!*    -bg f�rg                 Bakgrundsf�rg f�r menyer etc.
+!*    -background f�rg         Samma som ovan
+!*    -fg f�rg                 Textf�rg f�r menyer etc.
+!*    -foreground f�rg         Samma som ovan
+!*    -xrm resurs:v�rde        Godtycklig resurs med v�rde
+!*
+!***Slutligen kan man ocks� fr�n och med version 1.16 ge namnet
+!***p� ytterligare tv� resursfiler att ladda allra sist via
+!***parametern -ifilnamn p� kommandoraden.
+!***F�rutom dessa supportas f�rst�s alla �vriga optioner som
+!***finns dokumenterade i VARKON-manualen precis som vanligt.
+!*
+!**************************************************************
+
+!*
+!***varkon.font �r namnet p� den font som skall anv�ndas
+!***av VARKON i menyer, inmatningsf�nster, listf�nster
+!***osv. och som default font i f�nster skapade i MBS.
+!*
+!varkon.font:                   fixed
+!varkon.font:                   6x13
+!varkon.font:                   7x13
+varkon.font:                   9x15
+!varkon.font:                   10x20
+!varkon.font:                   12x24
+!*
+!***varkon.mbsedit �r resurser f�r funktionen "editera aktiv
+!***modul", f216. N�r funktionen aktiveras skapar VARKON ett
+!***shell-kommando best�ende av texterna emulator + editor + filnamn
+!***och exekverar detta som en subprocess. D�refter starats en
+!***andra subprocess f�r kompilering och slutligen, om autoexec
+!***�r satt till True, k�rs aktiv modul om automatiskt.
+!*
+varkon.mbsedit.emulator:          xterm -title MBS-Edit -e
+varkon.mbsedit.editor:            vi
+!varkon.mbsedit.emulator:
+!varkon.mbsedit.editor:           kwrite
+varkon.mbsedit.compiler:          mbsc
+varkon.mbsedit.autocompile:       True
+varkon.mbsedit.autoexec:          True
+!*
+!***varkon.html_viewer anv�nds av hj�lpsystemet f�r att starta en
+!***HTML-browser. Om denna resurs �r definierad skickar VARKON
+!***aktuell hj�lpfil till den angivna browsern. Om den inte �r
+!***definierad listar VARKON filen i ett listf�nster.
+!*
+!varkon.html_viewer:               konqueror
+!varkon.html_viewer:               netscape
+!*
+!***varkon.grawin_1.geometry styr det grafiska huvud-f�nstrets
+!***storlek och placering p� vanligt X-Windows maner.
+!***Tex. breddxh�jd+x+y om man vill placera f�nstret
+!***relativt �vre v�nstra h�rnet p� sk�rmen. breddxh�jd-x-y
+!***om man vill placera relativt nedre h�gra h�rnet. osv.
+!***Placering kan utel�mnas helt om man vill.
+!***Ytterligare grafiska f�nster kan skapas genom resurserna
+!***varkon.grawin_n.geometry d�r n en 2:a f�r f�nster nummer 2
+!***en 3:a f�r f�nster nummer 3 osv. Max 25 grafiska f�nster
+!***inklusive huvudf�nstret.
+!*
+varkon.grawin_1.geometry:       700x500+200
+!varkon.grawin_2.geometry:       300x200+10+250
+!varkon.grawin_3.geometry:       300x200+330+250
+!*
+!***Grafiska f�nster kan f�rses med en osynlig marginal s�
+!***att plats reserveras f�r tryckknappar/ikoner om man vill.
+!*
+varkon.margin_up:                32
+!varkon.margin_down:             22
+!varkon.margin_left:             70
+!varkon.margin_right:            50
+!*
+!***Med varkon.title kan man �ndra den text som skrivs ut i det grafiska
+!***huvud-f�nstrets ram. Om varkon.title.project �r True skrivs aktuellt
+!***projektnamn ut. Om varkon.title.jobnam �r satt till True l�ggs
+!***dessutom aktuellt jobnamn till automatiskt. Om varkon.title.viewname
+!***�r True skrivs �ven vynamnet ut i f�nsterramen.
+!*
+!varkon.title:                  VARKON-3D
+varkon.title.project:          True
+varkon.title.jobname:          True
+varkon.title.viewname:         True
+!*
+!***Snabbvalsknappar kan placeras var som helst i de grafiska
+!***f�nstren. L�ge och storlek ges av resursen varkon.button_n.geometry
+!***d�r n �r ett tal mellan 1 och 25. Talen 1 och 25 �r ocks� till�tna.
+!***Max 25 knappar i det grafiska f�nstret allts�. F�r varje knapp
+!***finns en resurs som styr vad som skall h�nda om man klickar p�
+!***den. H�r anv�nder vi samma koder som i VARKON:s ordinarie meny-
+!***filer. f128 f�r funktionen f128, m32 f�r meny 32 osv. En tredje
+!***resurs styr vilken text som skall st� i knappen och den fj�rde
+!***resursen �r knappens hj�lptext.
+!*
+!varkon.button_1.geometry:       70x25+1+0
+!varkon.button_1.text:           ZOOM
+!varkon.button_1.action:         f193
+!varkon.button_1.tooltip:        F�rstora en del av modellen till hela f�nstret
+!*
+!***Ikoner �r samma sak som snabbvalsknappar med den skillnaden
+!***att texten bytts ut mot namnet p� ikon-filen. Ikon-filer �r
+!***filer med namn som slutar p� .xpm och som kan skapas tex med
+!***X-Windows programmet pixmap. Ikonfiler f�ruts�tts ligga p� fil-
+!***katalogen $VARKON_ICO. Sammanlagda antalet knappar
+!***och ikoner f�r inte �verstiga 100. Ikoners storlek avg�rs av
+!***ikonfilen och kan inte styras h�rifr�n, bara deras placering.
+!*
+varkon.icon_1.geometry:         +0+0
+varkon.icon_1.name:             Varkon_zoom.xpm
+varkon.icon_1.action:           f193
+varkon.icon_1.tooltip:          F�rstora en del av modellen till hela f�nstret
+
+varkon.icon_2.geometry:         +38+0
+varkon.icon_2.name:             Varkon_autozoom.xpm
+varkon.icon_2.action:           f194
+varkon.icon_2.tooltip:          Skala hela modellen till hela f�nstret
+
+varkon.icon_3.geometry:         +76+0
+varkon.icon_3.name:             Varkon_scale.xpm
+varkon.icon_3.action:           f188
+varkon.icon_3.tooltip:          Ange godtycklig skalfaktor
+
+varkon.icon_4.geometry:         +114+0
+varkon.icon_4.name:             Varkon_pan.xpm
+varkon.icon_4.action:           f189
+varkon.icon_4.tooltip:          Flytta modellen med musen
+
+varkon.icon_5.geometry:         +152+0
+varkon.icon_5.name:             Varkon_previous.xpm
+varkon.icon_5.action:           f191
+varkon.icon_5.tooltip:          �terv�nd till f�reg�ende vy 
+
+varkon.icon_6.geometry:         +190+0
+varkon.icon_6.name:             Varkon_views.xpm
+varkon.icon_6.action:           f102
+varkon.icon_6.tooltip:          Skapa, �ndra och aktivera vyer
+
+varkon.icon_7.geometry:         +228+0
+varkon.icon_7.name:             Varkon_grid.xpm
+varkon.icon_7.action:           f103
+varkon.icon_7.tooltip:          Inst�llningar f�r raster
+
+varkon.icon_8.geometry:         +266+0
+varkon.icon_8.name:             Varkon_levels.xpm
+varkon.icon_8.action:           f197
+varkon.icon_8.tooltip:          T�nd, sl�ck och lista niv�er
+
+varkon.icon_9.geometry:         +304+0
+varkon.icon_9.name:             Varkon_printer.xpm
+varkon.icon_9.action:           f150
+varkon.icon_9.tooltip:          Skriv ut detta f�nster (eller st�ll in skrivare)
+!*
+!***Grafiska f�nster med OpenGL (WPRWIN).
+!*
+varkon.rwin.title:              Varkon dynamisk vy
+varkon.rwin.geometry:           900x650+250+50
+varkon.rwin.margin_up:          32
+
+varkon.rwin.icon_1.geometry:    +0+0
+varkon.rwin.icon_1.name:        Varkon_zoom.xpm
+varkon.rwin.icon_1.action:      f193
+varkon.rwin.icon_1.tooltip:     F�rstora en del av modellen till hela f�nstret
+
+varkon.rwin.icon_2.geometry:    +38+0
+varkon.rwin.icon_2.name:        Varkon_autozoom.xpm
+varkon.rwin.icon_2.action:      f194
+varkon.rwin.icon_2.tooltip:     Skala hela modellen till hela f�nstret
+
+varkon.rwin.icon_3.geometry:    +76+0
+varkon.rwin.icon_3.name:        Varkon_wireframe.xpm
+varkon.rwin.icon_3.action:      f100
+varkon.rwin.icon_3.tooltip:     Visa modellen som tr�dmodell
+
+varkon.rwin.icon_4.geometry:    +114+0
+varkon.rwin.icon_4.name:        Varkon_shade.xpm
+varkon.rwin.icon_4.action:      f101
+varkon.rwin.icon_4.tooltip:     Visa modellen med skuggade ytor
+
+varkon.rwin.icon_5.geometry:    +152+0
+varkon.rwin.icon_5.name:        Varkon_views.xpm
+varkon.rwin.icon_5.action:      f102
+varkon.rwin.icon_5.tooltip:     Skapa, �ndra och aktivera vyer
+
+varkon.rwin.icon_6.geometry:    +190+0
+varkon.rwin.icon_6.name:        Varkon_levels.xpm
+varkon.rwin.icon_6.action:      f197
+varkon.rwin.icon_6.tooltip:     T�nd, sl�ck och lista niv�er
+!*
+!***Partnamn dialogen
+!*
+varkon.partname.title:           V�lj part
+varkon.partname.geometry:       +50+50
+varkon.partname.jobdir:          Jobkatalogen
+varkon.partname.jobdir.tooltip:  V�lj en part (MBO-fil) i aktiv jobkatalog
+varkon.partname.libdir:          Partbiblioteket
+varkon.partname.libdir.tooltip:  V�lj en part (MBO-fil) i partbiblioteket
+varkon.partname.empty:           Katalogen �r tom !
+!*
+!***Menyf�nstrets placering. Observera att
+!***det inte �r m�jligt att p�verka menyf�nstrets storlek. 
+!***Denna ber�knas automatisk av VARKON och �ndras varje
+!***g�ng man v�xlar meny. Placering kan bara ges relativt
+!***sk�rmens �vre v�nsstra h�rn, d�rav plustecknen. Om man
+!***inte anger menytitel anv�nds aktivt jobnamn ist�llet.
+!*
+varkon.menu.title:               MENY
+varkon.menu.geometry:            +5+5
+varkon.menu.button_1.text:       abs
+varkon.menu.button_1.tooltip:    Ange positioner med absoluta koordinater
+varkon.menu.button_2.text:       rel
+varkon.menu.button_2.tooltip:    Ange positioner med relativa koordinater
+varkon.menu.button_3.text:       mus
+varkon.menu.button_3.tooltip:    Ange positioner med muspekare
+varkon.menu.button_4.text:       MBS
+varkon.menu.button_4.tooltip:    Ange positioner med MBS-uttryck
+varkon.menu.button_5.text:       �nde
+varkon.menu.button_5.tooltip:    Ange positioner med �nde av linje, cirkel eller kurva
+varkon.menu.button_6.text:       p�
+varkon.menu.button_6.tooltip:    Ange positioner p� storheter
+varkon.menu.button_7.text:       cent
+varkon.menu.button_7.tooltip:    Ange positioner med centrum av cirkel eller kurva
+varkon.menu.button_8.text:       sk�r
+varkon.menu.button_8.tooltip:    Ange positioner med sk�rning mellan 2 storheter
+varkon.menu.button_9.text:       rast
+varkon.menu.button_9.tooltip:    Ange positioner med raster
+varkon.menu.level.tooltip:       Byt aktivt niv�nummer
+varkon.menu.pen.tooltip:         Byt aktivt pennummer (f�rg)
+varkon.menu.width.tooltip:       S�tt aktiv linjebredd (f�r alla sorts storheter)
+varkon.menu.csy.tooltip:         Byt aktivt koordinatsystem
+varkon.menu.csy.title:           Aktivera ksys
+varkon.menu.local.tooltip:       V�lj ett koordinatsystem att aktivera, MODE_LOCAL(#n); i MBS
+varkon.menu.global.tooltip:      Aktivera koordinatsystemet GLOBAL, MODE_GLOBAL(); i MBS
+varkon.menu.basic.tooltip:       Aktivera koordinatsystemet BASIC, MODE_BASIC(); i MBS
+varkon.menu.mbs.tooltip:         Editera aktiv modul i MBS text mode
+varkon.menu.run.text:            K�r
+varkon.menu.run.tooltip:         Exekvera aktiv modul (nytt resultat skapas)
+varkon.menu.editp.text:          �ndraP
+varkon.menu.editp.tooltip:       �ndra en part's parametrar
+varkon.menu.delete.text:         Ta bort
+varkon.menu.delete.tooltip:      Radera en storhet (eller part)
+!*
+!***Print dialogen
+!*
+varkon.print.title:              Skriv ut f�nster
+varkon.print.geometry:           +150+150
+varkon.print.portrait:           St�ende
+varkon.print.portrait.tooltip:   Skriv ut f�nstret st�ende (port�tt)
+varkon.print.landscape:          Liggande
+varkon.print.landscape.tooltip:  Skriv ut f�nstret liggande (landskap)
+varkon.print.configure:          Inst�llningar
+varkon.print.configure.tooltip:  �ndra utskriftsinst�llningar
+varkon.print.configure.title:    Utskriftsinst�llningar
+varkon.print.driver:             Varkon skrivarprogram
+varkon.print.driver.tooltip:     postscript, hp7475, hpgl2 etc.
+varkon.print.command:            Unix print kommando
+varkon.print.command.tooltip:    Kommando som skickar utskriften till skrivaren
+varkon.print.mediasize:          Mediastorlek
+varkon.print.media_x.tooltip:    Mediastorlek i horisontell riktning (A4 = 210 mm)
+varkon.print.media_y.tooltip:    Mediastorlek i vertikal riktning (A4 = 297 mm)
+varkon.print.auto_manual:        Utskriftens storlek och placering
+varkon.print.auto:               Auto
+varkon.print.auto.tooltip:       G�r utskriften s� stor som m�jligt
+varkon.print.manual:             Manuell
+varkon.print.manual.tooltip:     Konfigurera utskriftens placering och storlek manuellt
+varkon.print.manual.title:       Utskriftens placering och storlek
+varkon.print.manual.rotation:    Vridning i grader moturs runt nedre v�nstra
+varkon.print.manual.xmin:        Flytta i X-riktningen (mm, default=0)
+varkon.print.manual.ymin:        Flytta i Y-riktningen (mm, default=0)
+varkon.print.manual.scale:       Skala
+!*
+!***Listf�nster kan placeras. Dessutom kan man styra rubrik
+!***och texter i knapparna. Resursen printer styr vilken
+!***skrivare som skall anv�ndas.
+!*
+varkon.list.title:             Listning - 
+varkon.list.geometry:          +200+100
+varkon.list.title.jobnam:      True
+varkon.list.row:               Rad
+varkon.list.page:              Sida
+varkon.list.save:              Spara
+varkon.list.kill:              St�ng
+varkon.list.printer:           lpr
+!*
+!***Listf�nster anv�nds ocks� f�r felrapportering.
+!***F�ljande resurs styr fellistans rubrik.
+!*
+varkon.error.title:            -----------------FELRAPPORT-----------------
+!*
+!***Inmatningsf�nstrets placering och storlek kan inte
+!***p�verkas h�rifr�n. D�remot f�ljande texter.
+!*
+varkon.input.title:            Inmatning
+varkon.input.geometry:         +250+200
+varkon.input.page:             Sida
+varkon.input.okey:             Ok
+varkon.input.okey.tooltip:     Acceptera �ndringar och verkst�ll
+varkon.input.reject:           Avbryt
+varkon.input.reject.tooltip:   Avbryt denna funktion utan att verkst�lla �ndringar
+varkon.input.on:               P�
+varkon.input.off:              Av
+varkon.input.next:             Bl�ddra
+varkon.input.help:             Hj�lp
+varkon.input.help.tooltip:     Visa manualsidan f�r denna funktion
+varkon.input.close:            St�ng
+varkon.input.close.tooltip:    St�ng detta f�nster
+varkon.input.save:             Spara
+varkon.input.delete:           Ta bort
+varkon.input.apply:            Verkst�ll
+!*
+!***Alternativf�nstrets placering och titel.
+!*
+varkon.alternative.title:      Alternativ 
+varkon.alternative.geometry:   +200+250 
+!*
+!***Vydialogen
+!*
+varkon.view.title:             Vyer
+varkon.view.geometry:          +150+150
+varkon.view.csys.text:         Koordinatsystem
+varkon.view.csys.tooltip:      G�r vyn parallell med ett koordinatsystems XY-plan
+varkon.view.campos.text:       Kameraposition
+varkon.view.campos.tooltip:    Betrakta modellen fr�n en given position
+varkon.view.save.text:         Spara som
+varkon.view.save.tooltip:      Spara denna vy med nedan angivet namn
+varkon.view.delete.text:       Ta bort vy
+varkon.view.delete.tooltip:    Ta bort vyn med nedan angivet namn
+!*
+!***Rasterdialogen
+!*
+varkon.grid.title:             Raster
+varkon.grid.geometry:          +150+150
+varkon.grid.position.text:     Basposition
+varkon.grid.resolution.text:   Delning
+varkon.grid.move.text:         Flytta
+varkon.grid.move.tooltip:      Flytta rastret till viss position i aktivt XY-plan
+varkon.grid.edit.text:         Redigera
+varkon.grid.edit.tooltip:      �ndra avst�ndet mellan rasterpunkter i X- eller Y-led
+varkon.grid.show.text:         T�nd
+varkon.grid.show.tooltip:      G�r rastret synligt
+varkon.grid.hide.text:         Sl�ck
+varkon.grid.hide.tooltip:      G�r rastret osynligt
+!*
+!***Attributdialogen
+!*
+varkon.attribute.title:          Aktiva attribut
+varkon.attribute.geometry:       +150+150
+varkon.attribute.point.text:     Punkt
+varkon.attribute.point.tooltip:  S�tt aktiva attribut f�r punkter (PFONT and PSIZE)
+varkon.attribute.point.font0:    Aktivera punkttyp 0. Ppunkter ritas som kryss (x)
+varkon.attribute.point.font1:    Aktivera punkttyp 1. Ppunkter ritas som plus (+)
+varkon.attribute.point.font2:    Aktivera punkttyp 2. Ppunkter ritas som plus (.)
+varkon.attribute.point.size:     S�tt storleken p� punkter, default = 2.
+varkon.attribute.line.text:      Linje
+varkon.attribute.line.tooltip:   S�tt aktiva attribut f�r linjer (LFONT and LDASHL)
+varkon.attribute.line.font0:     Aktivera linjetyp 0, heldragen
+varkon.attribute.line.font1:     Aktivera linjetyp 1, streckad
+varkon.attribute.line.font2:     Aktivera linjetyp 2, streckprickad
+varkon.attribute.line.dashl:     S�tt aktiv streckl�ngd f�r linjer i mm
+varkon.attribute.arc.text:       Cirkel
+varkon.attribute.arc.tooltip:    S�tt aktiva attribut f�r cirklar (AFONT and ADASHL)
+varkon.attribute.arc.font0:      Aktivera cirkeltyp 0, heldragen
+varkon.attribute.arc.font1:      Aktivera cirkeltyp 1, streckad
+varkon.attribute.arc.font2:      Aktivera cirkeltyp 2, streckprickad
+varkon.attribute.arc.dashl:      S�tt aktiv streckl�ngd f�r cirklar i mm
+varkon.attribute.curve.text:     Kurva
+varkon.attribute.curve.tooltip:  S�tt aktiva attribut f�r kurvor (CFONT and CDASHL)
+varkon.attribute.curve.font0:    Aktivera kurvtyp 0, heldragen
+varkon.attribute.curve.font1:    Aktivera kurvtyp 1, streckad
+varkon.attribute.curve.font2:    Aktivera kurvtyp 2, streckprickad
+varkon.attribute.curve.dashl:    S�tt aktiv streckl�ngd f�r kurvor i mm
+varkon.attribute.surf.text:      Yta
+varkon.attribute.surf.tooltip:   S�tt aktiva attribut f�r ytor (SDASHL, NULINES and NVLINES)
+varkon.attribute.surf.dashl:     S�tt aktiv streckl�ngd f�r ytors mittkurvor
+varkon.attribute.surf.nulines:   S�tt antal mittkurvor i ytors U-riktning
+varkon.attribute.surf.nvlines:   S�tt antal mittkurvor i ytors V-riktning
+varkon.attribute.text.text:      Text
+varkon.attribute.text.tooltip:   S�tt aktiva attribut f�r text (TSIZE, TWIDTH, TSLANT osv.)
+varkon.attribute.text.size:      S�tt storlek p� grafisk text (h�jd i mm), default = 5.
+varkon.attribute.text.width:     S�tt bredd p� grafisk text (% av h�jden), default = 60%.
+varkon.attribute.text.slant:     S�tt lutning p� grafisk text (% av 45 grader), default = 15.
+varkon.attribute.text.font0:     Aktivera typsnitt 0 (normalstil)
+varkon.attribute.text.font1:     Aktivera typsnitt 1 (fetstil)
+varkon.attribute.text.tpmode0:   Aktivera posmod 0 (3D text f�ljer vyplanet)
+varkon.attribute.text.tpmode1:   Aktivera posmod 1 (3D text f�ljer koordinatsystemets XY-plan)
+varkon.attribute.hatch.text:     Snitt
+varkon.attribute.hatch.tooltip:  S�tt aktiva attribut f�r snitt (XFONT och XDASHL)
+varkon.attribute.hatch.font0:    Aktivera snittyp 0, heldraget
+varkon.attribute.hatch.font1:    Aktivera snittyp 1, streckat
+varkon.attribute.hatch.font2:    Aktivera snittyp 2, streckprickat
+varkon.attribute.hatch.dashl:    S�tt aktiv streckl�ngd f�r snitt i mm
+varkon.attribute.dim.text:       M�tt
+varkon.attribute.dim.tooltip:    S�tt aktiva attribut f�r m�tt (DTSIZ, DASIZ osv.)
+varkon.attribute.dim.tsize:      S�tt textstorlek f�r m�tt
+varkon.attribute.dim.asize:      S�tt pilstorlek f�r m�tt
+varkon.attribute.dim.ndig:       S�tt antal decimaler i m�tt
+varkon.attribute.dim.auto:       S�tt p� (1) eller st�ng av (0) automatisk m�ttext
+!*
+!***F�nstret f�r skala har f�ljande texter.
+!*
+varkon.scale.title:            Skala
+varkon.scale.double:           Dubbla
+varkon.scale.half:             Halva
+!*
+!***Perspektivf�nstret har f�ljande texter.
+!*
+varkon.persp.title:            Perspektiv f�r vy : 
+varkon.persp.persp:            Sant perspektiv
+varkon.persp.dist:             Avst�ndet �r
+!*
+!***Niv�f�nstren har f�ljande texter.
+!*
+varkon.level.title:            Niv�er
+varkon.level.geometry:         +150+50
+varkon.level.blank:            Sl�ckt
+varkon.level.unblank:          T�nd
+varkon.level.name:             Niv�namn
+varkon.level.name.tooltip:     Lista niv�er via namn eller del av namn tex. Ytter* eller *B*
+varkon.level.range:            Intervall
+varkon.level.range.tooltip:    Lista en eller flera niv�er tex. 0 eller 0-10
+varkon.level.used:             Alla anv�nda
+varkon.level.used.tooltip:     Lista alla niv�er som anv�nds
+varkon.level.plus.tooltip:     Lista ytterligare niv�er fram�t
+varkon.level.minus.tooltip:    Lista ytterligare niv�er bak�t
+!*
+!***F�ljande resurs anv�nds f�r att framtvinga visning av
+!***aktivt koordinatsystem i en s�rskild f�rg ist�llet f�r den
+!***f�rg som ges av koordinatsystemets pennummer.
+!*
+varkon.act_csys_pen:           2
+!*
+!***Systemf�rger.
+!*
+varkon.background:               gray84
+varkon.buttonColor:              gray90
+varkon.selectedButtonColor:      gray75
+varkon.highlightedButtonColor:   SteelBlue
+varkon.foreground:               Black
+varkon.topShadowColor:           White
+varkon.bottomShadowColor:        Black
+varkon.tooltipColor:             LightYellow
+varkon.highlightedEntityColor:   Cyan
+!
+!***F�ljande resurser styr vilken f�rg olika pennor f�r i
+!***det grafiska f�nstret. Penna 0 �r f�nstrets bakgrundsf�rg
+!***och penna 1 �r f�rgrundsf�rgen. Max 256 olika pennor. P�
+!***system med bara 16 f�rger kan det h�nda att andra
+!***processer (tex. Motif) redan privat-allokerat s� m�nga att
+!***man inte ens f�r tillg�ng till 12 olika f�rger.
+!*
+varkon.color_0:                White
+varkon.color_1:                Black
+varkon.color_2:                Red
+varkon.color_3:                LightGreen
+varkon.color_4:                LightBlue
+varkon.color_5:                DarkRed
+varkon.color_6:                DarkGreen
+varkon.color_7:                DarkBlue
+varkon.color_8:                Brown
+varkon.color_9:                Yellow
+varkon.color_10:               Orange
+varkon.color_11:               Gray
+!*
+!***OpenGL-konfigurering.
+!*
+varkon.shade.rgba:             True
+varkon.shade.doublebuffer:     True
+!*
+!***H�r kan man v�lja f�rg- och z-djup. Linux med Mesa
+!***v�ljer max tillg�ngligt djup automatisk.
+!*
+!varkon.shade.redbits:         8
+!varkon.shade.greenbits:       8
+!varkon.shade.bluebits:        8
+!varkon.shade.zbits:           16
+!*
+!***Ljusk�llors bakgrundskomponent.
+!*
+varkon.shade.ambient.red:      40
+varkon.shade.ambient.blue:     40
+varkon.shade.ambient.green:    40
+!*
+!***Ljusk�llors diffusa komponent.
+!*
+varkon.shade.diffuse.red:      100
+varkon.shade.diffuse.blue:     100
+varkon.shade.diffuse.green:    100
+!*
+!***Ljusk�llors reflex komponent.
+!*
+varkon.shade.specular.red:     100
+varkon.shade.specular.blue:    100
+varkon.shade.specular.green:   100

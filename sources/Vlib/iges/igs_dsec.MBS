@@ -1,0 +1,68 @@
+!*******************************************************
+
+ MACRO MODULE igs_dsec(
+   VAR FILE infile,logfile;
+       INT   rowlgt;
+   VAR INT  status);
+
+!*      Reads Directory Entry section a 1:st time
+!*
+!*      Out: status = 0 => Ok
+!*                   -1 => Error
+!*
+!*      (C)microform ab 1997-12-22 J. Kjellander
+!*
+!*      2006-09-20 rowlgt , J.Kjellander, Örebro university
+!*
+!*******************************************************
+
+   STRING rad1*80,rad2*80;
+   INT    nl;
+
+ BEGINMODULE
+
+!*
+!***HEADER.
+!*
+    outlin(logfile);
+    outstr(logfile,"Directory Entry Section, pass 1 (counting)"); outlin(logfile);
+    outstr(logfile,"------------------------------------------"); outlin(logfile);  
+!*
+!***Read a 1:st row and check that it is a Directory section.
+!*
+    rad1:=inlin(infile);
+    if substr(rad1,73,1) <> "D" then
+      outstr(logfile,"This is not a Directory Entry Section");
+      outlin(logfile);
+      status:=-1;
+      exit();
+    else
+      status:=0;
+      nl:=2;
+    endif;
+    rad2:=inlin(infile);
+!*
+!***Read the remainder of the section.
+!*
+loop:
+
+    rad1:=inlin(infile);
+    rad2:=inlin(infile);
+    if substr(rad1,73,1) = "D" then
+      nl:=nl+2;
+      goto loop;
+    endif;
+!*
+!***Write to logfilee.
+!*
+    outstr(logfile,"Counted "+str(nl/2,-1,0)+" entities");
+    outlin(logfile);
+!*
+!***Give back the last read rows. After this the file pointer
+!***points at the 1:st row in the Parameter Data Section.
+!*
+    seek(infile,fpos(infile)-2*( rowlgt));
+
+ ENDMODULE
+
+!***************************************************************

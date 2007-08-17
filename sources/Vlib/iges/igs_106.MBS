@@ -1,0 +1,327 @@
+!**************************************************************************
+
+ LOCAL GEOMETRY MODULE igs_106(
+   VAR FILE infile,logfile;
+   STRING   dl1*80,dl2*80;
+   INT      ps_ptr;
+   INT      rowlgt;
+   VAR REF  id_ent;
+   VAR INT  status);
+
+!*      Read data from Parameter Section
+!*      and create a Copious Data.
+!*
+!*      In: infile  = File to read from.
+!*          logfile = Logfile.
+!*          dl1     = 1st row of Directory Entry Section.
+!*          dl2     = 2nd row of Directory Entry Section.
+!*          ps_ptr  = Pointer to Parameter Section.
+!*          rowlgt  = Row length used.
+!*
+!*      Out: status = 0 => Ok
+!*                   -1 => Error
+!*          id_ent  = Identity of created entity.
+!*     
+!*      2006-09-27, Mohamed Rahayem, Örebro university.
+!*
+!*************************************************************************
+
+   CONSTANT INT MAXPTS=1000;
+   INT    i,rownumber;
+   STRING row*132;
+   INT    ip;           ! ip=1 :x,y pairs,common z coordinate. / ip=2 :point X,Y,Z .
+                        ! ip=3 :point and i,j,k vectors .
+   INT    n;            ! Number of pairs or points or points with vectors
+   INT    i_tuple;      ! Loop index point.
+   INT    form ;        ! Form numbers of copious data entities.
+   FLOAT  zt;           ! Z value for ip= 1.
+   VECTOR p(MAXPTS);    ! Point     X,Y,Z.
+   REF    refarr(100);  ! Array of refrences ID's.
+
+ BEGINMODULE
+!*
+!***Get entity line number in Parameter
+!***Data Section and position filepointer.
+!*
+   rownumber:=ival(substr(dl1,9,8));
+   form:=ival(substr(dl2,33,8));
+   seek(infile,ps_ptr+(rownumber-1)*rowlgt);
+!*
+!***Read 1:st line and strip "106,".
+!*
+   row:=inlin(infile);
+   row:=substr(row,finds(row,",")+1);
+!*
+!**Check form number Forms 1-3  copious data entity.
+!*
+   IF form >=1 and form <= 3 THEN
+     part(#1,igs_gint(infile,row,ip,status):SAVE=0);
+     part(#2,igs_gint(infile,row,n,status):SAVE=0);
+     if ip < 1 or ip > 3 then 
+       outstr(logfile,"igs_106, IP value not {1,2,3}"); 
+       outlin(logfile);
+       outlin(logfile);
+       status := -1;            
+       exit();
+     endif; 
+    if ip=1 then
+      part(#3,igs_gflt(infile,row,zt,status):SAVE=0);
+      for i:=1 to n do
+        part(#4,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+        part(#5,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+        p(i).z:=zt;
+        poi_free(#6,p(i));                      ! Create a point.
+      endfor;
+!*
+!**Set id_ent.
+!*      
+      id_ent:=global_ref(#6.1); 
+    elif ip=2 then
+       for i:=1 to n do
+         part(#7,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#8,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         part(#9,igs_gflt(infile,row,p(i).z,status):SAVE=0);
+         poi_free(#10,p(i));                     ! Create a point.
+       endfor;
+!*
+!**Set id_ent.
+!*            
+       id_ent:=global_ref(#10.1); 
+    elif ip = 3 then
+       n:=2*n;
+       for i:=1 to n step 2 do
+         part(#11,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#12,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         part(#13,igs_gflt(infile,row,p(i).z,status):SAVE=0);   
+         part(#14,igs_gflt(infile,row,p(i+1).x,status):SAVE=0);  
+         part(#15,igs_gflt(infile,row,p(i+1).y,status):SAVE=0); 
+         part(#16,igs_gflt(infile,row,p(i+1).z,status):SAVE=0);
+!*       
+!**Change relative coords  i,j,k, to absolute coordinates
+!*
+         p(i+1):=p(i)+p(i+1); 
+!*       
+!**Create a line.
+!*    
+         lin_free(#17,p(i),p(i+1):blank=1);   
+         refarr(i):= refc(17,i);    
+       endfor;
+       cur_comparr(#69,n-1, refarr);
+       id_ent:=global_ref(#69); 
+    endif;
+!*
+!**Check form number Forms 11-13  Linear path entity.
+!*   
+   ELIF form >=11 and form <= 13 THEN
+
+     part(#35,igs_gint(infile,row,ip,status):SAVE=0);
+     part(#36,igs_gint(infile,row,n,status):SAVE=0);
+     if ip < 1 or ip > 3 then 
+       outstr(logfile,"igs_106, IP value not {1,2,3}"); 
+       outlin(logfile);
+       outlin(logfile);
+       status := -1;
+       id_ent:=##0;            
+       exit();
+     endif; 
+     if ip=1 then
+       part(#37,igs_gflt(infile,row,zt,status):SAVE=0);
+       for i:=1 to n do
+         part(#38,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#39,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         p(i).z:=zt;
+       endfor;
+       for i:=1 to n-1  do
+         lin_free(#50,p(i),p(i+1):blank=1);
+         refarr(i):= refc(50,i);    
+       endfor;
+       cur_comparr(#70,n-1, refarr);
+       id_ent:=global_ref(#70); 
+     elif ip=2 then
+     for i:=1 to n do
+       part(#40,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+       part(#41,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+       part(#42,igs_gflt(infile,row,p(i).z,status):SAVE=0);
+     endfor;
+        for i:=1 to n-1 do
+           lin_free(#51,p(i),p(i+1):blank=1);
+           refarr(i):= refc(51,i);    
+        endfor;
+        cur_comparr(#71,n-1, refarr);     
+        id_ent:=global_ref(#71); 
+     elif ip = 3 then
+       n:=2*n;
+       for i:=1 to n step 2 do
+         part(#43,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#44,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         part(#45,igs_gflt(infile,row,p(i).z,status):SAVE=0);   
+         part(#46,igs_gflt(infile,row,p(i+1).x,status):SAVE=0);  
+         part(#47,igs_gflt(infile,row,p(i+1).y,status):SAVE=0); 
+         part(#48,igs_gflt(infile,row,p(i+1).z,status):SAVE=0);
+!*       
+!**Change relative coords  i,j,k, to absolute coordinates
+!*
+         p(i+1):=p(i)+p(i+1); 
+       endfor;
+      for i:=1 to n-1  do
+        lin_free(#49,p(i),p(i+1):blank=1);
+        refarr(i):= refc(49,i);   
+      endfor; 
+      cur_comparr(#72,n-1, refarr);     
+      id_ent:=global_ref(#72); 
+     endif;   
+!*
+!**Check form number Forms 20-21  Center line entity.
+!*        
+   ELIF form >= 20 and form <= 21 THEN
+     part(#18,igs_gint(infile,row,ip,status):SAVE=0);
+     part(#19,igs_gint(infile,row,n,status):SAVE=0);
+     if ip <> 1  then 
+       outstr(logfile,"igs_106, IP value not equal to 1 - centerline entity."); 
+       outlin(logfile);
+       outlin(logfile);
+       status := -1;            
+       exit();
+     endif; 
+     part(#20,igs_gflt(infile,row,zt,status):SAVE=0);
+     for i:=1 to n do
+       part(#21,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+       part(#22,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+       p(i).z:=zt;
+     endfor;
+     for i:=1 to n-1 step 2  do
+       lin_free(#23,p(i),p(i+1));
+       refarr(i):= refc(23,i);   
+     endfor;  
+!*
+!**Set id_ent.
+!*    
+     id_ent:=global_ref(#23.1); 
+!*
+!**Check form number Forms 31-38  Section entity.
+!*   
+   ELIF form >= 31 and form <= 38 THEN
+     part(#24,igs_gint(infile,row,ip,status):SAVE=0);
+     part(#25,igs_gint(infile,row,n,status):SAVE=0);
+     if ip <> 1  then 
+       outstr(logfile,"igs_106, IP value not equal to 1 - section entity."); 
+       outlin(logfile);
+       outlin(logfile);
+       status := -1;  
+       id_ent:=##0;          
+       exit();
+     endif; 
+     part(#26,igs_gflt(infile,row,zt,status):SAVE=0);
+     for i:=1 to n do
+       part(#27,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+       part(#28,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+       p(i).z:=zt;
+     endfor;
+     for i:=1 to n-1 step 2 do
+       lin_free(#29,p(i),p(i+1));
+       refarr(i):= refc(29,i);   
+     endfor;
+!*
+!**Set id_ent.
+!*          
+    id_ent:=global_ref(#29); 
+!*
+!**Check form number Forms 40 Witness line entity.
+!*   
+   ELIF form = 40  THEN
+     part(#30,igs_gint(infile,row,ip,status):SAVE=0);
+     part(#31,igs_gint(infile,row,n,status):SAVE=0);
+     if ip <> 1  then 
+       outstr(logfile,"igs_106, IP value not equal to 1 -witness line entity."); 
+       outlin(logfile);
+       outlin(logfile);
+       status := -1;  
+       id_ent:=##0;          
+       exit();
+     endif; 
+     part(#32,igs_gflt(infile,row,zt,status):SAVE=0);
+     for i:=1 to n do
+       part(#33,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+       part(#34,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+       p(i).z:=zt;
+    endfor;  
+    for i:=1 to n do
+      poi_free(#78,p(i));
+      refarr(i):= refc(78,i);   
+    endfor;  
+!*
+!**Set id_ent.
+!*       
+    id_ent:=global_ref(#78); 
+    outstr(logfile,"igs_106, witness line - not completely implemented yet."); 
+    outlin(logfile);
+    outlin(logfile);  
+!*
+!**Check form number Forms 63 Simple closed Planar curve entity.
+!*    
+   ELIF form =63  THEN
+     part(#52,igs_gint(infile,row,ip,status):SAVE=0);
+     part(#53,igs_gint(infile,row,n,status):SAVE=0);
+     if ip < 1 or ip > 3 then 
+       outstr(logfile,"igs_106, IP value not {1,2,3}"); 
+       outlin(logfile);
+       outlin(logfile);
+       status := -1; 
+       id_ent:=##0;           
+       exit();
+     endif; 
+     if ip=1 then
+       part(#54,igs_gflt(infile,row,zt,status):SAVE=0);
+       for i:=1 to n do
+         part(#55,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#56,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         p(i).z:=zt;
+       endfor;
+       for i:=1 to n-1  do
+         lin_free(#57,p(i),p(i+1):blank=1);
+         refarr(i):= refc(57,i);        
+       endfor;
+       cur_comparr(#75,n-1, refarr);   
+       id_ent:=global_ref(#75); 
+     elif ip=2 then
+       for i:=1 to n do
+         part(#58,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#59,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         part(#60,igs_gflt(infile,row,p(i).z,status):SAVE=0);
+       endfor;
+       for i:=1 to n-1 do
+         lin_free(#61,p(i),p(i+1):blank=1);
+         refarr(i):= refc(61,i);           
+       endfor;  
+       cur_comparr(#76,n-1, refarr); 
+       id_ent:=global_ref(#76);    
+     elif ip = 3 then
+       n:=2*n;
+       for i:=1 to n step 2 do
+         part(#62,igs_gflt(infile,row,p(i).x,status):SAVE=0);   
+         part(#63,igs_gflt(infile,row,p(i).y,status):SAVE=0); 
+         part(#64,igs_gflt(infile,row,p(i).z,status):SAVE=0);   
+         part(#65,igs_gflt(infile,row,p(i+1).x,status):SAVE=0);  
+         part(#66,igs_gflt(infile,row,p(i+1).y,status):SAVE=0); 
+         part(#67,igs_gflt(infile,row,p(i+1).z,status):SAVE=0);
+!*       
+!**Change relative coords  i,j,k, to absolute coordinates
+!*
+         p(i+1):=p(i)+p(i+1); 
+       endfor;
+       for i:=1 to n-1  do
+         lin_free(#68,p(i),p(i+1):blank=1);
+         refarr(i):= refc(68,i);     
+       endfor; 
+       cur_comparr(#77,n-1, refarr); 
+       id_ent:=global_ref(#77);   
+     endif;      
+   ENDIF;  
+!*
+!***End   
+!*   
+   status:=0;
+
+ ENDMODULE
+
+!******************************************************************************************

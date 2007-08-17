@@ -1,0 +1,63 @@
+!*******************************************************
+
+ MACRO MODULE igs_fnam(
+   STRING     name_in*132 ;
+   VAR STRING name_out*132;
+   VAR INT    status);
+
+!*      Creats a complete filname and checks
+!*      that the file is possible to open with direct access.
+!*
+!*      In: name_in  = Name from user
+!*          name_out = Complete name including path
+!*          status   = 0 = OK, -1 = File cant be used/not exist.
+!*
+!*      (C)microform ab 1997-12-22 J. Kjellander
+!*
+!*******************************************************
+
+ STRING name_tmp*132;
+
+ BEGINMODULE
+
+!*
+!***Initiate.
+!*
+   name_out:=name_in;
+!*
+!***Add suffix if not specified by user.
+!*
+   if finds(name_out,".") = 0 then
+     name_out:=name_out+".IGS";
+   endif;
+!*
+!***If filename doesn't include "/" , we asume that act_jobdir
+!***should be used.
+!*
+   if act_ostype() = "UNIX" then
+     if finds(name_out,"/") = 0 then
+       name_out:=act_jobdir()+name_out;
+     endif;
+   else
+     if finds(name_out,"\") = 0  and finds(name_out,":") = 0 then
+       name_out:=act_jobdir()+name_out;
+     endif;
+   endif;
+!*
+!***Test to open for write (update).
+!***If not possible test by changing suffix to igs".
+!*
+   status:=0;
+
+   if test_file(name_out,"W") = 0 then
+     name_tmp:=substr(name_out,1,length(name_out)-3) + "igs";
+     if test_file(name_tmp,"W") = 0 then
+       status:=-1;
+     else
+       name_out:=name_tmp;
+     endif;
+   endif;
+
+ ENDMODULE
+
+!*******************************************************

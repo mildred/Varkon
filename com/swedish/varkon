@@ -1,0 +1,118 @@
+#!/bin/sh
+#######################################################
+#
+# varkon
+#
+# Startscript f�r VARKON.
+#
+# Parametrar = inga eller en (projekt) eller tv� (projekt och jobb)
+#
+# (C)�rebro universitet 2004
+#
+# 2006-09-22 S�ren Larsson, �revbo universitet
+#            Relativ s�kv�g till VARKON_ROOT 
+#
+#######################################################
+
+# VARKON_ROOT �r systemets huvudkatalog. Om resten
+# av systemet �r installerat under denna p� normalt
+# vis r�cker det att �ndra VARKON_ROOT f�r att kunna
+# starta. �vriga environmentparametrar �r kopplade till
+# VARKON_ROOT men kan f�rst�s �ndras om s� �nskas.
+# Alternativ 1, hitta relativ s�kv�g h�rifr�n.
+# Alternativ 2, ange s�kv�gen explicit
+VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`
+# VARKON_ROOT=/home/username/varkon/varkon_1.99X
+export VARKON_ROOT
+
+# Svenska menyfiler.
+VARKON_MDF=$VARKON_ROOT/mdf/swedish
+export VARKON_MDF
+
+# PID-filer, h�r �r det vanligt att man ist�llet v�ljer
+# tex. $HOME/pid s� att gamla projekt blir kvar n�r en
+# ny VARKON-version installeras. Alla anv�ndare m�ste
+# ha b�de skriv- och l�s-r�ttigheter till denna katalog.
+VARKON_PID=$VARKON_ROOT/pid
+export VARKON_PID
+
+# Felmeddelandefiler
+VARKON_ERM=$VARKON_ROOT/erm
+export VARKON_ERM
+
+# Manualen
+VARKON_DOC=$VARKON_ROOT/man
+export VARKON_DOC
+
+# Systembiblioteket (MBO-filer)
+VARKON_LIB=$VARKON_ROOT/lib
+export VARKON_LIB
+
+# Tempor�rfiler. H�r kan man ist�llet v�lja tex. bara /tmp
+# om den finns. I ett n�tverk kan man spara lite prestanda
+# om tempor�rfiler f�r ligga p� den lokala h�rddisken.
+# Alla anv�ndare m�ste ha b�de skriv- och l�s-r�ttigheter
+# till denna katalog.
+VARKON_TMP=$VARKON_ROOT/tmp
+export VARKON_TMP
+
+# Fontfiler f�r grafisk text.
+VARKON_FNT=$VARKON_ROOT/cnf/fnt
+export VARKON_FNT
+
+# Filer f�r konfiguration av plottrar. Dessa brukar man
+# ist�llet l�gga p� tex. $HOME/cnf/plt s� att ev. �ndringar
+# kvarst�r n�r en ny version av VARKON installeras.
+# Alla anv�ndare m�ste ha b�de skriv- och l�s-r�ttigheter
+# till denna katalog.
+VARKON_PLT=$VARKON_ROOT/cnf/plt
+export VARKON_PLT
+
+# Eventuella ikonfiler (bitmappar)
+VARKON_ICO=$VARKON_ROOT/cnf/icons
+export VARKON_ICO
+
+# Filer med toleranser
+VARKON_TOL=$VARKON_ROOT/cnf/tol
+export VARKON_TOL
+
+# X-Windows resurser p� svenska
+VARKON_INI=$VARKON_ROOT/cnf/ini/swedish
+export VARKON_INI
+
+# F�rst�lld root-katalog f�r nya projekt (applikationer)
+# �ven h�r �r det l�mpligt att v�lja n�got annat, tex. $HOME/app
+# Alla anv�ndare m�ste ha b�de skriv- och l�s-r�ttigheter
+# till denna katalog.
+VARKON_PRD=$VARKON_ROOT/app
+export VARKON_PRD
+
+# Exekverbara bin�rer (xvarkon, mbsc, plotprogram)
+VARKON_BIN=$VARKON_ROOT/bin
+export VARKON_BIN
+
+# Path till shared ODBC library. Avkommentera f�ljande tv�
+# rader och s�tt s�kv�gen att peka p� det st�lle d�r du
+# har ODBC-biblioteken installerade om du har byggt ihop
+# Varkon med st�d f�r ODBC.
+
+#LD_LIBRARY_PATH=/usr/lib/unixODBC
+#export LD_LIBRARY_PATH
+
+# Starta VARKON. Använd GLOBAL som default för nya jobb.
+$VARKON_BIN/xvarkon -GLOBAL -i$VARKON_INI/linux
+
+# Om man vill kan man �ven l�gga till en egen ini-fil
+# med X-resurser som d� laddas efter VARKON:s ordinarie
+# fil. Tex. n�t i stil med:
+
+# $VARKON_BIN/xvarkon -GLOBAL \
+# -i$VARKON_INI/linux -i$HOME/cnf/ini/swedish/min_egen_inifil
+
+# Ladda alltid den ordinarie filen f�rst och l�gg alla egna �ndringar
+# i den egna filen. Det �r det sist laddade som g�ller. �ndra inte
+# i standardfilen. 
+
+# Vill man k�ra systemet i ritnings-mode l�gger man till "-r" p�
+# kommandoraden.
+# $VARKON_BIN/xvarkon -r $1 $2 -i$VARKON_INI/linux

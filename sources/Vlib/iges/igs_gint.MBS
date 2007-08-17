@@ -1,0 +1,54 @@
+!************************************************************************
+                                                                       
+ MACRO MODULE igs_gint(                                                 
+   VAR FILE   infile;                                                      
+   VAR STRING row*80;                                                   
+   VAR INT    i;                                                          
+   VAR INT    status);                                                   
+!*                                                                      
+!*      Reads and removes integer from                                 
+!*      the row in question. If not possible a new row is read.        
+!*                                                                     
+!*      In: infile   = File to read from.                                     
+!*          row      = Row to read from.                                
+!*                                                                     
+!*      Out: i       = The read number.                                 
+!*           status  = 0 => Ok                                           
+!*                    -1 => Error                                       
+!*                                                                     
+!*      (C)Örebro University - Mohamed Rahayem 6-9-2006                
+!*                                                                                      
+!***********************************************************************
+
+   INT n_chars;
+
+ BEGINMODULE
+
+!*
+!*** Read the input row until next field if the reading operation is failed
+!*** Then read new row ,read first field in the new row.
+!*  
+ loop:
+
+  i:=ival(row,status,n_chars);
+!*
+!**Check status.
+!*
+  IF status = -1 THEN
+     exit("Invalid integer conversion !  "+ row);
+  ENDIF;  
+!*
+!**If end of line read new line.
+!*     
+  IF substr(row,n_chars + 1,1) = "P"  THEN
+     row := inlin(infile);
+     goto loop;
+  ENDIF;   
+
+  row:=substr(row,n_chars+2);
+!*
+!***End.
+!*  
+ ENDMODULE
+ 
+!*************************************************************************
