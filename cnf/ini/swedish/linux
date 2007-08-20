@@ -1,54 +1,54 @@
 !***************************************************************
 !*
-!*    Resursfil fï¿½r VARKON 1.19 fï¿½r Linux.
+!*    Resursfil för VARKON 1.19 för Linux.
 !*
 !*    (C)2007 J.Kjellander
 !*
 !*
 !*    Vid uppstart laddar UNIX-versionen av VARKON resurser i
-!*    tur och ordning frï¿½n fï¿½ljande kï¿½llor:
+!*    tur och ordning från följande källor:
 !*
-!*    1: Hï¿½rdprogrammerade default-vï¿½rden
+!*    1: Hårdprogrammerade default-värden
 !*    2: /usr/lib/X11/app-defaults/Varkon
 !*    3: XENVIRONMENT/Xdefaults
 !*    4: HOME/Xdefaults
-!*    5: Resursbeskrivningar pï¿½ kommandoraden
-!*    6: Resursfil vars namn getts pï¿½ kommandoraden
+!*    5: Resursbeskrivningar på kommandoraden
+!*    6: Resursfil vars namn getts på kommandoraden
 !*
-!***Om samma resurs fï¿½rekommer pï¿½ flera av dessa stï¿½llen
-!***gï¿½ller den som sist laddats. Saknas 2,3,4,5 och 6 kommer 1:an
-!***att gï¿½lla, dvs. de vï¿½rden som finns inprogrammerade i systemet
-!***sjï¿½lvt. I resursfil 2 lï¿½gger man normalt sï¿½dana resurser som
-!***skall gï¿½lla alla anvï¿½ndare av systemet. I resursfil 3 kan
-!***man lï¿½gga sï¿½dant som ï¿½r gemensamt bara fï¿½r en viss grupp
-!***anvï¿½ndare. I resursfil 4 lï¿½gger man sï¿½nt som ï¿½r unikt
-!***fï¿½r en enda anvï¿½ndare och pï¿½ kommandoraden slutligen
-!***kan anvï¿½ndaren varje gï¿½ng han startar systemet ï¿½ndra
-!***dessa ytterligare. Fï¿½ljande optioner kan ges pï¿½ kommando-
+!***Om samma resurs förekommer på flera av dessa ställen
+!***gäller den som sist laddats. Saknas 2,3,4,5 och 6 kommer 1:an
+!***att gälla, dvs. de värden som finns inprogrammerade i systemet
+!***självt. I resursfil 2 lägger man normalt sådana resurser som
+!***skall gälla alla användare av systemet. I resursfil 3 kan
+!***man lägga sådant som är gemensamt bara för en viss grupp
+!***användare. I resursfil 4 lägger man sånt som är unikt
+!***för en enda användare och på kommandoraden slutligen
+!***kan användaren varje gång han startar systemet ändra
+!***dessa ytterligare. Följande optioner kan ges på kommando-
 !***raden:
 !*
-!*    -fn fontnamn             Textfont fï¿½r menyer etc.
+!*    -fn fontnamn             Textfont för menyer etc.
 !*    -font fontnamn           Samma som ovan
-!*    -geometry bxh+x+y        Grafiska fï¿½nstrets storlek och lï¿½ge
-!*    -title fï¿½nsterrubrik     Grafiska fï¿½nstrets rubrik
-!*    -bg fï¿½rg                 Bakgrundsfï¿½rg fï¿½r menyer etc.
-!*    -background fï¿½rg         Samma som ovan
-!*    -fg fï¿½rg                 Textfï¿½rg fï¿½r menyer etc.
-!*    -foreground fï¿½rg         Samma som ovan
-!*    -xrm resurs:vï¿½rde        Godtycklig resurs med vï¿½rde
+!*    -geometry bxh+x+y        Grafiska fönstrets storlek och läge
+!*    -title fönsterrubrik     Grafiska fönstrets rubrik
+!*    -bg färg                 Bakgrundsfärg för menyer etc.
+!*    -background färg         Samma som ovan
+!*    -fg färg                 Textfärg för menyer etc.
+!*    -foreground färg         Samma som ovan
+!*    -xrm resurs:värde        Godtycklig resurs med värde
 !*
-!***Slutligen kan man ocksï¿½ frï¿½n och med version 1.16 ge namnet
-!***pï¿½ ytterligare tvï¿½ resursfiler att ladda allra sist via
-!***parametern -ifilnamn pï¿½ kommandoraden.
-!***Fï¿½rutom dessa supportas fï¿½rstï¿½s alla ï¿½vriga optioner som
+!***Slutligen kan man också från och med version 1.16 ge namnet
+!***på ytterligare två resursfiler att ladda allra sist via
+!***parametern -ifilnamn på kommandoraden.
+!***Förutom dessa supportas förstås alla övriga optioner som
 !***finns dokumenterade i VARKON-manualen precis som vanligt.
 !*
 !**************************************************************
 
 !*
-!***varkon.font ï¿½r namnet pï¿½ den font som skall anvï¿½ndas
-!***av VARKON i menyer, inmatningsfï¿½nster, listfï¿½nster
-!***osv. och som default font i fï¿½nster skapade i MBS.
+!***varkon.font är namnet på den font som skall användas
+!***av VARKON i menyer, inmatningsfönster, listfönster
+!***osv. och som default font i fönster skapade i MBS.
 !*
 !varkon.font:                   fixed
 !varkon.font:                   6x13
@@ -57,12 +57,12 @@ varkon.font:                   9x15
 !varkon.font:                   10x20
 !varkon.font:                   12x24
 !*
-!***varkon.mbsedit ï¿½r resurser fï¿½r funktionen "editera aktiv
-!***modul", f216. Nï¿½r funktionen aktiveras skapar VARKON ett
-!***shell-kommando bestï¿½ende av texterna emulator + editor + filnamn
-!***och exekverar detta som en subprocess. Dï¿½refter starats en
-!***andra subprocess fï¿½r kompilering och slutligen, om autoexec
-!***ï¿½r satt till True, kï¿½rs aktiv modul om automatiskt.
+!***varkon.mbsedit är resurser för funktionen "editera aktiv
+!***modul", f216. När funktionen aktiveras skapar VARKON ett
+!***shell-kommando bestående av texterna emulator + editor + filnamn
+!***och exekverar detta som en subprocess. Därefter starats en
+!***andra subprocess för kompilering och slutligen, om autoexec
+!***är satt till True, körs aktiv modul om automatiskt.
 !*
 varkon.mbsedit.emulator:          xterm -title MBS-Edit -e
 varkon.mbsedit.editor:            vi
@@ -72,42 +72,42 @@ varkon.mbsedit.compiler:          mbsc
 varkon.mbsedit.autocompile:       True
 varkon.mbsedit.autoexec:          True
 !*
-!***varkon.html_viewer anvï¿½nds av hjï¿½lpsystemet fï¿½r att starta en
-!***HTML-browser. Om denna resurs ï¿½r definierad skickar VARKON
-!***aktuell hjï¿½lpfil till den angivna browsern. Om den inte ï¿½r
-!***definierad listar VARKON filen i ett listfï¿½nster.
+!***varkon.html_viewer används av hjälpsystemet för att starta en
+!***HTML-browser. Om denna resurs är definierad skickar VARKON
+!***aktuell hjälpfil till den angivna browsern. Om den inte är
+!***definierad listar VARKON filen i ett listfönster.
 !*
 !varkon.html_viewer:               konqueror
 !varkon.html_viewer:               netscape
 !*
-!***varkon.grawin_1.geometry styr det grafiska huvud-fï¿½nstrets
-!***storlek och placering pï¿½ vanligt X-Windows maner.
-!***Tex. breddxhï¿½jd+x+y om man vill placera fï¿½nstret
-!***relativt ï¿½vre vï¿½nstra hï¿½rnet pï¿½ skï¿½rmen. breddxhï¿½jd-x-y
-!***om man vill placera relativt nedre hï¿½gra hï¿½rnet. osv.
-!***Placering kan utelï¿½mnas helt om man vill.
-!***Ytterligare grafiska fï¿½nster kan skapas genom resurserna
-!***varkon.grawin_n.geometry dï¿½r n en 2:a fï¿½r fï¿½nster nummer 2
-!***en 3:a fï¿½r fï¿½nster nummer 3 osv. Max 25 grafiska fï¿½nster
-!***inklusive huvudfï¿½nstret.
+!***varkon.grawin_1.geometry styr det grafiska huvud-fönstrets
+!***storlek och placering på vanligt X-Windows maner.
+!***Tex. breddxhöjd+x+y om man vill placera fönstret
+!***relativt övre vänstra hörnet på skärmen. breddxhöjd-x-y
+!***om man vill placera relativt nedre högra hörnet. osv.
+!***Placering kan utelämnas helt om man vill.
+!***Ytterligare grafiska fönster kan skapas genom resurserna
+!***varkon.grawin_n.geometry där n en 2:a får fönster nummer 2
+!***en 3:a får fönster nummer 3 osv. Max 25 grafiska fönster
+!***inklusive huvudfönstret.
 !*
 varkon.grawin_1.geometry:       700x500+200
 !varkon.grawin_2.geometry:       300x200+10+250
 !varkon.grawin_3.geometry:       300x200+330+250
 !*
-!***Grafiska fï¿½nster kan fï¿½rses med en osynlig marginal sï¿½
-!***att plats reserveras fï¿½r tryckknappar/ikoner om man vill.
+!***Grafiska fönster kan förses med en osynlig marginal så
+!***att plats reserveras för tryckknappar/ikoner om man vill.
 !*
 varkon.margin_up:                32
 !varkon.margin_down:             22
 !varkon.margin_left:             70
 !varkon.margin_right:            50
 !*
-!***Med varkon.title kan man ï¿½ndra den text som skrivs ut i det grafiska
-!***huvud-fï¿½nstrets ram. Om varkon.title.project ï¿½r True skrivs aktuellt
-!***projektnamn ut. Om varkon.title.jobnam ï¿½r satt till True lï¿½ggs
+!***Med varkon.title kan man ändra den text som skrivs ut i det grafiska
+!***huvud-fönstrets ram. Om varkon.title.project är True skrivs aktuellt
+!***projektnamn ut. Om varkon.title.jobnam är satt till True läggs
 !***dessutom aktuellt jobnamn till automatiskt. Om varkon.title.viewname
-!***ï¿½r True skrivs ï¿½ven vynamnet ut i fï¿½nsterramen.
+!***är True skrivs även vynamnet ut i fönsterramen.
 !*
 !varkon.title:                  VARKON-3D
 varkon.title.project:          True
@@ -115,37 +115,37 @@ varkon.title.jobname:          True
 varkon.title.viewname:         True
 !*
 !***Snabbvalsknappar kan placeras var som helst i de grafiska
-!***fï¿½nstren. Lï¿½ge och storlek ges av resursen varkon.button_n.geometry
-!***dï¿½r n ï¿½r ett tal mellan 1 och 25. Talen 1 och 25 ï¿½r ocksï¿½ tillï¿½tna.
-!***Max 25 knappar i det grafiska fï¿½nstret alltsï¿½. Fï¿½r varje knapp
-!***finns en resurs som styr vad som skall hï¿½nda om man klickar pï¿½
-!***den. Hï¿½r anvï¿½nder vi samma koder som i VARKON:s ordinarie meny-
-!***filer. f128 fï¿½r funktionen f128, m32 fï¿½r meny 32 osv. En tredje
-!***resurs styr vilken text som skall stï¿½ i knappen och den fjï¿½rde
-!***resursen ï¿½r knappens hjï¿½lptext.
+!***fönstren. Läge och storlek ges av resursen varkon.button_n.geometry
+!***där n är ett tal mellan 1 och 25. Talen 1 och 25 är också tillåtna.
+!***Max 25 knappar i det grafiska fönstret alltså. För varje knapp
+!***finns en resurs som styr vad som skall hända om man klickar på
+!***den. Här använder vi samma koder som i VARKON:s ordinarie meny-
+!***filer. f128 är funktion f128, m32 är meny 32 osv. En tredje
+!***resurs styr vilken text som skall stå i knappen och den fjärde
+!***resursen är knappens hjälptext.
 !*
 !varkon.button_1.geometry:       70x25+1+0
 !varkon.button_1.text:           ZOOM
 !varkon.button_1.action:         f193
-!varkon.button_1.tooltip:        Fï¿½rstora en del av modellen till hela fï¿½nstret
+!varkon.button_1.tooltip:        Förstora en del av modellen till hela fönstret
 !*
-!***Ikoner ï¿½r samma sak som snabbvalsknappar med den skillnaden
-!***att texten bytts ut mot namnet pï¿½ ikon-filen. Ikon-filer ï¿½r
-!***filer med namn som slutar pï¿½ .xpm och som kan skapas tex med
-!***X-Windows programmet pixmap. Ikonfiler fï¿½rutsï¿½tts ligga pï¿½ fil-
+!***Ikoner är samma sak som snabbvalsknappar med den skillnaden
+!***att texten bytts ut mot namnet på ikon-filen. Ikon-filer är
+!***filer med namn som slutar på .xpm och som kan skapas tex med
+!***X-Windows programmet pixmap. Ikonfiler förutsätts ligga på fil-
 !***katalogen $VARKON_ICO. Sammanlagda antalet knappar
-!***och ikoner fï¿½r inte ï¿½verstiga 100. Ikoners storlek avgï¿½rs av
-!***ikonfilen och kan inte styras hï¿½rifrï¿½n, bara deras placering.
+!***och ikoner får inte överstiga 100. Ikoners storlek avgörs av
+!***ikonfilen och kan inte styras härifrån, bara deras placering.
 !*
 varkon.icon_1.geometry:         +0+0
 varkon.icon_1.name:             Varkon_zoom.xpm
 varkon.icon_1.action:           f193
-varkon.icon_1.tooltip:          Fï¿½rstora en del av modellen till hela fï¿½nstret
+varkon.icon_1.tooltip:          Förstora en del av modellen till hela fönstret
 
 varkon.icon_2.geometry:         +38+0
 varkon.icon_2.name:             Varkon_autozoom.xpm
 varkon.icon_2.action:           f194
-varkon.icon_2.tooltip:          Skala hela modellen till hela fï¿½nstret
+varkon.icon_2.tooltip:          Skala hela modellen till hela fönstret
 
 varkon.icon_3.geometry:         +76+0
 varkon.icon_3.name:             Varkon_scale.xpm
@@ -160,29 +160,29 @@ varkon.icon_4.tooltip:          Flytta modellen med musen
 varkon.icon_5.geometry:         +152+0
 varkon.icon_5.name:             Varkon_previous.xpm
 varkon.icon_5.action:           f191
-varkon.icon_5.tooltip:          ï¿½tervï¿½nd till fï¿½regï¿½ende vy 
+varkon.icon_5.tooltip:          Återvänd till föregående vy 
 
 varkon.icon_6.geometry:         +190+0
 varkon.icon_6.name:             Varkon_views.xpm
 varkon.icon_6.action:           f102
-varkon.icon_6.tooltip:          Skapa, ï¿½ndra och aktivera vyer
+varkon.icon_6.tooltip:          Skapa, ändra och aktivera vyer
 
 varkon.icon_7.geometry:         +228+0
 varkon.icon_7.name:             Varkon_grid.xpm
 varkon.icon_7.action:           f103
-varkon.icon_7.tooltip:          Instï¿½llningar fï¿½r raster
+varkon.icon_7.tooltip:          Inställningar för raster
 
 varkon.icon_8.geometry:         +266+0
 varkon.icon_8.name:             Varkon_levels.xpm
 varkon.icon_8.action:           f197
-varkon.icon_8.tooltip:          Tï¿½nd, slï¿½ck och lista nivï¿½er
+varkon.icon_8.tooltip:          Tänd, släck och lista nivåer
 
 varkon.icon_9.geometry:         +304+0
 varkon.icon_9.name:             Varkon_printer.xpm
 varkon.icon_9.action:           f150
-varkon.icon_9.tooltip:          Skriv ut detta fï¿½nster (eller stï¿½ll in skrivare)
+varkon.icon_9.tooltip:          Skriv ut detta fönster (eller ställ in skrivare)
 !*
-!***Grafiska fï¿½nster med OpenGL (WPRWIN).
+!***Grafiska fönster med OpenGL (WPRWIN).
 !*
 varkon.rwin.title:              Varkon dynamisk vy
 varkon.rwin.geometry:           900x650+250+50
@@ -191,17 +191,17 @@ varkon.rwin.margin_up:          32
 varkon.rwin.icon_1.geometry:    +0+0
 varkon.rwin.icon_1.name:        Varkon_zoom.xpm
 varkon.rwin.icon_1.action:      f193
-varkon.rwin.icon_1.tooltip:     Fï¿½rstora en del av modellen till hela fï¿½nstret
+varkon.rwin.icon_1.tooltip:     Förstora en del av modellen till hela fönstret
 
 varkon.rwin.icon_2.geometry:    +38+0
 varkon.rwin.icon_2.name:        Varkon_autozoom.xpm
 varkon.rwin.icon_2.action:      f194
-varkon.rwin.icon_2.tooltip:     Skala hela modellen till hela fï¿½nstret
+varkon.rwin.icon_2.tooltip:     Skala hela modellen till hela fönstret
 
 varkon.rwin.icon_3.geometry:    +76+0
 varkon.rwin.icon_3.name:        Varkon_wireframe.xpm
 varkon.rwin.icon_3.action:      f100
-varkon.rwin.icon_3.tooltip:     Visa modellen som trï¿½dmodell
+varkon.rwin.icon_3.tooltip:     Visa modellen som trådmodell
 
 varkon.rwin.icon_4.geometry:    +114+0
 varkon.rwin.icon_4.name:        Varkon_shade.xpm
@@ -211,29 +211,29 @@ varkon.rwin.icon_4.tooltip:     Visa modellen med skuggade ytor
 varkon.rwin.icon_5.geometry:    +152+0
 varkon.rwin.icon_5.name:        Varkon_views.xpm
 varkon.rwin.icon_5.action:      f102
-varkon.rwin.icon_5.tooltip:     Skapa, ï¿½ndra och aktivera vyer
+varkon.rwin.icon_5.tooltip:     Skapa, ändra och aktivera vyer
 
 varkon.rwin.icon_6.geometry:    +190+0
 varkon.rwin.icon_6.name:        Varkon_levels.xpm
 varkon.rwin.icon_6.action:      f197
-varkon.rwin.icon_6.tooltip:     Tï¿½nd, slï¿½ck och lista nivï¿½er
+varkon.rwin.icon_6.tooltip:     Tänd, släck och lista nivåer
 !*
 !***Partnamn dialogen
 !*
-varkon.partname.title:           Vï¿½lj part
+varkon.partname.title:           Välj part
 varkon.partname.geometry:       +50+50
 varkon.partname.jobdir:          Jobkatalogen
-varkon.partname.jobdir.tooltip:  Vï¿½lj en part (MBO-fil) i aktiv jobkatalog
+varkon.partname.jobdir.tooltip:  Välj en part (MBO-fil) i aktiv jobkatalog
 varkon.partname.libdir:          Partbiblioteket
-varkon.partname.libdir.tooltip:  Vï¿½lj en part (MBO-fil) i partbiblioteket
-varkon.partname.empty:           Katalogen ï¿½r tom !
+varkon.partname.libdir.tooltip:  Välj en part (MBO-fil) i partbiblioteket
+varkon.partname.empty:           Katalogen är tom !
 !*
-!***Menyfï¿½nstrets placering. Observera att
-!***det inte ï¿½r mï¿½jligt att pï¿½verka menyfï¿½nstrets storlek. 
-!***Denna berï¿½knas automatisk av VARKON och ï¿½ndras varje
-!***gï¿½ng man vï¿½xlar meny. Placering kan bara ges relativt
-!***skï¿½rmens ï¿½vre vï¿½nsstra hï¿½rn, dï¿½rav plustecknen. Om man
-!***inte anger menytitel anvï¿½nds aktivt jobnamn istï¿½llet.
+!***Menyfönstrets placering. Observera att
+!***det inte är möjligt att påverka menyfönstrets storlek. 
+!***Denna beräknas automatisk av VARKON och ändras varje
+!***gång man växlar meny. Placering kan bara ges relativt
+!***skärmens övre vänstra hörn, därav plustecknen. Om man
+!***inte anger menytitel används aktivt jobnamn istället.
 !*
 varkon.menu.title:               MENY
 varkon.menu.geometry:            +5+5
@@ -245,43 +245,43 @@ varkon.menu.button_3.text:       mus
 varkon.menu.button_3.tooltip:    Ange positioner med muspekare
 varkon.menu.button_4.text:       MBS
 varkon.menu.button_4.tooltip:    Ange positioner med MBS-uttryck
-varkon.menu.button_5.text:       ï¿½nde
-varkon.menu.button_5.tooltip:    Ange positioner med ï¿½nde av linje, cirkel eller kurva
-varkon.menu.button_6.text:       pï¿½
-varkon.menu.button_6.tooltip:    Ange positioner pï¿½ storheter
+varkon.menu.button_5.text:       ände
+varkon.menu.button_5.tooltip:    Ange positioner med ände av linje, cirkel eller kurva
+varkon.menu.button_6.text:       på
+varkon.menu.button_6.tooltip:    Ange positioner på storheter
 varkon.menu.button_7.text:       cent
 varkon.menu.button_7.tooltip:    Ange positioner med centrum av cirkel eller kurva
-varkon.menu.button_8.text:       skï¿½r
-varkon.menu.button_8.tooltip:    Ange positioner med skï¿½rning mellan 2 storheter
+varkon.menu.button_8.text:       skär
+varkon.menu.button_8.tooltip:    Ange positioner med skärning mellan 2 storheter
 varkon.menu.button_9.text:       rast
 varkon.menu.button_9.tooltip:    Ange positioner med raster
-varkon.menu.level.tooltip:       Byt aktivt nivï¿½nummer
-varkon.menu.pen.tooltip:         Byt aktivt pennummer (fï¿½rg)
-varkon.menu.width.tooltip:       Sï¿½tt aktiv linjebredd (fï¿½r alla sorts storheter)
+varkon.menu.level.tooltip:       Byt aktivt nivånummer
+varkon.menu.pen.tooltip:         Byt aktivt pennummer (färg)
+varkon.menu.width.tooltip:       Sätt aktiv linjebredd (för alla sorts storheter)
 varkon.menu.csy.tooltip:         Byt aktivt koordinatsystem
 varkon.menu.csy.title:           Aktivera ksys
-varkon.menu.local.tooltip:       Vï¿½lj ett koordinatsystem att aktivera, MODE_LOCAL(#n); i MBS
+varkon.menu.local.tooltip:       Välj ett koordinatsystem att aktivera, MODE_LOCAL(#n); i MBS
 varkon.menu.global.tooltip:      Aktivera koordinatsystemet GLOBAL, MODE_GLOBAL(); i MBS
 varkon.menu.basic.tooltip:       Aktivera koordinatsystemet BASIC, MODE_BASIC(); i MBS
 varkon.menu.mbs.tooltip:         Editera aktiv modul i MBS text mode
-varkon.menu.run.text:            Kï¿½r
+varkon.menu.run.text:            Kör
 varkon.menu.run.tooltip:         Exekvera aktiv modul (nytt resultat skapas)
-varkon.menu.editp.text:          ï¿½ndraP
-varkon.menu.editp.tooltip:       ï¿½ndra en part's parametrar
+varkon.menu.editp.text:          ÄndraP
+varkon.menu.editp.tooltip:       Ändra en part's parametrar
 varkon.menu.delete.text:         Ta bort
 varkon.menu.delete.tooltip:      Radera en storhet (eller part)
 !*
 !***Print dialogen
 !*
-varkon.print.title:              Skriv ut fï¿½nster
+varkon.print.title:              Skriv ut fönster
 varkon.print.geometry:           +150+150
-varkon.print.portrait:           Stï¿½ende
-varkon.print.portrait.tooltip:   Skriv ut fï¿½nstret stï¿½ende (portï¿½tt)
+varkon.print.portrait:           Stående
+varkon.print.portrait.tooltip:   Skriv ut fönstret stående (portätt)
 varkon.print.landscape:          Liggande
-varkon.print.landscape.tooltip:  Skriv ut fï¿½nstret liggande (landskap)
-varkon.print.configure:          Instï¿½llningar
-varkon.print.configure.tooltip:  ï¿½ndra utskriftsinstï¿½llningar
-varkon.print.configure.title:    Utskriftsinstï¿½llningar
+varkon.print.landscape.tooltip:  Skriv ut fönstret liggande (landskap)
+varkon.print.configure:          Inställningar
+varkon.print.configure.tooltip:  Ändra utskriftsinställningar
+varkon.print.configure.title:    Utskriftsinställningar
 varkon.print.driver:             Varkon skrivarprogram
 varkon.print.driver.tooltip:     postscript, hp7475, hpgl2 etc.
 varkon.print.command:            Unix print kommando
@@ -291,18 +291,18 @@ varkon.print.media_x.tooltip:    Mediastorlek i horisontell riktning (A4 = 210 m
 varkon.print.media_y.tooltip:    Mediastorlek i vertikal riktning (A4 = 297 mm)
 varkon.print.auto_manual:        Utskriftens storlek och placering
 varkon.print.auto:               Auto
-varkon.print.auto.tooltip:       Gï¿½r utskriften sï¿½ stor som mï¿½jligt
+varkon.print.auto.tooltip:       Gör utskriften så stor som möjligt
 varkon.print.manual:             Manuell
 varkon.print.manual.tooltip:     Konfigurera utskriftens placering och storlek manuellt
 varkon.print.manual.title:       Utskriftens placering och storlek
-varkon.print.manual.rotation:    Vridning i grader moturs runt nedre vï¿½nstra
+varkon.print.manual.rotation:    Vridning i grader moturs runt nedre vänstra
 varkon.print.manual.xmin:        Flytta i X-riktningen (mm, default=0)
 varkon.print.manual.ymin:        Flytta i Y-riktningen (mm, default=0)
 varkon.print.manual.scale:       Skala
 !*
-!***Listfï¿½nster kan placeras. Dessutom kan man styra rubrik
+!***Listfönster kan placeras. Dessutom kan man styra rubrik
 !***och texter i knapparna. Resursen printer styr vilken
-!***skrivare som skall anvï¿½ndas.
+!***skrivare som skall användas.
 !*
 varkon.list.title:             Listning - 
 varkon.list.geometry:          +200+100
@@ -310,36 +310,36 @@ varkon.list.title.jobnam:      True
 varkon.list.row:               Rad
 varkon.list.page:              Sida
 varkon.list.save:              Spara
-varkon.list.kill:              Stï¿½ng
+varkon.list.kill:              Stäng
 varkon.list.printer:           lpr
 !*
-!***Listfï¿½nster anvï¿½nds ocksï¿½ fï¿½r felrapportering.
-!***Fï¿½ljande resurs styr fellistans rubrik.
+!***Listfönster används också för felrapportering.
+!***Följande resurs styr fellistans rubrik.
 !*
 varkon.error.title:            -----------------FELRAPPORT-----------------
 !*
-!***Inmatningsfï¿½nstrets placering och storlek kan inte
-!***pï¿½verkas hï¿½rifrï¿½n. Dï¿½remot fï¿½ljande texter.
+!***Inmatningsfönstrets placering och storlek kan inte
+!***påverkas härifrån. Däremot följande texter.
 !*
 varkon.input.title:            Inmatning
 varkon.input.geometry:         +250+200
 varkon.input.page:             Sida
 varkon.input.okey:             Ok
-varkon.input.okey.tooltip:     Acceptera ï¿½ndringar och verkstï¿½ll
+varkon.input.okey.tooltip:     Acceptera ändringar och verkställ
 varkon.input.reject:           Avbryt
-varkon.input.reject.tooltip:   Avbryt denna funktion utan att verkstï¿½lla ï¿½ndringar
-varkon.input.on:               Pï¿½
+varkon.input.reject.tooltip:   Avbryt denna funktion utan att verkställa ändringar
+varkon.input.on:               På
 varkon.input.off:              Av
-varkon.input.next:             Blï¿½ddra
-varkon.input.help:             Hjï¿½lp
-varkon.input.help.tooltip:     Visa manualsidan fï¿½r denna funktion
-varkon.input.close:            Stï¿½ng
-varkon.input.close.tooltip:    Stï¿½ng detta fï¿½nster
+varkon.input.next:             Bläddra
+varkon.input.help:             Hjälp
+varkon.input.help.tooltip:     Visa manualsidan för denna funktion
+varkon.input.close:            Stäng
+varkon.input.close.tooltip:    Stäng detta fönster
 varkon.input.save:             Spara
 varkon.input.delete:           Ta bort
-varkon.input.apply:            Verkstï¿½ll
+varkon.input.apply:            Verkställ
 !*
-!***Alternativfï¿½nstrets placering och titel.
+!***Alternativfönstrets placering och titel.
 !*
 varkon.alternative.title:      Alternativ 
 varkon.alternative.geometry:   +200+250 
@@ -349,9 +349,9 @@ varkon.alternative.geometry:   +200+250
 varkon.view.title:             Vyer
 varkon.view.geometry:          +150+150
 varkon.view.csys.text:         Koordinatsystem
-varkon.view.csys.tooltip:      Gï¿½r vyn parallell med ett koordinatsystems XY-plan
+varkon.view.csys.tooltip:      Gör vyn parallell med ett koordinatsystems XY-plan
 varkon.view.campos.text:       Kameraposition
-varkon.view.campos.tooltip:    Betrakta modellen frï¿½n en given position
+varkon.view.campos.tooltip:    Betrakta modellen från en given position
 varkon.view.save.text:         Spara som
 varkon.view.save.tooltip:      Spara denna vy med nedan angivet namn
 varkon.view.delete.text:       Ta bort vy
@@ -366,101 +366,101 @@ varkon.grid.resolution.text:   Delning
 varkon.grid.move.text:         Flytta
 varkon.grid.move.tooltip:      Flytta rastret till viss position i aktivt XY-plan
 varkon.grid.edit.text:         Redigera
-varkon.grid.edit.tooltip:      ï¿½ndra avstï¿½ndet mellan rasterpunkter i X- eller Y-led
-varkon.grid.show.text:         Tï¿½nd
-varkon.grid.show.tooltip:      Gï¿½r rastret synligt
-varkon.grid.hide.text:         Slï¿½ck
-varkon.grid.hide.tooltip:      Gï¿½r rastret osynligt
+varkon.grid.edit.tooltip:      Ändra avståndet mellan rasterpunkter i X- eller Y-led
+varkon.grid.show.text:         Tänd
+varkon.grid.show.tooltip:      Gör rastret synligt
+varkon.grid.hide.text:         Släck
+varkon.grid.hide.tooltip:      Gör rastret osynligt
 !*
 !***Attributdialogen
 !*
 varkon.attribute.title:          Aktiva attribut
 varkon.attribute.geometry:       +150+150
 varkon.attribute.point.text:     Punkt
-varkon.attribute.point.tooltip:  Sï¿½tt aktiva attribut fï¿½r punkter (PFONT and PSIZE)
+varkon.attribute.point.tooltip:  Sätt aktiva attribut för punkter (PFONT and PSIZE)
 varkon.attribute.point.font0:    Aktivera punkttyp 0. Ppunkter ritas som kryss (x)
 varkon.attribute.point.font1:    Aktivera punkttyp 1. Ppunkter ritas som plus (+)
 varkon.attribute.point.font2:    Aktivera punkttyp 2. Ppunkter ritas som plus (.)
-varkon.attribute.point.size:     Sï¿½tt storleken pï¿½ punkter, default = 2.
+varkon.attribute.point.size:     Sätt storleken på punkter, default = 2.
 varkon.attribute.line.text:      Linje
-varkon.attribute.line.tooltip:   Sï¿½tt aktiva attribut fï¿½r linjer (LFONT and LDASHL)
+varkon.attribute.line.tooltip:   Sätt aktiva attribut för linjer (LFONT and LDASHL)
 varkon.attribute.line.font0:     Aktivera linjetyp 0, heldragen
 varkon.attribute.line.font1:     Aktivera linjetyp 1, streckad
 varkon.attribute.line.font2:     Aktivera linjetyp 2, streckprickad
-varkon.attribute.line.dashl:     Sï¿½tt aktiv strecklï¿½ngd fï¿½r linjer i mm
+varkon.attribute.line.dashl:     Sätt aktiv strecklängd för linjer i mm
 varkon.attribute.arc.text:       Cirkel
-varkon.attribute.arc.tooltip:    Sï¿½tt aktiva attribut fï¿½r cirklar (AFONT and ADASHL)
+varkon.attribute.arc.tooltip:    Sätt aktiva attribut för cirklar (AFONT and ADASHL)
 varkon.attribute.arc.font0:      Aktivera cirkeltyp 0, heldragen
 varkon.attribute.arc.font1:      Aktivera cirkeltyp 1, streckad
 varkon.attribute.arc.font2:      Aktivera cirkeltyp 2, streckprickad
-varkon.attribute.arc.dashl:      Sï¿½tt aktiv strecklï¿½ngd fï¿½r cirklar i mm
+varkon.attribute.arc.dashl:      Sätt aktiv strecklängd för cirklar i mm
 varkon.attribute.curve.text:     Kurva
-varkon.attribute.curve.tooltip:  Sï¿½tt aktiva attribut fï¿½r kurvor (CFONT and CDASHL)
+varkon.attribute.curve.tooltip:  Sätt aktiva attribut för kurvor (CFONT and CDASHL)
 varkon.attribute.curve.font0:    Aktivera kurvtyp 0, heldragen
 varkon.attribute.curve.font1:    Aktivera kurvtyp 1, streckad
 varkon.attribute.curve.font2:    Aktivera kurvtyp 2, streckprickad
-varkon.attribute.curve.dashl:    Sï¿½tt aktiv strecklï¿½ngd fï¿½r kurvor i mm
+varkon.attribute.curve.dashl:    Sätt aktiv strecklängd för kurvor i mm
 varkon.attribute.surf.text:      Yta
-varkon.attribute.surf.tooltip:   Sï¿½tt aktiva attribut fï¿½r ytor (SDASHL, NULINES and NVLINES)
-varkon.attribute.surf.dashl:     Sï¿½tt aktiv strecklï¿½ngd fï¿½r ytors mittkurvor
-varkon.attribute.surf.nulines:   Sï¿½tt antal mittkurvor i ytors U-riktning
-varkon.attribute.surf.nvlines:   Sï¿½tt antal mittkurvor i ytors V-riktning
+varkon.attribute.surf.tooltip:   Sätt aktiva attribut för ytor (SDASHL, NULINES and NVLINES)
+varkon.attribute.surf.dashl:     Sätt aktiv strecklängd för ytors mittkurvor
+varkon.attribute.surf.nulines:   Sätt antal mittkurvor i ytors U-riktning
+varkon.attribute.surf.nvlines:   Sätt antal mittkurvor i ytors V-riktning
 varkon.attribute.text.text:      Text
-varkon.attribute.text.tooltip:   Sï¿½tt aktiva attribut fï¿½r text (TSIZE, TWIDTH, TSLANT osv.)
-varkon.attribute.text.size:      Sï¿½tt storlek pï¿½ grafisk text (hï¿½jd i mm), default = 5.
-varkon.attribute.text.width:     Sï¿½tt bredd pï¿½ grafisk text (% av hï¿½jden), default = 60%.
-varkon.attribute.text.slant:     Sï¿½tt lutning pï¿½ grafisk text (% av 45 grader), default = 15.
+varkon.attribute.text.tooltip:   Sätt aktiva attribut för text (TSIZE, TWIDTH, TSLANT osv.)
+varkon.attribute.text.size:      Sätt storlek på grafisk text (höjd i mm), default = 5.
+varkon.attribute.text.width:     Sätt bredd på grafisk text (% av höjden), default = 60%.
+varkon.attribute.text.slant:     Sätt lutning på grafisk text (% av 45 grader), default = 15.
 varkon.attribute.text.font0:     Aktivera typsnitt 0 (normalstil)
 varkon.attribute.text.font1:     Aktivera typsnitt 1 (fetstil)
-varkon.attribute.text.tpmode0:   Aktivera posmod 0 (3D text fï¿½ljer vyplanet)
-varkon.attribute.text.tpmode1:   Aktivera posmod 1 (3D text fï¿½ljer koordinatsystemets XY-plan)
+varkon.attribute.text.tpmode0:   Aktivera posmod 0 (3D text följer vyplanet)
+varkon.attribute.text.tpmode1:   Aktivera posmod 1 (3D text följer koordinatsystemets XY-plan)
 varkon.attribute.hatch.text:     Snitt
-varkon.attribute.hatch.tooltip:  Sï¿½tt aktiva attribut fï¿½r snitt (XFONT och XDASHL)
+varkon.attribute.hatch.tooltip:  Sätt aktiva attribut för snitt (XFONT och XDASHL)
 varkon.attribute.hatch.font0:    Aktivera snittyp 0, heldraget
 varkon.attribute.hatch.font1:    Aktivera snittyp 1, streckat
 varkon.attribute.hatch.font2:    Aktivera snittyp 2, streckprickat
-varkon.attribute.hatch.dashl:    Sï¿½tt aktiv strecklï¿½ngd fï¿½r snitt i mm
-varkon.attribute.dim.text:       Mï¿½tt
-varkon.attribute.dim.tooltip:    Sï¿½tt aktiva attribut fï¿½r mï¿½tt (DTSIZ, DASIZ osv.)
-varkon.attribute.dim.tsize:      Sï¿½tt textstorlek fï¿½r mï¿½tt
-varkon.attribute.dim.asize:      Sï¿½tt pilstorlek fï¿½r mï¿½tt
-varkon.attribute.dim.ndig:       Sï¿½tt antal decimaler i mï¿½tt
-varkon.attribute.dim.auto:       Sï¿½tt pï¿½ (1) eller stï¿½ng av (0) automatisk mï¿½ttext
+varkon.attribute.hatch.dashl:    Sätt aktiv strecklängd för snitt i mm
+varkon.attribute.dim.text:       Mått
+varkon.attribute.dim.tooltip:    Sätt aktiva attribut för mått (DTSIZ, DASIZ osv.)
+varkon.attribute.dim.tsize:      Sätt textstorlek för mått
+varkon.attribute.dim.asize:      Sätt pilstorlek för mått
+varkon.attribute.dim.ndig:       Sätt antal decimaler i mått
+varkon.attribute.dim.auto:       Sätt på (1) eller stäng av (0) automatisk måttext
 !*
-!***Fï¿½nstret fï¿½r skala har fï¿½ljande texter.
+!***Fönstret för skala har följande texter.
 !*
 varkon.scale.title:            Skala
 varkon.scale.double:           Dubbla
 varkon.scale.half:             Halva
 !*
-!***Perspektivfï¿½nstret har fï¿½ljande texter.
+!***Perspektivfönstret har följande texter.
 !*
-varkon.persp.title:            Perspektiv fï¿½r vy : 
+varkon.persp.title:            Perspektiv för vy : 
 varkon.persp.persp:            Sant perspektiv
-varkon.persp.dist:             Avstï¿½ndet ï¿½r
+varkon.persp.dist:             Avståndet är
 !*
-!***Nivï¿½fï¿½nstren har fï¿½ljande texter.
+!***Nivåfönstren har följande texter.
 !*
-varkon.level.title:            Nivï¿½er
+varkon.level.title:            Nivåer
 varkon.level.geometry:         +150+50
-varkon.level.blank:            Slï¿½ckt
-varkon.level.unblank:          Tï¿½nd
-varkon.level.name:             Nivï¿½namn
-varkon.level.name.tooltip:     Lista nivï¿½er via namn eller del av namn tex. Ytter* eller *B*
+varkon.level.blank:            Släckt
+varkon.level.unblank:          Tänd
+varkon.level.name:             Nivånamn
+varkon.level.name.tooltip:     Lista nivåer via namn eller del av namn tex. Ytter* eller *B*
 varkon.level.range:            Intervall
-varkon.level.range.tooltip:    Lista en eller flera nivï¿½er tex. 0 eller 0-10
-varkon.level.used:             Alla anvï¿½nda
-varkon.level.used.tooltip:     Lista alla nivï¿½er som anvï¿½nds
-varkon.level.plus.tooltip:     Lista ytterligare nivï¿½er framï¿½t
-varkon.level.minus.tooltip:    Lista ytterligare nivï¿½er bakï¿½t
+varkon.level.range.tooltip:    Lista en eller flera nivåer tex. 0 eller 0-10
+varkon.level.used:             Alla använda
+varkon.level.used.tooltip:     Lista alla nivåer som används
+varkon.level.plus.tooltip:     Lista ytterligare nivåer framåt
+varkon.level.minus.tooltip:    Lista ytterligare nivåer bakåt
 !*
-!***Fï¿½ljande resurs anvï¿½nds fï¿½r att framtvinga visning av
-!***aktivt koordinatsystem i en sï¿½rskild fï¿½rg istï¿½llet fï¿½r den
-!***fï¿½rg som ges av koordinatsystemets pennummer.
+!***Följande resurs används för att framtvinga visning av
+!***aktivt koordinatsystem i en särskild färg istället för den
+!***färg som ges av koordinatsystemets pennummer.
 !*
 varkon.act_csys_pen:           2
 !*
-!***Systemfï¿½rger.
+!***Systemfärger.
 !*
 varkon.background:               gray84
 varkon.buttonColor:              gray90
@@ -472,12 +472,12 @@ varkon.bottomShadowColor:        Black
 varkon.tooltipColor:             LightYellow
 varkon.highlightedEntityColor:   Cyan
 !
-!***Fï¿½ljande resurser styr vilken fï¿½rg olika pennor fï¿½r i
-!***det grafiska fï¿½nstret. Penna 0 ï¿½r fï¿½nstrets bakgrundsfï¿½rg
-!***och penna 1 ï¿½r fï¿½rgrundsfï¿½rgen. Max 256 olika pennor. Pï¿½
-!***system med bara 16 fï¿½rger kan det hï¿½nda att andra
-!***processer (tex. Motif) redan privat-allokerat sï¿½ mï¿½nga att
-!***man inte ens fï¿½r tillgï¿½ng till 12 olika fï¿½rger.
+!***Följande resurser styr vilken färg olika pennor får i
+!***det grafiska fönstret. Penna 0 är fönstrets bakgrundsfärg
+!***och penna 1 är förgrundsfärgen. Max 256 olika pennor. På
+!***system med bara 16 färger kan det hända att andra
+!***processer (tex. Motif) redan privat-allokerat så många att
+!***man inte ens får tillgång till 12 olika färger.
 !*
 varkon.color_0:                White
 varkon.color_1:                Black
@@ -497,27 +497,27 @@ varkon.color_11:               Gray
 varkon.shade.rgba:             True
 varkon.shade.doublebuffer:     True
 !*
-!***Hï¿½r kan man vï¿½lja fï¿½rg- och z-djup. Linux med Mesa
-!***vï¿½ljer max tillgï¿½ngligt djup automatisk.
+!***Här kan man välja färg- och z-djup. Linux med Mesa
+!***väljer max tillgängligt djup automatisk.
 !*
 !varkon.shade.redbits:         8
 !varkon.shade.greenbits:       8
 !varkon.shade.bluebits:        8
 !varkon.shade.zbits:           16
 !*
-!***Ljuskï¿½llors bakgrundskomponent.
+!***Ljuskällors bakgrundskomponent.
 !*
 varkon.shade.ambient.red:      40
 varkon.shade.ambient.blue:     40
 varkon.shade.ambient.green:    40
 !*
-!***Ljuskï¿½llors diffusa komponent.
+!***Ljuskällors diffusa komponent.
 !*
 varkon.shade.diffuse.red:      100
 varkon.shade.diffuse.blue:     100
 varkon.shade.diffuse.green:    100
 !*
-!***Ljuskï¿½llors reflex komponent.
+!***Ljuskällors reflex komponent.
 !*
 varkon.shade.specular.red:     100
 varkon.shade.specular.blue:    100
