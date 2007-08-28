@@ -163,6 +163,7 @@ static double curnog = 1.0;
  *      2006-12-28 Removed GP, J.Kjellander
  *      2007-01-08 piso, pborder,  Sören L
  *      2007-04-23 Bug, text projection, J.Kjellander
+ *      2007-08-28 Dim text, J.Kjellander
  *
  ******************************************************!*/
 
@@ -306,7 +307,6 @@ static double curnog = 1.0;
         DBread_ldim(&dim.ldm_un,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          dim.ldm_un.auto_ld = FALSE;
           WPplld(&dim.ldm_un,&k,x,y,z,a);
           }
         break;
@@ -315,7 +315,6 @@ static double curnog = 1.0;
         DBread_cdim(&dim.cdm_un,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          dim.cdm_un.auto_cd = FALSE;
           WPplcd(&dim.cdm_un,&k,x,y,z,a);
           }
         break;
@@ -324,7 +323,6 @@ static double curnog = 1.0;
         DBread_rdim(&dim.rdm_un,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          dim.rdm_un.auto_rd = FALSE;
           WPplrd(&dim.rdm_un,&k,x,y,z,a);
           }
         break;
@@ -333,7 +331,6 @@ static double curnog = 1.0;
         DBread_adim(&dim.adm_un,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          dim.adm_un.auto_ad = FALSE;
           WPplad(&dim.adm_un,1.0,&k,x,y,z,a);
           }
         break;
