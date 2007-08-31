@@ -62,6 +62,8 @@ static int  iwin_y;          /* even after a user move */
  *
  *      (C)2007-02-05 J.Kjellander
  *
+ *      2007-08-31 Added WPrepaint at extit, J.Kjellander
+ *
  ******************************************************!*/
 
   {
@@ -567,6 +569,7 @@ loop:
          if ( wintype == TYP_RWIN )
            {
            WPactivate_view(namlst[i],NULL,rwinpt,TYP_RWIN);
+           glXMakeCurrent(xdisp,rwinpt->id.x_id,rwinpt->rc);
            WPsodl_all(rwinpt);
            XCopyArea(xdisp,rwinpt->id.x_id,rwinpt->savmap,rwinpt->win_gc,
                      0,0,rwinpt->geo.dx,rwinpt->geo.dy,0,0);
@@ -603,7 +606,18 @@ exit:
    iwin_x = iwin_x + wm_x2 - wm_x1;
    iwin_y = iwin_y + wm_y2 - wm_y1;
    WPwdel(iwin_id);
-
+/*
+***If the view dialog overlaps the WPRWIN 
+***(which is rather likley) it seems that the
+***area under the view dialog is not restored
+***correctly. I can't gigure out why. An extra
+***WPsodl_all() here does not help but a full
+***repaint helps.
+*/
+   WPrepaint_RWIN(rwinpt->id.w_id,FALSE);
+/*
+***The end.
+*/
    return(status);
  }
 
@@ -913,6 +927,8 @@ exit:
  *
  *      (C)2007-02-11 J.Kjellander
  *
+ *      2007-08-31 Bugfix WPRWIN, J.Kjellander
+ *
  ******************************************************!*/
 
   {
@@ -920,13 +936,16 @@ exit:
    int     i;
    char    errbuf[81];
    WPGWIN *gwinpt;
+   WPRWIN *rwinpt;
 
 /*
 ***Initiering.
 */
    hit = FALSE;
 /*
-***Look upp all WPGWIN's.
+***Look upp all WPGWIN's and WPRWIN's and
+***activate the view of each window. If the
+***view does not exist, activate "xy" instead.
 */
    for ( i=0; i<WTABSIZ; ++i)
      {
@@ -937,12 +956,18 @@ exit:
          gwinpt = (WPGWIN *)wpwtab[i].ptr;
          if ( win_id == gwinpt->id.w_id  ||  win_id == GWIN_ALL )
            {
-/*
-***Activate the view of this window. If the view does not exist,
-***try activating "xy" instead.
-*/
            if ( WPactivate_view(gwinpt->vy.name,gwinpt,NULL,TYP_GWIN) < 0 )
              WPactivate_view("xy",gwinpt,NULL,TYP_GWIN);
+           hit = TRUE;
+           }
+         }
+       else if ( wpwtab[i].typ == TYP_RWIN )
+         {
+         rwinpt = (WPRWIN *)wpwtab[i].ptr;
+         if ( win_id == rwinpt->id.w_id  ||  win_id == GWIN_ALL )
+           {
+           if ( WPactivate_view(rwinpt->vy.name,NULL,rwinpt,TYP_RWIN) < 0 )
+             WPactivate_view("xy",NULL,rwinpt,TYP_RWIN);
            hit = TRUE;
            }
          }

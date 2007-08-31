@@ -568,8 +568,8 @@ evloop:
 ***<SHIFT> + mouse button 2 = PAN
 */
         if      ( event.xmotion.state & ControlMask ) mode = SCALE;
-        else if ( event.xmotion.state & ShiftMask )   mode = PAN;
-        else                                           mode = ROT;
+        else if ( event.xmotion.state & ShiftMask )  mode = PAN;
+        else                                          mode = ROT;
 
          switch ( mode )
            {
