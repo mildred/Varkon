@@ -324,6 +324,7 @@ exit:
  *      1999-03-09, Bugfix pen, J.Kjellander
  *      2004-07-27 B_plane, J.Kjellander, �rebro university
  *      2007-08-10 1.19, J.Kjellander
+ *      2007-09-01 Hatch and Dims, J.Kjellander
  *
  ******************************************************!*/
 
@@ -341,6 +342,11 @@ exit:
     DBCurve  cur;
     DBSurf   sur;
     DBText   txt;
+    DBHatch  xht;
+    DBLdim   ldm;
+    DBCdim   cdm;
+    DBRdim   rdm;
+    DBAdim   adm;
     DBBplane bpl;
     PMREFVA  idmat[IGMAXID][MXINIV];
     DBHeader hed;
@@ -353,7 +359,8 @@ exit:
 */
 loop:
     WPaddmess_mcwin(IGgtts(1633),WP_PROMPT);
-    typvek[0] = POITYP+LINTYP+ARCTYP+CURTYP+SURTYP+TXTTYP+BPLTYP;
+    typvek[0] = POITYP+LINTYP+ARCTYP+CURTYP+SURTYP+TXTTYP+XHTTYP+LDMTYP+
+                CDMTYP+RDMTYP+ADMTYP+BPLTYP;
     nid = IGMAXID;
     if ( (status=IGgmid(idmat,typvek,&nid)) < 0 ) goto exit;
 /*
@@ -449,6 +456,36 @@ askwdt:
         DBread_text(&txt,NULL,la);
         txt.wdt_tx = width;
         DBupdate_text(&txt,NULL,la);
+        }
+      else if ( typ == XHTTYP )
+        {
+        DBread_xhatch(&xht,NULL,la);
+        xht.wdt_xh = width;
+        DBupdate_xhatch(&xht,NULL,la);
+        }
+      else if ( typ == LDMTYP )
+        {
+        DBread_ldim(&ldm,la);
+        ldm.wdt_ld = width;
+        DBupdate_ldim(&ldm,la);
+        }
+      else if ( typ == CDMTYP )
+        {
+        DBread_cdim(&cdm,la);
+        cdm.wdt_cd = width;
+        DBupdate_cdim(&cdm,la);
+        }
+      else if ( typ == RDMTYP )
+        {
+        DBread_rdim(&rdm,la);
+        rdm.wdt_rd = width;
+        DBupdate_rdim(&rdm,la);
+        }
+      else if ( typ == ADMTYP )
+        {
+        DBread_adim(&adm,la);
+        adm.wdt_ad = width;
+        DBupdate_adim(&adm,la);
         }
       else if ( typ == BPLTYP )
         {

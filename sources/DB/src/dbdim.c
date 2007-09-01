@@ -53,7 +53,7 @@
 /*!******************************************************/
 
         DBstatus DBinsert_ldim(
-        GMLDM   *ldmpek,
+        DBLdim  *ldmpek,
         DBId    *idpek,
         DBptr   *lapek)
 
@@ -75,8 +75,9 @@
  *
  *      (C)microform ab 4/8/85 J. Kjellander
  *
- *      14/10/85 Headerdata, J. Kjellander
- *      23/3/92  GMPOSTV1, J. Kjellander
+ *      14/10/85   Headerdata, J.Kjellander
+ *      23/3/92    GMPOSTV1, J.Kjellander
+ *      2007-09-01 GMPOSTV2, J.Kjellander
  *
  ******************************************************!*/
 
@@ -85,18 +86,18 @@
 ***Typ-specifika data.
 */
     ldmpek->hed_ld.type = LDMTYP;   /* Typ = längdmått */
-    ldmpek->hed_ld.vers = GMPOSTV1; /* Version */
+    ldmpek->hed_ld.vers = GMPOSTV2; /* Version */
 /*
 ***Lagra.
 */
-    return(inpost((GMUNON *)ldmpek,idpek,lapek,sizeof(GMLDM)));
+    return(inpost((GMUNON *)ldmpek,idpek,lapek,sizeof(DBLdim)));
   }
 
 /********************************************************/
 /*!******************************************************/
 
         DBstatus DBread_ldim(
-        GMLDM   *ldmpek,
+        DBLdim  *ldmpek,
         DBptr    la)
 
 /*      Läsning av längdmått-post.
@@ -116,16 +117,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      V3MOME(hedpek,ldmpek,sizeof(GMLDM));
+      case GMPOSTV2:
+      V3MOME(hedpek,ldmpek,sizeof(DBLdim));
       break;
- 
+
+      case GMPOSTV1:
+      V3MOME(hedpek,ldmpek,sizeof(GMLDM1));
+      break;
+
       default:
       V3MOME(hedpek,ldmpek,sizeof(GMLDM0));
       ldmpek->pcsy_ld = DBNULL;
@@ -139,7 +144,7 @@
 /*!******************************************************/
 
         DBstatus DBupdate_ldim(
-        GMLDM   *ldmpek,
+        DBLdim  *ldmpek,
         DBptr    la)
 
 /*      Skriver över en existerande längdmått-post.
@@ -158,16 +163,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      updata( (char *)ldmpek, la, sizeof(GMLDM));
+      case GMPOSTV2:
+      updata( (char *)ldmpek, la, sizeof(DBLdim));
       break;
- 
+
+      case GMPOSTV1:
+      updata( (char *)ldmpek, la, sizeof(GMLDM1));
+      break;
+
       default:
       updata( (char *)ldmpek, la, sizeof(GMLDM0));
       break;
@@ -197,16 +206,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      rldat1(la,sizeof(GMLDM));
+      case GMPOSTV2:
+      rldat1(la,sizeof(DBLdim));
       break;
- 
+
+      case GMPOSTV1:
+      rldat1(la,sizeof(GMLDM1));
+      break;
+
       default:
       rldat1(la,sizeof(GMLDM0));
       break;
@@ -219,7 +232,7 @@
 /*!******************************************************/
 
         DBstatus DBinsert_cdim(
-        GMCDM   *cdmpek,
+        DBCdim  *cdmpek,
         DBId    *idpek,
         DBptr   *lapek)
 
@@ -241,8 +254,9 @@
  *
  *      (C)microform ab 4/8/85 J. Kjellander
  *
- *      14/10/85 Headerdata, J. Kjellander
- *      23/3/92  GMPOSTV1, J. Kjellander
+ *      14/10/85   Headerdata, J.Kjellander
+ *      23/3/92    GMPOSTV1, J.Kjellander
+ *      2007-09-01 GMPOSTV2, J.Kjellander
  *
  ******************************************************!*/
 
@@ -251,18 +265,18 @@
 ***Typ-specifika data.
 */
     cdmpek->hed_cd.type = CDMTYP;   /* Typ = diametermått */
-    cdmpek->hed_cd.vers = GMPOSTV1; /* Version */
+    cdmpek->hed_cd.vers = GMPOSTV2; /* Version */
 /*
 ***Lagra.
 */
-    return(inpost((GMUNON *)cdmpek,idpek,lapek,sizeof(GMCDM)));
+    return(inpost((GMUNON *)cdmpek,idpek,lapek,sizeof(DBCdim)));
   }
 
 /********************************************************/
 /*!******************************************************/
 
         DBstatus DBread_cdim(
-        GMCDM   *cdmpek,
+        DBCdim  *cdmpek,
         DBptr    la)
 
 /*      Läsning av diametermått-post.
@@ -282,16 +296,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      V3MOME(hedpek,cdmpek,sizeof(GMCDM));
+      case GMPOSTV2:
+      V3MOME(hedpek,cdmpek,sizeof(DBCdim));
       break;
- 
+
+      case GMPOSTV1:
+      V3MOME(hedpek,cdmpek,sizeof(GMCDM1));
+      break;
+
       default:
       V3MOME(hedpek,cdmpek,sizeof(GMCDM0));
       cdmpek->pcsy_cd = DBNULL;
@@ -305,7 +323,7 @@
 /*!******************************************************/
 
         DBstatus DBupdate_cdim(
-        GMCDM   *cdmpek,
+        DBCdim  *cdmpek,
         DBptr    la)
 
 /*      Skriver över en existerande diametermått-post.
@@ -324,16 +342,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      updata( (char *)cdmpek, la, sizeof(GMCDM));
+      case GMPOSTV2:
+      updata( (char *)cdmpek, la, sizeof(DBCdim));
       break;
- 
+
+      case GMPOSTV1:
+      updata( (char *)cdmpek, la, sizeof(GMCDM1));
+      break;
+
       default:
       updata( (char *)cdmpek, la, sizeof(GMCDM0));
       break;
@@ -364,16 +386,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      rldat1(la,sizeof(GMCDM));
+      case GMPOSTV2:
+      rldat1(la,sizeof(DBCdim));
       break;
- 
+
+      case GMPOSTV1:
+      rldat1(la,sizeof(GMCDM1));
+      break;
+
       default:
       rldat1(la,sizeof(GMCDM0));
       break;
@@ -386,7 +412,7 @@
 /*!******************************************************/
 
         DBstatus DBinsert_rdim(
-        GMRDM   *rdmpek,
+        DBRdim  *rdmpek,
         DBId    *idpek,
         DBptr   *lapek)
 
@@ -408,8 +434,9 @@
  *
  *      (C)microform ab 4/8/85 J. Kjellander
  *
- *      14/10/85 Headerdata, J. Kjellander
- *      23/3/92  GMPOSTV1, J. Kjellander
+ *      14/10/85   Headerdata, J.Kjellander
+ *      23/3/92    GMPOSTV1, J.Kjellander
+ *      2007-09-01 GMPOSTV2, J.Kjellander
  *
  ******************************************************!*/
 
@@ -418,18 +445,18 @@
 ***Typ-specifika data.
 */
     rdmpek->hed_rd.type = RDMTYP;   /* Typ = radiemått */
-    rdmpek->hed_rd.vers = GMPOSTV1; /* Version */
+    rdmpek->hed_rd.vers = GMPOSTV2; /* Version */
 /*
 ***Lagra.
 */
-    return(inpost((GMUNON *)rdmpek,idpek,lapek,sizeof(GMRDM)));
+    return(inpost((GMUNON *)rdmpek,idpek,lapek,sizeof(DBRdim)));
   }
 
 /********************************************************/
 /*!******************************************************/
 
         DBstatus DBread_rdim(
-        GMRDM   *rdmpek,
+        DBRdim  *rdmpek,
         DBptr    la)
 
 /*      Läsning av radiemått-post.
@@ -449,16 +476,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      V3MOME(hedpek,rdmpek,sizeof(GMRDM));
+      case GMPOSTV2:
+      V3MOME(hedpek,rdmpek,sizeof(DBRdim));
       break;
- 
+
+      case GMPOSTV1:
+      V3MOME(hedpek,rdmpek,sizeof(GMRDM1));
+      break;
+
       default:
       V3MOME(hedpek,rdmpek,sizeof(GMRDM0));
       rdmpek->pcsy_rd = DBNULL;
@@ -472,7 +503,7 @@
 /*!******************************************************/
 
         DBstatus DBupdate_rdim(
-        GMRDM   *rdmpek,
+        DBRdim  *rdmpek,
         DBptr    la)
 
 /*      Skriver över en existerande radiemått-post.
@@ -491,16 +522,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      updata( (char *)rdmpek, la, sizeof(GMRDM));
+      case GMPOSTV2:
+      updata( (char *)rdmpek, la, sizeof(DBRdim));
       break;
- 
+
+      case GMPOSTV1:
+      updata( (char *)rdmpek, la, sizeof(GMRDM1));
+      break;
+
       default:
       updata( (char *)rdmpek, la, sizeof(GMRDM0));
       break;
@@ -531,16 +566,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      rldat1(la,sizeof(GMRDM));
+      case GMPOSTV2:
+      rldat1(la,sizeof(DBRdim));
       break;
- 
+
+      case GMPOSTV1:
+      rldat1(la,sizeof(GMRDM1));
+      break;
+
       default:
       rldat1(la,sizeof(GMRDM0));
       break;
@@ -553,7 +592,7 @@
 /*!******************************************************/
 
         DBstatus DBinsert_adim(
-        GMADM   *admpek,
+        DBAdim  *admpek,
         DBId    *idpek,
         DBptr   *lapek)
 
@@ -575,8 +614,9 @@
  *
  *      (C)microform ab 4/8/85 J. Kjellander
  *
- *      14/10/85 Headerdata, J. Kjellander
- *      23/3/92  GMPOSTV1, J. Kjellander
+ *      14/10/85   Headerdata, J.Kjellander
+ *      23/3/92    GMPOSTV1, J.Kjellander
+ *      2007-09-01 GMPOSTV2, J.Kjellander
  *
  ******************************************************!*/
 
@@ -585,18 +625,18 @@
 ***Typ-specifika data.
 */
     admpek->hed_ad.type = ADMTYP;   /* Typ = vinkelmått */
-    admpek->hed_ad.vers = GMPOSTV1; /* Version */
+    admpek->hed_ad.vers = GMPOSTV2; /* Version */
 /*
 ***Lagra.
 */
-    return(inpost((GMUNON *)admpek,idpek,lapek,sizeof(GMADM)));
+    return(inpost((GMUNON *)admpek,idpek,lapek,sizeof(DBAdim)));
   }
 
 /********************************************************/
 /*!******************************************************/
 
         DBstatus DBread_adim(
-        GMADM   *admpek,
+        DBAdim  *admpek,
         DBptr    la)
 
 /*      Läsning av vinkelmått-post.
@@ -616,16 +656,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      V3MOME(hedpek,admpek,sizeof(GMADM));
+      case GMPOSTV2:
+      V3MOME(hedpek,admpek,sizeof(DBAdim));
       break;
- 
+
+      case GMPOSTV1:
+      V3MOME(hedpek,admpek,sizeof(GMADM1));
+      break;
+
       default:
       V3MOME(hedpek,admpek,sizeof(GMADM0));
       admpek->pcsy_ad = DBNULL;
@@ -639,7 +683,7 @@
 /*!******************************************************/
 
         DBstatus DBupdate_adim(
-        GMADM   *admpek,
+        DBAdim  *admpek,
         DBptr    la)
 
 /*      Skriver över en existerande vinkelmått-post.
@@ -658,16 +702,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      updata( (char *)admpek, la, sizeof(GMADM));
+      case GMPOSTV2:
+      updata( (char *)admpek, la, sizeof(DBAdim));
       break;
- 
+
+      case GMPOSTV1:
+      updata( (char *)admpek, la, sizeof(GMADM1));
+      break;
+
       default:
       updata( (char *)admpek, la, sizeof(GMADM0));
       break;
@@ -698,16 +746,20 @@
  ******************************************************!*/
 
   {
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
 
     switch ( GMVERS(hedpek) )
       {
-      case GMPOSTV1:
-      rldat1(la,sizeof(GMADM));
+      case GMPOSTV2:
+      rldat1(la,sizeof(DBAdim));
       break;
- 
+
+      case GMPOSTV1:
+      rldat1(la,sizeof(GMADM1));
+      break;
+
       default:
       rldat1(la,sizeof(GMADM0));
       break;

@@ -83,6 +83,7 @@ extern DBTmat  lklsyi;
     ldmpek->tsiz_ld      = pnp->dtsize;
     ldmpek->ndig_ld      = pnp->dndig;
     ldmpek->auto_ld      = pnp->dauto;
+    ldmpek->wdt_ld       = pnp->width;
     ldmpek->pcsy_ld      = lsysla;
 /*
 ***Lagra i gm.
@@ -212,6 +213,7 @@ extern DBTmat  lklsyi;
     cdmpek->tsiz_cd      = pnp->dtsize;
     cdmpek->ndig_cd      = pnp->dndig;
     cdmpek->auto_cd      = pnp->dauto;
+    cdmpek->wdt_cd       = pnp->width;
     cdmpek->pcsy_cd      = lsysla;
 /*
 ***Lagra i gm.
@@ -342,6 +344,7 @@ extern DBTmat  lklsyi;
     rdmpek->tsiz_rd      = pnp->dtsize;
     rdmpek->ndig_rd      = pnp->dndig;
     rdmpek->auto_rd      = pnp->dauto;
+    rdmpek->wdt_rd       = pnp->width;
     rdmpek->pcsy_rd      = lsysla;
 /*
 ***Lagra i gm.
@@ -475,6 +478,7 @@ extern DBTmat  lklsyi;
     admpek->tsiz_ad      = pnp->dtsize;
     admpek->ndig_ad      = pnp->dndig;
     admpek->auto_ad      = pnp->dauto;
+    admpek->wdt_ad       = pnp->width;
     admpek->pcsy_ad      = lsysla;
 /*
 ***Lagra i gm.

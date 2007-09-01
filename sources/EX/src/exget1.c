@@ -157,20 +157,20 @@
         DBId    *id,
         DBfloat *width)
 
-/*      Interface-rutin för GETWIDTH.
+/*      Interface routine for GETWIDTH.
  *
- *      In: id      => Pekare till partens ID
- *          width   => Pekare till resultat
+ *      In: id      => C ptr to entity ID
  *
- *      Ut: *width  = Aktuell linjebredd
+ *      Out: *width => Entity line width
  *
- *      Felkoder: EX1402 => Hittar ej storheten
- *                EX1412 => Otillåten typ för denna operation
+ *      Felkoder: EX1402 => Entity does not exist
+ *                EX1412 => Illegal entity type
  *
  *      (C)microform ab 1998-01-01, J. Kjellander
  *
  *      1998-03-04 Punkt, J.Kjellander
  *      2004-07-15 Mesh+B_plane, J.Kjellander, Örebro university
+ *      2007-01-09 Hatch and Dims, J.Kjellander
  *
  ******************************************************!*/
 
@@ -182,15 +182,20 @@
     DBArc    arc;
     DBCurve  cur;
     DBText   txt;
+    DBHatch  xht;
+    DBLdim   ldm;
+    DBCdim   cdm;
+    DBRdim   rdm;
+    DBAdim   adm;
     DBMesh   mesh;
     DBBplane bpl;
 
 /*
-***Översätt ID -> la.
+***Map ID -> la.
 */
     if ( DBget_pointer('I',id,&la,&typ) < 0 ) return(erpush("EX1402",""));
 /*
-***Vilken typ av storhet är det ?
+***What entity type ?
 */
     switch ( typ )
       {
@@ -219,6 +224,31 @@
      *width = txt.wdt_tx;
       break;
 
+      case XHTTYP:
+      DBread_xhatch(&xht,NULL,la);
+     *width = xht.wdt_xh;
+      break;
+
+      case LDMTYP:
+      DBread_ldim(&ldm,la);
+     *width = ldm.wdt_ld;
+      break;
+
+      case CDMTYP:
+      DBread_cdim(&cdm,la);
+     *width = cdm.wdt_cd;
+      break;
+
+      case RDMTYP:
+      DBread_rdim(&rdm,la);
+     *width = rdm.wdt_rd;
+      break;
+
+      case ADMTYP:
+      DBread_adim(&adm,la);
+     *width = adm.wdt_ad;
+      break;
+
       case MSHTYP:
       DBread_mesh(&mesh,la,MESH_HEADER);
      *width = mesh.wdt_m;
@@ -231,7 +261,9 @@
 
       default: return(erpush("EX1412","GETWIDTH"));
       }
-
+/*
+***The end.
+*/
     return(0);
   }
 

@@ -41,46 +41,47 @@ extern DBTmat  lklsyi;
 
 /*!******************************************************/
 
-       short EXexht(
-       DBId   *id,
-       DBHatch  *xhtpek,
-       DBfloat crdvek[],
-       V2NAPA *pnp)
+       short    EXexht(
+       DBId    *id,
+       DBHatch *xhtpek,
+       DBfloat  crdvek[],
+       V2NAPA  *pnp)
 
-/*      Skapa snitt.
+/*      Create a hatch entity.
  *
- *      In: id     => Pekare till snittets identitet.
- *          xhtpek => Pekare till snitt-structure.
- *          crdvek => Pekare till snittlinje-vektor
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => C ptr to hatch ID
+ *          xhtpek => C ptr to hatch record
+ *          crdvek => C ptr to hatch lines
+ *          pnp    => C ptr to attributes
  *
- *      Ut: Inget.
  *
- *      FV:      0 = Ok.
- *          EX1542 = Kan ej lagra snitt i GM.
+ *      Return:  0 = Ok.
+ *          EX1542 = Can't store hatch in DB.
  *
  *      (C)microform ab 15/11/85 B. Doverud
  *
- *      15/10/86 SAVE, J. Kjellander
- *      27/12/86 hit, J. Kjellander
- *      20/3/92  lsysla, J. Kjellander
+ *      15/10/86   SAVE, J.Kjellander
+ *      27/12/86   hit, J.Kjellander
+ *      20/3/92    lsysla, J.Kjellander
+ *      2007-09-01 WIDTH, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    DBptr   la;
+    DBptr la;
 
 /*
-***Fyll i namnparameterdata.
+***Add attribute data and csys.
 */
     xhtpek->hed_xh.blank = pnp->blank;
     xhtpek->hed_xh.pen   = pnp->pen;
     xhtpek->hed_xh.level = pnp->level;
     xhtpek->fnt_xh       = pnp->xfont;
     xhtpek->lgt_xh       = pnp->xdashl;
+    xhtpek->wdt_xh       = pnp->width;
     xhtpek->pcsy_xh      = lsysla;
 /*
-***Lagra posten i GM.
+***Save hatch in DB.
 */
     if ( pnp->save )
       {
@@ -93,13 +94,15 @@ extern DBTmat  lklsyi;
       xhtpek->hed_xh.hit = 0;
       }
 /*
-***Rita snittet.
+***Display hatch.
 */
     WPdrxh(xhtpek,crdvek,la,GWIN_ALL);
-
+/*
+***The end.
+*/
     return(0);
   }
-  
+
 /********************************************************/
 /*!******************************************************/
 
@@ -143,18 +146,16 @@ extern DBTmat  lklsyi;
  ******************************************************!*/
 
   {
-    register short   i;            /* Loopräknare */
-
-    DBptr   la;
-    DBetype   typ;
-    short   nlin,narc,ncur,status;
-    DBfloat   angt;
-    DBfloat   crdvek[4*GMXMXL];
+    DBptr    la;
+    DBetype  typ;
+    short    i,nlin,narc,ncur,status;
+    DBfloat  angt;
+    DBfloat  crdvek[4*GMXMXL];
     DBLine  *linvek=NULL,*lpvek[GMMXXH];
-    DBArc  *arcvek=NULL,*apvek[GMMXXH];
-    DBCurve  *curvek=NULL,*cpvek[GMMXXH];
-    DBSeg  *spvek[GMMXXH];
-    DBHatch   xht;
+    DBArc   *arcvek=NULL,*apvek[GMMXXH];
+    DBCurve *curvek=NULL,*cpvek[GMMXXH];
+    DBSeg   *spvek[GMMXXH];
+    DBHatch  xht;
 
 /*
 ***Hämta geometri-data för samtliga refererade storheter och
@@ -244,5 +245,5 @@ end:
 */
     return(status);
   }
-  
+
 /********************************************************/

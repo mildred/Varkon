@@ -458,7 +458,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
  *      into a single OpenGL display list.
  *
  *      NOTE: The RC for this window must be activated
- *             before calling. 
+ *             before calling.
  *
  *      (C)microform ab 1998-01-04 J. Kjellander
  *
@@ -616,7 +616,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
          case XHTTYP:
          DBread_xhatch(&xht,crdvek,la);
-         if ( actwdt != 0.0 ) set_linewidth(rwinpt,0.0);
+         if ( xht.wdt_xh != actwdt ) set_linewidth(rwinpt,xht.wdt_xh);
          pr_xht(rwinpt,&xht,crdvek);
          break;
 /*
@@ -624,7 +624,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
          case LDMTYP:
          DBread_ldim(&ldm,la);
-         if ( actwdt != 0.0 ) set_linewidth(rwinpt,0.0);
+         if ( ldm.wdt_ld != actwdt ) set_linewidth(rwinpt,ldm.wdt_ld);
          pr_ldm(rwinpt,&ldm);
          break;
 /*
@@ -632,7 +632,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
          case CDMTYP:
          DBread_cdim(&cdm,la);
-         if ( actwdt != 0.0 ) set_linewidth(rwinpt,0.0);
+         if ( cdm.wdt_cd != actwdt ) set_linewidth(rwinpt,cdm.wdt_cd);
          pr_cdm(rwinpt,&cdm);
          break;
 /*
@@ -640,7 +640,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
          case RDMTYP:
          DBread_rdim(&rdm,la);
-         if ( actwdt != 0.0 ) set_linewidth(rwinpt,0.0);
+         if ( rdm.wdt_rd != actwdt ) set_linewidth(rwinpt,rdm.wdt_rd);
          pr_rdm(rwinpt,&rdm);
          break;
 /*
@@ -648,7 +648,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
          case ADMTYP:
          DBread_adim(&adm,la);
-         if ( actwdt != 0.0 ) set_linewidth(rwinpt,0.0);
+         if ( adm.wdt_ad != actwdt ) set_linewidth(rwinpt,adm.wdt_ad);
          pr_adm(rwinpt,&adm);
          break;
 /*
@@ -827,7 +827,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
        case XHTTYP:
        DBread_xhatch(&xht,crdvek,la);
-       glLineWidth((GLfloat)2);
+       glLineWidth((GLfloat)width_to_pixels(rwinpt,xht.wdt_xh) + 1);
        pr_xht(rwinpt,&xht,crdvek);
        break;
 /*
@@ -835,7 +835,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
        case LDMTYP:
        DBread_ldim(&ldm,la);
-       glLineWidth((GLfloat)2);
+       glLineWidth((GLfloat)width_to_pixels(rwinpt,ldm.wdt_ld) + 1);
        pr_ldm(rwinpt,&ldm);
        break;
 /*
@@ -843,7 +843,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
        case CDMTYP:
        DBread_cdim(&cdm,la);
-       glLineWidth((GLfloat)2);
+       glLineWidth((GLfloat)width_to_pixels(rwinpt,cdm.wdt_cd) + 1);
        pr_cdm(rwinpt,&cdm);
        break;
 /*
@@ -851,7 +851,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
        case RDMTYP:
        DBread_rdim(&rdm,la);
-       glLineWidth((GLfloat)2);
+       glLineWidth((GLfloat)width_to_pixels(rwinpt,rdm.wdt_rd) + 1);
        pr_rdm(rwinpt,&rdm);
        break;
 /*
@@ -859,7 +859,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 */
        case ADMTYP:
        DBread_adim(&adm,la);
-       glLineWidth((GLfloat)2);
+       glLineWidth((GLfloat)width_to_pixels(rwinpt,adm.wdt_ad) + 1);
        pr_adm(rwinpt,&adm);
        break;
 /*

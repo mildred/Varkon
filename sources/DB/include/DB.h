@@ -400,6 +400,7 @@ DBfloat  ang_xh;             /* Line angle */
 DBshort  nlin_xh;            /* Number of lines, max GMXMXL */
 DBptr    lptr_xh;            /* DB-pointer to lines */
 DBptr    pcsy_xh;            /* DB-pointer to coordinate system */
+DBfloat  wdt_xh;             /* Linewidth */
 } DBHatch;
 
 /*
@@ -418,6 +419,7 @@ DBfloat  tsiz_ld;            /* Text size */
 DBshort  ndig_ld;            /* Number of decimals */
 tbool    auto_ld;            /* Auto text TRUE/FALSE */
 DBptr    pcsy_ld;            /* DB-pointer to coordinate system */
+DBfloat  wdt_ld;             /* Linewidth */
 } DBLdim;
 
 /*
@@ -436,6 +438,7 @@ DBfloat  tsiz_cd;            /* Text size */
 DBshort  ndig_cd;            /* Number of decimals */
 tbool    auto_cd;            /* Auto text TRUE/FALSE */
 DBptr    pcsy_cd;            /* DB-pointer to coordinate system */
+DBfloat  wdt_cd;             /* Linewidth */
 } DBCdim;
 
 /*
@@ -454,6 +457,7 @@ DBfloat  tsiz_rd;            /* Text size */
 DBshort  ndig_rd;            /* Number of decimals */
 tbool    auto_rd;            /* Auto text TRUE/FALSE */
 DBptr    pcsy_rd;            /* DB-pointer to coordinate system */
+DBfloat  wdt_rd;             /* Linewidth */
 } DBRdim;
 
 /*
@@ -475,6 +479,7 @@ DBfloat  tsiz_ad;            /* Text size */
 DBshort  ndig_ad;            /* Number of decimals */
 tbool    auto_ad;            /* Auto text TRUE/FALSE */
 DBptr    pcsy_ad;            /* DB-pointer to coordinate system */
+DBfloat  wdt_ad;             /* Linewidth */
 } DBAdim;
 
 /*

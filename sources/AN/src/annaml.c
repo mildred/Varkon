@@ -289,7 +289,7 @@ extern short modtyp;               /* geometry type, for annaml() */
 ***Hatch.
 */
            case VXHT:
-             if ( (nampar != PMXFONT) && (nampar != PMXDASHL) )
+             if ( (nampar != PMXFONT) && (nampar != PMXDASHL) && (nampar != PMWIDTH) )
                okflg = FALSE;
            break;
 /*
@@ -324,7 +324,7 @@ extern short modtyp;               /* geometry type, for annaml() */
            case VRDIM:
            case VADIM:
              if ( (nampar != PMDTSIZE) && (nampar != PMDASIZE) &&
-                  (nampar != PMDNDIG) && (nampar != PMDAUTO) )
+                  (nampar != PMDNDIG) && (nampar != PMDAUTO) && (nampar != PMWIDTH) )
                okflg = FALSE;
            break;
 /*

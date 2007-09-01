@@ -86,7 +86,7 @@ static void manual_config();
 /*
 ***Is this the first time this function is called ?
 ***Establish initial window position and load printer
-***configurationinto static variables.
+***configuration into static variables.
 */
    if ( premiere )
      {

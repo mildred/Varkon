@@ -59,9 +59,9 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 
 /*      Display linear, diameter, radius or angular dimension.
  *
- *      In: dimpek => Pekare till mått-post.
- *          la     => GM-adress.
- *          win_id => Fönster att rita i.
+ *      In: dimpek => C ptr to dim record.
+ *          la     => Dim address in DB.
+ *          win_id => WPGWIN ID to display in or GWIN_ALL.
  *
  *      Return:  0 => Ok.
  *
@@ -77,11 +77,11 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
    WPGWIN *gwinpt;
 
 /*
-***Om den är blankad är det enkelt.
+***Don't display blanked entities.
 */
    if ( dimpek->hed_un.blank) return(0);
 /*
-***Loopa igenom alla WPGWIN-fönster.
+***Loop through all WPGWIN's.
 */
    for ( i=0; i<WTABSIZ; ++i )
      {
@@ -90,21 +90,21 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
        {
        gwinpt = (WPGWIN *)winptr->ptr;
 /*
-***Skall vi rita i detta fönster ?
+***Is this window involved ?
 */
        if ( win_id == GWIN_ALL  ||  win_id == gwinpt->id.w_id )
          {
 /*
-***Ja, ligger det på en nivå som är tänd i detta fönster ?
+***Yes, is the dim level visible in this window ?
 */
          if ( WPnivt(gwinpt->nivtab,dimpek->hed_un.level) )
            {
 /*
-***Ja. Kolla att rätt färg är inställd.
+***Yes,set color.
 */
            if ( dimpek->hed_un.pen != actpen ) WPspen(dimpek->hed_un.pen);
 /*
-***Sen är det bara att rita.
+***Display.
 */
            drawdm(gwinpt,dimpek,la,TRUE);
            }
@@ -158,23 +158,15 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
        if ( win_id == GWIN_ALL  ||  win_id == gwinpt->id.w_id )
          {
 /*
-***Ja. Om den finns i DF kan vi sudda snabbt.
+***Remove from DF.
 */
-         if ( WPfobj(gwinpt,la,dimpek->hed_un.type,&typ) )
-           {
-           WPdobj(gwinpt,FALSE);
-           WProbj(gwinpt);
-           }
+         if ( WPfobj(gwinpt,la,dimpek->hed_un.type,&typ) ) WProbj(gwinpt);
 /*
-***Om den nu ligger på en släckt nivå eller är blankad gör vi
-***inget mer. Annars får vi återskapa polylinjen och sudda långsamt.
+***Remove from display.
 */
-         else
-           {
-           if ( !WPnivt(gwinpt->nivtab,dimpek->hed_un.level)  ||
+         if ( !WPnivt(gwinpt->nivtab,dimpek->hed_un.level)  ||
                                dimpek->hed_un.blank) return(0);
-           drawdm(gwinpt,dimpek,la,FALSE);
-           }
+         drawdm(gwinpt,dimpek,la,FALSE);
          }
        }
      }
@@ -199,16 +191,15 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
  *          la     => GM-adress.
  *          draw   => TRUE = Rita, FALSE = Sudda
  *
- *      Ut:  Inget.
- *
- *      (C)microform ab 27/1/95 J. Kjellander
+ *      (C)microform ab 27/1/95 J.Kjellander
  *
  *      2006-12-26 Removed GP, J.Kjellander
+ *      2007-09-01 WIDTH, J.Kjellander
  *
  ******************************************************!*/
 
  {
-   double x[PLYMXV],y[PLYMXV],z[PLYMXV],scale;
+   double x[PLYMXV],y[PLYMXV],z[PLYMXV],scale,w;
    char   a[PLYMXV];
    int    k;
 
@@ -221,14 +212,17 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
      {
      case LDMTYP:
      WPplld(&dimpek->ldm_un,&k,x,y,z,a);
+     w = dimpek->ldm_un.wdt_ld;
      break;
 
      case CDMTYP:
      WPplcd(&dimpek->cdm_un,&k,x,y,z,a);
+     w = dimpek->cdm_un.wdt_cd;
      break;
 
      case RDMTYP:
      WPplrd(&dimpek->rdm_un,&k,x,y,z,a);
+     w = dimpek->rdm_un.wdt_rd;
      break;
 
      case ADMTYP:
@@ -236,11 +230,15 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
               gwinpt->geo.psiz_x /
              (gwinpt->vy.modwin.xmax - gwinpt->vy.modwin.xmin);
      WPplad(&dimpek->adm_un,scale,&k,x,y,z,a);
+     w = dimpek->adm_un.wdt_ad;
      break;
     }
 /*
-***Klipp polylinjen. Om den är synlig (helt eller delvis ),
-***rita den.
+***Set linewidth.
+*/
+   if ( w != 0.0 ) WPswdt(gwinpt->id.w_id,w);
+/*
+***Clip and display.
 */
    if ( WPcply(&gwinpt->vy.modwin,-1,&k,x,y,a) )
      {
@@ -253,7 +251,13 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
        }
      else WPdply(gwinpt,k,x,y,a,draw);
      }
-
+/*
+***Reset linewidth.
+*/
+   if ( w != 0.0 ) WPswdt(gwinpt->id.w_id,0.0);
+/*
+***The end.
+*/
    return(0);
  }
 

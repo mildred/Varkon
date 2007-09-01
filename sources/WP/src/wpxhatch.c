@@ -58,6 +58,8 @@ static short drawxh(WPGWIN *gwinpt, DBHatch *xhtpek, DBfloat crdvek[],
  *
  *      (C) microform ab 26/1/95 J. Kjellander
  *
+ *      2007-09-01 WIDTH, J.Kjellander
+ *
  ******************************************************!*/
 
  {
@@ -89,13 +91,15 @@ static short drawxh(WPGWIN *gwinpt, DBHatch *xhtpek, DBfloat crdvek[],
          if ( WPnivt(gwinpt->nivtab,xhtpek->hed_xh.level) )
            {
 /*
-***Ja. Kolla att rätt färg är inställd.
+***Set color and width.
 */
            if ( xhtpek->hed_xh.pen != actpen ) WPspen(xhtpek->hed_xh.pen);
+           if ( xhtpek->wdt_xh != 0.0 ) WPswdt(gwinpt->id.w_id,xhtpek->wdt_xh);
 /*
-***Sen är det bara att rita.
+***Display.
 */
            drawxh(gwinpt,xhtpek,crdvek,la,TRUE);
+           if ( xhtpek->wdt_xh != 0.0 ) WPswdt(gwinpt->id.w_id,0.0);
            }
          }
        }
@@ -126,6 +130,8 @@ static short drawxh(WPGWIN *gwinpt, DBHatch *xhtpek, DBfloat crdvek[],
  *
  *      (C) microform ab 26/1/95 J. Kjellander
  *
+ *      2007-09-01 WIDTH, J.Kjellander
+ *
  ******************************************************!*/
 
  {
@@ -149,29 +155,20 @@ static short drawxh(WPGWIN *gwinpt, DBHatch *xhtpek, DBfloat crdvek[],
        if ( win_id == GWIN_ALL  ||  win_id == gwinpt->id.w_id )
          {
 /*
-***Ja. Om den finns i DF och det är heldraget kan vi sudda snabbt.
+***Remove object from DF.
 */
-         if ( WPfobj(gwinpt,la,XHTTYP,&typ) )
-           {
-           if ( xhtpek->fnt_xh == 0 ) WPdobj(gwinpt,FALSE);
-           else
-             {
-             WProbj(gwinpt);
-             if ( !WPnivt(gwinpt->nivtab,xhtpek->hed_xh.level)  ||
-                                 xhtpek->hed_xh.blank) return(0);
-             drawxh(gwinpt,xhtpek,crdvek,la,FALSE);
-             }
-           }
+         if ( WPfobj(gwinpt,la,XHTTYP,&typ) ) WProbj(gwinpt);
 /*
-***Om den nu ligger på en släckt nivå eller är blankad gör vi
-***inget mer. Annars får vi återskapa polylinjen och sudda långsamt.
+***If blanked we are now finished.
 */
-         else
-           {
-           if ( !WPnivt(gwinpt->nivtab,xhtpek->hed_xh.level)  ||
+         if ( !WPnivt(gwinpt->nivtab,xhtpek->hed_xh.level)  ||
                                xhtpek->hed_xh.blank) return(0);
-           drawxh(gwinpt,xhtpek,crdvek,la,FALSE);
-           }
+/*
+***Remove from display.
+*/
+         if ( xhtpek->wdt_xh != 0.0 ) WPswdt(gwinpt->id.w_id,xhtpek->wdt_xh);
+         drawxh(gwinpt,xhtpek,crdvek,la,FALSE);
+         if ( xhtpek->wdt_xh != 0.0 ) WPswdt(gwinpt->id.w_id,0.0);
          }
        }
      }
@@ -249,7 +246,7 @@ static short drawxh(WPGWIN *gwinpt, DBHatch *xhtpek, DBfloat crdvek[],
 
 /*      Creates the graphical 3D polyline representation 
  *      for a xhatch.
- *      
+ *
  *      In:  xhtptr  = C-ptr to DBHatch.
  *           n+1     = Offset to polyline start.
  *
@@ -265,7 +262,7 @@ static short drawxh(WPGWIN *gwinpt, DBHatch *xhtpek, DBfloat crdvek[],
  {
    int    i,k,nl;
    DBLine lin;
- 
+
 /*
 ***Initializations.
 */

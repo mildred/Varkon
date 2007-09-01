@@ -143,6 +143,9 @@ extern pm_ptr  strefp;
 
    switch( np->par_np )
      {
+/*
+***PEN.
+*/
      case PMPEN:                                   /* integer */
         if ( ineqty( tyla, stintp ) )
            {
@@ -153,7 +156,9 @@ extern pm_ptr  strefp;
         else   
            return( erpush( "IN3193", "PEN" ) );    /* Ilegal type for named parameter */
         break;
-
+/*
+***WIDTH.
+*/
      case PMWIDTH:                                 /* float */
         if ( ineqty( tyla, stflop ) )
            npblockp->width = val.lit.float_va;
@@ -162,7 +167,9 @@ extern pm_ptr  strefp;
         else   
            return( erpush( "IN3193", "WIDTH" ) );    
         break;
-
+/*
+***LEVEL.
+*/
      case PMLEVEL:                                 /* integer */
         if ( ineqty( tyla, stintp ) )
            {
@@ -173,21 +180,27 @@ extern pm_ptr  strefp;
          else   
            return( erpush( "IN3193", "LEVEL" ) );   
          break;
-
+/*
+***BLANK.
+*/
      case PMBLANK:                                 /* integer */
         if ( ineqty( tyla, stintp ) )
            npblockp->blank = val.lit.int_va;
         else   
            return( erpush( "IN3193", "BLANK" ) );   
         break;
-
+/*
+***HIT.
+*/
      case PMHIT:                                   /* integer */
         if ( ineqty( tyla, stintp ) )
            npblockp->hit = val.lit.int_va;
         else   
            return( erpush( "IN3193", "HIT" ) );     
         break;
-
+/*
+***SAVE.
+*/
      case PMSAVE:                                  /* integer */
         if ( ineqty( tyla, stintp ) )
            npblockp->save = val.lit.int_va;
@@ -271,7 +284,9 @@ extern pm_ptr  strefp;
         else   
            return( erpush( "IN3193", "LDASHL" ) );  
         break;
-
+/*
+***Arc dash length.
+*/
      case PMADASHL:                                /* float */
         if ( ineqty( tyla, stflop ) )
            npblockp->adashl = val.lit.float_va;
@@ -280,7 +295,9 @@ extern pm_ptr  strefp;
         else  
            return( erpush( "IN3193", "ADASHL" ) );  
         break;
-
+/*
+***Curve dash length.
+*/
      case PMCDASHL:                                /* float */
         if ( ineqty( tyla, stflop ) )
            npblockp->cdashl = val.lit.float_va;
