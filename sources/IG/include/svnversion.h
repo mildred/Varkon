@@ -1,2 +1,2 @@
-#define SVNVERSION "$Rev$"
+#define SVNVERSION "18"
 
