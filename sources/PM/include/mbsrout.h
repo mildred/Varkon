@@ -1,29 +1,29 @@
 /*!******************************************************************
-*  File: mbsrout.h 
-*  ===============   
+*  File: mbsrout.h
+*  ===============
 * 
 *  Definitions for the MBS interpreter. This file compiles
 *  for Varkon if VARKON is defined. If not, see end of file.
 *
-*  This file is part of the Program Module (PM) Library. 
-*    
-*  This library is free software; you can redistribute it and/or 
-*  modify it under the terms of the GNU Library General Public 
-*  License as published by the Free Software Foundation; either 
-*  version 2 of the License, or (at your option) any later 
-*  version. 
-* 
-*  This library is distributed in the hope that it will be 
-*  useful, but WITHOUT ANY WARRANTY; without even the implied  
-*  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR 
-*  PURPOSE.  See the GNU Library General Public License for more  
-*  details.   
-*   
-*  You should have received a copy of the GNU Library General 
-*  Public License along with this library; if not, write to the 
-*  Free Software Foundation, Inc., 675 Mass Ave, Cambridge, 
-*  MA 02139, USA. 
-*   
+*  This file is part of the Program Module (PM) Library.
+*
+*  This library is free software; you can redistribute it and/or
+*  modify it under the terms of the GNU Library General Public
+*  License as published by the Free Software Foundation; either
+*  version 2 of the License, or (at your option) any later
+*  version.
+*
+*  This library is distributed in the hope that it will be
+*  useful, but WITHOUT ANY WARRANTY; without even the implied
+*  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
+*  PURPOSE.  See the GNU Library General Public License for more
+*  details.
+*
+*  You should have received a copy of the GNU Library General
+*  Public License along with this library; if not, write to the
+*  Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
+*  MA 02139, USA.
+*
 ******************************************************************/
 
 /*
@@ -76,7 +76,6 @@
 /*
 ***Nya rutiner i samband med Kartro 30/5/86
 */
-
 #define VGTREF   42    /*evgref      GETREF      */
 #define VLDGM    43    /*evldgm      LOAD_GM     */
 #define VSVGM    44    /*evsvgm      SAVE_GM     */
@@ -92,7 +91,6 @@
 /*
 ***Ny rutin för version 1.4  9/4/87 
 */
-
 #define VFINDS   51    /*evfins      FINDS       */
 #define VARCL    52    /*evarcl      ARCL        */
 #define VTANG    53    /*evtang      TANG        */
@@ -113,7 +111,6 @@
 /*
 ***Nya rutiner för version 1.4  9/4/87
 */
-
 #define VVECL    67    /*evvecl      VECL        */
 #define VVECN    68    /*evvecn      VECN        */
 #define VANGLE   69    /*evangl      ANGLE       */
@@ -142,70 +139,65 @@
 /*
 ***Nya rutiner i och med version 1.2, 13/3/86.
 */
-
-#define VGTID    91    /*evgtid      GETID      Removed */
-#define VGTHDR   92    /*evghdr      GETHDR      */
-#define VGTPOI   93    /*evgpoi      GETPOI      */
-#define VGTLIN   94    /*evglin      GETLIN      */
-#define VGTARC   95    /*evgarc      GETARC      */
-#define VGTCUR   96    /*evgcur      GETCUR     Removed */
-#define VGTTRF   97    /*evgtrf      GETTRF      */
-#define VGTTXT   98    /*evgtxt      GETTXT      */
-#define VGTXHT   99    /*evgxht      GETXHT      */
-#define VGTLDM  100    /*evgldm      GETLDM      */
-#define VGTCDM  101    /*evgcdm      GETCDM      */
-#define VGTRDM  102    /*evgrdm      GETRDM      */
-#define VGTADM  103    /*evgadm      GETADM      */
-#define VGTGRP  104    /*evggrp      GETGRP      */
-#define VGTCSY  105    /*evgcsy      GETCSY      */
-#define VGTSYM  106    /*      GETSYM     Utgï¿½ */
-#define VGTPRT  107    /*evgprt      GETPRT      */
-#define VGTTYP  108    /*evgtyp      GETTYP      */
-#define VGTINT  109    /*evgint      GETINT      */
-#define VGTFLT  110    /*evgflt      GETFLT      */
-#define VGTSTR  111    /*evgstr      GETSTR      */
-#define VGTVEC  112    /*evgvec      GETVEC      */
-#define VSYMB   113    /*evsymb      SYMB        */
-#define VTRIM   114    /*evtrim      TRIM        */
-#define VDEL    115    /*evdel       DEL         */
-#define VCLGM   116    /*evclgm      CLEAR_GM    */
-#define VBLNK   117    /*evblk       BLANK      Utgått */
-#define VUBLNK  118    /*evublk      UNBLANK    Utgått */
+#define VGTID       91    /*evgtid      GETID      Removed */
+#define VGTHDR      92    /*evghdr      GETHDR      */
+#define VGTPOI      93    /*evgpoi      GETPOI      */
+#define VGTLIN      94    /*evglin      GETLIN      */
+#define VGTARC      95    /*evgarc      GETARC      */
+#define VGTCUR      96    /*evgcur      GETCUR     Removed */
+#define VGTTRF      97    /*evgtrf      GETTRF      */
+#define VGTTXT      98    /*evgtxt      GETTXT      */
+#define VGTXHT      99    /*evgxht      GETXHT      */
+#define VGTLDM     100    /*evgldm      GETLDM      */
+#define VGTCDM     101    /*evgcdm      GETCDM      */
+#define VGTRDM     102    /*evgrdm      GETRDM      */
+#define VGTADM     103    /*evgadm      GETADM      */
+#define VGTGRP     104    /*evggrp      GETGRP      */
+#define VGTCSY     105    /*evgcsy      GETCSY      */
+#define VGTSYM     106    /* Removed                */
+#define VGTPRT     107    /*evgprt      GETPRT      */
+#define VGTTYP     108    /*evgtyp      GETTYP      */
+#define VGTINT     109    /*evgint      GETINT      */
+#define VGTFLT     110    /*evgflt      GETFLT      */
+#define VGTSTR     111    /*evgstr      GETSTR      */
+#define VGTVEC     112    /*evgvec      GETVEC      */
+#define VSYMB      113    /*evsymb      SYMB        */
+#define VTRIM      114    /*evtrim      TRIM        */
+#define VDEL       115    /*evdel       DEL         */
+#define VCLGM      116    /*evclgm      CLEAR_GM    */
+#define VBLNK      117    /*evblk       BLANK      Utgått */
+#define VUBLNK     118    /*evublk      UNBLANK    Utgått */
 
 /*
 *** Nya rutiner för Kartro 30/6/86
 */
-
-#define VCREVI  119    /*evcrvi      CRE_VIEW    */
-#define VACTVI  120    /*evacvi      ACT_VIEW    */
-#define VSCLVI  121    /*evscvi      SCL_VIEW    */
-#define VCENVI  122    /*evcevi      CEN_VIEW    */
-#define VERAVI  123    /*evervi      ERASE_VIEW  */
-#define VREPVI  124    /*evrpvi      REP_VIEW    */
-#define VCACVI  125    /*evcavi      CACC_VIEW   */
-
+#define VCREVI     119    /*evcrvi      CRE_VIEW    */
+#define VACTVI     120    /*evacvi      ACT_VIEW    */
+#define VSCLVI     121    /*evscvi      SCL_VIEW    */
+#define VCENVI     122    /*evcevi      CEN_VIEW    */
+#define VERAVI     123    /*evervi      ERASE_VIEW  */
+#define VREPVI     124    /*evrpvi      REP_VIEW    */
+#define VCACVI     125    /*evcavi      CACC_VIEW   */
 /*
 ***Ny rutin för version 1.3 3/11/86     
 */
 
-#define VPLTVI  126    /*evplvi      PLOT_VIEW   Removed */
+#define VPLTVI     126    /*evplvi      PLOT_VIEW   Removed */
 
 /*
 ***Nya rutiner för version 1.3 1/10/86    
 */
-
-#define VTIM    127    /*evtime      TIME        */
-#define VRSTR   128    /*evrstr      RSTR        */
-#define VRVAL   129    /*evrval      RVAL        */
-#define VREFC   130    /*evrefc      REFC        */
-#define VLSIN   131    /*evlsin      LST_INI     */
-#define VLSEX   132    /*evlsex      LST_EXI     */
-#define VLSLN   133    /*evlsln      LST_LIN     */
+#define VTIM       127    /*evtime      TIME        */
+#define VRSTR      128    /*evrstr      RSTR        */
+#define VRVAL      129    /*evrval      RVAL        */
+#define VREFC      130    /*evrefc      REFC        */
+#define VLSIN      131    /*evlsin      LST_INI     */
+#define VLSEX      132    /*evlsex      LST_EXI     */
+#define VLSLN      133    /*evlsln      LST_LIN     */
 
 /*
 ***Nya rutiner för version 1.3 30/10/86    
 */
-
 #define VACBLK  134   /*evablk      ACT_BLANK   */
 #define VACVIN  135   /*evavin      ACT_VNAM    */
 #define VACPEN  136   /*evapen      ACT_PEN     */
@@ -235,16 +227,14 @@
 #define VACDNDG 160   /*evadnd      ACT_DNDIG   */
 #define VACDAUT 161   /*evadau      ACT_DAUTO   */
 
-/* 
-***Ny rutin för version 1.4 21/12/86       
+/*
+***Ny rutin för version 1.4 21/12/86
 */
-
 #define VGLOREF 162   /*evglor      GLOBAL_REF  */
 
 /*
-***Nya rutiner för version 1.4 April 87    
+***Nya rutiner för version 1.4 April 87
 */
-
 #define VPSPMT  163   /*evpspt      PSH_PMT     */
 #define VPOPMT  164   /*evpopt      POP_PMT     */
 #define VCRTSTR 165   /*evcrts      CRE_TSTR    */
@@ -257,10 +247,9 @@
 #define VVPROD  172   /*evcrpr      VPROD       */
 #define VLINPER 173   /*evlipe      LIN_PERP    */
 
-/* 
+/*
 ***Nya rutiner fï¿½ databaskommunikation Maj 87 
 */
-
 #define VDBOP   174   /*evdbop      DB_OPEN     */
 #define VDBBG   175   /*evdbbg      DB_BEGIN    */
 #define VDBSL   176   /*evdbsl      DB_SELECT   */
@@ -278,20 +267,17 @@
 /* 
 ***Nya rutiner fï¿½ V 1.5 
 */
-
 #define VGTBPL  187   /*evgbpl      GETBPL      */
 #define VCSYS1P 188   /*evcs1p      CSYS_1P     */
 
 /* 
 ***Nya rutiner fï¿½ V 1.6 
 */
-
 #define VPLTWI  189   /*evplwi      PLOT_WIN    */
 
 /* 
 ***Nya rutiner fï¿½ V1.7 Oktober 1988 
 */
-
 #define VUPHDR  190   /*evuhdr      UPDHDR      */
 #define VLDJOB  191   /*evldjb      LOAD_JOB    */
 #define VSVJOB  192   /*evsvjb      SAVE_JOB    */
@@ -300,7 +286,6 @@
 /*
 ***Nya rutiner fï¿½ V1.8 Mars 1989 
 */
-
 #define VHIDVI  194   /*evhdvi      HIDE_VIEW   */
 #define VPRPVI  195   /*evprvi      PERP_VIEW   */
 #define VTEXTL  196   /*evtxtl      TEXTL       */
@@ -309,7 +294,6 @@
 /*
 ***Nya rutiner fï¿½ V1.10 Juli 1990.
 */
-
 #define VEXEST  198   /*evexst      EXESTAT     */
 #define VAREA   199   /*evarea      AREA        */
 #define VCGRAV  200   /*evcgra      CGRAV       */
@@ -318,7 +302,6 @@
 /*
 ***Nya rutiner fï¿½ V1.11 1991.
 */
-
 #define VCURC   202   /*evcurc      CUR_CONIC   */
 #define VITANG  203   /*evitan      INV_TANG    */
 #define VCURS   204   /*evcurs      CUR_SPLINE  */
@@ -336,134 +319,122 @@
 #define VUPMBS  216   /*evupm       UPDP_MBS    */
 
 /*
-***Nya rutiner fï¿½ ytmodulen 10/7/92 
+***Nya rutiner för ytmodulen 10/7/92 
 */
-
-#define VSUREX  217   /*evsexd      SUR_EXDEF   */
-#define VCURSIL 218   /*evcsil      CUR_SIL     */
-#define VCURINT 219   /*evcint      CUR_INT     */
-#define VCURISO 220   /*evciso      CUR_ISO     */
-#define VNORM   221   /*evnorm      NORM        */
+#define VSUREX     217   /*evsexd      SUR_EXDEF   */
+#define VCURSIL    218   /*evcsil      CUR_SIL     */
+#define VCURINT    219   /*evcint      CUR_INT     */
+#define VCURISO    220   /*evciso      CUR_ISO     */
+#define VNORM      221   /*evnorm      NORM        */
 
 /*
 ***Nya rutiner för transformationer 10/12/92
 */
-
-#define VTFMOV  222   /*evtrmv      TFORM_MOVE   */
-#define VTFROTP 223   /*evtrrp      TFORM_ROTP   */
-#define VTFROTL 224   /*evtrrl      TFORM_ROTL   */
-#define VTFMIRR 225   /*evtrmi      TFORM_MIRR   */
-#define VTFCOMP 226   /*evtrco      TFORM_COMP   */
-#define VTFU    227   /*evtrus      TFORM_USRDEF */
-#define VTCOPY  228   /*evtcop      TCOPY        */
-
-/*
-***Ny rutin fï¿½ GL 17/2/93
-*/
-
-#define VCURGL  229   /*evcugl      CUR_GL       */
+#define VTFMOV     222   /*evtrmv      TFORM_MOVE   */
+#define VTFROTP    223   /*evtrrp      TFORM_ROTP   */
+#define VTFROTL    224   /*evtrrl      TFORM_ROTL   */
+#define VTFMIRR    225   /*evtrmi      TFORM_MIRR   */
+#define VTFCOMP    226   /*evtrco      TFORM_COMP   */
+#define VTFU       227   /*evtrus      TFORM_USRDEF */
+#define VTCOPY     228   /*evtcop      TCOPY        */
 
 /*
-***Ny rutin fï¿½ SAAB 8/8/93
+***Ny rutin för GL 17/2/93
 */
+#define VCURGL     229   /*evcugl      CUR_GL       */
 
-#define VMSIZE  230   /*evmsiz      MSIZE_VIEW   */
+/*
+***Ny rutin för SAAB 8/8/93
+*/
+#define VMSIZE     230   /*evmsiz      MSIZE_VIEW   */
 
 /*
 ***Nya rutiner för fönsterhantering 6/12/93
 */
-
-#define VCRWIN  231   /*evcrwi      CRE_WIN    */
-#define VCREDI  232   /*evcred      CRE_EDIT   */
-#define VCRICO  233   /*evcric      CRE_ICON   */
-#define VCRBUT  234   /*evcrbu      CRE_BUTTON */
-#define VSHWIN  235   /*evshwi      SHOW_WIN   */
-#define VWTWIN  236   /*evwtwi      WAIT_WIN   */
-#define VGTEDI  237   /*evgted      GET_EDIT   */
-#define VUPEDI  238   /*evuped      UPD_EDIT   */
-#define VGTBUT  239   /*evgtbu      GET_BUTTON */
-#define VDLWIN  240   /*evdlwi      DEL_WIN    */
+#define VCRWIN     231   /*evcrwi      CRE_WIN    */
+#define VCREDI     232   /*evcred      CRE_EDIT   */
+#define VCRICO     233   /*evcric      CRE_ICON   */
+#define VCRBUT     234   /*evcrbu      CRE_BUTTON */
+#define VSHWIN     235   /*evshwi      SHOW_WIN   */
+#define VWTWIN     236   /*evwtwi      WAIT_WIN   */
+#define VGTEDI     237   /*evgted      GET_EDIT   */
+#define VUPEDI     238   /*evuped      UPD_EDIT   */
+#define VGTBUT     239   /*evgtbu      GET_BUTTON */
+#define VDLWIN     240   /*evdlwi      DEL_WIN    */
 
 /*
-***Nya GM-get rutiner fï¿½ kurvor och ytor. 10/1/94
+***Nya GM-get rutiner för kurvor och ytor. 10/1/94
 */
-
-#define VGTCUH  241   /*evgcuh      GETCURH    */
-#define VGTSEG  242   /*evgseg      GETSEG     */
-#define VGTSUH  243   /*evgsuh      GETSURH    */
+#define VGTCUH     241   /*evgcuh      GETCURH    */
+#define VGTSEG     242   /*evgseg      GETSEG     */
+#define VGTSUH     243   /*evgsuh      GETSURH    */
 
 /*
 ***Nya Macro-rutiner 2/2/94.
 */
-
-#define VUPPMBS 244   /*evuppm      UPDPP_MBS  */
+#define VUPPMBS    244   /*evuppm      UPDPP_MBS  */
 
 /*
 ***Nya Ytmodul-rutiner 25/4/94.
 */
-
-#define VSURCON 245   /*evscon      SUR_CONIC  */
-#define VSUROF  246   /*evsoff      SUR_OFFS   */
-
-/*
-***Multifï¿½ster mm. 20/1-95.
-*/
-
-#define VGTVIEW 247   /*evgtvi      GET_VIEW   */
-#define VDELMBS 248   /*evdelm      DEL_MBS    */
-#define VACTCSY 249   /*evacsy      ACT_CSY    */
+#define VSURCON    245   /*evscon      SUR_CONIC  */
+#define VSUROF     246   /*evsoff      SUR_OFFS   */
 
 /*
-***Nya rutiner fï¿½ SAAB 27/2-95.
+***Multifönster mm. 20/1-95.
 */
-
-#define VMODBA  250   /*evmoba      MODE_BASIC        */
-#define VSURSA  251   /*evssar      SUR_SPLARR        */
-#define VSURCA  252   /*evscar      SUR_CONARR        */
-#define VSURAP  253   /*evsapp      SUR_APPROX        */
-#define VSURCO  254   /*evscom      SUR_COMP          */
-#define VSURT   255   /*evstrm      SUR_TRIM          */
-#define VGTTOP  256   /*evgtop      GETTOPP           */
-#define VGTCUP  257   /*evgcub      GETCUBP           */
-#define VGTRAP  258   /*evgrat      GETRATP           */
-#define VCURSA  259   /*evcusa      CUR_SPLARR        */
-#define VCURCA  260   /*evcuca      CUR_CONARR        */
-#define VCURFA  261   /*evcfan      CUR_FANGA         */
-#define VCURGD  262   /*evcged      CUR_GEODESIC      */
-#define VCURAP  263   /*evcapp      CUR_APPROX        */
-#define VRUNMBS 264   /*evrunm      RUN_MBS           */
+#define VGTVIEW    247   /*evgtvi      GET_VIEW   */
+#define VDELMBS    248   /*evdelm      DEL_MBS    */
+#define VACTCSY    249   /*evacsy      ACT_CSY    */
 
 /*
-***Nya rutiner fï¿½ version 1.14.
+***Nya rutiner för SAAB 27/2-95.
 */
-
-#define VAPID      265   /*evapid      ACT_PID           */
-#define VAVVERS    266   /*evavvr      ACT_VARKON_VERS   */
-#define VAVSER     267   /*evavsr      ACT_VARKON_SERIAL */
-#define VAOSTYP    268   /*evaost      ACT_OSTYPE        */
-#define VAHOST     269   /*evahst      ACT_HOST          */
-#define VUFNAM     270   /*evufnm      UNIQUE_FILENAME   */
-#define VRAND      271   /*evrand      RANDOM            */
-#define VALLILS    272   /*evails      ALL_INT_LIN_SUR   */
-#define VALLIOS    273   /*evaios      ALL_INV_ON_SUR    */
-#define VAPPFIL    274   /*evappf      APPEND_FILE       */
-#define VDELFIL    275   /*evdelf      DELETE_FILE       */
-#define VMOVFIL    276   /*evmovf      MOVE_FILE         */
-#define VCOPFIL    277   /*evcopf      COPY_FILE         */
-#define VTSTFIL    278   /*evtstf      TEST_FILE         */
-#define VGETENV    279   /*evgenv      GET_ENVIRONMENT   */
-#define VGRID      280   /*evgrid      GRID_VIEW         */
-#define VGRIDX     281   /*evgrix      GRIDX_VIEW        */
-#define VGRIDY     282   /*evgriy      GRIDY_VIEW        */
-#define VGRIDDX    283   /*evgrdx      GRIDDX_VIEW       */
-#define VGRIDDY    284   /*evgrdy      GRIDDY_VIEW       */
-#define VSRTGM     285   /*evsrgm      SET_ROOT_GM       */
-#define VGNXGM     286   /*evgngm      GET_NEXT_GM       */
+#define VMODBA     250   /*evmoba      MODE_BASIC        */
+#define VSURSA     251   /*evssar      SUR_SPLARR        */
+#define VSURCA     252   /*evscar      SUR_CONARR        */
+#define VSURAP     253   /*evsapp      SUR_APPROX        */
+#define VSURCO     254   /*evscom      SUR_COMP          */
+#define VSURT      255   /*evstrm      SUR_TRIM          */
+#define VGTTOP     256   /*evgtop      GETTOPP           */
+#define VGTCUP     257   /*evgcub      GETCUBP           */
+#define VGTRAP     258   /*evgrat      GETRATP           */
+#define VCURSA     259   /*evcusa      CUR_SPLARR        */
+#define VCURCA     260   /*evcuca      CUR_CONARR        */
+#define VCURFA     261   /*evcfan      CUR_FANGA         */
+#define VCURGD     262   /*evcged      CUR_GEODESIC      */
+#define VCURAP     263   /*evcapp      CUR_APPROX        */
+#define VRUNMBS    264   /*evrunm      RUN_MBS           */
 
 /*
-***Nya rutiner fï¿½ version 1.15
+***Nya rutiner för version 1.14.
 */
+#define VAPID      265  /*evapid      ACT_PID           */
+#define VAVVERS    266  /*evavvr      ACT_VARKON_VERS   */
+#define VAVSER     267  /*evavsr      ACT_VARKON_SERIAL */
+#define VAOSTYP    268  /*evaost      ACT_OSTYPE        */
+#define VAHOST     269  /*evahst      ACT_HOST          */
+#define VUFNAM     270  /*evufnm      UNIQUE_FILENAME   */
+#define VRAND      271  /*evrand      RANDOM            */
+#define VALLILS    272  /*evails      ALL_INT_LIN_SUR   */
+#define VALLIOS    273  /*evaios      ALL_INV_ON_SUR    */
+#define VAPPFIL    274  /*evappf      APPEND_FILE       */
+#define VDELFIL    275  /*evdelf      DELETE_FILE       */
+#define VMOVFIL    276  /*evmovf      MOVE_FILE         */
+#define VCOPFIL    277  /*evcopf      COPY_FILE         */
+#define VTSTFIL    278  /*evtstf      TEST_FILE         */
+#define VGETENV    279  /*evgenv      GET_ENVIRONMENT   */
+#define VGRID      280  /*evgrid      GRID_VIEW         */
+#define VGRIDX     281  /*evgrix      GRIDX_VIEW        */
+#define VGRIDY     282  /*evgriy      GRIDY_VIEW        */
+#define VGRIDDX    283  /*evgrdx      GRIDDX_VIEW       */
+#define VGRIDDY    284  /*evgrdy      GRIDDY_VIEW       */
+#define VSRTGM     285  /*evsrgm      SET_ROOT_GM       */
+#define VGNXGM     286  /*evgngm      GET_NEXT_GM       */
 
+/*
+***Nya rutiner för version 1.15
+*/
 #define VCRFBUT    287  /*evcrfb      CRE_FBUTTON       */
 #define VCRFICO    288  /*evcrfi      CRE_FICON         */
 #define VGETWIN    289  /*evgtwi      GET_WIN           */
@@ -493,29 +464,27 @@
 #define VPOSMBS    313  /*evposm      POS_MBS           */
 
 /*
-***Nya rutiner fï¿½ version 1.16
+***Nya rutiner för version 1.16
 */
-
-#define VGTFAP     314   /*evgfac      GETFACP           */
-#define VSURNA     315   /*evsnar      SUR_NURBSARR      */
-#define VSUAREA    316   /*evsuar      SURFACE_AREA      */
-#define VSEAREA    317   /*evsear      SECTION_AREA      */
-#define VGETWDT    318   /*evgwdt      GETWIDTH          */
-#define VACTWDT    319   /*evawdt      ACT_WIDTH         */
-#define VSCR_2     320   /*evscr2      SCREEN_2          */
-#define VPOS_2     321   /*evpos2      POS_2             */
-#define VIDNT_2    322   /*evidn2      IDENT_2           */
-#define VHIGHL     323   /*evhigh      HIGHLIGHT         */
-#define VGTPTR     324   /*evgptr      GET_POINTER       */
-#define VINFNM     325   /*evinfn      INFNAME           */
-#define VLOADPM    326   /*evldpm      LOAD_PM           */
-#define VALLILM    327   /*evailm      ALL_INT_LIN_MSUR  */
-#define VCALEXT    328   /*evcaxt      CALL_EXTERN       */
+#define VGTFAP     314  /*evgfac      GETFACP           */
+#define VSURNA     315  /*evsnar      SUR_NURBSARR      */
+#define VSUAREA    316  /*evsuar      SURFACE_AREA      */
+#define VSEAREA    317  /*evsear      SECTION_AREA      */
+#define VGETWDT    318  /*evgwdt      GETWIDTH          */
+#define VACTWDT    319  /*evawdt      ACT_WIDTH         */
+#define VSCR_2     320  /*evscr2      SCREEN_2          */
+#define VPOS_2     321  /*evpos2      POS_2             */
+#define VIDNT_2    322  /*evidn2      IDENT_2           */
+#define VHIGHL     323  /*evhigh      HIGHLIGHT         */
+#define VGTPTR     324  /*evgptr      GET_POINTER       */
+#define VINFNM     325  /*evinfn      INFNAME           */
+#define VLOADPM    326  /*evldpm      LOAD_PM           */
+#define VALLILM    327  /*evailm      ALL_INT_LIN_MSUR  */
+#define VCALEXT    328  /*evcaxt      CALL_EXTERN       */
 
 /*
-***Nya rutiner fï¿½ version 1.17
+***Nya rutiner för version 1.17
 */
-
 #define VIVAL      329  /*evival      IVAL              */
 #define VFVAL      330  /*evfval      FVAL              */
 #define VODBCCO    331  /*evodco      ODBC_CONNECT      */
@@ -534,14 +503,12 @@
 /*
 ***New routines by Orebro University version 1.17D
 */
-
 #define VSURCURV   343  /*evscur      SUR_CURVES        */
 #define VCURNA     344  /*evcuna      CUR_NURBSARR      */
 
 /*
-***New routines for TCP/IP, ï¿½ebro university.
+***New routines for TCP/IP, Örebro university.
 */
-
 #define VTCPCO     345  /*evtcco      TCP_CONNECT       */
 #define VTCPLI     346  /*evtcli      TCP_LISTEN        */
 #define VTCPCL     347  /*evtccl      TCP_CLOSE         */
@@ -560,8 +527,6 @@
 ***New routines for Robot Application Protocol (RAP)
 ***by Orebro University
 */
-
-
 #define VRPCCC     358  /*evrpcc      RPC_CLIENTCREATE  */
 #define VRPCCD     359  /*evrpcd      RPC_CLIENTDESTROY */
 #define VRAPOF     360  /*evrpof      RAP_OUTFLOAT      */
@@ -605,6 +570,11 @@
 #define VGTLEVEL   388  /* evgtlv     GET_LEVEL         */
 #define VACLEVEL   389  /* evalev     ACT_LEVEL         */
 #define VNMLEVEL   390  /* evnmlv     NAME_LEVEL        */
+
+/*
+***New routines for 2.0.
+*/
+#define VASVNVERS  391  /*evasvr      ACT_SVN_VERS      */
 
 /*
 ***If you are building your own application,

@@ -11,6 +11,7 @@
 !*      (C)microform ab 13/9/95 J. Kjellander
 !*
 !*      1996-06-04 Engelska, J.Kjellander
+!*      2007-09-02 SVN version, J.Kjellander
 !*
 !*******************************************************
 
@@ -18,7 +19,8 @@
 
    lst_ini(get_tstr(1546));        ! ANALYS - Systemdata
 
-   lst_lin(get_tstr(1547) + act_varkon_vers());              ! Version
+   lst_lin(get_tstr(1547) + act_varkon_vers());              ! Varkon version
+   lst_lin(get_tstr(65)   + act_svn_vers());                 ! SVN version
    lst_lin(get_tstr(1548) + str(act_varkon_serial(),-1,0));  ! Serienummer
    lst_lin(get_tstr(1549) + act_ostype());                   ! OS-typ
    lst_lin(get_tstr(1550) + act_host());                     ! Nodnamn

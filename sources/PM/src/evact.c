@@ -45,6 +45,7 @@
 *    evacsy();     Evaluates ACT_CSY
 *    evapid();     Evaluates ACT_PID
 *    evavvr();     Evaluates ACT_VARKON_VERS
+*    evasvr();     Evaluates ACT_SVN_VERS
 *    evavsr();     Evaluates ACT_VARKON_SERIAL
 *    evaost();     Evaluates ACT_OSTYPE
 *    evahst();     Evaluates ACT_HOST
@@ -1143,13 +1144,9 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
 
         short evavvr()
 
-/*      Evaluerar funktionen ACT_VARKON_VERSION.
+/*      Evaluates function ACT_VARKON_VERSION().
  *
- *      In:
- *
- *      Ut: Global *func_vp  =  Pointer to result value.
- *
- *      FV:
+ *      Out: Global *func_vp  =  Pointer to result value.
  *
  *      (C)microform ab 13/9/95 J. Kjellander
  *
@@ -1160,6 +1157,26 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
   {
     sprintf(func_vp->lit.str_va,"%d.%d%c",
             (int)sydata.vernr,(int)sydata.revnr,sydata.level);
+
+    return(0);
+  }
+
+/********************************************************/
+/*!******************************************************/
+
+        short evasvr()
+
+/*      Evaluates function ACT_SVN_VERSION().
+ *
+ *      Out: Global *func_vp  =  Pointer to result value.
+ *
+ *      (C)2007-09-02 J. Kjellander
+ *
+ ******************************************************!*/
+
+  {
+    strncpy(func_vp->lit.str_va,sydata.svnversion,4);
+    func_vp->lit.str_va[4] = '\0';
 
     return(0);
   }

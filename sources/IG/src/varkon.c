@@ -4,7 +4,7 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*  main()     Main entrypoint for the interactive Varkon system    */  
+/*  main()     Main entrypoint for the interactive Varkon system    */
 /*  igckjn();  Check jobname for consitency                         */
 /*  igcenv();  Check/register WIN32 environment                     */
 /*                                                                  */
@@ -33,6 +33,7 @@
 #include "../../DB/include/DB.h"
 #include "../include/IG.h"
 #include "../include/debug.h"
+#include "../include/svnversion.h"
 #include "../../EX/include/EX.h"
 #include "../../WP/include/WP.h"
 #include "../../GE/include/GE.h"
@@ -47,6 +48,7 @@
 static int igcenv();
 #endif
 
+
 /*
 ***Default system meta data.
 */
@@ -55,11 +57,11 @@ V3MDAT  sydata =
            { 1000,       /* Serial number, microform = 1000 */
              1,          /* Version number*/
              19,         /* Revision */
-            'B',         /* 2007-02-11 */
+            'B',         /* 2007-08-11 */
              0,0,0,0,0,  /* Dummy times */
              0,0,0,0,0,
              " ",        /* Sysname */
-             " ",        /* Dummy */
+             SVNVERSION, /* SVN version */
              BAS_MOD,    /* opmode */
              0,          /* Module protection code */
              " ",        /* Release */
@@ -93,7 +95,7 @@ char    inifil_2[V3PTHLEN+1] = "";     /* 2:nd inifile */
 ***modtyp = 2 => DRAWING
 ***modatt = LOCAL, GLOBAL or BASIC
 */
-short   modtyp,modatt;
+short modtyp,modatt;
 
 /*
 ***Largest ID sequence number in current module.

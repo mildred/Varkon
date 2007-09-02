@@ -65,7 +65,7 @@ distr debug:
 	mkdir -p ../pid
 	mkdir -p ../app
 
-#make xvarkon
+# Make xvarkon
 	@make -C IG -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
 	@make -C PM -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
 	@make -C EX -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
@@ -74,13 +74,13 @@ distr debug:
 	@make -C GE -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
 	@make -f Makefile.$(PLATFORM)
 
-#make mbsc
+# Make mbsc
 	@make -C AN -C src -f Makefile.$(PLATFORM)
 
-#make plotter programs
+# Make plotter programs
 	@make -C PL -C src -f Makefile.$(PLATFORM) all
 
-#make vlib
+# Make vlib
 	@make -C Vlib -f Makefile
            
 clean:

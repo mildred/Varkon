@@ -270,6 +270,7 @@ short evadau(void);
 short evacsy(void);
 short evapid(void);
 short evavvr(void);
+short evasvr(void);
 short evavsr(PMLITVA *valp);
 short evaost(void);
 short evahst(void);

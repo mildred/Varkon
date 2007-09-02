@@ -305,12 +305,6 @@ extern DBseqnum huvidm;
 */
     WPinla(IGgtts(270));
 /*
-***Demo-version.
-*/
-#ifdef V3_DEMO
-    if ( (status=WPalla("Limited demo version of",(short)1)) < 0 ) return(status);
-#endif
-/*
 ***Serienummer.
 */
     if ( sydata.opmode == BAS_MOD )
