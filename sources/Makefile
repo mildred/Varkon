@@ -3,7 +3,7 @@
 #   Makefile for Varkon version 1.19
 #   --------------------------------
 #
-#   2007-08-04 Johan Kjellander
+#   2007-09-05 Johan Kjellander
 #
 ##########################################
 
@@ -64,6 +64,9 @@ distr debug:
 	mkdir -p ../tmp
 	mkdir -p ../pid
 	mkdir -p ../app
+
+# If SVN is used, update includefile with current SVNVERSION.
+	./update_versionfile
 
 # Make xvarkon
 	@make -C IG -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)

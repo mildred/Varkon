@@ -7,7 +7,8 @@
 ##########################################################
 
 INCFILES = ../include/IG.h             \
-           ../include/futab.h
+           ../include/futab.h          \
+           ../include/svnversion.h
 
 # The contents of IGlib.a
 
@@ -58,10 +59,6 @@ debug : $(OBJECTS)
 # on the following include-files.
 
 $(OBJECTS) : $(INCFILES)
-
-# ig1 also depends on futab.h
-
-../lib/IGlib.a(ig1.o): $(INCFILES) ../include/futab.h
 
 clean:
 	rm -f ../lib/IGlib.a

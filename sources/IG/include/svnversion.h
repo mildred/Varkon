@@ -1,2 +1,0 @@
-#define SVNVERSION "18"
-
