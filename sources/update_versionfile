@@ -1,0 +1,29 @@
+#!/bin/sh
+#######################################################
+#
+# update_versionfile
+#
+# This is a shell script that is called by the main
+# makefile for Varkon during the build process.
+#
+# If the Varkon sources used to build the system are
+# downloaded from the SourceForge SVN repository this
+# script updates ./sources/IG/include/svnversion.h with
+# the current SVN version.
+#
+# If SVN is not used the script does nothing. In that
+# case the existing svnversion.h will be used.
+#
+# Latest update: 2007-09-05 J.Kjellander
+#
+#####################################################
+#
+if test -d ../.svn; then
+  if which svnversion; then
+    echo -en "#define SVNVERSION \0042" > ./IG/include/svnversion.h
+    svnversion -n . >> ./IG/include/svnversion.h
+    echo -e "\0042" >> ./IG/include/svnversion.h
+  fi
+fi
+#
+#####################################################
