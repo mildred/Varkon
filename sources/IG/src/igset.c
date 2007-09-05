@@ -239,7 +239,7 @@ error:
    inevev(exnpt,&val,&valtyp);
 
    if      ( val.lit_type == C_INT_VA) width = val.lit.int_va;
-   else if ( val.lit_type == C_FLO_VA) width = val.lit.float_va;
+   else                                width = val.lit.float_va;
 
    if ( width == defnap.width )
      {
@@ -258,7 +258,7 @@ error:
 */
    return(0);
   }
-  
+
 /********************************************************/
 /*!******************************************************/
 

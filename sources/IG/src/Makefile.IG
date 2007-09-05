@@ -11,8 +11,7 @@ INCFILES = ../include/IG.h             \
 
 # The contents of IGlib.a
 
-OBJECTS = ../lib/IGlib.a(varkon.o)     \
-          ../lib/IGlib.a(iginit.o)     \
+OBJECTS = ../lib/IGlib.a(iginit.o)     \
           ../lib/IGlib.a(igsurf.o)     \
           ../lib/IGlib.a(igview.o)     \
           ../lib/IGlib.a(igcurve.o)    \
@@ -48,11 +47,11 @@ OBJECTS = ../lib/IGlib.a(varkon.o)     \
           ../lib/IGlib.a(igfile.o)     \
           ../lib/IGlib.a(igdebug.o)
 
-# IGlib.a depends on the objects. 
+# IGlib.a depends on the objects.
 
-distr : $(OBJECTS)
+distr : $(OBJECTS) ../lib/IGlib.a(varkon.o)
 
-debug : $(OBJECTS)
+debug : $(OBJECTS) ../lib/IGlib.a(varkon.o)
 
 # Objects depend on sources implicitly and sources depend
 # on the following include-files.
@@ -61,3 +60,8 @@ $(OBJECTS) : $(INCFILES)
 
 clean:
 	rm -f ../lib/IGlib.a
+
+../lib/IGlib.a(varkon.o): varkon.c $(INCFILES) ../include/svnversion.h
+	$(COMPILE) varkon.c
+	ar r ../lib/IGlib.a varkon.o
+	$(RM) varkon.o
