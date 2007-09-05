@@ -35,7 +35,6 @@
 
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
-#include "../../IG/include/svnversion.h"
 #include "../include/AN.h"
 #include <string.h>
 
@@ -62,7 +61,7 @@ V3MDAT sydata = {                  /* System constants */
                 0, 0, 0, 0, 0,     /* tider            */
                 0, 0, 0, 0, 0,
                 "",                /* Sysname          */
-                SVNVERSION,        /* SVN version      */
+                "",                /* Not used         */
                 BAS_MOD,           /* opmode           */
                 0,                 /* Skyddskod MN860610 */
                 "",                /* Release          */

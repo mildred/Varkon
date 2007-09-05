@@ -61,12 +61,18 @@ V3MDAT  sydata =
              0,0,0,0,0,  /* Dummy times */
              0,0,0,0,0,
              " ",        /* Sysname */
-             SVNVERSION, /* SVN version */
+             " ",        /* Not used */
              BAS_MOD,    /* opmode */
              0,          /* Module protection code */
              " ",        /* Release */
              " ",        /* Version */
              0      } ;  /* Encrypted serial number */
+
+/*
+***Current SVN version number. Initialized
+***from the contents of IG/include/svnversion.h
+*/
+char svnversion[V3STRLEN] = SVNVERSION;
 
 /*
 ***Current system sizes is initialized during startup.

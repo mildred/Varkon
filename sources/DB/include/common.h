@@ -164,7 +164,7 @@ short day_u;                    /* Day updated */
 short hour_u;                   /* Hour updated */
 short min_u;                    /* Minute updated */
 char  sysname[9];               /* OS or host name */
-char  svnversion[5];            /* SVN version */
+char  dummy[5];                 /* Not used */
 short opmode;                   /* BAS_MOD/RIT_MOD */
 short mpcode;                   /* Module protection code */
 char  release[9];               /* OS release */

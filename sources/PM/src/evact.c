@@ -78,7 +78,7 @@
 
 extern V2NAPA defnap;
 extern V3MDAT sydata;
-extern char   pidnam[],jobnam[],jobdir[];
+extern char   pidnam[],jobnam[],jobdir[],svnversion[];
 extern pm_ptr actmod;
 extern DBptr  lsysla;
 
@@ -1175,8 +1175,8 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
  ******************************************************!*/
 
   {
-    strncpy(func_vp->lit.str_va,sydata.svnversion,4);
-    func_vp->lit.str_va[4] = '\0';
+    strncpy(func_vp->lit.str_va,svnversion,V3STRLEN-1);
+    func_vp->lit.str_va[V3STRLEN] = '\0';
 
     return(0);
   }

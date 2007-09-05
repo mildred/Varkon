@@ -7,8 +7,7 @@
 ##########################################################
 
 INCFILES = ../include/IG.h             \
-           ../include/futab.h          \
-           ../include/svnversion.h
+           ../include/futab.h
 
 # The contents of IGlib.a
 

@@ -39,20 +39,14 @@
 #include <string.h>
 
 extern V3MDAT  sydata;
-extern short   posmode;
-extern char    actcnm[];
+extern short   posmode,modtyp,modatt;
+extern char    jobnam[],jobdir[],tmprit[],actcnm[],svnversion[];
 extern DBTmat *lsyspk;
 extern DBptr   lsysla;
 extern DBTmat  lklsys;
 extern V2NAPA  defnap;
 extern WPVIEW  wpviewtab[];
-extern char    jobnam[];
-
-
-
-extern char    jobdir[],tmprit[];
 extern V3MSIZ  sysize;
-extern short   modtyp,modatt;
 extern bool    tmpref;
 
 
@@ -82,6 +76,8 @@ static short get_Leveltable(FILE *jf);
  *
  *      (C)2007-03-31 1.19, J.Kjellander
  *
+ *      2007-09-05 SVN_version added, J.Kjellander
+ *
  ******************************************************!*/
 
   {
@@ -105,6 +101,7 @@ static short get_Leveltable(FILE *jf);
     if ( fprintf(jf,"Serial=%d\n",(int)sydata.sernr)         < 0 ) goto werror;
     if ( fprintf(jf,"Version=%d\n",(int)sydata.vernr)        < 0 ) goto werror;
     if ( fprintf(jf,"Revision=%d\n",(int)sydata.revnr)       < 0 ) goto werror;
+    if ( fprintf(jf,"SVN_version=%s\n",svnversion)           < 0 ) goto werror;
     if ( fprintf(jf,"Level=%c\n",sydata.level)               < 0 ) goto werror;
     if ( fprintf(jf,"Jobname=%s\n",jobnam)                   < 0 ) goto werror;
     if ( fprintf(jf,"Creation_date=%d-%d-%d\n",y,m,d)        < 0 ) goto werror;
