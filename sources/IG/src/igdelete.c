@@ -321,8 +321,7 @@ syserr:
 /*
 ***L�s in gruppnamn.
 */
-    IGptma(318,IG_INP);
-    if ( (status=IGssip(IGgtts(267),grpnam,"",JNLGTH)) < 0 ) goto exit;
+    if ( (status=IGssip(IGgtts(318),IGgtts(267),grpnam,"",JNLGTH)) < 0 ) goto exit;
 /*
 ***H�mta LA och typ f�r huvud-parten.
 */

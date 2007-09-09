@@ -296,11 +296,10 @@ errend:
 /*
 ***Fråga efter filnamn.
 */
-    IGptma(376,IG_INP);
     strcpy(fnam,jobdir);
     strcat(fnam,jobnam);
     strcat(fnam,MBSEXT);
-    status = IGssip(IGgtts(267),fnam,fnam,V3PTHLEN);
+    status = IGssip(IGgtts(376),IGgtts(267),fnam,fnam,V3PTHLEN);
     if ( status < 0 ) return(status);
 /*
 ***Finns redan en fil med samma namn ?
@@ -334,7 +333,6 @@ errend:
 ***The end.
 */
     return(0);
-
   }
 
 /********************************************************/

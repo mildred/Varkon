@@ -126,9 +126,12 @@ bool    tmpref;
 *** 3 = MBS,      4 = End,       5 = On
 *** 6 = Center,   7 = Intersect, 8 = Grid
 ***posmode defaults to 2 = Cursor and is managed
-***through the buttons in the menu window.
+***through the buttons in the menu window. The
+***rel button (button 1) alters the meaning of
+***the 8 other buttons by adding an offset.
 */
-short posmode = 2;
+int  posmode = 2;
+bool relpos = FALSE;
 
 /*
 ***Name of active coordinate system.

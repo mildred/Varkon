@@ -1052,8 +1052,7 @@ restart:
 ***Get DX and DY values.
 */
 loop:
-    IGptma(45,IG_INP);
-    status = IGmsip(psarr,isarr,dsarr,ml,(short)2);
+    status = IGmsip(IGgtts(45),psarr,isarr,dsarr,ml,(short)2);
     IGrsma();
     if ( status < 0 ) return(status);
 /*

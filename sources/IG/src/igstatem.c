@@ -356,7 +356,7 @@ edit:
 /*
 ***L�t anv�ndaren editera.
 */
-    status = IGssip(promt,newpar,oldpar,V3STRLEN);
+    status = IGssip("",promt,newpar,oldpar,V3STRLEN);
 
     if ( status < 0 )
       {

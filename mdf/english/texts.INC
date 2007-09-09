@@ -1,9 +1,5 @@
-
 ! Varkon standard texts
-! Latest update for version 1.19A
-! JK
 
-t0   = "Select : "
 t1   = "  <SPACE>=Next message       <CR>=Cancel"
 t2   = " <SPACE>=new line   <CR>=new page   <ESC>=Cancel !"
 t3   = " Continue = <CR> "
@@ -70,7 +66,7 @@ t62  = "executed !"
 t63  = "One entity updated !"
 t64  = "entities updated !"
 t65  = "SVN version      : "
-
+t66  = "Enter relative distance !"
 t67  = "y"
 t68  = "n"
 t69  = "Exit without saving changes ?"
@@ -320,7 +316,7 @@ t322 = "Select first corner point "
 t323 = "Select second corner point "
 t324 = "Intersection, select first entity ! "
 t325 = "Select second entity !"
-t326 = "Enter coordinates"
+t326 = "Enter coordinates !"
 t327 = "Enter requested intersect number"
 t328 = "Enter new default value"
 t329 = "Enter new default position"

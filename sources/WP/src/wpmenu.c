@@ -35,11 +35,12 @@
 #include "../include/WP.h"
 #include <math.h>
 
-extern char    jobnam[];      /* Current jobname for menu window border */
-extern short   posmode;       /* Currently active positions method in IG */
-extern short   v3mode;        /* RIT_MOD/BAS_MOD... */
-extern char    actcnm[];      /* Name of currently active coordinate system */
-extern V2NAPA  defnap;        /* Currently active attributes */
+extern char    jobnam[];     /* Current jobname for menu window border */
+extern int     posmode;      /* Currently active positions method in IG */
+extern bool    relpos;       /* Relative positions flag On/Off */
+extern short   v3mode;       /* RIT_MOD/BAS_MOD... */
+extern char    actcnm[];     /* Name of currently active coordinate system */
+extern V2NAPA  defnap;       /* Currently active attributes */
 
 static MNUDAT *actmeny;       /* Currently active menu */
 static wpw_id  men_id;        /* WP-id of the menu window */
@@ -54,15 +55,15 @@ static Window  runid;         /* X-id of the Run button */
 static Window  edpid;         /* X-id of the EditP button */
 static Window  delid;         /* X-id of the Delete button */
 
-static char    pbtext_1[81];  /* Text for pos button 1 */
-static char    pbtext_2[81];  /* Text for pos button 2 */
-static char    pbtext_3[81];  /* Text for pos button 3 */
-static char    pbtext_4[81];  /* Text for pos button 4 */
-static char    pbtext_5[81];  /* Text for pos button 5 */
-static char    pbtext_6[81];  /* Text for pos button 6 */
-static char    pbtext_7[81];  /* Text for pos button 7 */
-static char    pbtext_8[81];  /* Text for pos button 8 */
-static char    pbtext_9[81];  /* Text for pos button 9 */
+static char    pbtext_1[81];  /* Text for pos button 1 absolute */
+static char    pbtext_2[81];  /* Text for pos button 2 relative */
+static char    pbtext_3[81];  /* Text for pos button 3 mouse */
+static char    pbtext_4[81];  /* Text for pos button 4 mbs */
+static char    pbtext_5[81];  /* Text for pos button 5 end */
+static char    pbtext_6[81];  /* Text for pos button 6 on */
+static char    pbtext_7[81];  /* Text for pos button 7 centre */
+static char    pbtext_8[81];  /* Text for pos button 8 intersect */
+static char    pbtext_9[81];  /* Text for pos button 9 grid */
 
 static char    pbttip_1[81];  /* Tooltip for pos button 1 */
 static char    pbttip_2[81];  /* Tooltip for pos button 2 */
@@ -311,6 +312,10 @@ static short csys_dialogue(int x,int y);
 */
    actmeny = NULL;
 /*
+***Init (turn off) the relative positions button.
+*/
+   relpos = FALSE;
+/*
 ***The end.
 */
    return(0);
@@ -320,7 +325,7 @@ static short csys_dialogue(int x,int y);
 /*!*******************************************************/
 
      short   WPactivate_menu(
-     MNUDAT *meny)  
+     MNUDAT *meny)
 
 /*   Make a menu active and display it.
  *
@@ -335,7 +340,7 @@ static short csys_dialogue(int x,int y);
 /*
 ***Update actmeny.
 */
-    actmeny = meny;   
+    actmeny = meny;
 /*
 ***Update contents of menu window.
 */
@@ -358,6 +363,7 @@ static short csys_dialogue(int x,int y);
  *
  *    24/1/94    Omarbetad, J. Kjellander
  *    2007-03-17 More buttons, J.Kjellander
+ *    2007-09-09 relpos, J.Kjellander
  *
  *******************************************************!*/
 
@@ -415,7 +421,7 @@ static short csys_dialogue(int x,int y);
    if ( mrl > tlmax) tlmax = mrl;
 /*
 ***Window width, mendx.
-*/    
+*/
    butdx = tlmax;
    mendx = ly + butdx + ly;
 /*
@@ -569,7 +575,7 @@ static short csys_dialogue(int x,int y);
    posid[0] = butptr->id.x_id;
 
    butx += butdx + 2*bw;
-   if ( posmode == 1 )
+   if ( relpos )
      WPmcbu(men_id,butx,buty,butdx,butdy,bw,pbtext_2,pbtext_2,"",WP_BGND3,WP_FGND,&pos_id);
    else
      WPmcbu(men_id,butx,buty,butdx,butdy,bw,pbtext_2,pbtext_2,"",WP_BGND2,WP_FGND,&pos_id);
@@ -650,8 +656,7 @@ static short csys_dialogue(int x,int y);
 */
    XStoreName(xdisp,mwinpt->id.x_id,title);
 /*
-***Mappa alla sub-fönster nu. Detta görs inte av WPmcbu() eftersom
-***vi har satt mwinpt->mapped = FALSE när vi skapade meny-fönstret.
+***Map all sub windows now. This is not done earlier.
 */
    XMapSubwindows(xdisp,mwinpt->id.x_id);
 /*
@@ -679,6 +684,7 @@ static short csys_dialogue(int x,int y);
  *      (C)microform ab 17/7/92 J. Kjellander
  *
  *      2007-03-25 1.19, J.Kjellander
+ *      2007-09-09 relpos, J.Kjellander
  *
  ******************************************************!*/
 
@@ -704,7 +710,7 @@ static short csys_dialogue(int x,int y);
    else
      {
      *altptr = actmeny->alt;
-  
+
       while ( hit == FALSE  &&  i < actmeny->nalt )
         {
         if ( event->xany.window == altid[i++] ) hit = TRUE;
@@ -783,7 +789,13 @@ static short csys_dialogue(int x,int y);
        {
        if ( event->xany.window == posid[i] )
          {
-         posmode = i;
+         if ( i == 1 )
+           {
+           if ( relpos ) relpos = FALSE;
+           else          relpos = TRUE;
+           }
+         else posmode = i;
+
          WPupdate_menu();
         *altptr = NULL;
          hit = TRUE;
@@ -874,10 +886,9 @@ static short csys_dialogue(int x,int y);
 */
     WPwshw(*id);
 /*
-***För att varje sub-fönster vid meny-byte varje gång inte
-***skall mappas individuellt av WPmcbu() sätter vi meny-
-***fönstrets map-status till false och mappar alla subfönster
-***vid ett enda tillfälle i WPrcmw().
+***To prevent each sub window to be mapped individually each
+***time a new menu is displayed we set the map falg to FALSE.
+***Mapping is then done by WPupdate_menu();
 */
     iwinpt->mapped = FALSE;
 
@@ -893,7 +904,7 @@ static short csys_dialogue(int x,int y);
 
 /*      Handles the CSY-button in the menu window.
  *
- *      In: 
+ *      In: main_x, main_y = Requested window position.
  *
  *      Return:  0 = OK.
  *          REJECT = Operation canceled.
@@ -937,7 +948,7 @@ static short csys_dialogue(int x,int y);
    if ( WPstrl(basic)  > altlen ) altlen = WPstrl(basic);
    if ( WPstrl(reject) > altlen ) altlen = WPstrl(reject);
    if ( WPstrl(help)   > altlen ) altlen = WPstrl(help);
- 
+
    altlen *= 1.4;
 /*
 ***Window geometry.
@@ -956,9 +967,9 @@ static short csys_dialogue(int x,int y);
 /*
 ***Which csy mode is active now ?
 */
-   if      ( strcmp(actcnm,"BASIC") == 0 )  csy_mode = 1;
+   if       ( strcmp(actcnm,"BASIC") == 0 )  csy_mode = 1;
    else if ( strcmp(actcnm,"GLOBAL") == 0 ) csy_mode = 2;
-   else                                     csy_mode = 3;
+   else                                      csy_mode = 3;
 /*
 ***LOCAL button.
 */

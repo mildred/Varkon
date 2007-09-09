@@ -1080,7 +1080,7 @@ static short savelw(WPLWIN *lwinpt);
 
     if ( fil == TRUE )
       {
-      status = IGssip("Enter filename :",fnam,dstr,V3PTHLEN);
+      status = IGssip("","Enter filename :",fnam,dstr,V3PTHLEN);
       if ( status < 0 ) goto end;
       strcpy(dstr,fnam);
       }

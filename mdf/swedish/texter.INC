@@ -70,8 +70,7 @@ t62  = "exekverad !"
 t63  = "En storhet uppdaterad !"
 t64  = "storheter uppdaterade !"
 t65  = "SVN version      : "
-
-!
+t66  = "Ange relativt avstånd !"
 t67  = "j"
 t68  = "n"
 t69  = "Sluta utan att spara ?"

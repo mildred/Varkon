@@ -86,13 +86,10 @@ static char *pidpath();   /* Returnerar path till PID-katalogen */
 */
    if ( saveflag  &&  !jnflag )
        {
-       IGptma(193,IG_INP);
-       if ( (status=IGssip(IGgtts(400),newjob,"",JNLGTH)) < 0 )
+       if ( (status=IGssip(IGgtts(193),IGgtts(400),newjob,"",JNLGTH)) < 0 )
          {
-         IGrsma();
          return(status);
          }
-       IGrsma();
        }
 /*
 ***Välj ett nytt projektnamn.
@@ -571,8 +568,7 @@ static char *pidpath();   /* Returnerar path till PID-katalogen */
 /*
 ***Editera.
 */
-   IGplma(rubrik,IG_INP);
-   status = IGmsip(p_ps,p_is,p_ds,ml,(short)6);
+   status = IGmsip(rubrik,p_ps,p_is,p_ds,ml,(short)6);
    IGrsma();
    if ( status == REJECT ) return(REJECT);
 /*

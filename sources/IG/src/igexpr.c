@@ -48,18 +48,20 @@
 #include <math.h>
 
 extern bool    tmpref;
-extern short   v3mode,modtyp,posmode;
+extern short   v3mode,modtyp;
+extern int     posmode;
+extern bool    relpos;
 extern MNUALT  smbind[];
 extern DBTmat *lsyspk;
 
 static short genuv(short pnr, pm_ptr *pexnpt);
 static short genrfs(short pnr, DBetype *ptyp, pm_ptr *pexnpt, bool *pend,
                     bool *pright, short utstat);
-static short gnpmen(pm_ptr *pexnpt);
-static short gnpabs(pm_ptr *pexnpt);
+static short gnpany(pm_ptr *pexnpt);
 static short gnprel(pm_ptr *pexnpt);
+static short gnpabs(pm_ptr *pexnpt);
 static short gnpcrh(pm_ptr *pexnpt);
-static short gnpexp(pm_ptr *pexnpt);
+static short gnpmbs(pm_ptr *pexnpt);
 static short gnpend(pm_ptr *pexnpt);
 static short gnpon(pm_ptr *pexnpt);
 static short gnpint(pm_ptr *pexnpt);
@@ -111,22 +113,20 @@ static short igpcen(DBVector *vecptr);
     sttycl type;
 
 /*
-***Skriv ut ev. promtstrï¿½ng.
-*/
-    if (pnr > 0) IGptma(pnr,IG_INP);
-/*
-***Lï¿½s in vï¿½rde.
+***Get string.
 */
 loop:
-    if ( (status=IGssip(IGgtts(46),istr,dstr,V3STRLEN)) < 0) goto exit;
-
-    if (anaexp(istr,FALSE,pexnpt,&type) != 0)
+    if ( (status=IGssip(IGgtts(pnr),IGgtts(46),istr,dstr,V3STRLEN)) < 0) goto exit;
+/*
+***Analyze.
+*/
+    if ( anaexp(istr,FALSE,pexnpt,&type ) != 0)
       {
       errmes();
       goto loop;
       }
 
-    if (type != ST_INT)
+    if ( type != ST_INT )
         {
         erpush("IG2232",IGgtts(4));
         errmes();
@@ -226,14 +226,10 @@ end:
     sttycl type;
 
 /*
-***Skriv ut ev. promtstrï¿½ng.
-*/
-    if (pnr > 0) IGptma(pnr,IG_INP);
-/*
 ***Lï¿½s in vï¿½rde.
 */
 loop:
-    if ( (status=IGssip(IGgtts(204),istr,dstr,V3STRLEN)) < 0 ) goto exit;
+    if ( (status=IGssip(IGgtts(pnr),IGgtts(204),istr,dstr,V3STRLEN)) < 0 ) goto exit;
 
     if (anaexp(istr,FALSE,pexnpt,&type) != 0)
        {
@@ -361,14 +357,10 @@ end:
     dsarr[0] = ds[0];
     dsarr[1] = ds[1];
 /*
-***Skriv ut ev. promtstrï¿½ng.
+***Get strings.
 */
-    if ( pnr > 0 ) IGptma(pnr,IG_INP);
-/*
-***Lï¿½s in vï¿½rden.
-*/    
 loop:
-    if ( (status=IGmsip(psarr,isarr,dsarr,ml,(short)2)) < 0 ) goto exit;
+    if ( (status=IGmsip(IGgtts(pnr),psarr,isarr,dsarr,ml,(short)2)) < 0 ) goto exit;
 /*
 *** Kopiera svaret till defaultstrï¿½ngarna 
 */
@@ -438,13 +430,9 @@ exit:
     PMLITVA litval;
 
 /*
-***Skriv ut ev. promtstrï¿½ng.
-*/
-    if (pnr > 0) IGptma(pnr,IG_INP);
-/*
 ***Lï¿½s in vï¿½rde.
 */
-    if ( (status=IGssip(IGgtts(266),istr,dstr,V3STRLEN)) < 0 )
+    if ( (status=IGssip(IGgtts(pnr),IGgtts(266),istr,dstr,V3STRLEN)) < 0 )
        goto exit;
 /*
 ***Analysera. Om det var ett MBS-strï¿½nguttryck ï¿½r allt ok.
@@ -724,23 +712,22 @@ exit:
        short   pnr,
        pm_ptr *pexnpt)
 
-/*      Huvudrutin fï¿½r att skapa en uttrycks-nod fï¿½r
- *      en position.
+/*      Create a position expression (VECTOR).
  *
- *      In:   pnr    => Promt-strï¿½ng nr, om 0 ingen utskrift.
- *            pexnpt => Pekare till pm_ptr variabel.
+ *      In:   pnr    => Prompt number or 0 for no prompt.
  *
- *      Out: *pexnpt => PM-pekare till expression-node.
+ *      Out: *pexnpt => PM ptr to VECTOR expression.
  *
  *      Return:  0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => Tillbaks till huvudmenyn
- *             < 0 => Fel frï¿½n PM.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to main menu.
+ *             < 0 => Internal error.
  *
  *      (C)microform ab 15/11/88 J. Kjellander
  *
  *      1998-03-31 default, J.Kjellander
  *      2007-07-28 1.19, J.Kjellander
+ *      2007-09-09 relpos, J.Kjelander
  *
  ******************************************************!*/
 
@@ -748,34 +735,37 @@ exit:
     short status;
 
 /*
+***Remember current PM stack pointer for
+***garbage collection if needed.
+*/
+    pmmark();
+/*
 ***Output prompt.
 */
 start:
     if ( pnr > 0 ) WPaddmess_mcwin(IGgtts(pnr),WP_PROMPT);
 /*
-***Select method.
+***Relative or ordinary position ?
 */
-    switch ( posmode )
-      {
-      case 0:  status = gnpabs(pexnpt); break;
-      case 1:  status = gnprel(pexnpt); break;
-      case 2:  status = gnpcrh(pexnpt); break;
-      case 3:  status = gnpexp(pexnpt); break;
-      case 4:  status = gnpend(pexnpt); break;
-      case 5:  status = gnpon(pexnpt);  break;
-      case 6:  status = gnpcen(pexnpt); break;
-      case 7:  status = gnpint(pexnpt); break;
-      case 8:  status = gnpcrh(pexnpt); break;
-      default: status = REJECT; break;
-      }
+    if ( relpos ) status = gnprel(pexnpt);
+    else         status = gnpany(pexnpt);
 /*
 ***Clear the promt.
 */
     WPclear_mcwin();
 /*
-***Change pos method maybe ?
+***Change pos method maybe ? Collect garbage
+***and try again.
 */
-    if ( status == SMBPOSM ) goto start;
+    if ( status == SMBPOSM )
+      {
+      pmrele();
+      goto start;
+      }
+/*
+***If status still is negative, collect garbage in PM.
+*/
+    if ( status < 0 ) pmrele();
 /*
 ***The end.
 */
@@ -787,13 +777,11 @@ start:
 
        short IGcpov(DBVector *pos)
 
-/*      Skapar ett positions-vï¿½rde. Ersï¿½tter getpos().
+/*      Create a position literal value (VECTOR).
  *
- *      In: pos    => Pekare till position.
+ *      Out: *pos   => C ptr to VECTOR value.
  *
- *      Ut: *pos   => Position.
- *
- *      FV: Returnerar status frï¿½n IGcpos().
+ *      Return: Returns the status from IGcpos().
  *
  *      (C)microform ab 15/11/88 J. Kjellander
  *
@@ -805,15 +793,15 @@ start:
    PMLITVA val;
 
 /*
-***Spara pm-stack pekaren.
+***Save PM stack pointer.
 */
    pmmark();
 /*
-***Skapa positions-uttryck.
+***Create position expression.
 */
    if ( (status=IGcpos((short)0,&exnpt)) < 0 ) goto end;
 /*
-***Interpretera.
+***Evaluate.
 */
    inevev(exnpt,&val,&valtyp);
 
@@ -821,7 +809,7 @@ start:
    pos->y_gm = val.lit.vec_va.y_val;
    pos->z_gm = val.lit.vec_va.z_val;
 /*
-***Slut.
+***Collect garbage in PM and exit.
 */
 end:
    pmrele();
@@ -831,167 +819,144 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-static short gnpmen(pm_ptr *pexnpt)
+static short gnpany(pm_ptr *pexnpt)
 
-/*      Skapar en uttrycks-nod fï¿½r en position via val
- *      i positionsmenyn.
+/*      Create a position expression (VECTOR).
  *
- *      In: pexnpt => Pekare till pm_ptr variabel.
+ *      Out: *pexnpt => PM ptr to VECTOR expression.
  *
- *      Ut: *pexnpt => PM-pekare till expression-node.
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to main menu.
+ *             < 0 => Internal error.
  *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => Tillbaks till huvudmenyn
- *             < 0 => Fel frï¿½n PM.
- *
- *      (C)microform ab 15/11/88 J. Kjellander
- *
- *       1/3/94  Snabbval, J. Kjellander
- *       1998-03-31 Hï¿½rkors i 3D, J.Kjellander
- *       1998-10-20 ï¿½ven fï¿½r WIN32, J.Kjellander
+ *      (C)2007-09-09 J. Kjellander
  *
  ******************************************************!*/
 
   {
-    short   status,alttyp,alt=-1;
-    MNUALT *pmualt;
+    short status;
 
 /*
-***Skriv ut meny och lï¿½s in svar, snabbval ej tillï¿½tet.
+***Select method. Relative is not allowed here.
 */
-#ifdef WIN32
-l1:
-    msshmu(141);
-#else
-    IGaamu(141);
-l1:
-#endif
-
-    IGgalt(&pmualt,&alttyp);
-
-#ifdef WIN32
-    mshdmu();
-#endif
-
-    if ( pmualt == NULL )
+    switch ( posmode )
       {
-      switch ( alttyp )
-        {
-        case SMBRETURN:
-        IGsamu();
-        return(REJECT);
-
-        case SMBMAIN:
-        return(GOMAIN);
-
-        case SMBPOSM:
-        WPbell();
-        goto l1;
-        }
-      }
-    else alt = pmualt->actnum;
-
-    switch(alt)
-      {
-      case 1:                            /* Absolut */
-      IGptma(326,IG_INP);
-      status=gnpabs(pexnpt);
-      IGrsma();
-      break;
-
-      case 2:                            /* Relativt */
-      status=gnprel(pexnpt);
-      break;
-
-      case 3:                            /* Hï¿½rkors */
-      status=gnpcrh(pexnpt);
-      break;
-
-      case 4:                            /* Uttryck */
-      status=gnpexp(pexnpt);
-      break;
-
-      case 5:                            /* ï¿½nde av storhet */
-      status=gnpend(pexnpt);
-      break;
-
-      case 6:                            /* Pï¿½ en storhet */
-      status=gnpon(pexnpt);
-      break;
-
-      case 7:                            /* Centrum av storhet */
-      status=gnpcen(pexnpt);
-      break;
-
-      case 8:                            /* Skï¿½rning */
-      status=gnpint(pexnpt);
-      break;
-
-      case 10:                            /* Byt referens */
-      if ( tmpref ) tmpref = FALSE;
-      else tmpref = TRUE;
-      goto l1;
-
-      default:                           /* Okï¿½nt alt. */
-      erpush("IG0103","");
-      errmes();
-      goto l1;
-      }
-
-    if ( status == REJECT )
-      {
-      goto l1;
+      case 0:  status = gnpabs(pexnpt); break;
+      case 2:  status = gnpcrh(pexnpt); break;
+      case 3:  status = gnpmbs(pexnpt); break;
+      case 4:  status = gnpend(pexnpt); break;
+      case 5:  status = gnpon(pexnpt);  break;
+      case 6:  status = gnpcen(pexnpt); break;
+      case 7:  status = gnpint(pexnpt); break;
+      case 8:  status = gnpcrh(pexnpt); break;
+      default: status = REJECT; break;
       }
 /*
-***Sudda positionsmenyn och ï¿½tervï¿½nd.
+***The end.
 */
-    if ( status != GOMAIN ) IGsamu();
-
     return(status);
   }
 
 /********************************************************/
 /*!******************************************************/
 
-static short gnpabs(pm_ptr *pexnpt)
+static short gnprel(pm_ptr *pexnpt)
 
-/*      Position med X,Y,Z format. Skapar en uttrycksnod
- *      av typen vector.
+/*      Create a relative position expression.
  *
- *      In: pexnpt => Pekare till pm_ptr variabel.
+ *      Out: *pexnpt => PM ptr to expression.
  *
- *      Ut: *pexnpt => PM-pekare till expression node.
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to main menu
  *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *             < 0 => Fel frï¿½n PM.
+ *      (C)microform ab 9/8/85 J. Kjellander
  *
- *      (C)microform ab 16/1/85 J. Kjellander
- *
- *      22/10/85 Lï¿½ngre inputstrï¿½ngar, J. Kjellander
- *      6/10/86  GOMAIN, J. Kjellander
- *      8/10/86  Promt, J. Kjellander
+ *      23/3/86    Anrop IGcpos(pnr,... B. Doverud
+ *      6/10/86    GOMAIN, J. Kjellander
+ *      2007-09-09 relpos, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    char   ps[3][40];     /* promptstrï¿½ng */
-    char   is[3][80];     /* inputstrï¿½ng */
+    pm_ptr  exnpt1,exnpt2;
+    short   status;
+
+/*
+***Base position. Turn off relpos during
+***base position. Update the menu afterwards
+***to ensure that the rel button is still highligted.
+*/
+     WPaddmess_mcwin(IGgtts(51),WP_PROMPT);
+     relpos = FALSE;
+     status = gnpany(&exnpt1);
+     relpos = TRUE;
+     WPupdate_menu();
+     WPclear_mcwin();
+
+     if ( status == SMBPOSM ) return(status);
+     else if ( status < 0 ) goto end;
+/*
+***Offset "vec(dx,dy,dz)".
+*/
+     WPaddmess_mcwin(IGgtts(287),WP_PROMPT);
+     status = gnpabs(&exnpt2);
+     WPclear_mcwin();
+
+     if ( status == SMBPOSM ) return(status);
+     else if ( status < 0 ) goto end;
+/*
+***Make an expressions list "pos + vec(dx,dy,dz)".
+*/
+    pmcbie(PM_PLUS,exnpt1,exnpt2,pexnpt);
+/*
+***The end.
+*/
+end:
+    return(status);
+    }
+
+/********************************************************/
+/*!******************************************************/
+
+static short gnpabs(pm_ptr *pexnpt)
+
+/*      Position using absolute coordinates.
+ *
+ *      Out: *pexnpt => PM ptr to VEC(x,y,z)-expression.
+ *
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *             < 0 => Internal error.
+ *
+ *      (C)microform ab 16/1/85 J. Kjellander
+ *
+ *      22/10/85   Längre inputsträngar, J. Kjellander
+ *      6/10/86    GOMAIN, J. Kjellander
+ *      8/10/86    Promt, J. Kjellander
+ *      2007-09-09 relpos, J.Kjellander
+ *
+ ******************************************************!*/
+
+  {
+    char   ps[3][40];     /* prompt string */
+    char   is[3][80];     /* input string */
     char  *psarr[3];
     char  *isarr[3];
     char  *dsarr[3];
-    short  ml[3];         /* maxlï¿½ngder */
+    short  ml[3];         /* max lengths */
     sttycl type;
     char   expr[132];
     short  status;
+    int    pnr;
 
     static char ds[3][80] = {"0","0","0"};
 
 /*
-***Initiering.
+***Init.
 */
-    strcpy(ps[0],IGgtts(201));       /* kopiera promptar */
+    strcpy(ps[0],IGgtts(201));       /* copy prompts */
     strcpy(ps[1],IGgtts(202));
     strcpy(ps[2],IGgtts(203));
 
@@ -999,7 +964,7 @@ static short gnpabs(pm_ptr *pexnpt)
     ml[1]=80;
     ml[2]=80;
 
-    psarr[0] = ps[0];                  /* initiera pekarna */
+    psarr[0] = ps[0];                  /* init ptrs */
     psarr[1] = ps[1];
     psarr[2] = ps[2];
 
@@ -1011,19 +976,24 @@ static short gnpabs(pm_ptr *pexnpt)
     dsarr[1] = ds[1];
     dsarr[2] = ds[2];
 /*
-***Lï¿½s in vï¿½rden.
-*/    
+***Main prompt.
+*/
+    if ( relpos ) pnr = 66;
+    else         pnr = 326;
+/*
+***Get string values.
+*/
 loop:
-    if ( (status=IGmsip(psarr,isarr,dsarr,ml,modtyp)) != 0 ) return(status);
+    if ( (status=IGmsip(IGgtts(pnr),psarr,isarr,dsarr,ml,modtyp)) != 0 ) return(status);
     if ( modtyp == 2 ) strcpy(is[2],"0");
 /*
-*** Kopiera svaret till defaultstrï¿½ngarna 
+***Save as default.
 */
     strcpy(ds[0],is[0]); 
     strcpy(ds[1],is[1]);
     strcpy(ds[2],is[2]);
 /*
-***Skapa funktionsstrï¿½ngen
+***Create VECTOR expression.
 */
     if ( modtyp == 2 )
       {
@@ -1039,55 +1009,10 @@ loop:
       errmes();
       goto loop;
       }
-
+/*
+***The end.
+*/
     return(0);
-    }
-
-/********************************************************/
-/*!******************************************************/
-
-static short gnprel(pm_ptr *pexnpt)
-
-/*      Position relativt position. Skapar en uttrycksnod
- *      av typen vector.
- *
- *      In: pexnpt => Pekare till pm_ptr variabel.
- *
- *      Ut: *pexnpt => PM-pekare till expression node.
- *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => ï¿½ter till huvudmenyn
- *
- *      (C)microform ab 9/8/85 J. Kjellander
- *
- *      23/3/86  Anrop IGcpos(pnr,... B. Doverud
- *      6/10/86  GOMAIN, J. Kjellander
- *
- ******************************************************!*/
-
-  {
-    pm_ptr  exnpt1,exnpt2;
-    short   status;
-
-/*
-***Skapa basposition.
-*/
-     WPaddmess_mcwin(IGgtts(51),WP_PROMPT);
-     if ( (status=gnpmen(&exnpt1)) < 0 ) goto end;
-     WPclear_mcwin();
-/*
-***Skapa "vec(dx,dy,dz)".
-*/
-     IGptma(287,IG_INP);
-     if ( (status=gnpabs(&exnpt2)) < 0 ) goto end;
-/*
-***Lï¿½nka ihop till "pos + vec(dx,dy,dz)".
-*/
-    pmcbie(PM_PLUS,exnpt1,exnpt2,pexnpt);
-
-end:
-    return(status);
     }
 
 /********************************************************/
@@ -1095,8 +1020,7 @@ end:
 
 static short gnpcrh(pm_ptr *pexnpt)
 
-/*      Position med hï¿½rkors. Skapar en literal
- *      av typen vector.
+/*      Position using mouse pointer or grid.
  *
  *      In: pexnpt => Pekare till pm_ptr variabel.
  *
@@ -1136,10 +1060,9 @@ static short gnpcrh(pm_ptr *pexnpt)
 /********************************************************/
 /*!******************************************************/
 
-static short gnpexp(pm_ptr *pexnpt)
+static short gnpmbs(pm_ptr *pexnpt)
 
-/*      Position med uttryck. Skapar en identifierar-
- *      uttrycksnod.
+/*      Position using MBS.
  *
  *      In: pexnpt => Pekare till pm_ptr variabel.
  *
@@ -1164,13 +1087,12 @@ static short gnpexp(pm_ptr *pexnpt)
     short   status;
 
 /*
-***Lï¿½s in uttryck.
+***Get string.
 */
-    IGptma(209,IG_INP);
 loop:
-    if ( (status=IGssip(IGgtts(267),istr,"",V3STRLEN)) != 0 ) goto end;
+    if ( (status=IGssip(IGgtts(209),IGgtts(267),istr,"",V3STRLEN)) != 0 ) goto end;
 /*
-***Prova att analysera.
+***Analyze.
 */
     if ( anaexp(istr,FALSE,pexnpt,&type ) != 0 )
       {
@@ -1178,7 +1100,7 @@ loop:
       goto loop;
       }
 /*
-***Kolla att det var rï¿½tt typ.
+***Typecheck.
 */
     if (type != ST_VEC)
       {
@@ -1187,7 +1109,7 @@ loop:
       goto loop;
       }
 /*
-***Slut.
+***The end.
 */
 end:
     return(status);
@@ -1198,16 +1120,13 @@ end:
 
 static short gnpend(pm_ptr *pexnpt)
 
-/*      Huvudrutin fï¿½r position i ï¿½nden av storhet med fast
- *      eller temporï¿½r referens.
+/*      Create END(ref) position expression.
  *
- *      In: pexnpt => Pekare till pm_ptr variabel.
+ *      Out: *pexnpt => PM ptr to expression.
  *
- *      Ut: *pexnpt => PM-pekare till expression node.
- *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => Huvudmenyn
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to mainmenu.
  *
  *      (C)microform ab 1/11/85 J. Kjellander
  *
@@ -1228,7 +1147,7 @@ static short gnpend(pm_ptr *pexnpt)
     DBVector posvec;
 
 /*
-***Temporï¿½r referens.
+***Temp ref.
 */
     if ( tmpref)
       {
@@ -1241,29 +1160,25 @@ static short gnpend(pm_ptr *pexnpt)
       pmclie( &litstr, pexnpt);
       }
 /*
-***Fast referens.
+***True reference.
 */
     else
       {
 /*
-***Create REF expression.
+***Create STARTP/ENDP function expression.
 */
       typ = LINTYP+ARCTYP+CURTYP;
       if ( (status=genrfs(331,&typ,&exnpt,&end,&right,(short)0)) != 0 ) goto exit;
-/*
-***Skapa argumentlistan.
-*/
+
       pmtcon(exnpt,(pm_ptr)NULL,&arglst,&dummy);
-/*
-***Skapa funktionsuttrycksnoden.
-*/
+
       if ( end ) stlook("ENDP",&kind,&ref);
       else       stlook("STARTP",&kind,&ref);
 
       pmcfue(ref,arglst,pexnpt);
       }
 /*
-***Avslutning.
+***The end.
 */
 exit:
     return(status);
@@ -1756,7 +1671,7 @@ loop:
     else if ( pektkn == *IGgtts(97) )
       {
 inid:
-      status = IGssip(IGgtts(283),idstr,"",V3STRLEN);
+      status = IGssip("",IGgtts(283),idstr,"",V3STRLEN);
       if ( status == REJECT ) return(REJECT);
       if ( status == GOMAIN ) return(GOMAIN);
       if ( IGstid(idstr,idvek) < 0 )

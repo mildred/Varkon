@@ -1038,6 +1038,14 @@ static void sigtrp(int sigval)
       return(notdef);
       }
 /*
+***tnr == 0 means NULL string.
+*/
+    if ( tnr == 0 )
+      {
+      notdef[0] = '\0';
+      return(notdef);
+      }
+/*
 ***Fixa fram motsvarande pekare.
 */
     tp = txtind[tnr];

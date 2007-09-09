@@ -478,10 +478,10 @@ char *IGqema();
 /*
 ***iginput.c
 */
-short IGssip(char *ps, char *is, char *ds, short ml);
+short IGssip(char *prompt, char *ps, char *is, char *ds, short ml);
 short IGsfip(char *ps, DBfloat *fval);
 short IGsiip(char *ps, int *ival) ;
-short IGmsip(char *ps[], char *is[], char *ds[], short ml[], short as);
+short IGmsip(char *prompt, char *ps[], char *is[], char *ds[], short ml[], short as);
 bool  IGialt(short psnum, short tsnum, short fsnum, bool  pip);
 bool  IGials(char *ps, char *ts, char *fs, bool  pip);
 

@@ -335,7 +335,7 @@ getnam:
      if ( strcmp(dstr,"") == 0 )    strcpy(dstr,jobnam);
      if ( strcmp(typ,PLTEXT) == 0 ) IGptma(215,IG_INP);
      else                           IGptma(173,IG_INP);
-     status=IGssip(IGgtts(267),fnam,dstr,JNLGTH);
+     status=IGssip("",IGgtts(267),fnam,dstr,JNLGTH);
      IGrsma();
      if ( status == GOMAIN ) goto gomain;
      if ( status == REJECT ) goto reject;
@@ -443,7 +443,7 @@ gomain:
 /*
 ***Läs in kommando.
 */
-     if ( (status=IGssip(IGgtts(302),shcmd,dstr,80)) < 0 ) return(status);
+     if ( (status=IGssip("",IGgtts(302),shcmd,dstr,80)) < 0 ) return(status);
      strcpy(dstr,shcmd);
 /*
 ***Utför.
@@ -564,9 +564,7 @@ static short ighidf(bool screen)
 */
 getnam:
    if ( strcmp(dstr,"") == 0 ) strcpy(dstr,jobnam);
-   IGptma(215,IG_INP);
-   status = IGssip(IGgtts(267),fnam,dstr,JNLGTH);
-   IGrsma();
+   status = IGssip(IGgtts(215),IGgtts(267),fnam,dstr,JNLGTH);
    if ( status < 0 ) return(status);
    strcpy(dstr,fnam);
 /*

@@ -245,9 +245,9 @@ static GC     icon_gc = 0;                  /* X GC with clip mask for transpare
  *
  *      In: message = C ptr to message string.
  *          type    = Type of message, WP_MESSAGE
- *                                      WP_ERROR
- *                                      WP_PROMPT
- *                                      WP_CLEARED
+ *                                     WP_ERROR
+ *                                     WP_PROMPT
+ *                                     WP_CLEARED
  *
  *      (C)2007-06-18 J. Kjellander
  *

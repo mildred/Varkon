@@ -39,7 +39,9 @@
 #include <string.h>
 
 extern V3MDAT  sydata;
-extern short   posmode,modtyp,modatt;
+extern short   modtyp,modatt;
+extern int     posmode;
+extern bool    relpos;
 extern char    jobnam[],jobdir[],tmprit[],actcnm[],svnversion[];
 extern DBTmat *lsyspk;
 extern DBptr   lsysla;
@@ -77,6 +79,7 @@ static short get_Leveltable(FILE *jf);
  *      (C)2007-03-31 1.19, J.Kjellander
  *
  *      2007-09-05 SVN_version added, J.Kjellander
+ *      2007-09-09 relpos added, J.Kjellander
  *
  ******************************************************!*/
 
@@ -114,6 +117,7 @@ static short get_Leveltable(FILE *jf);
 */
     if ( fprintf(jf,"\n#Expressions\n")                      < 0 ) goto werror;
     if ( fprintf(jf,"Position_method=%d\n",(int)posmode)     < 0 ) goto werror;
+    if ( relpos && fprintf(jf,"Relative=On\n")               < 0 ) goto werror;
     if ( fprintf(jf,"#End\n")                                < 0 ) goto werror;
 /*
 ***Data related to the currently active coordinate system.
@@ -662,12 +666,21 @@ werror:
  *
  *      (C)2007-03-19 J. Kjellander
  *
+ *      2007-09-09 relpos, J.Kjellander
+ *
  ******************************************************!*/
 
   {
    char line[V3STRLEN+1];
 
-
+/*
+***Init posmode and relpos.
+*/
+   posmode = 2;
+   relpos = FALSE;
+/*
+***Read file.
+*/
    while ( fgets(line,V3STRLEN,jf) != NULL )
      {
 /*
@@ -682,8 +695,14 @@ werror:
 */
      else if ( strncmp(line,"Position_method=",16) == 0 )
        {
-       posmode = 2;
-       if ( sscanf(&line[16],"%hd",&posmode) == 0 ) return(-1);
+       if ( sscanf(&line[16],"%d",&posmode) == 0 ) return(-1);
+       }
+/*
+***Relative=On
+*/
+     else if ( strncmp(line,"Relative=On",11) == 0 )
+       {
+       relpos = TRUE;
        }
      }
 /*

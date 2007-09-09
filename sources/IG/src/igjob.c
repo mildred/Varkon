@@ -65,11 +65,10 @@ char   tmprit[V3PTHLEN+1];
 /* Namn på temporär .RIT-fil under körning. */
 
 extern pm_ptr   actmod,pmstkp;
-extern bool     tmpref,rstron,igxflg,igbflg,jnflag;
+extern bool     tmpref,rstron,igxflg,igbflg,jnflag,relpos;
 extern char     pidnam[],jobnam[],jobdir[],mdffil[],actcnm[];
-extern short    modtyp,modatt,v3mode,actfun,
-                rmarg,bmarg,igmatt,igmtyp,pant,mant;
-extern short    posmode;
+extern short    modtyp,modatt,v3mode,actfun,igmatt,igmtyp,pant,mant;
+extern int      posmode;
 extern DBptr    msysla,lsysla;
 extern DBseqnum snrmax;
 extern V3MDAT   sydata;
@@ -393,7 +392,7 @@ static short igebas()
 /*
 ***Läs in jobnamn.
 */
-    status = IGssip(IGgtts(400),job,"",JNLGTH);
+    status = IGssip("",IGgtts(400),job,"",JNLGTH);
     if ( status < 0 ) return(status);
 /*
 ***Kolla om RES-filen finns.
@@ -1221,8 +1220,7 @@ static short igsvgm()
 /*
 ***Läs in nytt jobbnamn.
 */
-    IGptma(210,IG_INP);     
-    status = IGssip(IGgtts(267),newnam,newnam,JNLGTH);
+    status = IGssip(IGgtts(210),IGgtts(267),newnam,newnam,JNLGTH);
     if ( status < 0 ) return(status);
 /*
 ***Kolla att namnet är ok.
@@ -1368,8 +1366,7 @@ exit:
 /*
 ***Läs in nytt filnamn.
 */
-    IGptma(349,IG_INP);
-    if ( (status=IGssip(IGgtts(267),newnam,jobnam,JNLGTH)) < 0 )
+    if ( (status=IGssip(IGgtts(349),IGgtts(267),newnam,jobnam,JNLGTH)) < 0 )
         goto exit;
 /*
 ***Ändra namnet i modulhuvudet.
@@ -1429,8 +1426,7 @@ exit:
 ***Läs in nytt filnamn.
 */
 loop:
-    IGptma(279,IG_INP);     
-    status = IGssip(IGgtts(267),newnam,"",JNLGTH);
+    status = IGssip(IGgtts(279),IGgtts(267),newnam,"",JNLGTH);
     if ( status < 0 ) return(status);
 /*
 ***Kolla att det nya namnet inte är lika med aktuellt jobbnamn.
@@ -1522,8 +1518,7 @@ loop:
 /*
 ***Läs in nytt filnamn.
 */
-    IGptma(357,IG_INP);
-    if ( (status=IGssip(IGgtts(267),newnam,jobnam,JNLGTH)) < 0 )
+    if ( (status=IGssip(IGgtts(357),IGgtts(267),newnam,jobnam,JNLGTH)) < 0 )
         goto exit;
 /*
 ***Lagra jobb.
@@ -1761,8 +1756,7 @@ l1:
 */
    if ( !jnflag )
      {
-     IGptma(193,IG_INP);
-     if ( (status=IGssip(IGgtts(400),newnam,"",JNLGTH)) < 0 )
+     if ( (status=IGssip(IGgtts(193),IGgtts(400),newnam,"",JNLGTH)) < 0 )
         return(status);
 
      if ( IGchjn(newnam) < 0 )
@@ -1874,8 +1868,7 @@ l1:
 */
    if ( !jnflag )
      {
-     IGptma(193,IG_INP);
-     if ( (status=IGssip(IGgtts(400),newnam,"",JNLGTH)) < 0 )
+     if ( (status=IGssip(IGgtts(193),IGgtts(400),newnam,"",JNLGTH)) < 0 )
         return(status);
 
      if ( IGchjn(newnam) < 0 )
@@ -1973,8 +1966,7 @@ l1:
 */
    if ( !jnflag )
      {
-     IGptma(193,IG_INP);
-     if ( (status=IGssip(IGgtts(400),newnam,"",JNLGTH)) < 0 )
+     if ( (status=IGssip(IGgtts(193),IGgtts(400),newnam,"",JNLGTH)) < 0 )
         return(status);
 
      if ( IGchjn(newnam) < 0 )
@@ -2191,8 +2183,7 @@ l1:
 */
    else
      {
-     IGplma(mesbuf,IG_INP);
-     status=IGssip(IGgtts(210),newjob,"",JNLGTH);
+     status=IGssip(mesbuf,IGgtts(210),newjob,"",JNLGTH);
      }
 
    actfun = oldafu;
@@ -2503,6 +2494,7 @@ static short iginjb()
 */
     tmpref  = FALSE;
     posmode = 2;
+    relpos = FALSE;
 /*
 ***Initiera koordinatsystem. Modulens system = GLOBAL och
 ***inget lokalt system aktivt.

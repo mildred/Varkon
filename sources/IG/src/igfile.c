@@ -569,7 +569,7 @@ loop2:
 /*
 ***Vänta på användarens <CR>.
 */
-   status = IGssip(IGgtts(3),s,"",1);
+   status = IGssip("",IGgtts(3),s,"",1);
 /*
 ***Slut.
 */

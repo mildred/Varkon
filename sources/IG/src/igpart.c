@@ -43,11 +43,12 @@
 #include "../../WP/include/WP.h"
 
 extern pm_ptr  actmod;
-extern short   actfun,v3mode,modtyp,posmode;
+extern short   actfun,v3mode,modtyp;
+extern int     posmode;
 extern char    jobdir[],jobnam[],actpnm[],mbodir[];
 extern bool    tmpref,iggflg;
 extern V2NAPA  defnap;
-extern struct  ANSYREC sy;
+extern struct ANSYREC sy;
 
 /*
 ***The current directory for part selection.
@@ -96,7 +97,7 @@ static short get_partname(char *name);
 ***The end.
 */
 end:
-    WPerhg();    
+    WPerhg();
     return(status);
   }
 
@@ -134,7 +135,7 @@ end:
 ***The end.
 */
 end:
-    WPerhg();    
+    WPerhg();
     return(status);
   }
 
@@ -161,8 +162,7 @@ end:
 /*
 ***Get name of macro module.
 */
-    IGptma(167,IG_INP);
-    if ( (status=IGssip(IGgtts(267),filnam,dstr,JNLGTH)) < 0 ) goto end;
+    if ( (status=IGssip(IGgtts(167),IGgtts(267),filnam,dstr,JNLGTH)) < 0 ) goto end;
     strcpy(dstr,filnam);
 /*
 ***Create a PART statement an execute in MACRO mode.
@@ -174,7 +174,7 @@ end:
 */
 end:
     WPclear_mcwin();
-    WPerhg();    
+    WPerhg();
     return(status);
   }
 
@@ -343,7 +343,8 @@ end:
         pmtcon(expr,(pm_ptr)NULL,&csys_ptr,&dummy);
         }
 /*
-***Loop through the parameter list and fix prompt strings and default values.
+***Loop through the parameter list and fix prompt
+***strings and default values.
 */
     pmsbla(newmod);   
     pmrpap((pm_ptr)0);
@@ -384,7 +385,7 @@ end:
 ***that should not be displayed to the user ?
 */
       if ( strlen(prompt) == 0 ) hidden[npars] = TRUE;
-      else                        hidden[npars] = FALSE;
+      else                       hidden[npars] = FALSE;
 /*
 ***Parameter type.
 */
@@ -451,7 +452,7 @@ end:
 retry:
     if ( nvisible == 1  &&  input_types[0] == C_VEC_VA )
       {
-      IGplma(input_prompts[0],IG_MESS);
+      WPaddmess_mcwin(input_prompts[0],WP_MESSAGE);
       if ( pos_modes[0] >= 0 )
         {
         old_posmode = posmode; posmode = pos_modes[0];
@@ -459,15 +460,13 @@ retry:
         posmode = old_posmode;
         }
       else { status = IGcpos(0,&expr); }
-      IGrsma();
       if ( status < 0 ) goto reject;
       pprexs(expr,modtyp,input_ptrs[0],V3STRLEN);
       }
     else if ( nvisible == 1  &&  input_types[0] == C_REF_VA )
       {
-      IGplma(input_prompts[0],IG_MESS);
+      WPaddmess_mcwin(input_prompts[0],WP_MESSAGE);
       status = IGcref(0,&type_masks[0],&expr,&end,&right);
-      IGrsma();
       if ( status < 0 ) goto reject;
       pprexs(expr,modtyp,input_ptrs[0],V3STRLEN);
       }
@@ -682,7 +681,7 @@ reject:
   {
     pm_ptr   parlst;              /* soft parameter list */
     pm_ptr   exnpt;               /* pekare till expr. node */
-    pm_ptr   retla;     
+    pm_ptr   retla;
     pm_ptr   oldmod;              /* base adress of caller */
     pm_ptr   newmod;              /* base adress of called module */
     pm_ptr   dummy;
@@ -805,7 +804,7 @@ reject:
             t_string_prompt(prompt);
 /*
 ***What kind of parameter ?
-*/ 
+*/
             switch(defval.lit_type)
               {
 /*
@@ -824,7 +823,7 @@ reject:
 ***FLOAT parameter.
 */
               case C_FLO_VA: 
-              IGplma(prompt,IG_INP);
+              WPaddmess_mcwin(prompt,WP_MESSAGE);
               if ( optpar ) status = IGcflt(0,"",istr,&exnpt);
               else
                 {
@@ -1943,8 +1942,7 @@ start:
 */
    else if ( status == 3 )
      {
-     IGptma(244,IG_INP);
-     if ( (status=IGssip(IGgtts(267),name,"",JNLGTH)) < 0 ) errmes();
+     if ( (status=IGssip(IGgtts(244),IGgtts(267),name,"",JNLGTH)) < 0 ) errmes();
      }
 /*
 ***No, then this is the end.
