@@ -713,8 +713,8 @@ WPWIN wpwtab[WTABSIZ];
      DBint  slevel,
      DBint *subw_id)
 
-/*   Event-loop f�r MBS-rutinen WAIT_WIN. L�gger sig
- *   och v�ntar p� events i det WPIWIN-f�nster som angetts.
+/*   Event-loop for MBS-routine WAIT_WIN(). Also used by many
+ *   Varkon dialogs.
  *
  *   Denna rutin anv�nds dels av MBS (WAIT_WIN) och dessutom
  *   av WPialt() samt WPmsip(). K�nnetecknande �r att den i

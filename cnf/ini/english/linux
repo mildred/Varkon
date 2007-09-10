@@ -203,9 +203,11 @@ varkon.print.command.tooltip:    Command that will direct driver output to the p
 varkon.print.mediasize:          Media size
 varkon.print.media_x.tooltip:    Media size in horizontal direction (A4 = 210 mm)
 varkon.print.media_y.tooltip:    Media size in vertical direction (A4 = 297 mm)
-varkon.print.auto_manual:        Print scale and orientation
+varkon.print.orientation:        Print orientation
 varkon.print.auto:               Auto
 varkon.print.auto.tooltip:       Automatically scale print to fit media
+varkon.print.select:             Select
+varkon.print.select.tooltip:     Use the mouse to select what part of the model to print
 varkon.print.manual:             Manual
 varkon.print.manual.tooltip:     Manually configure print scale and orientation
 varkon.print.manual.title:       Print scale and orientation

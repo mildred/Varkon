@@ -367,8 +367,7 @@ m76 = "GEOMETRI"
 
 m77 = "SYSTEMDATA"
       "gm-data",f140
-      "pm-data",f139
-      "övrigt",m95;
+      "pm-data",f139;
 
 m79 = "PART/GRUPP"
       "en part",M379
@@ -451,11 +450,6 @@ m93 = "FONT_EDITOR"
 m94 = "GENERERA FIL"
        "detta tecken",M179
        "alla tecken",M180;
-
-m95 = "ÖVRIGT"
-      "idtab-ej dok",f141
-      "läs-ej dok",f142
-      "sydata-ej dok",f143;
 
 m97 = "VAR STIFFNESS"
       "med tang.",f72

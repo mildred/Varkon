@@ -371,8 +371,7 @@ m76 = "GEOMETRY"
 
 m77 = "SYSTEM"
       "gm-data",f140
-      "pm-data",f139
-      "misc",m95;
+      "pm-data",f139;
 
 m79 = "PART/GROUP"
       "one part",M379
@@ -455,11 +454,6 @@ m93 = "FONT_EDITOR"
 m94 = "GENERERATE FILE"
        "this char",M179
        "all  char",M180;
-
-m95 = "MISC"
-      "idtab-not doc",f141
-      "read-not doc",f142
-      "sydata-not doc",f143;
 
 m97 = "VAR STIFFNESS"
       "with tangents",f72

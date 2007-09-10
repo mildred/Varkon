@@ -617,15 +617,20 @@ exit:
 ***Ensure no old events pending. First event here
 ***should be Button Press.
 */
-   while ( XPending(xdisp) ) XNextEvent(xdisp,&xev);
+   while ( XPending(xdisp) )
+     {
+     XNextEvent(xdisp,&xev);
+     if ( xev.type == Expose ) WPwexp(&xev.xexpose);
+     }
 /*
 ***Eventloop.
 */
    while ( 1 )
      {
-     XMaskEvent(xdisp,ButtonPressMask |
+     XMaskEvent(xdisp,ButtonPressMask   |
                       ButtonReleaseMask |
-                      PointerMotionMask,&xev);
+                      PointerMotionMask |
+                      ExposureMask,&xev);
 
      switch (xev.type)
        {
@@ -774,6 +779,12 @@ exit:
             abs(*piy2 - *piy1) < minh ) status = -1;
        else                             status =  0;
        goto exit;
+/*
+***Expose.
+*/
+       case Expose:
+       if ( xev.type == Expose ) WPwexp(&xev.xexpose);
+       break;
        }
      }
 /*

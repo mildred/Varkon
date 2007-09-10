@@ -289,9 +289,11 @@ varkon.print.command.tooltip:    Kommando som skickar utskriften till skrivaren
 varkon.print.mediasize:          Mediastorlek
 varkon.print.media_x.tooltip:    Mediastorlek i horisontell riktning (A4 = 210 mm)
 varkon.print.media_y.tooltip:    Mediastorlek i vertikal riktning (A4 = 297 mm)
-varkon.print.auto_manual:        Utskriftens storlek och placering
+varkon.print.orientation:        Utskriftens orientering
 varkon.print.auto:               Auto
 varkon.print.auto.tooltip:       Gör utskriften så stor som möjligt
+varkon.print.select:             Markera
+varkon.print.select.tooltip:     Markera med musen vad som skall skrivas ut
 varkon.print.manual:             Manuell
 varkon.print.manual.tooltip:     Konfigurera utskriftens placering och storlek manuellt
 varkon.print.manual.title:       Utskriftens placering och storlek
