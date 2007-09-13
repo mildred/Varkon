@@ -60,7 +60,8 @@ extern V3MDAT  sydata;
  *
  *      (C)2006-12-25 Johan Kjellander
  *
- *      2007-01-09 pborder, piso,   Sören L
+ *      2007-01-09 pborder, piso,Sören L
+ *      2007-09-13 WIDTH for dims, J.Kjellander
  *
  ******************************************************!*/
 {
@@ -69,9 +70,8 @@ extern V3MDAT  sydata;
    int       k;
    DBptr     la;
    DBetype   type;
-   char      buf[MAXMETA];
+   char      str[V3STRLEN+1],buf[MAXMETA];
    short     status,curpen;
-   char      str[V3STRLEN+1];
    double    width,curwdt,tmpcn;
    DBId      dummy;
    DBAny     gmpost;
@@ -205,7 +205,7 @@ loop:
 */
         case TXTTYP:
         DBread_text(&gmpost.txt_un,str,la);
-        WPpltx(&gmpost.txt_un,str,&k,x,y,z,a);
+        WPpltx(&gmpost.txt_un,(unsigned char *)str,&k,x,y,z,a);
         width = gmpost.txt_un.wdt_tx;
         break;
 /*
@@ -214,6 +214,7 @@ loop:
         case LDMTYP:
         DBread_ldim(&gmpost.ldm_un,la);
         WPplld(&gmpost.ldm_un,&k,x,y,z,a);
+        width = gmpost.ldm_un.wdt_ld;
         break;
 /*
 ***Diameter dimension.
@@ -221,13 +222,15 @@ loop:
         case CDMTYP:
         DBread_cdim(&gmpost.cdm_un,la);
         WPplcd(&gmpost.cdm_un,&k,x,y,z,a);
+        width = gmpost.cdm_un.wdt_cd;
         break;
 /*
 ***Radius dimension.
 */
         case RDMTYP:
-        DBread_rdim(&gmpost.rdm_un,la);    
+        DBread_rdim(&gmpost.rdm_un,la); 
         WPplrd(&gmpost.rdm_un,&k,x,y,z,a);
+        width = gmpost.rdm_un.wdt_rd;
         break;
 /*
 ***Angular dimension.
@@ -235,6 +238,7 @@ loop:
         case ADMTYP:
         DBread_adim(&gmpost.adm_un,la);
         WPplad(&gmpost.adm_un,scale,&k,x,y,z,a);
+        width = gmpost.adm_un.wdt_ad;
         break;
 /*
 ***Hatch.
@@ -242,6 +246,7 @@ loop:
         case XHTTYP:
         DBread_xhatch(&gmpost.xht_un,xhcrds,la);
         WPplxh(&gmpost.xht_un,xhcrds,&k,x,y,z,a);
+        width = gmpost.xht_un.wdt_xh;
         break;
 /*
 ***Part and group.

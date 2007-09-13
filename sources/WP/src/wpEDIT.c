@@ -1067,12 +1067,12 @@ extern MNUALT smbind[];
 /*
 ***ï¿½, ï¿½ och ï¿½.
 */
-      case XK_aring:      symbol = SMBCHAR; tkn = 'ï¿½' ; break;
-      case XK_Aring:      symbol = SMBCHAR; tkn = 'ï¿½' ; break;
-      case XK_adiaeresis: symbol = SMBCHAR; tkn = 'ï¿½' ; break;
-      case XK_Adiaeresis: symbol = SMBCHAR; tkn = 'ï¿½' ; break;
-      case XK_odiaeresis: symbol = SMBCHAR; tkn = 'ï¿½' ; break;
-      case XK_Odiaeresis: symbol = SMBCHAR; tkn = 'ï¿½' ; break;
+      case XK_aring:      symbol = SMBCHAR; tkn = 'å' ; break;
+      case XK_Aring:      symbol = SMBCHAR; tkn = 'Å' ; break;
+      case XK_adiaeresis: symbol = SMBCHAR; tkn = 'ä' ; break;
+      case XK_Adiaeresis: symbol = SMBCHAR; tkn = 'Ä' ; break;
+      case XK_odiaeresis: symbol = SMBCHAR; tkn = 'ö' ; break;
+      case XK_Odiaeresis: symbol = SMBCHAR; tkn = 'Ö' ; break;
 /*
 ***Backspace, delete och return (samt enter).
 */

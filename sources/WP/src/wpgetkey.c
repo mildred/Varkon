@@ -320,12 +320,12 @@ start:
 /*
 ***Ã…, Ã„ ochï¿½Ã–.
 */
-      case XK_aring:      *s = 'ï¿½'; ntkn = 1; break;
-      case XK_Aring:      *s = 'ï¿½'; ntkn = 1; break;
-      case XK_adiaeresis: *s = 'ï¿½'; ntkn = 1; break;
-      case XK_Adiaeresis: *s = 'ï¿½'; ntkn = 1; break;
-      case XK_odiaeresis: *s = 'ï¿½'; ntkn = 1; break;
-      case XK_Odiaeresis: *s = 'ï¿½';ntkn = 1; break;
+      case XK_aring:      *s = 'å'; ntkn = 1; break;
+      case XK_Aring:      *s = 'Å'; ntkn = 1; break;
+      case XK_adiaeresis: *s = 'ä'; ntkn = 1; break;
+      case XK_Adiaeresis: *s = 'Ä'; ntkn = 1; break;
+      case XK_odiaeresis: *s = 'ö'; ntkn = 1; break;
+      case XK_Odiaeresis: *s = 'Ö';ntkn = 1; break;
 /*
 ***Funktionstangenter.
 */
