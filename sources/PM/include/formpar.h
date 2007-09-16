@@ -170,7 +170,7 @@
 /*
 ***VLDIM = 25, LDIM(-,<vec>,<vec>,<vec>,<int>)
 */
-     "-2:ve.ve.ve.ie",
+     "-5:ve.ve.ve.ie",
 /*
 ***VCDIM = 26, CDIM(-,<ref>,<pos>,<int>) 
 */
