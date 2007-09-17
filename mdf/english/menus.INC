@@ -78,6 +78,7 @@ m11 = "CREATE"
       "surface",m12
       "coordsys",m26
       "text",f50
+      "dimension",m50
       "tcopy",m10
       "group",f55
       "part",f25

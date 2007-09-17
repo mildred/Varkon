@@ -47,7 +47,7 @@ static short dxfocs(FILE *filpek, DBCsys *csypek, DBTmat *pmat, DBVector *origo)
 static short dxfobp(FILE *filpek, DBBplane *bplpek, DBVector *origo);
 static short dxfoms(FILE *filpek, DBMesh *mshpek, DBVector *origo);
 static short dxfotx(FILE *filpek, DBText *txtpek, char str[], DBVector *origo);
-static short dxfold(FILE *filpek, DBLdim *ldmpek, DBVector *origo);
+static short dxfold(FILE *filpek, DBLdim *ldmptr, DBCsys *csyptr, DBVector *origo);
 static short dxfocd(FILE *filpek, DBCdim *cdmpek, DBVector *origo);
 static short dxford(FILE *filpek, DBRdim *rdmpek, DBVector *origo);
 static short dxfoad(FILE *filpek, DBAdim *admpek, DBVector *origo);
@@ -94,6 +94,7 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
    DBAny   gmpost;
    DBTmat  pmat;
    DBSeg  *segptr,arcseg[4];
+   DBCsys  csy;
 
 /*
 ***Initializations.
@@ -163,8 +164,8 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
        case TXTTYP: DBread_text(&gmpost.txt_un,str,la);
                     dxfotx(filpek,&gmpost.txt_un,str,origo); break;
 
-       case LDMTYP: DBread_ldim(&gmpost.ldm_un,la);
-                    dxfold(filpek,&gmpost.ldm_un,origo); break;
+       case LDMTYP: DBread_ldim(&gmpost.ldm_un,&csy,la);
+                    dxfold(filpek,&gmpost.ldm_un,&csy,origo); break;
 
        case CDMTYP: DBread_cdim(&gmpost.cdm_un,la);
                     dxfocd(filpek,&gmpost.cdm_un,origo); break;
@@ -710,13 +711,14 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
 
  static short     dxfold(
         FILE     *filpek,
-        DBLdim   *ldmpek,
+        DBLdim   *ldmptr,
+        DBCsys   *csyptr,
         DBVector *origo)
 
 /*      Writes a linear dimension on DXF-format.
  *
  *      In:  filpek = Pekar på öppen DXF-fil.
- *           ldmpek = Pekare till ldmpost.
+ *           ldmptr = Pekare till ldmpost.
  *           origo  = Nollpunkt.
  *
  *      FV:  0 => Ok
@@ -731,13 +733,13 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
 /*
 ***Visible ?
 */
-   if ( !WPnivt(actwin.nivtab,ldmpek->hed_ld.level) ||
-        ldmpek->hed_ld.blank ) return(0);
+   if ( !WPnivt(actwin.nivtab,ldmptr->hed_ld.level) ||
+        ldmptr->hed_ld.blank ) return(0);
 /*
 ***Make polyline.
 */
    k = -1;
-   WPplld(ldmpek,&k,x,y,z,a);
+   WPplld(ldmptr,csyptr,&k,x,y,z,a);
 /*
 ***Project.
 */
@@ -747,7 +749,7 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
 */
    if ( WPcply(&actwin.vy.modwin,(short)-1,&k,x,y,a) )
      {
-     dxfopl(filpek,&(ldmpek->hed_ld),k,x,y,a,origo);
+     dxfopl(filpek,&(ldmptr->hed_ld),k,x,y,a,origo);
      }
 
    return(0);

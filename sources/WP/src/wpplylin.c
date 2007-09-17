@@ -292,7 +292,7 @@ static double curnog = 1.0;
           {
           i =  0;
           n =  4*xht.nlin_xh;
-  
+
           while ( i < n )
             {
             x[++k] = crdvek[i++];
@@ -304,10 +304,10 @@ static double curnog = 1.0;
         break;
 
         case LDMTYP:
-        DBread_ldim(&dim.ldm_un,la);
+        DBread_ldim(&dim.ldm_un,&csy,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          WPplld(&dim.ldm_un,&k,x,y,z,a);
+          WPplld(&dim.ldm_un,&csy,&k,x,y,z,a);
           }
         break;
 

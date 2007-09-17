@@ -300,6 +300,7 @@ end:
    DBTmat    pmat;
    DBSeg    *segptr,arcseg[4];
    DBSegarr *pborder, *piso;
+   DBCsys    csy;
 
 /*
 ***Div. initiering.
@@ -416,10 +417,10 @@ loop:
 ***Linear dimension.
 */
        case LDMTYP:
-       DBread_ldim(&gmpost.ldm_un,la);
+       DBread_ldim(&gmpost.ldm_un,&csy,la);
        if ( !gmpost.hed_un.blank  &&  WPnivt(actwin->nivtab,gmpost.hed_un.level) )
          {
-         WPplld(&gmpost.ldm_un,&k,x,y,z,a);
+         WPplld(&gmpost.ldm_un,&csy,&k,x,y,z,a);
          }
        break;
 /*

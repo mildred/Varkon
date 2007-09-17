@@ -551,8 +551,8 @@ extern DBTmat *lsyspk;
         break;
 
       case LDMTYP:
-        DBread_ldim(&ogmpst.ldm_un,la);
-        DBread_ldim(&ngmpst.ldm_un,la);
+        DBread_ldim(&ogmpst.ldm_un,NULL,la);
+        DBread_ldim(&ngmpst.ldm_un,NULL,la);
         GEtfLdim_to_local(&ogmpst.ldm_un,ptr,&ngmpst.ldm_un);
         status = EXeldm(id,&ngmpst.ldm_un,att);
         break;

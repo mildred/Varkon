@@ -83,10 +83,10 @@ static FUATTR futab[] =
  {IGbpln, FALSE, RIT_MOD+BAS2_MOD},          /* f27  B-Plan */
  {IGlipt, FALSE, BAS3_MOD},                  /* f28  Linje tang. en storhet */
  {IGli2t, FALSE, BAS3_MOD},                  /* f29  Linje tang. 2 cirklar */
- { IGld0, FALSE, RIT_MOD+BAS2_MOD},          /* f30  Längdmått horisontellt */
+ { IGld0, FALSE, RIT_MOD+BAS_MOD},           /* f30  Längdmått horisontellt */
 
- { IGld1, FALSE, RIT_MOD+BAS2_MOD},          /* f31  Längdmått vertikalt */
- { IGld2, FALSE, RIT_MOD+BAS2_MOD},          /* f32  Längdmått parallellt */
+ { IGld1, FALSE, RIT_MOD+BAS_MOD},           /* f31  Längdmått vertikalt */
+ { IGld2, FALSE, RIT_MOD+BAS_MOD},           /* f32  Längdmått parallellt */
  { IGcd0, FALSE, RIT_MOD+BAS2_MOD},          /* f33  Diametermått horisont. */
  { IGcd1, FALSE, RIT_MOD+BAS2_MOD},          /* f34  Diametermått vertikalt */
  { IGcd2, FALSE, RIT_MOD+BAS2_MOD},          /* f35  Diametermått parallellt */

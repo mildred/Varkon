@@ -465,7 +465,7 @@ askwdt:
         }
       else if ( typ == LDMTYP )
         {
-        DBread_ldim(&ldm,la);
+        DBread_ldim(&ldm,NULL,la);
         ldm.wdt_ld = width;
         DBupdate_ldim(&ldm,la);
         }
@@ -1474,7 +1474,7 @@ loop:
 
     if ( typ == LDMTYP )
       {
-      DBread_ldim(&ldm,la);
+      DBread_ldim(&ldm,NULL,la);
       dauto = ldm.auto_ld;
       tsiz = ldm.tsiz_ld;
       }
@@ -1632,7 +1632,7 @@ loop:
 
     if ( typ == LDMTYP )
       {
-      DBread_ldim(&ldm,la);
+      DBread_ldim(&ldm,NULL,la);
       asiz = ldm.asiz_ld;
       }
     else if ( typ == CDMTYP )
@@ -1781,7 +1781,7 @@ loop:
 
     if ( typ == LDMTYP )
       {
-      DBread_ldim(&ldm,la);
+      DBread_ldim(&ldm,NULL,la);
       dauto = ldm.auto_ld;
       ndig = ldm.ndig_ld;
       }
@@ -1976,7 +1976,7 @@ loop:
 
     if ( typ == LDMTYP )
       {
-      DBread_ldim(&ldm,la);
+      DBread_ldim(&ldm,NULL,la);
       ldm.auto_ld = dauto;
       DBupdate_ldim(&ldm,la);
       }

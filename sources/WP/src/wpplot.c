@@ -79,6 +79,7 @@ extern V3MDAT  sydata;
    DBSeg    *segptr,arcseg[4];
    DBSegarr *pborder,*piso;
    DBfloat   xhcrds[4*GMXMXL];
+   DBCsys    csy;
    METADEF   md;
 
 /*
@@ -212,8 +213,8 @@ loop:
 ***Linear dimension.
 */
         case LDMTYP:
-        DBread_ldim(&gmpost.ldm_un,la);
-        WPplld(&gmpost.ldm_un,&k,x,y,z,a);
+        DBread_ldim(&gmpost.ldm_un,&csy,la);
+        WPplld(&gmpost.ldm_un,&csy,&k,x,y,z,a);
         width = gmpost.ldm_un.wdt_ld;
         break;
 /*

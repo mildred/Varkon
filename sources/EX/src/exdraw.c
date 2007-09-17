@@ -433,7 +433,7 @@ extern DBTmat *lsyspk;
     DBAny     gmpost;
     DBSeg     arcseg[4];
     DBSeg    *graseg;
-/*    DBTmat    pmat;  */
+    DBCsys    csy;
     DBHeader  hed;
     DBPart    part;
     DBSegarr *pborder;
@@ -511,33 +511,33 @@ extern DBTmat *lsyspk;
 ***Längdmått.
 */
       case LDMTYP:
-      DBread_ldim((DBLdim *)&gmpost,la);
-      if ( draw ) WPdrdm(&gmpost,la,win_id);
-      else        WPdldm(&gmpost,la,win_id);
+      DBread_ldim((DBLdim *)&gmpost,&csy,la);
+      if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
+      else        WPdldm(&gmpost,&csy,la,win_id);
       break;
 /*
 ***Diametermått.
 */
       case CDMTYP:
       DBread_cdim((DBCdim *)&gmpost,la);
-      if ( draw ) WPdrdm(&gmpost,la,win_id);
-      else        WPdldm(&gmpost,la,win_id);
+      if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
+      else        WPdldm(&gmpost,&csy,la,win_id);
       break;
 /*
 ***Radiemått.
 */
       case RDMTYP:
       DBread_rdim((DBRdim *)&gmpost,la);
-      if ( draw ) WPdrdm(&gmpost,la,win_id);
-      else        WPdldm(&gmpost,la,win_id);
+      if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
+      else        WPdldm(&gmpost,&csy,la,win_id);
       break;
 /*
 ***Vinkelmått.
 */
       case ADMTYP:
       DBread_adim((DBAdim *)&gmpost,la);
-      if ( draw ) WPdrdm(&gmpost,la,win_id);
-      else        WPdldm(&gmpost,la,win_id);
+      if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
+      else        WPdldm(&gmpost,&csy,la,win_id);
       break;
 /*
 ***Koordinatsystem.

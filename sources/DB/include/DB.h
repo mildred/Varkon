@@ -691,10 +691,9 @@ DBstatus DBwrite_nurbs(DBHvector *cpts, DBint ncpts, DBfloat *knots,
                        DBint nknots, DBptr *cpts_la, DBptr *knots_la);
 DBstatus DBread_nurbs(DBHvector *cpts, DBint ncpts, DBfloat *knots,
                              DBint nknots, DBptr cpts_la, DBptr knots_la);
-DBstatus DBfree_nurbs(DBfloat  *knots, DBHvector *cpts);                             
-DBstatus DBdelete_nurbs(DBSeg *seg);                  
-                       
-                       
+DBstatus DBfree_nurbs(DBfloat  *knots, DBHvector *cpts);
+DBstatus DBdelete_nurbs(DBSeg *seg);
+
 /* Surface insert, read, update, deltete etc. */
 
 DBstatus  DBinsert_surface(DBSurf *surptr, DBPatch *tpptr, DBSegarr *ptrim,
@@ -756,7 +755,7 @@ DBstatus DBdelete_xhatch(DBptr la);
 /* Linear dimension insert, read, update and delete */
 
 DBstatus DBinsert_ldim(DBLdim *ldmptr, DBId *idptr, DBptr *laptr);
-DBstatus DBread_ldim(DBLdim *ldmptr, DBptr la);
+DBstatus DBread_ldim(DBLdim *ldmptr, DBCsys *csyptr, DBptr la);
 DBstatus DBupdate_ldim(DBLdim *ldmptr, DBptr la);
 DBstatus DBdelete_ldim(DBptr la);
 

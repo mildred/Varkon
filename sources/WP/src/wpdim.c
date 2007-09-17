@@ -33,6 +33,7 @@
 
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
+#include "../../GE/include/GE.h"
 #include "../include/WP.h"
 #include <math.h>
 
@@ -48,18 +49,20 @@
 
 extern int actpen;
 
-static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
+static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, bool draw);
 
 /*!******************************************************/
 
-        short WPdrdm(
-        DBAny *dimpek,
+        short   WPdrdm(
+        DBAny  *dimptr,
+        DBCsys *csyptr,
         DBptr   la,
         DBint   win_id)
 
 /*      Display linear, diameter, radius or angular dimension.
  *
- *      In: dimpek => C ptr to dim record.
+ *      In: dimptr => C ptr to dim record.
+ *          csyptr => C ptr to dim csys.
  *          la     => Dim address in DB.
  *          win_id => WPGWIN ID to display in or GWIN_ALL.
  *
@@ -68,6 +71,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
  *      (C) microform ab 27/1/95 J. Kjellander
  *
  *      2006-12-26 Removed GP, J.Kjellander
+ *      2007-09-17 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -79,7 +83,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*
 ***Don't display blanked entities.
 */
-   if ( dimpek->hed_un.blank) return(0);
+   if ( dimptr->hed_un.blank) return(0);
 /*
 ***Loop through all WPGWIN's.
 */
@@ -97,43 +101,48 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*
 ***Yes, is the dim level visible in this window ?
 */
-         if ( WPnivt(gwinpt->nivtab,dimpek->hed_un.level) )
+         if ( WPnivt(gwinpt->nivtab,dimptr->hed_un.level) )
            {
 /*
 ***Yes,set color.
 */
-           if ( dimpek->hed_un.pen != actpen ) WPspen(dimpek->hed_un.pen);
+           if ( dimptr->hed_un.pen != actpen ) WPspen(dimptr->hed_un.pen);
 /*
 ***Display.
 */
-           drawdm(gwinpt,dimpek,la,TRUE);
+           drawdm(gwinpt,dimptr,csyptr,la,TRUE);
            }
          }
        }
      }
-
+/*
+***The end.
+*/
    return(0);
  }
 
 /********************************************************/
 /*!******************************************************/
 
-        short WPdldm(
-        DBAny *dimpek,
+        short   WPdldm(
+        DBAny  *dimptr,
+        DBCsys *csyptr,
         DBptr   la,
         DBint   win_id)
 
 /*      Erase dimension.
  *
- *      In: dimpek => Pekare till mått-post.
- *          la     => GM-adress.
- *          win_id => Fönster att sudda i.
+ *      In: dimptr => C ptr to dim record.
+ *          csyptr => C ptr to dim csys.
+ *          la     => Dim address in DB.
+ *          win_id => WPGWIN ID to display in or GWIN_ALL.
  *
  *      Return:  0 => Ok.
  *
  *      (C) microform ab 27/1/95 J. Kjellander
  *
  *      2006-12-26 Removed GP, J.Kjellander
+ *      2007-09-17 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -144,7 +153,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
    WPGWIN *gwinpt;
 
 /*
-***Loopa igenom alla WPGWIN-fönster.
+***Loop through all WPGWIN-windows.
 */
    for ( i=0; i<WTABSIZ; ++i )
      {
@@ -153,24 +162,26 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
        {
        gwinpt = (WPGWIN *)winptr->ptr;
 /*
-***Skall vi sudda i detta fönster ?
+***Is this window involved ?
 */
        if ( win_id == GWIN_ALL  ||  win_id == gwinpt->id.w_id )
          {
 /*
 ***Remove from DF.
 */
-         if ( WPfobj(gwinpt,la,dimpek->hed_un.type,&typ) ) WProbj(gwinpt);
+         if ( WPfobj(gwinpt,la,dimptr->hed_un.type,&typ) ) WProbj(gwinpt);
 /*
 ***Remove from display.
 */
-         if ( !WPnivt(gwinpt->nivtab,dimpek->hed_un.level)  ||
-                               dimpek->hed_un.blank) return(0);
-         drawdm(gwinpt,dimpek,la,FALSE);
+         if ( !WPnivt(gwinpt->nivtab,dimptr->hed_un.level)  ||
+                               dimptr->hed_un.blank) return(0);
+         drawdm(gwinpt,dimptr,csyptr,la,FALSE);
          }
        }
      }
-
+/*
+***The end.
+*/
    return(0);
  }
 
@@ -179,22 +190,24 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 
  static short   drawdm(
         WPGWIN *gwinpt,
-        DBAny  *dimpek,
+        DBAny  *dimptr,
+        DBCsys *csyptr,
         DBptr   la,
         bool    draw)
 
-/*      Ritar/suddar ett mått i ett visst fönster.
- *      Vid ritning lagras objektet samtidigt i DF.
+/*      Draw/erase dim in a WPGWIN and update DF.
  *
- *      In: gwinpt => Pekare till fönster.
- *          dimpek => Pekare till mått-post.
- *          la     => GM-adress.
- *          draw   => TRUE = Rita, FALSE = Sudda
+ *      In: gwinpt => C ptr to window.
+ *          dimptr => C ptr to dim record.
+ *          csyptr => C ptr to dim csys.
+ *          la     => Dim address in DB.
+ *          draw   => TRUE for draw, FALSE for erase.
  *
  *      (C)microform ab 27/1/95 J.Kjellander
  *
  *      2006-12-26 Removed GP, J.Kjellander
  *      2007-09-01 WIDTH, J.Kjellander
+ *      2007-09-17 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -204,33 +217,34 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
    int    k;
 
 /*
-***Skapa grafisk representation, dvs. polylinje.
+***Create graphical representation (polyline).
 */
    k = -1;
 
-   switch ( dimpek->hed_un.type )
+   switch ( dimptr->hed_un.type )
      {
      case LDMTYP:
-     WPplld(&dimpek->ldm_un,&k,x,y,z,a);
-     w = dimpek->ldm_un.wdt_ld;
+     WPplld(&dimptr->ldm_un,csyptr,&k,x,y,z,a);
+     WPpply(gwinpt,k,x,y,z);
+     w = dimptr->ldm_un.wdt_ld;
      break;
 
      case CDMTYP:
-     WPplcd(&dimpek->cdm_un,&k,x,y,z,a);
-     w = dimpek->cdm_un.wdt_cd;
+     WPplcd(&dimptr->cdm_un,&k,x,y,z,a);
+     w = dimptr->cdm_un.wdt_cd;
      break;
 
      case RDMTYP:
-     WPplrd(&dimpek->rdm_un,&k,x,y,z,a);
-     w = dimpek->rdm_un.wdt_rd;
+     WPplrd(&dimptr->rdm_un,&k,x,y,z,a);
+     w = dimptr->rdm_un.wdt_rd;
      break;
 
      case ADMTYP:
      scale = (gwinpt->vy.scrwin.xmax - gwinpt->vy.scrwin.xmin) *
               gwinpt->geo.psiz_x /
              (gwinpt->vy.modwin.xmax - gwinpt->vy.modwin.xmin);
-     WPplad(&dimpek->adm_un,scale,&k,x,y,z,a);
-     w = dimpek->adm_un.wdt_ad;
+     WPplad(&dimptr->adm_un,scale,&k,x,y,z,a);
+     w = dimptr->adm_un.wdt_ad;
      break;
     }
 /*
@@ -242,9 +256,9 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 */
    if ( WPcply(&gwinpt->vy.modwin,-1,&k,x,y,a) )
      {
-     if ( draw  &&  dimpek->hed_un.hit )
+     if ( draw  &&  dimptr->hed_un.hit )
        {
-       if ( WPsply(gwinpt,k,x,y,a,la,dimpek->hed_un.type) )
+       if ( WPsply(gwinpt,k,x,y,a,la,dimptr->hed_un.type) )
          WPdobj(gwinpt,TRUE);
        else
          return(erpush("GP0012",""));
@@ -265,7 +279,8 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*!******************************************************/
 
         short   WPplld(
-        DBLdim *dimpek,
+        DBLdim *dimptr,
+        DBCsys *csyptr,
         int    *n,
         double  x[],
         double  y[],
@@ -274,8 +289,9 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 
 /*      Creates the graphical 3D polyline representation 
  *      for a linear dimension.
- *      
- *      In:  dimpek  = C-ptr to DBLdim.
+ *
+ *      In:  dimptr  = C-ptr to DBLdim.
+ *           csyptr  = C-ptr to current csys.
  *           n+1     = Offset to polyline start.
  *
  *      Out: n       = Offset to polyline end.
@@ -284,6 +300,8 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
  *      Return: 0    = Ok.
  *
  *      (C)2006-12-26 J.Kjellander
+ *
+ *      2007-90-17 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -294,40 +312,41 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     double x1,y1,x2,y2,x3,y3,x4,y4,x5,y5;
     double fi,sinfi,cosfi;
     double a,b,d,e,d5,tt;
-    double xp2,xp3,xp6,xp7,yp1,yp4;
+    double xp2,xp3,xp6,xp7,yp1,yp4,xt,yt,zt;
     double dy,dx,pa,radk;
     short  dimtyp,ndig;
     DBText txtrec;
+    DBTmat t;
 
 /*
 ***Initializations.
 */
     radk = PI/180.0;
-    dimtyp = dimpek->dtyp_ld;           /* Type */
-    ndig = dimpek->ndig_ld;             /* Decimals */
-    d = dimpek->asiz_ld;                /* Arrow size */
+    dimtyp = dimptr->dtyp_ld;           /* Type */
+    ndig = dimptr->ndig_ld;             /* Decimals */
+    d = dimptr->asiz_ld;                /* Arrow size */
     d5 = d/5;
 
     k = *n;
-    x5 = dimpek->p3_ld.x_gm;            /* Text position */
-    y5 = dimpek->p3_ld.y_gm; 
-    x1 = dimpek->p1_ld.x_gm;            /* Start */
-    y1 = dimpek->p1_ld.y_gm;       
-    x4 = dimpek->p2_ld.x_gm;            /* End */
-    y4 = dimpek->p2_ld.y_gm;
+    x5 = dimptr->p3_ld.x_gm;            /* Text position */
+    y5 = dimptr->p3_ld.y_gm; 
+    x1 = dimptr->p1_ld.x_gm;            /* Start */
+    y1 = dimptr->p1_ld.y_gm;
+    x4 = dimptr->p2_ld.x_gm;            /* End */
+    y4 = dimptr->p2_ld.y_gm;
     if ((x1 == x4) && (y1 == y4)) return(0);
 
     txtrec.fnt_tx = 0;
-    txtrec.h_tx = dimpek->tsiz_ld;      /* Text size */
+    txtrec.h_tx = dimptr->tsiz_ld;      /* Text size */
     txtrec.b_tx = 60.0;
     txtrec.l_tx = 15.0;
 /*
-***Beräkna vinkeln och x2,y2,x3,y3
-*/ 
+***Calculate angle and x2,y2,x3,y3
+*/
     switch (dimtyp) {
 
-         case LDHORIZON: {                     /* Horisontellt mått */
-              if ((y5 > y1) && (y5 > y4)) { 
+         case LDHORIZON: {                     /* Horizontal */
+              if ((y5 > y1) && (y5 > y4)) {
                    fi = 180.0;
                    if (x4 > x1) {
                         tt = x1; x1 = x4; x4 = tt;
@@ -335,7 +354,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
                    }
               } else {
                    fi = 0.0;
-                   if (x4 < x1) {  
+                   if (x4 < x1) {
                         tt = x1; x1 = x4; x4 = tt;
                         tt = y1; y1 = y4; y4 = tt;
                    }
@@ -346,7 +365,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
               break;
          }
 
-         case LDVERTIC: {                      /* Vertikalt mått */
+         case LDVERTIC: {                      /* Vertical */
               if ((x5 < x1) && (x5 < x4)) { 
                    fi = 270.0;
                    if (y4 > y1) {
@@ -359,14 +378,14 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
                         tt = x1; x1 = x4; x4 = tt;
                         tt = y1; y1 = y4; y4 = tt;
                    }
-              }    
+              }
               x2 = x3 = x5;
               y2 = y1;
               y3 = y4;
               break;
          }
 
-         case LDPARALL: {                      /* Parallelt mått */
+         case LDPARALL: {                      /* Parallell */
               dy = x1 - x4; dx = y4 - y1;
               tt = SQRT(dx*dx + dy*dy);
               dx /= tt; dy /= tt;
@@ -415,8 +434,8 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     a = SQRT((x3 - x2)*(x3 - x2) + (y3 - y2)*(y3 - y2));
     b = SQRT((x5 - x2)*(x5 - x2) + (y5 - y2)*(y5 - y2));
     e = SQRT((x5 - x3)*(x5 - x3) + (y5 - y3)*(y5 - y3));
-    yp1 = SQRT((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));    
-    yp4 = SQRT((x4 - x3)*(x4 - x3) + (y4 - y3)*(y4 - y3));    
+    yp1 = SQRT((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+    yp4 = SQRT((x4 - x3)*(x4 - x3) + (y4 - y3)*(y4 - y3));
 
     switch (dimtyp) {
 
@@ -453,49 +472,49 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 ***parenteser löser problemet, fråga inte mig varför.
 ***DIAB!!!!
 */
-    if ((e > a) && (b < e)) {               /* Vänster */
+    if ((e > a) && (b < e)) {               /* Left */
 
          xp2 = b;
          xp3 = e;
-         xp7 = e + 2*d;      
+         xp7 = e + 2*d;
          if ((fi > 90.0) && (fi <= 270.0))
               xp6 = -(strlen(txt)*txtrec.b_tx*txtrec.h_tx/60.0);
          else
-              xp6 = 0.0;  
+              xp6 = 0.0;
     } else if ((b > a) && (e < b)) {
-                xp6 = -(b + 2*d);            /* Höger */
+                xp6 = -(b + 2*d);            /* Right */
                 xp2 = -b; 
                 xp3 = -e;
                 if ((fi <= 90.0) || (fi > 270.0))
                      xp7 = strlen(txt)*txtrec.b_tx*txtrec.h_tx/60.0;
                 else
-                     xp7 = 0.0;  
+                     xp7 = 0.0;
            } else {
                 xp3 = xp7 = e;
-                xp2 = xp6 = -b;          /* Mellan */
+                xp2 = xp6 = -b;          /* Between arrows */
            }
 /*
-***Bygg måttet
-*/ 
-    x[ ++k ] = xp2;      y[ k ] = yp1;    typ[ k ] = 0;
-    x[ ++k ] = xp2;      y[ k ] = -d5;    typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp3;      y[ k ] = yp4;    typ[ k ] = 0;
-    x[ ++k ] = xp3;      y[ k ] = -d5;    typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp6;      y[ k ] = 0.0;    typ[ k ] = 0;
-    x[ ++k ] = xp7;      y[ k ] = 0.0;    typ[ k ] = VISIBLE; 
+***Make polyline.
+*/
+    x[++k] = xp2;      y[k] = yp1;    typ[k] = 0;
+    x[++k] = xp2;      y[k] = -d5;    typ[k] = VISIBLE;
+    x[++k] = xp3;      y[k] = yp4;    typ[k] = 0;
+    x[++k] = xp3;      y[k] = -d5;    typ[k] = VISIBLE;
+    x[++k] = xp6;      y[k] = 0.0;    typ[k] = 0;
+    x[++k] = xp7;      y[k] = 0.0;    typ[k] = VISIBLE;
 
     if (xp2*xp3 > 0.0)
          d = -d;
 
-    x[ ++k ] = xp2;      y[ k ] = 0.0;    typ[ k ] = 0;
-    x[ ++k ] = xp2 + d;  y[ k ] = d5;     typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp2 + d;  y[ k ] = -d5;    typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp2;      y[ k ] = 0.0;    typ[ k ] = VISIBLE; 
+    x[++k] = xp2;      y[k] = 0.0;    typ[k] = 0;
+    x[++k] = xp2 + d;  y[k] = d5;     typ[k] = VISIBLE;
+    x[++k] = xp2 + d;  y[k] = -d5;    typ[k] = VISIBLE;
+    x[++k] = xp2;      y[k] = 0.0;    typ[k] = VISIBLE;
 
-    x[ ++k ] = xp3;      y[ k ] = 0.0;    typ[ k ] = 0;
-    x[ ++k ] = xp3 - d;  y[ k ] = d5;     typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp3 - d;  y[ k ] = -d5;    typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp3;      y[ k ] = 0.0;    typ[ k ] = VISIBLE; 
+    x[++k] = xp3;      y[k] = 0.0;    typ[k] = 0;
+    x[++k] = xp3 - d;  y[k] = d5;     typ[k] = VISIBLE;
+    x[++k] = xp3 - d;  y[k] = -d5;    typ[k] = VISIBLE;
+    x[++k] = xp3;      y[k] = 0.0;    typ[k] = VISIBLE;
 
     x[ ++k ] = 0;                         typ[ k ] = 0;
 
@@ -504,7 +523,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     else
          y[ k ] = 2*d5;
 /*
-***Transformera till lokalt koordinatsystem
+***Transform to local 2D csys.
 */
     if (fi == 0.0)                        /* cos=1 sin=0 */
          for (i = 0; i <= k; i++) {
@@ -544,23 +563,50 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*
 ***Add the text.
 */
-    if ((fi > 90.0) && (fi <= 270.0)) {
-         if (fi <= 180.0)
-              txtrec.v_tx = fi + 180.0;
-         else
-              txtrec.v_tx = fi - 180.0;
-    } else
-         txtrec.v_tx = fi;
+    if ( (fi > 90.0) && (fi <= 270.0) )
+      {
+      if ( fi <= 180.0 ) txtrec.v_tx = fi + 180.0;
+      else               txtrec.v_tx = fi - 180.0;
+      }
+      else txtrec.v_tx = fi;
 
-    txtrec.crd_tx.x_gm = x[ k ];
-    txtrec.crd_tx.y_gm = y[ k-- ];
+    txtrec.crd_tx.x_gm = x[k];
+    txtrec.crd_tx.y_gm = y[k];
+    txtrec.crd_tx.z_gm = z[k--];
     txtrec.pmod_tx     = 0;
 
-    if ( dimpek->auto_ld ) WPpltx(&txtrec,(unsigned char *)txt,&k,x,y,z,typ);
+    if ( dimptr->auto_ld ) WPpltx(&txtrec,(unsigned char *)txt,&k,x,y,z,typ);
 /*
-***End.
+***If needed, transform 2D polyline to XY-plane of 3D csys.
 */
-   *n = k;    
+    if ( dimptr->pcsy_ld > 0 )
+      {
+      GEtform_inv(&csyptr->mat_pl,&t);
+
+      for ( i=0; i<=k; i++ )
+        {
+        xt = t.g11 * x[i] +
+             t.g12 * y[i] +
+             t.g13 * z[i] +
+             t.g14;
+        yt = t.g21 * x[i] +
+             t.g22 * y[i] +
+             t.g23 * z[i] +
+             t.g24;
+        zt = t.g31 * x[i] +
+             t.g32 * y[i] +
+             t.g33 * z[i] +
+             t.g34;
+
+        x[i] = xt;
+        y[i] = yt;
+        z[i] = zt;
+        }
+      }
+/*
+***The end.
+*/
+   *n = k;
 
     return(0);
   }
@@ -569,7 +615,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*!******************************************************/
 
         short   WPplcd(
-        DBCdim *dimpek,
+        DBCdim *dimptr,
         int    *n,
         double  x[],
         double  y[],
@@ -579,7 +625,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*      Creates the graphical 3D polyline representation 
  *      for a circular dimension.
  *      
- *      In:  dimpek  = C-ptr to DBCdim.
+ *      In:  dimptr  = C-ptr to DBCdim.
  *           n+1     = Offset to polyline start.
  *
  *      Out: n       = Offset to polyline end.
@@ -606,24 +652,24 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     radk = PI/180.0;
 
     k = *n;    
-    x5 = dimpek->p3_cd.x_gm;            /* Text position */
-    y5 = dimpek->p3_cd.y_gm; 
+    x5 = dimptr->p3_cd.x_gm;            /* Text position */
+    y5 = dimptr->p3_cd.y_gm; 
 
-    dimtyp = dimpek->dtyp_cd;                 /* Måtttyp */
+    dimtyp = dimptr->dtyp_cd;                 /* Måtttyp */
 
-    ndig = dimpek->ndig_cd;
-    x1 = dimpek->p1_cd.x_gm;                 /* Start */
-    y1 = dimpek->p1_cd.y_gm;       
-    x4 = dimpek->p2_cd.x_gm;                 /* Slut */
-    y4 = dimpek->p2_cd.y_gm;
+    ndig = dimptr->ndig_cd;
+    x1 = dimptr->p1_cd.x_gm;                 /* Start */
+    y1 = dimptr->p1_cd.y_gm;       
+    x4 = dimptr->p2_cd.x_gm;                 /* Slut */
+    y4 = dimptr->p2_cd.y_gm;
     if ((x1 == x4) && (y1 == y4))
          return(0);
 
-    d = dimpek->asiz_cd;                      /* Pilstorlek */
+    d = dimptr->asiz_cd;                      /* Pilstorlek */
     d5 = d/5;
 
     txtrec.fnt_tx = 0;
-    txtrec.h_tx = dimpek->tsiz_cd;            /* Textstorlek */
+    txtrec.h_tx = dimptr->tsiz_cd;            /* Textstorlek */
     txtrec.b_tx = 60.0;
     txtrec.l_tx = 15.0;
 /*
@@ -857,7 +903,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     txtrec.crd_tx.y_gm = y[ k-- ];
     txtrec.pmod_tx     = 0;
 
-    if (dimpek->auto_cd) WPpltx(&txtrec,(unsigned char *)txt,&k,x,y,z,typ);
+    if (dimptr->auto_cd) WPpltx(&txtrec,(unsigned char *)txt,&k,x,y,z,typ);
 /*
 ***The End.
 */
@@ -870,7 +916,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*!******************************************************/
 
         short   WPplrd(
-        DBRdim *dimpek,
+        DBRdim *dimptr,
         int    *n,
         double  x[],
         double  y[],
@@ -880,7 +926,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*      Creates the graphical 3D polyline representation 
  *      for a radius dimension.
  *      
- *      In:  dimpek  = C-ptr to DBRdim.
+ *      In:  dimptr  = C-ptr to DBRdim.
  *           n+1     = Offset to polyline start.
  *
  *      Out: n       = Offset to polyline end.
@@ -911,19 +957,19 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 
     k = *n;    
 
-    ndig = dimpek->ndig_rd;
-    x1 = dimpek->p1_rd.x_gm;  
-    y1 = dimpek->p1_rd.y_gm;       
-    x2 = dimpek->p2_rd.x_gm;  
-    y2 = dimpek->p2_rd.y_gm;
-    x3 = dimpek->p3_rd.x_gm;  
-    y3 = dimpek->p3_rd.y_gm;
+    ndig = dimptr->ndig_rd;
+    x1 = dimptr->p1_rd.x_gm;  
+    y1 = dimptr->p1_rd.y_gm;       
+    x2 = dimptr->p2_rd.x_gm;  
+    y2 = dimptr->p2_rd.y_gm;
+    x3 = dimptr->p3_rd.x_gm;  
+    y3 = dimptr->p3_rd.y_gm;
 
-    d = dimpek->asiz_rd;                      /* Pilstorlek */
+    d = dimptr->asiz_rd;                      /* Pilstorlek */
     d5 = d/5;
 
     txtrec.fnt_tx = 0;
-    txtrec.h_tx = dimpek->tsiz_rd;            /* Textstorlek */
+    txtrec.h_tx = dimptr->tsiz_rd;            /* Textstorlek */
     txtrec.b_tx = 60.0;
     txtrec.l_tx = 15.0;
 /*
@@ -1023,10 +1069,10 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     sinfi = SIN(radk*fi);
     cosfi = COS(radk*fi);
 
-    if ( dimpek->auto_rd )             /* ska det vara måttext? */
+    if ( dimptr->auto_rd )             /* ska det vara måttext? */
       {
       sprintf(txtformat,"R%%0.%df",ndig);       /* Textformat */
-      sprintf(txt,txtformat,dimpek->r_rd);       /* Måttsträng */
+      sprintf(txt,txtformat,dimptr->r_rd);       /* Måttsträng */
 
       if ( (fi > 90.0) && (fi < 270.0) ) /* Rita upponer på undersidan */
         {
@@ -1077,7 +1123,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*!******************************************************/
 
         short   WPplad(
-        DBAdim *dimpek,
+        DBAdim *dimptr,
         double  scale,
         int    *n,
         double  x[],
@@ -1088,7 +1134,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 /*      Creates the graphical 3D polyline representation 
  *      for an angular dimension.
  *      
- *      In:  dimpek  = C-ptr to DBAdim.
+ *      In:  dimptr  = C-ptr to DBAdim.
  *           scale   = For WPplar()
  *           n+1     = Offset to polyline start.
  *
@@ -1121,21 +1167,21 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
 
     radk = PI/180.0;
 
-    x3 = dimpek->pos_ad.x_gm;                      /* cirkelcentrum */
-    y3 = dimpek->pos_ad.y_gm;
+    x3 = dimptr->pos_ad.x_gm;                      /* cirkelcentrum */
+    y3 = dimptr->pos_ad.y_gm;
 
     txtrec.fnt_tx = 0;
-    txtrec.h_tx = dimpek->tsiz_ad;            /* Textstorlek */
+    txtrec.h_tx = dimptr->tsiz_ad;            /* Textstorlek */
     txtrec.b_tx = 60.0;
     txtrec.l_tx = 15.0;
 
-    ndig = dimpek->ndig_ad;
-    v1 = dimpek->v1_ad;                      /* Startvinkel */
-    v2 = dimpek->v2_ad;                      /* Slutvinkel */  
-    tv = dimpek->tv_ad;                      /* Textvinkel */
-    r =  dimpek->r_ad;                       /* Radien */
-    r1 = dimpek->r1_ad;                      /* startradien startv. */
-    r2 = dimpek->r2_ad;                      /* Startradie slutv */
+    ndig = dimptr->ndig_ad;
+    v1 = dimptr->v1_ad;                      /* Startvinkel */
+    v2 = dimptr->v2_ad;                      /* Slutvinkel */  
+    tv = dimptr->tv_ad;                      /* Textvinkel */
+    r =  dimptr->r_ad;                       /* Radien */
+    r1 = dimptr->r1_ad;                      /* startradien startv. */
+    r2 = dimptr->r2_ad;                      /* Startradie slutv */
 /*
 ***Normalisera till 0.0 <= v < 360.0
 */
@@ -1166,12 +1212,12 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
     else if ( tv < ((v1 + v2)/2.0 - 180.0)) 
          tv += 360.0;
 
-    d = dimpek->asiz_ad;                      /* Pilstorlek */
+    d = dimptr->asiz_ad;                      /* Pilstorlek */
     d5 = d/5;
 /*
 ***Ska det vara måttext?
 */
-    if ( dimpek->auto_ad )
+    if ( dimptr->auto_ad )
       {
       sprintf(txtformat,"%%0.%df\015",ndig);    /* Textformat */
       sprintf(txt,txtformat,(v2-v1));            /* Måttsträng */
@@ -1273,7 +1319,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimpek, DBptr la, bool draw);
          d = -d;
 
 
-    if (dimpek->auto_ad) {             /* ska det vara måttext? */
+    if (dimptr->auto_ad) {             /* ska det vara måttext? */
 
 
          if (r != 0.0)

@@ -97,22 +97,24 @@
 /*!******************************************************/
 
         DBstatus DBread_ldim(
-        DBLdim  *ldmpek,
+        DBLdim  *ldmptr,
+        DBCsys  *csyptr,
         DBptr    la)
 
-/*      Läsning av längdmått-post.
+/*      Read LDIM data.
  *
- *      In: ldmpek => Pekare till en ldm-structure.
- *          la     => Måttets adress i GM.
+ *      In:   la     => The LDIM DB-pointer.
  *
- *      Ut: *ldmpek => Längdmått-post.
+ *      Out: *ldmpek => LDIM data.
+ *           *csyptr => Csys data if available and
+ *                      csyptr != NULL.
  *
- *      FV:   0 => Ok.
- *          < 0 => Fel från rddat1().
+ *      Return: Always 0.
  *
  *      (C)microform ab 4/8/85 J. Kjellander
  *
- *      23/3/92  GMPOSTV1, J. Kjellander
+ *      23/3/92    GMPOSTV1, J. Kjellander
+ *      2007-09-17 csyptr, J.Kjellander
  *
  ******************************************************!*/
 
@@ -124,16 +126,17 @@
     switch ( GMVERS(hedpek) )
       {
       case GMPOSTV2:
-      V3MOME(hedpek,ldmpek,sizeof(DBLdim));
+      V3MOME(hedpek,ldmptr,sizeof(DBLdim));
+      if ( csyptr != NULL  &&  ldmptr->pcsy_ld > 0 ) DBread_csys(csyptr,NULL,ldmptr->pcsy_ld);
       break;
 
       case GMPOSTV1:
-      V3MOME(hedpek,ldmpek,sizeof(GMLDM1));
+      V3MOME(hedpek,ldmptr,sizeof(GMLDM1));
       break;
 
       default:
-      V3MOME(hedpek,ldmpek,sizeof(GMLDM0));
-      ldmpek->pcsy_ld = DBNULL;
+      V3MOME(hedpek,ldmptr,sizeof(GMLDM0));
+      ldmptr->pcsy_ld = DBNULL;
       break;
       }
 

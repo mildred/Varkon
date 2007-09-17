@@ -69,7 +69,7 @@ static void  pr_arc(WPRWIN *rwinpt, DBArc *arc, DBSeg *arcseg);
 static void  pr_cur(WPRWIN *rwinpt, DBCurve *cur, DBSeg *graseg);
 static void  pr_txt(WPRWIN *rwinpt, DBText *txt, char *str);
 static void  pr_xht(WPRWIN *rwinpt, DBHatch *xht, DBfloat crdvek[]);
-static void  pr_ldm(WPRWIN *rwinpt, DBLdim *ldm);
+static void  pr_ldm(WPRWIN *rwinpt, DBLdim *ldm, DBCsys *csyptr);
 static void  pr_cdm(WPRWIN *rwinpt, DBCdim *cdm);
 static void  pr_rdm(WPRWIN *rwinpt, DBRdim *rdm);
 static void  pr_adm(WPRWIN *rwinpt, DBAdim *adm);
@@ -256,7 +256,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A Linear dimension.
 */
          case LDMTYP:
-         DBread_ldim(&ldm,la);
+         DBread_ldim(&ldm,&csy,la);
          if ( ldm.p1_ld.x_gm < xmin ) xmin = ldm.p1_ld.x_gm;
          if ( ldm.p1_ld.x_gm > xmax ) xmax = ldm.p1_ld.x_gm;
          if ( ldm.p1_ld.y_gm < ymin ) ymin = ldm.p1_ld.y_gm;
@@ -623,9 +623,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A linear dimension.
 */
          case LDMTYP:
-         DBread_ldim(&ldm,la);
+         DBread_ldim(&ldm,&csy,la);
          if ( ldm.wdt_ld != actwdt ) set_linewidth(rwinpt,ldm.wdt_ld);
-         pr_ldm(rwinpt,&ldm);
+         pr_ldm(rwinpt,&ldm,&csy);
          break;
 /*
 ***A circular dimension.
@@ -834,9 +834,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A linear dimension.
 */
        case LDMTYP:
-       DBread_ldim(&ldm,la);
+       DBread_ldim(&ldm,&csy,la);
        glLineWidth((GLfloat)width_to_pixels(rwinpt,ldm.wdt_ld) + 1);
-       pr_ldm(rwinpt,&ldm);
+       pr_ldm(rwinpt,&ldm,&csy);
        break;
 /*
 ***A circular dimension.
@@ -1534,7 +1534,8 @@ static void     pr_xht(
 
 static void    pr_ldm(
        WPRWIN *rwinpt,
-       DBLdim *ldmptr)
+       DBLdim *ldmptr,
+       DBCsys *csyptr)
 
 /*     Process Linear dimension.
  * 
@@ -1555,7 +1556,7 @@ static void    pr_ldm(
 ***Create graphical representation.
 */
    k = -1;
-   WPplld(ldmptr,&k,x,y,z,a);
+   WPplld(ldmptr,csyptr,&k,x,y,z,a);
 /*
 ***Give the polyline to OpenGL.
 */

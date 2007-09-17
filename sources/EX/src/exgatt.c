@@ -191,7 +191,7 @@ extern V2NAPA defnap;
       break;
 
       case LDMTYP:
-      DBread_ldim(&gmpost.ldm_un,la);
+      DBread_ldim(&gmpost.ldm_un,NULL,la);
       pnp->dasize = gmpost.ldm_un.asiz_ld;
       pnp->dtsize = gmpost.ldm_un.tsiz_ld;
       pnp->dndig  = gmpost.ldm_un.ndig_ld;

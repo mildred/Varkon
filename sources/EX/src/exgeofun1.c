@@ -226,7 +226,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXon(
+        short     EXon(
         DBId     *idpek,
         DBfloat   u,
         DBfloat   v,
@@ -329,7 +329,7 @@ extern V2NAPA  defnap;
       break;
 
       case LDMTYP:
-      DBread_ldim(&gmpost.ldm_un, la);
+      DBread_ldim(&gmpost.ldm_un, NULL, la);
       status=GEposition(&gmpost,NULL,u,v,vecptr);
       break;
 

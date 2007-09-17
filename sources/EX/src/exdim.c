@@ -46,15 +46,15 @@ extern DBTmat  lklsyi;
 
 /*!******************************************************/
 
-       short EXeldm(
+       short   EXeldm(
        DBId   *id,
-       DBLdim  *ldmpek,
+       DBLdim *ldmptr,
        V2NAPA *pnp)
 
 /*      Skapar längdmått, lagrar i GM och ritar.
  *
  *      In: id     => Pekare till identitet.
- *          ldmpek => Pekare till GM-struktur.
+ *          ldmptr => Pekare till GM-struktur.
  *          pnp    => Pekare till namnparameterblock.
  *
  *      Ut: Inget.
@@ -71,37 +71,39 @@ extern DBTmat  lklsyi;
  ******************************************************!*/
 
   {
-    DBptr   la;
+    DBptr  la;
+    DBCsys csy;
 
 /*
-***Fyll i namnparameterdata.
+***Add attributes.
 */
-    ldmpek->hed_ld.blank = pnp->blank;
-    ldmpek->hed_ld.pen   = pnp->pen;
-    ldmpek->hed_ld.level = pnp->level;
-    ldmpek->asiz_ld      = pnp->dasize;
-    ldmpek->tsiz_ld      = pnp->dtsize;
-    ldmpek->ndig_ld      = pnp->dndig;
-    ldmpek->auto_ld      = pnp->dauto;
-    ldmpek->wdt_ld       = pnp->width;
-    ldmpek->pcsy_ld      = lsysla;
+    ldmptr->hed_ld.blank = pnp->blank;
+    ldmptr->hed_ld.pen   = pnp->pen;
+    ldmptr->hed_ld.level = pnp->level;
+    ldmptr->asiz_ld      = pnp->dasize;
+    ldmptr->tsiz_ld      = pnp->dtsize;
+    ldmptr->ndig_ld      = pnp->dndig;
+    ldmptr->auto_ld      = pnp->dauto;
+    ldmptr->wdt_ld       = pnp->width;
+    ldmptr->pcsy_ld      = lsysla;
 /*
-***Lagra i gm.
+***Insert in DB.
 */
     if ( pnp->save )
       {
-      ldmpek->hed_ld.hit = pnp->hit;
-      if ( DBinsert_ldim(ldmpek,id,&la) < 0 )
+      ldmptr->hed_ld.hit = pnp->hit;
+      if ( DBinsert_ldim(ldmptr,id,&la) < 0 )
            return(erpush("EX1442",""));
       }
     else
       {
-      ldmpek->hed_ld.hit = 0;
+      ldmptr->hed_ld.hit = 0;
       }
 /*
-***Rita.
+***Display.
 */
-    WPdrdm((DBAny *)ldmpek,la,GWIN_ALL);
+    if ( ldmptr->pcsy_ld > 0 ) DBread_csys(&csy,NULL,ldmptr->pcsy_ld);
+    WPdrdm((DBAny *)ldmptr,&csy,la,GWIN_ALL);
 
     return(0);
   }
@@ -109,7 +111,7 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXldim(
+       short     EXldim(
        DBId     *id,
        DBVector *p1,
        DBVector *p2,
@@ -143,16 +145,7 @@ extern DBTmat  lklsyi;
     DBLdim   ldim;
 
 /*
-***Transformera till basic.
-*/
-    if ( lsyspk != NULL )
-      {
-      GEtfpos_to_local(p1,&lklsyi,p1);
-      GEtfpos_to_local(p2,&lklsyi,p2);
-      GEtfpos_to_local(p3,&lklsyi,p3);
-      }
-/*
-***Skapa måttet.
+***Ldim geometry in local csys.
 */
     ldim.p1_ld.x_gm = p1->x_gm;
     ldim.p1_ld.y_gm = p1->y_gm;
@@ -168,23 +161,23 @@ extern DBTmat  lklsyi;
 
     ldim.dtyp_ld = alt;
 /*
-***Lagra i gm och rita.
+***Save in DB and display.
 */
-    return ( EXeldm(id,&ldim,pnp));
+    return(EXeldm(id,&ldim,pnp));
   }
 
 /********************************************************/
 /*!******************************************************/
 
-       short EXecdm(
+       short   EXecdm(
        DBId   *id,
-       DBCdim  *cdmpek,
+       DBCdim *cdmptr,
        V2NAPA *pnp)
 
 /*      Skapar diametermått, lagrar i GM och ritar.
  *
  *      In: id     => Pekare till identitet.
- *          cdmpek => Pekare till GM-struktur.
+ *          cdmptr => Pekare till GM-struktur.
  *          pnp    => Pekare till namnparameterblock.
  *
  *      Ut: Inget.
@@ -201,37 +194,39 @@ extern DBTmat  lklsyi;
  ******************************************************!*/
 
   {
-    DBptr   la;
+    DBptr  la;
+    DBCsys csy;
 
 /*
 ***Fyll i namnparameterdata.
 */
-    cdmpek->hed_cd.blank = pnp->blank;
-    cdmpek->hed_cd.pen   = pnp->pen;
-    cdmpek->hed_cd.level = pnp->level;
-    cdmpek->asiz_cd      = pnp->dasize;
-    cdmpek->tsiz_cd      = pnp->dtsize;
-    cdmpek->ndig_cd      = pnp->dndig;
-    cdmpek->auto_cd      = pnp->dauto;
-    cdmpek->wdt_cd       = pnp->width;
-    cdmpek->pcsy_cd      = lsysla;
+    cdmptr->hed_cd.blank = pnp->blank;
+    cdmptr->hed_cd.pen   = pnp->pen;
+    cdmptr->hed_cd.level = pnp->level;
+    cdmptr->asiz_cd      = pnp->dasize;
+    cdmptr->tsiz_cd      = pnp->dtsize;
+    cdmptr->ndig_cd      = pnp->dndig;
+    cdmptr->auto_cd      = pnp->dauto;
+    cdmptr->wdt_cd       = pnp->width;
+    cdmptr->pcsy_cd      = lsysla;
 /*
 ***Lagra i gm.
 */
     if ( pnp->save )
       {
-      cdmpek->hed_cd.hit = pnp->hit;
-      if ( DBinsert_cdim(cdmpek,id,&la) < 0 )
+      cdmptr->hed_cd.hit = pnp->hit;
+      if ( DBinsert_cdim(cdmptr,id,&la) < 0 )
              return(erpush("EX1452",""));
       }
     else
       {
-      cdmpek->hed_cd.hit = 0;
+      cdmptr->hed_cd.hit = 0;
       }
 /*
 ***Rita.
 */
-    WPdrdm((DBAny *)cdmpek,la,GWIN_ALL);
+    if ( cdmptr->pcsy_cd > 0 ) DBread_csys(&csy,NULL,cdmptr->pcsy_cd);
+    WPdrdm((DBAny *)cdmptr,&csy,la,GWIN_ALL);
 
     return(0);
   }
@@ -239,7 +234,7 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXcdim(
+       short      EXcdim(
        DBId     *id,
        DBId     *refid,
        DBVector *pos,
@@ -274,10 +269,10 @@ extern DBTmat  lklsyi;
 
   {
     DBptr   la;
-    DBetype   typ;
+    DBetype typ;
     DBArc   oldarc;
     DBSeg   seg[4];
-    DBCdim   cdim;
+    DBCdim  cdim;
 
 /*
 ***Transformera till basic.
@@ -307,15 +302,15 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXerdm(
+       short   EXerdm(
        DBId   *id,
-       DBRdim  *rdmpek,
+       DBRdim *rdmptr,
        V2NAPA *pnp)
 
 /*      Skapar radiemått, lagrar i GM och ritar.
  *
  *      In: id     => Pekare till identitet.
- *          rdmpek => Pekare till GM-struktur.
+ *          rdmptr => Pekare till GM-struktur.
  *          pnp    => Pekare till namnparameterblock.
  *
  *      Ut: Inget.
@@ -332,37 +327,39 @@ extern DBTmat  lklsyi;
  ******************************************************!*/
 
   {
-    DBptr   la;
+    DBptr  la;
+    DBCsys csy;
 
 /*
 ***Fyll i namnparameterdata.
 */
-    rdmpek->hed_rd.blank = pnp->blank;
-    rdmpek->hed_rd.pen   = pnp->pen;
-    rdmpek->hed_rd.level = pnp->level;
-    rdmpek->asiz_rd      = pnp->dasize;
-    rdmpek->tsiz_rd      = pnp->dtsize;
-    rdmpek->ndig_rd      = pnp->dndig;
-    rdmpek->auto_rd      = pnp->dauto;
-    rdmpek->wdt_rd       = pnp->width;
-    rdmpek->pcsy_rd      = lsysla;
+    rdmptr->hed_rd.blank = pnp->blank;
+    rdmptr->hed_rd.pen   = pnp->pen;
+    rdmptr->hed_rd.level = pnp->level;
+    rdmptr->asiz_rd      = pnp->dasize;
+    rdmptr->tsiz_rd      = pnp->dtsize;
+    rdmptr->ndig_rd      = pnp->dndig;
+    rdmptr->auto_rd      = pnp->dauto;
+    rdmptr->wdt_rd       = pnp->width;
+    rdmptr->pcsy_rd      = lsysla;
 /*
 ***Lagra i gm.
 */
     if ( pnp->save )
       {
-      rdmpek->hed_rd.hit = pnp->hit;
-      if ( DBinsert_rdim(rdmpek,id,&la) < 0 )
+      rdmptr->hed_rd.hit = pnp->hit;
+      if ( DBinsert_rdim(rdmptr,id,&la) < 0 )
            return(erpush("EX1462",""));
       }
     else
       {
-      rdmpek->hed_rd.hit = 0;
+      rdmptr->hed_rd.hit = 0;
       }
 /*
 ***Rita.
 */
-    WPdrdm((DBAny *)rdmpek,la,GWIN_ALL);
+    if ( rdmptr->pcsy_rd > 0 ) DBread_csys(&csy,NULL,rdmptr->pcsy_rd);
+    WPdrdm((DBAny *)rdmptr,&csy,la,GWIN_ALL);
 
     return(0);
   }
@@ -370,7 +367,7 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXrdim(
+       short     EXrdim(
        DBId     *id,
        DBId     *refid,
        DBVector *p1,
@@ -404,10 +401,10 @@ extern DBTmat  lklsyi;
 
   {
     DBptr   la;
-    DBetype   typ;
+    DBetype typ;
     DBArc   oldarc;
     DBSeg   seg[4];
-    DBRdim   rdim;
+    DBRdim  rdim;
 
 /*
 ***Transformera till basic.
@@ -441,15 +438,15 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXeadm(
+       short   EXeadm(
        DBId   *id,
-       DBAdim  *admpek,
+       DBAdim *admptr,
        V2NAPA *pnp)
 
 /*      Skapar vinkelmått, lagrar i GM och ritar.
  *
  *      In: id     => Pekare till identitet.
- *          admpek => Pekare till GM-struktur.
+ *          admptr => Pekare till GM-struktur.
  *          pnp    => Pekare till namnparameterblock.
  *
  *      Ut: Inget.
@@ -466,37 +463,39 @@ extern DBTmat  lklsyi;
  ******************************************************!*/
 
   {
-    DBptr   la;
+    DBptr  la;
+    DBCsys csy;
 
 /*
 ***Fyll i namnparameterdata.
 */
-    admpek->hed_ad.blank = pnp->blank;
-    admpek->hed_ad.pen   = pnp->pen;
-    admpek->hed_ad.level = pnp->level;
-    admpek->asiz_ad      = pnp->dasize;
-    admpek->tsiz_ad      = pnp->dtsize;
-    admpek->ndig_ad      = pnp->dndig;
-    admpek->auto_ad      = pnp->dauto;
-    admpek->wdt_ad       = pnp->width;
-    admpek->pcsy_ad      = lsysla;
+    admptr->hed_ad.blank = pnp->blank;
+    admptr->hed_ad.pen   = pnp->pen;
+    admptr->hed_ad.level = pnp->level;
+    admptr->asiz_ad      = pnp->dasize;
+    admptr->tsiz_ad      = pnp->dtsize;
+    admptr->ndig_ad      = pnp->dndig;
+    admptr->auto_ad      = pnp->dauto;
+    admptr->wdt_ad       = pnp->width;
+    admptr->pcsy_ad      = lsysla;
 /*
 ***Lagra i gm.
 */
     if ( pnp->save )
       {
-      admpek->hed_ad.hit = pnp->hit;
-      if ( DBinsert_adim(admpek,id,&la) < 0 )
+      admptr->hed_ad.hit = pnp->hit;
+      if ( DBinsert_adim(admptr,id,&la) < 0 )
            return(erpush("EX1472",""));
       }
     else
       {
-      admpek->hed_ad.hit = 0;
+      admptr->hed_ad.hit = 0;
       }
 /*
 ***Rita.
 */
-    WPdrdm((DBAny *)admpek,la,GWIN_ALL);
+    if ( admptr->pcsy_ad > 0 ) DBread_csys(&csy,NULL,admptr->pcsy_ad);
+    WPdrdm((DBAny *)admptr,&csy,la,GWIN_ALL);
 
     return(0);
   }
@@ -504,7 +503,7 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXadim(
+       short     EXadim(
        DBId     *id,
        DBId     *refid1,
        DBId     *refid2,

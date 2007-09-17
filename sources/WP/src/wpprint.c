@@ -52,11 +52,11 @@ static bool   portrait = TRUE;               /* Print orientation */
 /*
 ***Prototypes for internal functions.
 */
-static void start_print(WPGWIN *gwinpt, int mode);
-static void read_config();
-static void write_config();
-static void config_dialogue();
-static void manual_config();
+static void  start_print(WPGWIN *gwinpt, int mode);
+static void  read_config();
+static void  write_config();
+static void  config_dialogue();
+static short manual_config();
 
 /*!******************************************************/
 
@@ -511,7 +511,7 @@ exit:
      case PRINTMODE_MANUAL:
      WPmkpf(gwinpt,fp,&gwinpt->vy.modwin,&origo);
      fclose(fp);
-     manual_config();
+     if ( manual_config() == REJECT ) return;
      sprintf(params," -x%g -y%g -v%g -s%g ",xmin,ymin,rotation,scale);
      break;
      }
@@ -1083,7 +1083,7 @@ exit:
 /********************************************************/
 /*!******************************************************/
 
- static void manual_config()
+ static short manual_config()
 
 /*      Manually configure scale and orientation.
  *
@@ -1186,11 +1186,15 @@ loop:
      ymin     = -tmpy;
      scale    = tmps;
      write_config();
-     }
 /*
 ***The end.
 */
-   return;
+     return(0);
+     }
+/*
+***REJECT.
+*/
+     else return(REJECT);
   }
 
 /********************************************************/

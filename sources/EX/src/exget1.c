@@ -230,7 +230,7 @@
       break;
 
       case LDMTYP:
-      DBread_ldim(&ldm,la);
+      DBread_ldim(&ldm,NULL,la);
      *width = ldm.wdt_ld;
       break;
 
@@ -875,7 +875,7 @@
 /*
 ***Läs ldim-posten och returnera ldim-data.
 */
-    DBread_ldim(ldim,la);
+    DBread_ldim(ldim,NULL,la);
 
     return(0);
   }
