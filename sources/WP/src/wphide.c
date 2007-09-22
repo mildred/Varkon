@@ -427,10 +427,10 @@ loop:
 ***Diameter dimension.
 */
        case CDMTYP:
-       DBread_cdim(&gmpost.cdm_un,la);
+       DBread_cdim(&gmpost.cdm_un,&csy,la);
        if ( !gmpost.hed_un.blank  &&  WPnivt(actwin->nivtab,gmpost.hed_un.level) )
          {
-         WPplcd(&gmpost.cdm_un,&k,x,y,z,a);
+         WPplcd(&gmpost.cdm_un,&csy,&k,x,y,z,a);
          }
        break;
 /*

@@ -180,7 +180,6 @@ short WPwait(DBint win_id, bool wait);
 short drwait(bool draw);
 short WPupwb(WPGWIN *gwinpt);
 short WPposw(int  rx, int  ry, int  dx, int  dy, int *px, int *py);
-short WPwlma(char *s);
 
 /*
 ***wpgetkey.c
@@ -489,7 +488,7 @@ short WPplxh(DBHatch *xhtptr, DBfloat  crdvek[], int *n,
 short WPdrdm(DBAny *dimptr, DBCsys *csyptr, DBptr la, DBint win_id);
 short WPdldm(DBAny *dimptr, DBCsys *csyptr, DBptr la, DBint win_id);
 short WPplld(DBLdim *dimptr, DBCsys *csyptr, int *n, double x[], double y[], double z[], char a[]);
-short WPplcd(DBCdim *dimptr, int *n, double x[], double y[], double z[], char a[]);
+short WPplcd(DBCdim *dimptr, DBCsys *csyptr, int *n, double x[], double y[], double z[], char a[]);
 short WPplrd(DBRdim *dimptr, int *n, double x[], double y[], double z[], char a[]);
 short WPplad(DBAdim *dimptr, double scale, int *n, double x[], double y[], double z[], char a[]);
 

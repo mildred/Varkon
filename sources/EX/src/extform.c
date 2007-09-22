@@ -558,8 +558,8 @@ extern DBTmat *lsyspk;
         break;
 
       case CDMTYP:
-        DBread_cdim(&ogmpst.cdm_un,la);
-        DBread_cdim(&ngmpst.cdm_un,la);
+        DBread_cdim(&ogmpst.cdm_un,NULL,la);
+        DBread_cdim(&ngmpst.cdm_un,NULL,la);
         GEtfCdim_to_local(&ogmpst.cdm_un,ptr,&ngmpst.cdm_un);
         status = EXecdm(id,&ngmpst.cdm_un,att);
         break;

@@ -357,6 +357,8 @@ expose:
  *
  *      (C)2007-05-30 J. Kjellander
  *
+ *      2007-09-22 Flush added, J.Kjellander
+ *
  ******************************************************!*/
 
   {
@@ -401,7 +403,7 @@ expose:
 */
    start = oldest_message + message_count - 1;
    if ( start > WP_MCWBUFSIZ-1 ) start -= WP_MCWBUFSIZ;
-  
+
    stop = message_count;
    if ( stop > nlines ) stop = nlines;
 /*
@@ -463,6 +465,10 @@ expose:
 ***Expose the command WPEDIT window.
 */
    WPxped(mcwptr->cmdptr);
+/*
+***Flush.
+*/
+   XFlush(xdisp);
 /*
 ***The end.
 */

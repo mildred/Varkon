@@ -334,7 +334,7 @@ extern V2NAPA  defnap;
       break;
 
       case CDMTYP:
-      DBread_cdim(&gmpost.cdm_un, la);
+      DBread_cdim(&gmpost.cdm_un, NULL, la);
       status=GEposition(&gmpost,NULL,u,v,vecptr);
       break;
 

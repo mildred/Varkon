@@ -28,8 +28,6 @@
 /*  Free Software Foundation, Inc., 675 Mass Ave, Cambridge,        */
 /*  MA 02139, USA.                                                  */
 /*                                                                  */
-/*  (C)Microform AB 1984-1999, Gunnar Liden, gunnar@microform.se    */
-/*                                                                  */
 /********************************************************************/
 
 #include "../../DB/include/DB.h"
@@ -37,82 +35,163 @@
 
 /*!******************************************************/
 
-        DBstatus GE821(
+        DBstatus  GE821(
         DBArc    *parc,
+        DBSeg    *seg,
         DBVector *pos,
-        short     alt,
+        short     type,
+        DBTmat   *dimsys,
         DBCdim   *cdmpek)
 
-/*      Beräknar med hjälp av cirkeln och pos de tre
- *      positioner som definierar måttet.
+/*      Uses pos and DBArc data to calculate the three
+ *      LOCAL positions that define a CDIM.
  *
- *      In: parc   = Pekare till cirkel
- *          pos    = Pekare till måttextens läge
- *          alt    = Horisontellt, vertikalt eller parall.
- *          cdmpek = Pekare till diametermått-struktur
+ *      Varkon pre SVN#28 saved CDIM DB-geometry in BASIC.
+ *      From SVN#28 CDIM data is saved in LOCAL coordinates.
  *
- *      Out: *cdmpek = Fyller i de tre positionerna
+ *      In: parc   = C ptr to arc
+ *          seg    = C ptr to segments
+ *          pos    = C ptr to LOCAL text position
+ *          type   = Horizontal, vertical or parallell
+ *          dimsys = C ptr to CDIM coordinate system
+ *
+ *      Out: *cdmpek = DBCdim with positions calculated
  *
  *      (C)microform ab 19/8/85 J. Kjellander
  *
- *       1999-05-27 Rewritten, J.Kjellander
+ *      1999-05-27 Rewritten, J.Kjellander
+ *      2007-09-17 3D arcs, J.Kjellander
  *
  ******************************************************!*/
 
   {
-   DBfloat dx,dy,fi;
+   DBstatus status;
+   DBfloat  dx,dy,fi;
+   DBVector arc_centre;
 
 /*
-***Testa alt och beräkna positionerna därefter.
+***Calculate CDIM data (3 pos). Note that DBArc
+***centre pos x_a and y_a are BASIC coordinates
+***and can not be used in 3D since Z is missing.
 */
-   switch ( alt )
+   if ( parc->ns_a == 0 )
      {
+     if ( dimsys != NULL ) GEtfpos_to_basic(pos,dimsys,pos);
+
+     switch ( type )
+       {
 /*
-***Horisontellt.
+***2D Horizontal.
 */
-     case 0:
-     cdmpek->p1_cd.x_gm = parc->x_a + parc->r_a;
-     cdmpek->p1_cd.y_gm = parc->y_a;
-     cdmpek->p2_cd.x_gm = parc->x_a - parc->r_a;
-     cdmpek->p2_cd.y_gm = parc->y_a;
-     break;
+       case 0:
+       cdmpek->p1_cd.x_gm = parc->x_a + parc->r_a;
+       cdmpek->p1_cd.y_gm = parc->y_a;
+       cdmpek->p2_cd.x_gm = parc->x_a - parc->r_a;
+       cdmpek->p2_cd.y_gm = parc->y_a;
+       break;
 /*
-***Vertikalt.
+***2D Vertical.
 */
-     case 1:
-     cdmpek->p1_cd.x_gm = parc->x_a;
-     cdmpek->p1_cd.y_gm = parc->y_a + parc->r_a;
-     cdmpek->p2_cd.x_gm = parc->x_a;
-     cdmpek->p2_cd.y_gm = parc->y_a - parc->r_a;
-     break;
+       case 1:
+       cdmpek->p1_cd.x_gm = parc->x_a;
+       cdmpek->p1_cd.y_gm = parc->y_a + parc->r_a;
+       cdmpek->p2_cd.x_gm = parc->x_a;
+       cdmpek->p2_cd.y_gm = parc->y_a - parc->r_a;
+       break;
 /*
-***Parallellt.
+***2D Parallell.
 */
-     case 2:
-     dx = pos->x_gm - parc->x_a;
-     dy = pos->y_gm - parc->y_a;
-     if ( dx == 0 && dy > 0 ) fi = PI05;
-     else if ( dx == 0 && dy < 0 ) fi = PI15;
-     else
-        {
-        fi = ATAN(dy/dx);
-        if ( dx < 0 ) fi = fi + PI;
-        if ( fi < 0.0 ) fi = fi + PI2;
-        }
-     fi = fi - PI05;
-     cdmpek->p1_cd.x_gm = parc->x_a + parc->r_a*COS(fi);
-     cdmpek->p1_cd.y_gm = parc->y_a + parc->r_a*SIN(fi);
-     cdmpek->p2_cd.x_gm = parc->x_a - parc->r_a*COS(fi);
-     cdmpek->p2_cd.y_gm = parc->y_a - parc->r_a*SIN(fi);
-     break;
+       case 2:
+       dx = pos->x_gm - parc->x_a;
+       dy = pos->y_gm - parc->y_a;
+       if ( dx == 0 && dy > 0 ) fi = PI05;
+       else if ( dx == 0 && dy < 0 ) fi = PI15;
+       else
+         {
+         fi = ATAN(dy/dx);
+         if ( dx < 0 ) fi = fi + PI;
+         if ( fi < 0.0 ) fi = fi + PI2;
+         }
+       fi = fi - PI05;
+       cdmpek->p1_cd.x_gm = parc->x_a + parc->r_a*COS(fi);
+       cdmpek->p1_cd.y_gm = parc->y_a + parc->r_a*SIN(fi);
+       cdmpek->p2_cd.x_gm = parc->x_a - parc->r_a*COS(fi);
+       cdmpek->p2_cd.y_gm = parc->y_a - parc->r_a*SIN(fi);
+       break;
+       }
      }
 /*
-***Oavsett typ är alltid 3:e positionen = pos.
+***3D arc. Calculate arc centre. GEcentre() returns
+***coordinates in BASIC. Transform to LOCAL and project
+***to XY-plane of dimsys.
+*/
+   else
+     {
+     status = GEcentre((DBAny *)parc,seg,0.0,&arc_centre);
+     if ( dimsys != NULL ) GEtfpos_to_local(&arc_centre,dimsys,&arc_centre);
+     arc_centre.z_gm = 0.0;
+
+     switch ( type )
+       {
+/*
+***3D Horizontal.
+*/
+       case 0:
+       cdmpek->p1_cd.x_gm = arc_centre.x_gm + parc->r_a;
+       cdmpek->p1_cd.y_gm = arc_centre.y_gm;
+       cdmpek->p1_cd.z_gm = 0.0;
+       cdmpek->p2_cd.x_gm = arc_centre.x_gm - parc->r_a;
+       cdmpek->p2_cd.y_gm = arc_centre.y_gm;
+       cdmpek->p2_cd.z_gm = 0.0;
+       break;
+/*
+***3D Vertical.
+*/
+       case 1:
+       cdmpek->p1_cd.x_gm = arc_centre.x_gm;
+       cdmpek->p1_cd.y_gm = arc_centre.y_gm + parc->r_a;
+       cdmpek->p1_cd.z_gm = 0.0;
+       cdmpek->p2_cd.x_gm = arc_centre.x_gm;
+       cdmpek->p2_cd.y_gm = arc_centre.y_gm - parc->r_a;
+       cdmpek->p2_cd.z_gm = 0.0;
+       break;
+/*
+***3D Parallell.
+*/
+       case 2:
+       dx = pos->x_gm - arc_centre.x_gm;
+       dy = pos->y_gm - arc_centre.y_gm;
+       if       ( dx == 0.0 && dy > 0.0 ) fi = PI05;
+       else if ( dx == 0.0 && dy < 0.0 ) fi = PI15;
+       else
+         {
+         fi = ATAN(dy/dx);
+         if ( dx < 0.0 ) fi = fi + PI;
+         if ( fi < 0.0 ) fi = fi + PI2;
+         }
+       fi = fi - PI05;
+       cdmpek->p1_cd.x_gm = arc_centre.x_gm + parc->r_a*COS(fi);
+       cdmpek->p1_cd.y_gm = arc_centre.y_gm + parc->r_a*SIN(fi);
+       cdmpek->p1_cd.z_gm = 0.0;
+       cdmpek->p2_cd.x_gm = arc_centre.x_gm - parc->r_a*COS(fi);
+       cdmpek->p2_cd.y_gm = arc_centre.y_gm - parc->r_a*SIN(fi);
+       cdmpek->p2_cd.z_gm = 0.0;
+       break;
+       }
+     }
+/*
+***Third position is always = pos.
 */
    cdmpek->p3_cd.x_gm = pos->x_gm;
    cdmpek->p3_cd.y_gm = pos->y_gm;
-   cdmpek->dtyp_cd = alt;
-
+   cdmpek->p3_cd.z_gm = 0.0;
+/*
+***Add type.
+*/
+   cdmpek->dtyp_cd = type;
+/*
+***The end.
+*/
    return(0);
   }
 

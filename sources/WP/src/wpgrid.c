@@ -671,13 +671,13 @@ exit:
 */
    if ( gwinpt->grid_dx <= 0.0 )
      {
-     WPwlma("Illegal grid dx !");
+     WPaddmess_mcwin("Illegal grid dx !",WP_MESSAGE);
      return;
      }
 
    if ( gwinpt->grid_dy <= 0.0 )
      {
-     WPwlma("Illegal grid dy !");
+     WPaddmess_mcwin("Illegal grid dy !",WP_MESSAGE);
      return;
      }
 /*
@@ -806,7 +806,7 @@ exit:
 
    if ( (pix_dx=SQRT(idx*idx + idy*idy)) < 8.0 )
      {
-     WPwlma("Grid dx too small !");
+     WPaddmess_mcwin("Grid dx too small !",WP_MESSAGE);
      return;
      }
 
@@ -817,7 +817,7 @@ exit:
 
    if ( SQRT(idx*idx + idy*idy) < 8.0 )
      {
-     WPwlma("Grid dy too small !");
+     WPaddmess_mcwin("Grid dy too small !",WP_MESSAGE);
      return;
      }
 /*

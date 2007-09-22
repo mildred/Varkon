@@ -235,7 +235,7 @@
 /*!******************************************************/
 
         DBstatus DBinsert_cdim(
-        DBCdim  *cdmpek,
+        DBCdim  *cdmptr,
         DBId    *idpek,
         DBptr   *lapek)
 
@@ -243,7 +243,7 @@
  *      data fylls i och posten lagras därefter med ett
  *      anrop till inpost().
  *
- *      In: cdmpek => Pekare till en cdm-structure.
+ *      In: cdmptr => Pekare till en cdm-structure.
  *          idpek  => Pekare till identitet-structure.
  *          lapek  => Pekare till DBptr-variabel.
  *
@@ -267,34 +267,36 @@
 /*
 ***Typ-specifika data.
 */
-    cdmpek->hed_cd.type = CDMTYP;   /* Typ = diametermått */
-    cdmpek->hed_cd.vers = GMPOSTV2; /* Version */
+    cdmptr->hed_cd.type = CDMTYP;   /* Typ = diametermått */
+    cdmptr->hed_cd.vers = GMPOSTV2; /* Version */
 /*
 ***Lagra.
 */
-    return(inpost((GMUNON *)cdmpek,idpek,lapek,sizeof(DBCdim)));
+    return(inpost((GMUNON *)cdmptr,idpek,lapek,sizeof(DBCdim)));
   }
 
 /********************************************************/
 /*!******************************************************/
 
         DBstatus DBread_cdim(
-        DBCdim  *cdmpek,
+        DBCdim  *cdmptr,
+        DBCsys  *csyptr,
         DBptr    la)
 
-/*      Läsning av diametermått-post.
+/*      Read CDIM data.
  *
- *      In: cdmpek => Pekare till en cdm-structure.
- *          la     => Måttets adress i GM.
+ *      In:   la     => The LDIM DB-pointer.
  *
- *      Ut: *cdmpek => Diametermått-post.
+ *      Out: *cdmptr => CDIM data.
+ *           *csyptr => Csys data if available and
+ *                      csyptr != NULL.
  *
- *      FV:   0 => Ok.
- *          < 0 => Fel från rddat1().
+ *      Return: Always 0.
  *
  *      (C)microform ab 4/8/85 J. Kjellander
  *
  *      23/3/92  GMPOSTV1, J. Kjellander
+ *      2007-09-17 csyptr, J.Kjellander
  *
  ******************************************************!*/
 
@@ -306,16 +308,17 @@
     switch ( GMVERS(hedpek) )
       {
       case GMPOSTV2:
-      V3MOME(hedpek,cdmpek,sizeof(DBCdim));
+      V3MOME(hedpek,cdmptr,sizeof(DBCdim));
+      if ( csyptr != NULL  &&  cdmptr->pcsy_cd > 0 ) DBread_csys(csyptr,NULL,cdmptr->pcsy_cd);
       break;
 
       case GMPOSTV1:
-      V3MOME(hedpek,cdmpek,sizeof(GMCDM1));
+      V3MOME(hedpek,cdmptr,sizeof(GMCDM1));
       break;
 
       default:
-      V3MOME(hedpek,cdmpek,sizeof(GMCDM0));
-      cdmpek->pcsy_cd = DBNULL;
+      V3MOME(hedpek,cdmptr,sizeof(GMCDM0));
+      cdmptr->pcsy_cd = DBNULL;
       break;
       }
 
@@ -326,12 +329,12 @@
 /*!******************************************************/
 
         DBstatus DBupdate_cdim(
-        DBCdim  *cdmpek,
+        DBCdim  *cdmptr,
         DBptr    la)
 
 /*      Skriver över en existerande diametermått-post.
  *
- *      In: cdmpek => Pekare till en cdm-structure.
+ *      In: cdmptr => Pekare till en cdm-structure.
  *          la     => Måttets adress i GM.
  *
  *      Ut: Inget.
@@ -352,15 +355,15 @@
     switch ( GMVERS(hedpek) )
       {
       case GMPOSTV2:
-      updata( (char *)cdmpek, la, sizeof(DBCdim));
+      updata( (char *)cdmptr, la, sizeof(DBCdim));
       break;
 
       case GMPOSTV1:
-      updata( (char *)cdmpek, la, sizeof(GMCDM1));
+      updata( (char *)cdmptr, la, sizeof(GMCDM1));
       break;
 
       default:
-      updata( (char *)cdmpek, la, sizeof(GMCDM0));
+      updata( (char *)cdmptr, la, sizeof(GMCDM0));
       break;
       }
 

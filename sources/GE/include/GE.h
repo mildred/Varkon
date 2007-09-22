@@ -336,7 +336,7 @@ DBstatus GE816(DBVector *pv, DBVector *tv, DBVector *iv, DBfloat pvalue[],
                short npoi, DBTmat *pcrd, DBCurve *curpek, DBSeg *segmnt);
 DBstatus GE817(DBAny *pstr, DBSeg *pseg, DBCurve *pcur_out, DBSeg *pseg_out,
                DBfloat glob_s, DBfloat glob_e);
-DBstatus GE821(DBArc *parc, DBVector *pos, short alt, DBCdim *cdmpek);
+DBstatus GE821(DBArc *parc, DBSeg *seg, DBVector *pos, short alt, DBTmat *lsyspk, DBCdim *cdmpek);
 DBstatus GE822(DBArc *parc, DBVector *p1, DBVector *p2, DBRdim *rdmpek);
 DBstatus GE823(DBLine *l1, DBLine *l2, DBVector *p, short alt, DBAdim *admpek);
 

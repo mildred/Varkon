@@ -196,8 +196,8 @@ extern V2NAPA  defnap;
         break;
 
       case CDMTYP:
-        DBread_cdim(&ogmpst.cdm_un,la);
-        DBread_cdim(&ngmpst.cdm_un,la);
+        DBread_cdim(&ogmpst.cdm_un,NULL,la);
+        DBread_cdim(&ngmpst.cdm_un,NULL,la);
         GEtfCdim_to_local(&ogmpst.cdm_un,ptr,&ngmpst.cdm_un);
         DBupdate_cdim(&ngmpst.cdm_un,la);
         break;
@@ -484,8 +484,8 @@ extern V2NAPA  defnap;
         break;
 
       case CDMTYP:
-        DBread_cdim(&ogmpst.cdm_un,la);
-        DBread_cdim(&ngmpst.cdm_un,la);
+        DBread_cdim(&ogmpst.cdm_un,NULL,la);
+        DBread_cdim(&ngmpst.cdm_un,NULL,la);
         GEtfCdim_to_local(&ogmpst.cdm_un,ptr,&ngmpst.cdm_un);
         attr.dtsize = ogmpst.cdm_un.tsiz_cd;
         attr.dasize = ogmpst.cdm_un.asiz_cd;
@@ -937,8 +937,8 @@ extern V2NAPA  defnap;
         break;
 
       case CDMTYP:
-        DBread_cdim(&ogmpst.cdm_un,la);
-        DBread_cdim(&ngmpst.cdm_un,la);
+        DBread_cdim(&ogmpst.cdm_un,NULL,la);
+        DBread_cdim(&ngmpst.cdm_un,NULL,la);
         GEtfCdim_to_local(&ogmpst.cdm_un,ptr,&ngmpst.cdm_un);
         DBupdate_cdim(&ngmpst.cdm_un,la);
         break;

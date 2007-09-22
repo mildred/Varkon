@@ -383,7 +383,7 @@
  *      (C)microform ab 6/12/93 J. Kjellander
  *
  *      1996-12-12 Vï¿½nsterjust. lablar, J.Kjellander
- *      1998-03-27 OpenGL fï¿½r AIX, J.Kjellander
+ *      1998-03-27 OpenGL för AIX, J.Kjellander
  *
  ******************************************************!*/
 

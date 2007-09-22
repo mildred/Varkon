@@ -235,7 +235,7 @@
       break;
 
       case CDMTYP:
-      DBread_cdim(&cdm,la);
+      DBread_cdim(&cdm,NULL,la);
      *width = cdm.wdt_cd;
       break;
 
@@ -916,7 +916,7 @@
 /*
 ***Läs cdim-posten och returnera cdim-data.
 */
-    DBread_cdim(cdim,la);
+    DBread_cdim(cdim,NULL,la);
 
     return(0);
   }

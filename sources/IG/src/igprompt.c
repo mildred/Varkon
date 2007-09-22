@@ -123,7 +123,7 @@ static char  pstack[MXMLEV+1][81];  /* Prompt stack */
 ***använder vi winpac:s meddelandefönster.
 */
 #ifdef UNIX
-    if ( mode == IG_MESS ) WPwlma(s);
+    if ( mode == IG_MESS ) WPaddmess_mcwin(s,WP_MESSAGE);
     return(0);
 #endif
 

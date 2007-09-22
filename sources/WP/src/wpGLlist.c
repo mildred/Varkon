@@ -70,7 +70,7 @@ static void  pr_cur(WPRWIN *rwinpt, DBCurve *cur, DBSeg *graseg);
 static void  pr_txt(WPRWIN *rwinpt, DBText *txt, char *str);
 static void  pr_xht(WPRWIN *rwinpt, DBHatch *xht, DBfloat crdvek[]);
 static void  pr_ldm(WPRWIN *rwinpt, DBLdim *ldm, DBCsys *csyptr);
-static void  pr_cdm(WPRWIN *rwinpt, DBCdim *cdm);
+static void  pr_cdm(WPRWIN *rwinpt, DBCdim *cdm, DBCsys *csyptr);
 static void  pr_rdm(WPRWIN *rwinpt, DBRdim *rdm);
 static void  pr_adm(WPRWIN *rwinpt, DBAdim *adm);
 static void  pr_bpl(WPRWIN *rwinpt, DBBplane *bpl);
@@ -192,7 +192,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 
          k = -1;
          WPplar(&arc,seg,(double)1.0,&k,x,y,z,a);
-   
+
          for ( i=0; i<=k; ++i )
            {
            if ( x[i] < xmin ) xmin = x[i];
@@ -256,7 +256,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A Linear dimension.
 */
          case LDMTYP:
-         DBread_ldim(&ldm,&csy,la);
+         DBread_ldim(&ldm,NULL,la);
          if ( ldm.p1_ld.x_gm < xmin ) xmin = ldm.p1_ld.x_gm;
          if ( ldm.p1_ld.x_gm > xmax ) xmax = ldm.p1_ld.x_gm;
          if ( ldm.p1_ld.y_gm < ymin ) ymin = ldm.p1_ld.y_gm;
@@ -273,10 +273,10 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
          if ( ldm.p3_ld.y_gm > ymax ) ymax = ldm.p3_ld.y_gm;
          break;
 /*
-***A Circilar dimension.
+***A Circular dimension.
 */
          case CDMTYP:
-         DBread_cdim(&cdm,la);
+         DBread_cdim(&cdm,NULL,la);
          if ( cdm.p1_cd.x_gm < xmin ) xmin = cdm.p1_cd.x_gm;
          if ( cdm.p1_cd.x_gm > xmax ) xmax = cdm.p1_cd.x_gm;
          if ( cdm.p1_cd.y_gm < ymin ) ymin = cdm.p1_cd.y_gm;
@@ -631,9 +631,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A circular dimension.
 */
          case CDMTYP:
-         DBread_cdim(&cdm,la);
+         DBread_cdim(&cdm,&csy,la);
          if ( cdm.wdt_cd != actwdt ) set_linewidth(rwinpt,cdm.wdt_cd);
-         pr_cdm(rwinpt,&cdm);
+         pr_cdm(rwinpt,&cdm,&csy);
          break;
 /*
 ***A radius dimension.
@@ -842,9 +842,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A circular dimension.
 */
        case CDMTYP:
-       DBread_cdim(&cdm,la);
+       DBread_cdim(&cdm,&csy,la);
        glLineWidth((GLfloat)width_to_pixels(rwinpt,cdm.wdt_cd) + 1);
-       pr_cdm(rwinpt,&cdm);
+       pr_cdm(rwinpt,&cdm,&csy);
        break;
 /*
 ***A radius dimension.
@@ -1582,7 +1582,8 @@ static void    pr_ldm(
 
 static void    pr_cdm(
        WPRWIN *rwinpt,
-       DBCdim *cdmptr)
+       DBCdim *cdmptr,
+       DBCsys *csyptr)
 
 /*     Process Circular dimension.
  * 
@@ -1603,7 +1604,7 @@ static void    pr_cdm(
 ***Create graphical representation.
 */
    k = -1;
-   WPplcd(cdmptr,&k,x,y,z,a);
+   WPplcd(cdmptr,csyptr,&k,x,y,z,a);
 /*
 ***Give the polyline to OpenGL.
 */

@@ -471,7 +471,7 @@ askwdt:
         }
       else if ( typ == CDMTYP )
         {
-        DBread_cdim(&cdm,la);
+        DBread_cdim(&cdm,NULL,la);
         cdm.wdt_cd = width;
         DBupdate_cdim(&cdm,la);
         }
@@ -1480,7 +1480,7 @@ loop:
       }
     else if ( typ == CDMTYP )
       {
-      DBread_cdim(&cdm,la);
+      DBread_cdim(&cdm,NULL,la);
       dauto = cdm.auto_cd;
       tsiz = cdm.tsiz_cd;
       }
@@ -1637,7 +1637,7 @@ loop:
       }
     else if ( typ == CDMTYP )
       {
-      DBread_cdim(&cdm,la);
+      DBread_cdim(&cdm,NULL,la);
       asiz = cdm.asiz_cd;
       }
     else if ( typ == RDMTYP )
@@ -1787,7 +1787,7 @@ loop:
       }
     else if ( typ == CDMTYP )
       {
-      DBread_cdim(&cdm,la);
+      DBread_cdim(&cdm,NULL,la);
       dauto = cdm.auto_cd;
       ndig = cdm.ndig_cd;
       }
@@ -1982,7 +1982,7 @@ loop:
       }
     else if ( typ == CDMTYP )
       {
-      DBread_cdim(&cdm,la);
+      DBread_cdim(&cdm,NULL,la);
       cdm.auto_cd = dauto;
       DBupdate_cdim(&cdm,la);
       }

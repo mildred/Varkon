@@ -312,10 +312,10 @@ static double curnog = 1.0;
         break;
 
         case CDMTYP:
-        DBread_cdim(&dim.cdm_un,la);
+        DBread_cdim(&dim.cdm_un,&csy,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          WPplcd(&dim.cdm_un,&k,x,y,z,a);
+          WPplcd(&dim.cdm_un,&csy,&k,x,y,z,a);
           }
         break;
 

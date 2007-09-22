@@ -519,7 +519,7 @@ extern DBTmat *lsyspk;
 ***Diametermått.
 */
       case CDMTYP:
-      DBread_cdim((DBCdim *)&gmpost,la);
+      DBread_cdim((DBCdim *)&gmpost,&csy,la);
       if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
       else        WPdldm(&gmpost,&csy,la,win_id);
       break;

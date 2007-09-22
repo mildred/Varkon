@@ -174,15 +174,15 @@
 /*
 ***VCDIM = 26, CDIM(-,<ref>,<pos>,<int>) 
 */
-     "-2:re.ve.ie",
+     "-5:re.ve.ie",
 /*
 ***VRDIM = 27, RDIM(-,<ref>,<vec>,<vec>)
 */
-     "-2:re.ve.ve",
+     "-5:re.ve.ve",
 /*
 ***VADIM = 28, ADIM(-,<ref>,<ref>,<vec>,<int>)
 */
-     "-2:re.re.ve.ie",
+     "-5:re.re.ve.ie",
 /*
 ***VACOS = 29, ARCCOS(<float>) = <float>
 */

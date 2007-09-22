@@ -15,7 +15,6 @@
 *    WPwton();   Returns wait status On/Off
 *    WPupwb();   Updates WPGWIN title text
 *    WPposw();   Positions windows
-*    WPwlma();   Dsiplays message text
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -519,35 +518,6 @@ static  WPBUTT *buttpt = 0;
   *px = x;
   *py = y;
 
-   return(0);
- }
-
-/*********************************************************/
-/*!*******************************************************/
-
-     short WPwlma(char *s)
-
-/*   Skriver ut meddelande i meddelandef�nster.
- *
- *   In: s  = Str�ng
- *
- *   Ut: Inget.
- *
- *   FV: 0
- *
- *   (C)microform ab 31/1/95 J. Kjellander
- *
- *******************************************************!*/
-
- {
-
-/*
-***Test av WPMCWIN.
-*/
-   WPaddmess_mcwin(s,WP_MESSAGE);
-/*
-***Slut.
-*/
    return(0);
  }
 

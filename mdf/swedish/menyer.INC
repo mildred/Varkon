@@ -181,6 +181,7 @@ m23 = "TEXT"
 !      "font-editor",m93;
 
 m24 = "EXPORTERA"
+      "MBS",f144
       "DXF-2D",f92
       "DXF-3D",M398
       "STL",M1625

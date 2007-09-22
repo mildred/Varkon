@@ -221,8 +221,8 @@ loop:
 ***Diameter dimension.
 */
         case CDMTYP:
-        DBread_cdim(&gmpost.cdm_un,la);
-        WPplcd(&gmpost.cdm_un,&k,x,y,z,a);
+        DBread_cdim(&gmpost.cdm_un,&csy,la);
+        WPplcd(&gmpost.cdm_un,&csy,&k,x,y,z,a);
         width = gmpost.cdm_un.wdt_cd;
         break;
 /*

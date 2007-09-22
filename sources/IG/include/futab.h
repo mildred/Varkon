@@ -87,9 +87,9 @@ static FUATTR futab[] =
 
  { IGld1, FALSE, RIT_MOD+BAS_MOD},           /* f31  Längdmått vertikalt */
  { IGld2, FALSE, RIT_MOD+BAS_MOD},           /* f32  Längdmått parallellt */
- { IGcd0, FALSE, RIT_MOD+BAS2_MOD},          /* f33  Diametermått horisont. */
- { IGcd1, FALSE, RIT_MOD+BAS2_MOD},          /* f34  Diametermått vertikalt */
- { IGcd2, FALSE, RIT_MOD+BAS2_MOD},          /* f35  Diametermått parallellt */
+ { IGcd0, FALSE, RIT_MOD+BAS_MOD},           /* f33  Diametermått horisont. */
+ { IGcd1, FALSE, RIT_MOD+BAS_MOD},           /* f34  Diametermått vertikalt */
+ { IGcd2, FALSE, RIT_MOD+BAS_MOD},           /* f35  Diametermått parallellt */
 
  {IGrdim, FALSE, RIT_MOD+BAS2_MOD},          /* f36  Radiemått */
  {IGadim, FALSE, RIT_MOD+BAS2_MOD},          /* f37  Vinkelmått */

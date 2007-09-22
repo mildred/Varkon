@@ -200,7 +200,7 @@ extern V2NAPA defnap;
       break;
 
       case CDMTYP:
-      DBread_cdim(&gmpost.cdm_un,la);
+      DBread_cdim(&gmpost.cdm_un,NULL,la);
       pnp->dasize = gmpost.cdm_un.asiz_cd;
       pnp->dtsize = gmpost.cdm_un.tsiz_cd;
       pnp->dndig  = gmpost.cdm_un.ndig_cd;

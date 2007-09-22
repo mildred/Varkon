@@ -48,7 +48,7 @@ static short dxfobp(FILE *filpek, DBBplane *bplpek, DBVector *origo);
 static short dxfoms(FILE *filpek, DBMesh *mshpek, DBVector *origo);
 static short dxfotx(FILE *filpek, DBText *txtpek, char str[], DBVector *origo);
 static short dxfold(FILE *filpek, DBLdim *ldmptr, DBCsys *csyptr, DBVector *origo);
-static short dxfocd(FILE *filpek, DBCdim *cdmpek, DBVector *origo);
+static short dxfocd(FILE *filpek, DBCdim *cdmpek, DBCsys *csyptr, DBVector *origo);
 static short dxford(FILE *filpek, DBRdim *rdmpek, DBVector *origo);
 static short dxfoad(FILE *filpek, DBAdim *admpek, DBVector *origo);
 static short dxfoxh(FILE *filpek, DBHatch *xhtpek, DBfloat crd[], DBVector *origo);
@@ -167,10 +167,10 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
        case LDMTYP: DBread_ldim(&gmpost.ldm_un,&csy,la);
                     dxfold(filpek,&gmpost.ldm_un,&csy,origo); break;
 
-       case CDMTYP: DBread_cdim(&gmpost.cdm_un,la);
-                    dxfocd(filpek,&gmpost.cdm_un,origo); break;
+       case CDMTYP: DBread_cdim(&gmpost.cdm_un,&csy,la);
+                    dxfocd(filpek,&gmpost.cdm_un,&csy,origo); break;
 
-       case RDMTYP: DBread_rdim(&gmpost.rdm_un,la);    
+       case RDMTYP: DBread_rdim(&gmpost.rdm_un,la);
                     dxford(filpek,&gmpost.rdm_un,origo); break;
 
        case ADMTYP: DBread_adim(&gmpost.adm_un,la);
@@ -761,6 +761,7 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
  static short     dxfocd(
         FILE     *filpek,
         DBCdim   *cdmpek,
+        DBCsys   *csyptr,
         DBVector *origo)
 
 /*      Writes diameter dimension on DXF-format.
@@ -787,7 +788,7 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
 ***Make polyline.
 */
    k = -1;
-   WPplcd(cdmpek,&k,x,y,z,a);
+   WPplcd(cdmpek,csyptr,&k,x,y,z,a);
 /*
 ***Project.
 */

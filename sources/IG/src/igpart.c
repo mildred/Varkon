@@ -288,7 +288,7 @@ end:
     oldhit = defnap.hit;
 /*
 ***If this is a PART call in RUN mode, set tmpref = TRUE
-***and HIT = 0. 
+***and HIT = 0.
 */
     if ( atyp == RUN )
       {
@@ -641,7 +641,7 @@ exit:
     tmpref     = oldtrf;
     defnap.hit = oldhit;
     actfun     = oldafu;
-    WPerhg();    
+    WPerhg();
 /*
 ***The end.
 */
@@ -675,6 +675,8 @@ reject:
  *              IG5362   => Not a MACRO module
  *
  *      (C)2007-04-27 Johan Kjellander
+ *
+ *      2007-09-22 WPRWIN repaint added, J.Kjellander
  *
  ******************************************************!*/
 
@@ -800,7 +802,7 @@ reject:
             optflg = FALSE;
 /*
 ***Substitute optional t-string with text.
-*/    
+*/
             t_string_prompt(prompt);
 /*
 ***What kind of parameter ?
@@ -969,6 +971,10 @@ reject:
 */
     else if ( status == 4 ) status = 0;
 /*
+***Update WPRWIN's.
+*/
+    WPrepaint_RWIN(RWIN_ALL,FALSE);
+/*
 ***Finish.
 */
     status = 0;
@@ -981,7 +987,7 @@ exit:
     defnap.hit  = oldhit;
     defnap.save = oldsav;
 
-    WPerhg();    
+    WPerhg();
 /*
 ***The end.
 */

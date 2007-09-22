@@ -63,6 +63,7 @@ static int  iwin_y;          /* even after a user move */
  *      (C)2007-02-05 J.Kjellander
  *
  *      2007-08-31 Added WPrepaint at extit, J.Kjellander
+ *      2007-09-22 Bug repaint, J.Kjellander
  *
  ******************************************************!*/
 
@@ -408,10 +409,10 @@ loop:
    if ( but_id == csys_id )
      {
      XUnmapWindow(xdisp,iwinpt->id.x_id);
-     WPwlma(IGgtts(271));
+     WPaddmess_mcwin(IGgtts(271),WP_MESSAGE);
      type = CSYTYP;
      status = IGgsid(csy_id,&type,&dum,&dum,0);
-     WPwlma("");
+     WPclear_mcwin();
      XMapWindow(xdisp,iwinpt->id.x_id);
      if ( status < 0 ) goto loop;
 
@@ -463,9 +464,9 @@ loop:
    else if ( but_id == camera_id )
      {
      XUnmapWindow(xdisp,iwinpt->id.x_id);
-     WPwlma(IGgtts(330));
+     WPaddmess_mcwin(IGgtts(330),WP_MESSAGE);
      status=IGcpov((DBVector *)&campos);
-     WPwlma("");
+     WPclear_mcwin();
      XMapWindow(xdisp,iwinpt->id.x_id);
      if ( status < 0 ) WPbell();
      else
@@ -610,11 +611,11 @@ exit:
 ***If the view dialog overlaps the WPRWIN 
 ***(which is rather likley) it seems that the
 ***area under the view dialog is not restored
-***correctly. I can't gigure out why. An extra
+***correctly. I can't figure out why. An extra
 ***WPsodl_all() here does not help but a full
 ***repaint helps.
 */
-   WPrepaint_RWIN(rwinpt->id.w_id,FALSE);
+  if ( wintype == TYP_RWIN ) WPrepaint_RWIN(rwinpt->id.w_id,FALSE);
 /*
 ***The end.
 */

@@ -230,7 +230,8 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
      break;
 
      case CDMTYP:
-     WPplcd(&dimptr->cdm_un,&k,x,y,z,a);
+     WPplcd(&dimptr->cdm_un,csyptr,&k,x,y,z,a);
+     WPpply(gwinpt,k,x,y,z);
      w = dimptr->cdm_un.wdt_cd;
      break;
 
@@ -616,6 +617,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
 
         short   WPplcd(
         DBCdim *dimptr,
+        DBCsys *csyptr,
         int    *n,
         double  x[],
         double  y[],
@@ -624,8 +626,9 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
 
 /*      Creates the graphical 3D polyline representation 
  *      for a circular dimension.
- *      
+ *
  *      In:  dimptr  = C-ptr to DBCdim.
+ *           csyptr  = C-ptr to current csys.
  *           n+1     = Offset to polyline start.
  *
  *      Out: n       = Offset to polyline end.
@@ -634,6 +637,8 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
  *      Return: 0    = Ok.
  *
  *      (C)2006-12-26 J.Kjellander
+ *
+ *      2007-09-17 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -644,14 +649,15 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
     double x1,y1,x2,y2,x3,y3,x4,y4,x5,y5;
     double fi,sinfi,cosfi;
     double a,b,d,e,d5,tt;
-    double xp2,xp3,xp6,xp7,yp1,yp4;
+    double xp2,xp3,xp6,xp7,yp1,yp4,xt,yt,zt;
     double dy,dx,pa,radk;
     short  dimtyp,ndig;
     DBText txtrec;
+    DBTmat t;
 
     radk = PI/180.0;
 
-    k = *n;    
+    k = *n;
     x5 = dimptr->p3_cd.x_gm;            /* Text position */
     y5 = dimptr->p3_cd.y_gm; 
 
@@ -659,11 +665,10 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
 
     ndig = dimptr->ndig_cd;
     x1 = dimptr->p1_cd.x_gm;                 /* Start */
-    y1 = dimptr->p1_cd.y_gm;       
+    y1 = dimptr->p1_cd.y_gm;
     x4 = dimptr->p2_cd.x_gm;                 /* Slut */
     y4 = dimptr->p2_cd.y_gm;
-    if ((x1 == x4) && (y1 == y4))
-         return(0);
+    if ( (x1 == x4) && (y1 == y4) ) return(0);
 
     d = dimptr->asiz_cd;                      /* Pilstorlek */
     d5 = d/5;
@@ -674,7 +679,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
     txtrec.l_tx = 15.0;
 /*
 ***Beräkna vinkeln och x2,y2,x3,y3
-*/ 
+*/
     switch (dimtyp) {
          case CDHORIZON: {                     /* Horisontellt mått */
               if ((y5 > y1) && (y5 > y4)) { 
@@ -709,7 +714,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
                         tt = x1; x1 = x4; x4 = tt;
                         tt = y1; y1 = y4; y4 = tt;
                    }
-              }    
+              }
               x2 = x3 = x5;
               y2 = y1;
               y3 = y4;
@@ -765,8 +770,8 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
     a = SQRT((x3 - x2)*(x3 - x2) + (y3 - y2)*(y3 - y2));
     b = SQRT((x5 - x2)*(x5 - x2) + (y5 - y2)*(y5 - y2));
     e = SQRT((x5 - x3)*(x5 - x3) + (y5 - y3)*(y5 - y3));
-    yp1 = SQRT((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));    
-    yp4 = SQRT((x4 - x3)*(x4 - x3) + (y4 - y3)*(y4 - y3));    
+    yp1 = SQRT((x2 - x1)*(x2 - x1) + (y2 - y1)*(y2 - y1));
+    yp4 = SQRT((x4 - x3)*(x4 - x3) + (y4 - y3)*(y4 - y3));
 
     switch (dimtyp) {
          case CDHORIZON: {                     /* Horisontellt mått */
@@ -804,7 +809,7 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
 
          xp2 = b;
          xp3 = e;
-         xp7 = e + 2*d;      
+         xp7 = e + 2*d;
          if ((fi > 90.0) && (fi <= 270.0)) {
               xp6 = -(strlen(txt)*txtrec.b_tx*txtrec.h_tx/60.0);
          } else
@@ -825,24 +830,24 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
 ***Bygg måttet
 */ 
     x[ ++k ] = xp2;      y[ k ] = yp1;    typ[ k ] = 0;
-    x[ ++k ] = xp2;      y[ k ] = -d5;    typ[ k ] = VISIBLE; 
+    x[ ++k ] = xp2;      y[ k ] = -d5;    typ[ k ] = VISIBLE;
     x[ ++k ] = xp3;      y[ k ] = yp4;    typ[ k ] = 0;
-    x[ ++k ] = xp3;      y[ k ] = -d5;    typ[ k ] = VISIBLE; 
+    x[ ++k ] = xp3;      y[ k ] = -d5;    typ[ k ] = VISIBLE;
     x[ ++k ] = xp6;      y[ k ] = 0.0;    typ[ k ] = 0;
-    x[ ++k ] = xp7;      y[ k ] = 0.0;    typ[ k ] = VISIBLE; 
+    x[ ++k ] = xp7;      y[ k ] = 0.0;    typ[ k ] = VISIBLE;
 
     if (xp2*xp3 > 0.0)
          d = -d;
 
     x[ ++k ] = xp2;      y[ k ] = 0.0;    typ[ k ] = 0;
-    x[ ++k ] = xp2 + d;  y[ k ] = d5;     typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp2 + d;  y[ k ] = -d5;    typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp2;      y[ k ] = 0.0;    typ[ k ] = VISIBLE; 
+    x[ ++k ] = xp2 + d;  y[ k ] = d5;     typ[ k ] = VISIBLE;
+    x[ ++k ] = xp2 + d;  y[ k ] = -d5;    typ[ k ] = VISIBLE;
+    x[ ++k ] = xp2;      y[ k ] = 0.0;    typ[ k ] = VISIBLE;
 
     x[ ++k ] = xp3;      y[ k ] = 0.0;    typ[ k ] = 0;
-    x[ ++k ] = xp3 - d;  y[ k ] = d5;     typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp3 - d;  y[ k ] = -d5;    typ[ k ] = VISIBLE; 
-    x[ ++k ] = xp3;      y[ k ] = 0.0;    typ[ k ] = VISIBLE; 
+    x[ ++k ] = xp3 - d;  y[ k ] = d5;     typ[ k ] = VISIBLE;
+    x[ ++k ] = xp3 - d;  y[ k ] = -d5;    typ[ k ] = VISIBLE;
+    x[ ++k ] = xp3;      y[ k ] = 0.0;    typ[ k ] = VISIBLE;
 
     x[ ++k ] = 0;                         typ[ k ] = 0;
 
@@ -899,15 +904,43 @@ static short drawdm(WPGWIN *gwinpt, DBAny *dimptr, DBCsys *csyptr, DBptr la, boo
     } else
          txtrec.v_tx = fi;
 
-    txtrec.crd_tx.x_gm = x[ k ];
-    txtrec.crd_tx.y_gm = y[ k-- ];
+    txtrec.crd_tx.x_gm = x[k];
+    txtrec.crd_tx.y_gm = y[k];
+    txtrec.crd_tx.z_gm = z[k--];
     txtrec.pmod_tx     = 0;
 
     if (dimptr->auto_cd) WPpltx(&txtrec,(unsigned char *)txt,&k,x,y,z,typ);
 /*
+***If needed, transform 2D polyline to XY-plane of 3D csys.
+*/
+    if ( dimptr->pcsy_cd > 0 )
+      {
+      GEtform_inv(&csyptr->mat_pl,&t);
+
+      for ( i=0; i<=k; i++ )
+        {
+        xt = t.g11 * x[i] +
+             t.g12 * y[i] +
+             t.g13 * z[i] +
+             t.g14;
+        yt = t.g21 * x[i] +
+             t.g22 * y[i] +
+             t.g23 * z[i] +
+             t.g24;
+        zt = t.g31 * x[i] +
+             t.g32 * y[i] +
+             t.g33 * z[i] +
+             t.g34;
+
+        x[i] = xt;
+        y[i] = yt;
+        z[i] = zt;
+        }
+      }
+/*
 ***The End.
 */
-    *n = k;    
+    *n = k;
 
     return(0);
   }

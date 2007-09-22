@@ -762,7 +762,7 @@ DBstatus DBdelete_ldim(DBptr la);
 /* Circular dimension insert, read, update and delete */
 
 DBstatus DBinsert_cdim(DBCdim *cdmptr, DBId *idptr, DBptr *laptr);
-DBstatus DBread_cdim(DBCdim *cdmptr, DBptr la);
+DBstatus DBread_cdim(DBCdim *cdmptr, DBCsys *csyptr, DBptr la);
 DBstatus DBupdate_cdim(DBCdim *cdmptr, DBptr la);
 DBstatus DBdelete_cdim(DBptr la);
 
