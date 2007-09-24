@@ -229,16 +229,16 @@ loop:
 ***Radius dimension.
 */
         case RDMTYP:
-        DBread_rdim(&gmpost.rdm_un,la); 
-        WPplrd(&gmpost.rdm_un,&k,x,y,z,a);
+        DBread_rdim(&gmpost.rdm_un,&csy,la); 
+        WPplrd(&gmpost.rdm_un,&csy,&k,x,y,z,a);
         width = gmpost.rdm_un.wdt_rd;
         break;
 /*
 ***Angular dimension.
 */
         case ADMTYP:
-        DBread_adim(&gmpost.adm_un,la);
-        WPplad(&gmpost.adm_un,scale,&k,x,y,z,a);
+        DBread_adim(&gmpost.adm_un,&csy,la);
+        WPplad(&gmpost.adm_un,&csy,scale,&k,x,y,z,a);
         width = gmpost.adm_un.wdt_ad;
         break;
 /*

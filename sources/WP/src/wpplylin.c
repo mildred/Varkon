@@ -308,6 +308,7 @@ static double curnog = 1.0;
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
           WPplld(&dim.ldm_un,&csy,&k,x,y,z,a);
+          WPpply(gwinpt,k,x,y,z);
           }
         break;
 
@@ -316,22 +317,25 @@ static double curnog = 1.0;
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
           WPplcd(&dim.cdm_un,&csy,&k,x,y,z,a);
+          WPpply(gwinpt,k,x,y,z);
           }
         break;
 
         case RDMTYP:
-        DBread_rdim(&dim.rdm_un,la);
+        DBread_rdim(&dim.rdm_un,&csy,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          WPplrd(&dim.rdm_un,&k,x,y,z,a);
+          WPplrd(&dim.rdm_un,&csy,&k,x,y,z,a);
+          WPpply(gwinpt,k,x,y,z);
           }
         break;
 
         case ADMTYP:
-        DBread_adim(&dim.adm_un,la);
+        DBread_adim(&dim.adm_un,&csy,la);
         if ( !dim.hed_un.blank  &&  WPnivt(gwinpt->nivtab,dim.hed_un.level) )
           {
-          WPplad(&dim.adm_un,1.0,&k,x,y,z,a);
+          WPplad(&dim.adm_un,&csy,1.0,&k,x,y,z,a);
+          WPpply(gwinpt,k,x,y,z);
           }
         break;
 

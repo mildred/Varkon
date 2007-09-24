@@ -261,6 +261,7 @@ extern V2NAPA  defnap;
  *      1997-12-17 sur209(), J.Kjellander
  *      1998-09-24 b_plan, J.Kjellander
  *      1999-12-18 sur209->varkon_sur_eval_gm, G  Liden
+ *      2007-09-24 3D dims, J.Kjellander
  *
  ******************************************************!*/
 
@@ -268,6 +269,7 @@ extern V2NAPA  defnap;
     DBAny  gmpost;
     DBSeg *segpek;
     DBSeg  arcseg[4];
+    DBCsys csy;
     EVALS  xyz;
     DBptr  la;
     DBetype  typ;
@@ -329,23 +331,27 @@ extern V2NAPA  defnap;
       break;
 
       case LDMTYP:
-      DBread_ldim(&gmpost.ldm_un, NULL, la);
+      DBread_ldim(&gmpost.ldm_un, &csy, la);
       status=GEposition(&gmpost,NULL,u,v,vecptr);
+      if ( gmpost.ldm_un.pcsy_ld > 0 ) GEtfpos_to_basic(vecptr,&csy.mat_pl,vecptr);
       break;
 
       case CDMTYP:
-      DBread_cdim(&gmpost.cdm_un, NULL, la);
+      DBread_cdim(&gmpost.cdm_un, &csy, la);
       status=GEposition(&gmpost,NULL,u,v,vecptr);
+      if ( gmpost.cdm_un.pcsy_cd > 0 ) GEtfpos_to_basic(vecptr,&csy.mat_pl,vecptr);
       break;
 
       case RDMTYP:
-      DBread_rdim(&gmpost.rdm_un, la);
+      DBread_rdim(&gmpost.rdm_un, &csy, la);
       status=GEposition(&gmpost,NULL,u,v,vecptr);
+      if ( gmpost.rdm_un.pcsy_rd > 0 ) GEtfpos_to_basic(vecptr,&csy.mat_pl,vecptr);
       break;
 
       case ADMTYP:
-      DBread_adim(&gmpost.adm_un, la);
+      DBread_adim(&gmpost.adm_un, &csy, la);
       status=GEposition(&gmpost,NULL,u,v,vecptr);
+      if ( gmpost.adm_un.pcsy_ad > 0 ) GEtfpos_to_basic(vecptr,&csy.mat_pl,vecptr);
       break;
 
       default:
@@ -366,7 +372,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXion(
+        short     EXion(
         DBId     *idpek,
         DBVector *vecptr,
         DBshort   tnr,
@@ -450,7 +456,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXtang(
+        short     EXtang(
         DBId     *idpek,
         DBfloat   t,
         DBTmat   *crdptr,
@@ -539,7 +545,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXitan(
+        short     EXitan(
         DBId     *idpek,
         DBVector *vecptr,
         DBshort   tnr,
@@ -615,7 +621,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXcurv(
+        short    EXcurv(
         DBId    *idpek,
         DBfloat  t,
         DBfloat *fltptr)
@@ -688,7 +694,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXicur(
+        short    EXicur(
         DBId    *idpek,
         DBfloat  kappa,
         DBshort  tnr,
@@ -756,7 +762,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXcen(
+        short     EXcen(
         DBId     *idpek,
         DBfloat   t,
         DBTmat   *crdptr,
@@ -835,7 +841,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXnorm(
+        short     EXnorm(
         DBId     *idpek,
         DBfloat   u,
         DBfloat   v,
@@ -932,7 +938,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXarcl(
+        short    EXarcl(
         DBId    *idpek,
         DBfloat *length)
 
@@ -1009,7 +1015,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXiarc(
+        short    EXiarc(
         DBId    *idpek,
         DBfloat  l,
         DBfloat *tptr)
@@ -1109,7 +1115,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXsuar(
+        short    EXsuar(
         DBId    *idpek,
         DBfloat  tol,
         DBfloat *p_area)
@@ -1203,7 +1209,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXsear(
+        short    EXsear(
         DBId    *idpek,
         DBfloat  tol,
         DBfloat *p_area)
@@ -1320,7 +1326,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXsecg(
+        short     EXsecg(
         DBId     *idpek,
         DBfloat   tol,
         DBVector *p_cgrav)
@@ -1434,7 +1440,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXtxtl(
+        short    EXtxtl(
         char    *str,
         DBfloat *l)
 
@@ -1466,7 +1472,7 @@ extern V2NAPA  defnap;
 /********************************************************/
 /*!******************************************************/
 
-        short EXsect(
+        short     EXsect(
         DBId     *idp1,
         DBId     *idp2,
         DBint     inr,
@@ -1688,7 +1694,7 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-        short EXnsec(
+        short    EXnsec(
         DBId    *idp1,
         DBId    *idp2,
         DBshort  inr,
@@ -1874,7 +1880,7 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-       short EXidnt(
+       short    EXidnt(
        DBetype *typmsk,
        DBId     ident[],
        bool    *end,
@@ -1911,7 +1917,6 @@ end:
     WPerhg();
 
     return(0);
-
   }
   
 /********************************************************/
@@ -1952,8 +1957,8 @@ end:
       pos.y_gm = *py;
       pos.z_gm = 0.0;
       GEtfpos_to_local(&pos,lsyspk,&pos);
-      *px = pos.x_gm;
-      *py = pos.y_gm;
+     *px = pos.x_gm;
+     *py = pos.y_gm;
       }
 
     return(0);
@@ -1962,7 +1967,7 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-       short EXscr(
+       short    EXscr(
        DBshort *pix,
        DBshort *piy,
        DBint   *win_id)
@@ -1997,7 +2002,7 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-       short EXarea(
+       short     EXarea(
        DBId     *ridvek,
        DBshort   nref,
        DBfloat   dist,
@@ -2109,7 +2114,7 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-        short EXusec(
+        short     EXusec(
         DBId     *idp1,
         DBId     *idp2,
         DBshort   inr,
@@ -2173,7 +2178,7 @@ end:
   pdat2 = NULL;
 /*
 ***Initializations for surface/curve intersect
-***No start point       
+***No start point.
 */
    start.x_gm =  0.0;
    start.y_gm =  0.0;
@@ -2401,7 +2406,7 @@ end:
 /********************************************************/
 /*!******************************************************/
 
-       short EXpinc(
+       short     EXpinc(
        DBVector *p1,
        DBVector *p2,
        DBfloat   r1,

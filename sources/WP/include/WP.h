@@ -480,7 +480,7 @@ short WPexfn();
 short WPdrxh(DBHatch *xhtpek, DBfloat crdvek[], DBptr la, DBint win_id);
 short WPdlxh(DBHatch *xhtpek, DBfloat crdvek[], DBptr la, DBint win_id);
 short WPplxh(DBHatch *xhtptr, DBfloat  crdvek[], int *n,
-        double x[], double y[], double z[], char a[]);
+             double x[], double y[], double z[], char a[]);
 
 /*
 ***wpdim.c
@@ -489,8 +489,9 @@ short WPdrdm(DBAny *dimptr, DBCsys *csyptr, DBptr la, DBint win_id);
 short WPdldm(DBAny *dimptr, DBCsys *csyptr, DBptr la, DBint win_id);
 short WPplld(DBLdim *dimptr, DBCsys *csyptr, int *n, double x[], double y[], double z[], char a[]);
 short WPplcd(DBCdim *dimptr, DBCsys *csyptr, int *n, double x[], double y[], double z[], char a[]);
-short WPplrd(DBRdim *dimptr, int *n, double x[], double y[], double z[], char a[]);
-short WPplad(DBAdim *dimptr, double scale, int *n, double x[], double y[], double z[], char a[]);
+short WPplrd(DBRdim *dimptr, DBCsys *csyptr, int *n, double x[], double y[], double z[], char a[]);
+short WPplad(DBAdim *dimptr, DBCsys *csyptr, double scale, int *n,
+             double x[], double y[], double z[], char a[]);
 
 /*
 ***wpcsy.c

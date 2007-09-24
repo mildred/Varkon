@@ -769,14 +769,14 @@ DBstatus DBdelete_cdim(DBptr la);
 /* Radius dimension insert, read, update and delete */
 
 DBstatus DBinsert_rdim(DBRdim *rdmptr, DBId *idptr, DBptr *laptr);
-DBstatus DBread_rdim(DBRdim *rdmptr, DBptr la);
+DBstatus DBread_rdim(DBRdim *rdmptr, DBCsys *csyptr, DBptr la);
 DBstatus DBupdate_rdim(DBRdim *rdmptr, DBptr la);
 DBstatus DBdelete_rdim(DBptr la);
 
 /* Angular dimension insert, read, update and delete */
 
 DBstatus DBinsert_adim(DBAdim *admptr, DBId *idptr, DBptr *laptr);
-DBstatus DBread_adim(DBAdim *admptr, DBptr la);
+DBstatus DBread_adim(DBAdim *admptr, DBCsys *csyptr, DBptr la);
 DBstatus DBupdate_adim(DBAdim *admptr, DBptr la);
 DBstatus DBdelete_adim(DBptr la);
 

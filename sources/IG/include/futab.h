@@ -91,8 +91,8 @@ static FUATTR futab[] =
  { IGcd1, FALSE, RIT_MOD+BAS_MOD},           /* f34  Diametermått vertikalt */
  { IGcd2, FALSE, RIT_MOD+BAS_MOD},           /* f35  Diametermått parallellt */
 
- {IGrdim, FALSE, RIT_MOD+BAS2_MOD},          /* f36  Radiemått */
- {IGadim, FALSE, RIT_MOD+BAS2_MOD},          /* f37  Vinkelmått */
+ {IGrdim, FALSE, RIT_MOD+BAS_MOD},           /* f36  Radiemått */
+ {IGadim, FALSE, RIT_MOD+BAS_MOD},           /* f37  Vinkelmått */
  { IGxht, FALSE, RIT_MOD+BAS2_MOD},          /* f38  Snittmarkering */
  {IGlipe, FALSE, RIT_MOD+BAS2_MOD},          /* f39  Linje v-rät mot annan */
  {IGlifr, FALSE, RIT_MOD+BAS2_MOD},          /* f40  Linje mellan 2 pos */

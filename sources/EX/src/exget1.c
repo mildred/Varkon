@@ -240,12 +240,12 @@
       break;
 
       case RDMTYP:
-      DBread_rdim(&rdm,la);
+      DBread_rdim(&rdm,NULL,la);
      *width = rdm.wdt_rd;
       break;
 
       case ADMTYP:
-      DBread_adim(&adm,la);
+      DBread_adim(&adm,NULL,la);
      *width = adm.wdt_ad;
       break;
 
@@ -957,7 +957,7 @@
 /*
 ***Läs rdim-posten och returnera rdim-data.
 */
-    DBread_rdim(rdim,la);
+    DBread_rdim(rdim,NULL,la);
 
     return(0);
   }
@@ -998,7 +998,7 @@
 /*
 ***Läs adim-posten och returnera adim-data.
 */
-    DBread_adim(adim,la);
+    DBread_adim(adim,NULL,la);
 
     return(0);
   }

@@ -527,7 +527,7 @@ extern DBTmat *lsyspk;
 ***Radiemått.
 */
       case RDMTYP:
-      DBread_rdim((DBRdim *)&gmpost,la);
+      DBread_rdim((DBRdim *)&gmpost,&csy,la);
       if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
       else        WPdldm(&gmpost,&csy,la,win_id);
       break;
@@ -535,7 +535,7 @@ extern DBTmat *lsyspk;
 ***Vinkelmått.
 */
       case ADMTYP:
-      DBread_adim((DBAdim *)&gmpost,la);
+      DBread_adim((DBAdim *)&gmpost,&csy,la);
       if ( draw ) WPdrdm(&gmpost,&csy,la,win_id);
       else        WPdldm(&gmpost,&csy,la,win_id);
       break;

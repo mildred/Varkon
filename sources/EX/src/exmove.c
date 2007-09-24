@@ -203,15 +203,15 @@ extern V2NAPA  defnap;
         break;
 
       case RDMTYP:
-        DBread_rdim(&ogmpst.rdm_un,la);
-        DBread_rdim(&ngmpst.rdm_un,la);
+        DBread_rdim(&ogmpst.rdm_un,NULL,la);
+        DBread_rdim(&ngmpst.rdm_un,NULL,la);
         GEtfRdim_to_local(&ogmpst.rdm_un,ptr,&ngmpst.rdm_un);
         DBupdate_rdim(&ngmpst.rdm_un,la);
         break;
 
       case ADMTYP:
-        DBread_adim(&ogmpst.adm_un,la);
-        DBread_adim(&ngmpst.adm_un,la);
+        DBread_adim(&ogmpst.adm_un,NULL,la);
+        DBread_adim(&ngmpst.adm_un,NULL,la);
         GEtfAdim_to_local(&ogmpst.adm_un,ptr,&ngmpst.adm_un);
         DBupdate_adim(&ngmpst.adm_un,la);
         break;
@@ -495,8 +495,8 @@ extern V2NAPA  defnap;
         break;
 
       case RDMTYP:
-        DBread_rdim(&ogmpst.rdm_un,la);
-        DBread_rdim(&ngmpst.rdm_un,la);
+        DBread_rdim(&ogmpst.rdm_un,NULL,la);
+        DBread_rdim(&ngmpst.rdm_un,NULL,la);
         GEtfRdim_to_local(&ogmpst.rdm_un,ptr,&ngmpst.rdm_un);
         attr.dtsize = ogmpst.rdm_un.tsiz_rd;
         attr.dasize = ogmpst.rdm_un.asiz_rd;
@@ -506,8 +506,8 @@ extern V2NAPA  defnap;
         break;
 
       case ADMTYP:
-        DBread_adim(&ogmpst.adm_un,la);
-        DBread_adim(&ngmpst.adm_un,la);
+        DBread_adim(&ogmpst.adm_un,NULL,la);
+        DBread_adim(&ngmpst.adm_un,NULL,la);
         GEtfAdim_to_local(&ogmpst.adm_un,ptr,&ngmpst.adm_un);
         attr.dtsize = ogmpst.adm_un.tsiz_ad;
         attr.dasize = ogmpst.adm_un.asiz_ad;
@@ -944,15 +944,15 @@ extern V2NAPA  defnap;
         break;
 
       case RDMTYP:
-        DBread_rdim(&ogmpst.rdm_un,la);
-        DBread_rdim(&ngmpst.rdm_un,la);
+        DBread_rdim(&ogmpst.rdm_un,NULL,la);
+        DBread_rdim(&ngmpst.rdm_un,NULL,la);
         GEtfRdim_to_local(&ogmpst.rdm_un,ptr,&ngmpst.rdm_un);
         DBupdate_rdim(&ngmpst.rdm_un,la);
         break;
 
       case ADMTYP:
-        DBread_adim(&ogmpst.adm_un,la);
-        DBread_adim(&ngmpst.adm_un,la);
+        DBread_adim(&ogmpst.adm_un,NULL,la);
+        DBread_adim(&ngmpst.adm_un,NULL,la);
         GEtfAdim_to_local(&ogmpst.adm_un,ptr,&ngmpst.adm_un);
         DBupdate_adim(&ngmpst.adm_un,la);
         break;

@@ -337,8 +337,8 @@ DBstatus GE816(DBVector *pv, DBVector *tv, DBVector *iv, DBfloat pvalue[],
 DBstatus GE817(DBAny *pstr, DBSeg *pseg, DBCurve *pcur_out, DBSeg *pseg_out,
                DBfloat glob_s, DBfloat glob_e);
 DBstatus GE821(DBArc *parc, DBSeg *seg, DBVector *pos, short alt, DBTmat *lsyspk, DBCdim *cdmpek);
-DBstatus GE822(DBArc *parc, DBVector *p1, DBVector *p2, DBRdim *rdmpek);
-DBstatus GE823(DBLine *l1, DBLine *l2, DBVector *p, short alt, DBAdim *admpek);
+DBstatus GE822(DBArc *parc, DBSeg *seg, DBVector *p1, DBVector *p2, DBTmat *lsyspk, DBRdim *rdmpek);
+DBstatus GE823(DBLine *l1, DBLine *l2, DBVector *p, short alt, DBTmat *lsyspk, DBAdim *admpek);
 
 /* Hatching/area/cgrav. */
 

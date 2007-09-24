@@ -209,7 +209,7 @@ extern V2NAPA defnap;
       break;
 
       case RDMTYP:
-      DBread_rdim(&gmpost.rdm_un,la);
+      DBread_rdim(&gmpost.rdm_un,NULL,la);
       pnp->dasize = gmpost.rdm_un.asiz_rd;
       pnp->dtsize = gmpost.rdm_un.tsiz_rd;
       pnp->dndig  = gmpost.rdm_un.ndig_rd;
@@ -218,7 +218,7 @@ extern V2NAPA defnap;
       break;
 
       case ADMTYP:
-      DBread_adim(&gmpost.adm_un,la);
+      DBread_adim(&gmpost.adm_un,NULL,la);
       pnp->dasize = gmpost.adm_un.asiz_ad;
       pnp->dtsize = gmpost.adm_un.tsiz_ad;
       pnp->dndig  = gmpost.adm_un.ndig_ad;

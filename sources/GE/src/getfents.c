@@ -475,7 +475,7 @@ static short calds2(DBTmat *ptr, DBfloat *pdet, DBfloat *psx);
         DBLdim *oldm,
         DBTmat *pt,
         DBLdim *nldm)
-        
+
 /*      Transforms a linear dimension with t.
  *      (from basic to local)
  *
@@ -505,7 +505,7 @@ static short calds2(DBTmat *ptr, DBfloat *pdet, DBfloat *psx);
         DBCdim *ocdm,
         DBTmat *pt,
         DBCdim *ncdm)
-        
+
 /*      Transforms a diameter dimension with t.
  *      (from basic to local)
  *
@@ -525,7 +525,7 @@ static short calds2(DBTmat *ptr, DBfloat *pdet, DBfloat *psx);
     GEtfpos_to_local(&ocdm->p2_cd,pt,&ncdm->p2_cd);
     GEtfpos_to_local(&ocdm->p3_cd,pt,&ncdm->p3_cd);
 
-    return(0);  
+    return(0);
   }
 
 /********************************************************/
@@ -535,7 +535,7 @@ static short calds2(DBTmat *ptr, DBfloat *pdet, DBfloat *psx);
         DBRdim *ordm,
         DBTmat *pt,
         DBRdim *nrdm)
-        
+
 /*      Transforms a radius dimension with t.
  *      (from basic to local)
  *
@@ -565,7 +565,7 @@ static short calds2(DBTmat *ptr, DBfloat *pdet, DBfloat *psx);
         DBAdim *oadm,
         DBTmat *pt,
         DBAdim *nadm)
-        
+
 /*      Transforms an angular dimension with t.
  *      (from basic to local)
  *

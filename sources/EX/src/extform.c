@@ -565,15 +565,15 @@ extern DBTmat *lsyspk;
         break;
 
       case RDMTYP:
-        DBread_rdim(&ogmpst.rdm_un,la);
-        DBread_rdim(&ngmpst.rdm_un,la);
+        DBread_rdim(&ogmpst.rdm_un,NULL,la);
+        DBread_rdim(&ngmpst.rdm_un,NULL,la);
         GEtfRdim_to_local(&ogmpst.rdm_un,ptr,&ngmpst.rdm_un);
         status = EXerdm(id,&ngmpst.rdm_un,att);
         break;
 
       case ADMTYP:
-        DBread_adim(&ogmpst.adm_un,la);
-        DBread_adim(&ngmpst.adm_un,la);
+        DBread_adim(&ogmpst.adm_un,NULL,la);
+        DBread_adim(&ngmpst.adm_un,NULL,la);
         GEtfAdim_to_local(&ogmpst.adm_un,ptr,&ngmpst.adm_un);
         status = EXeadm(id,&ngmpst.adm_un,att);
         break;

@@ -410,7 +410,7 @@ loop:
        DBread_text(&gmpost.txt_un,str,la);
        if ( !gmpost.hed_un.blank  &&  WPnivt(actwin->nivtab,gmpost.hed_un.level) )
          {
-         WPpltx(&gmpost.txt_un,str,&k,x,y,z,a);
+         WPpltx(&gmpost.txt_un,(unsigned char *)str,&k,x,y,z,a);
          }
        break;
 /*
@@ -437,20 +437,20 @@ loop:
 ***Radius dimension.
 */
        case RDMTYP:
-       DBread_rdim(&gmpost.rdm_un,la);    
+       DBread_rdim(&gmpost.rdm_un,&csy,la);
        if ( !gmpost.hed_un.blank  &&  WPnivt(actwin->nivtab,gmpost.hed_un.level) )
          {
-         WPplrd(&gmpost.rdm_un,&k,x,y,z,a);
+         WPplrd(&gmpost.rdm_un,&csy,&k,x,y,z,a);
          }
        break;
 /*
 ***Angular dimension.
 */
        case ADMTYP:
-       DBread_adim(&gmpost.adm_un,la);
+       DBread_adim(&gmpost.adm_un,&csy,la);
        if ( !gmpost.hed_un.blank  &&  WPnivt(actwin->nivtab,gmpost.hed_un.level) )
          {
-         WPplad(&gmpost.adm_un,scale,&k,x,y,z,a);
+         WPplad(&gmpost.adm_un,&csy,scale,&k,x,y,z,a);
          }
        break;
 /*

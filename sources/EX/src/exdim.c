@@ -252,7 +252,6 @@ extern DBTmat  lklsyi;
  *      Return:      0 = Ok.
  *              EX1402 = Arc does not exist in DB
  *              EX1412 = refid is not an arc
- *              EX1452 = Can't insert cdim in DB
  *
  *      (C)microform ab  4/8/85 J. Kjellander
  *
@@ -309,22 +308,21 @@ extern DBTmat  lklsyi;
        DBRdim *rdmptr,
        V2NAPA *pnp)
 
-/*      Skapar radiemått, lagrar i GM och ritar.
+/*      Create radius dimension, store in DB and display.
  *
- *      In: id     => Pekare till identitet.
- *          rdmptr => Pekare till GM-struktur.
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => C ptr to RDIM ID.
+ *          rdmptr => C ptr to RDIM data.
+ *          pnp    => C ptr to attributes.
  *
- *      Ut: Inget.
- *
- *      Felkod:      0 = Ok.
- *              EX1462 = Kan ej lagra radiemått i GM.
+ *      Return:      0 = Ok.
+ *              EX1462 = Can't store RDIM in DB.
  *
  *      (C)microform ab  15/11/85 B. Doverud
  *
  *      15/10/86 SAVE, J. Kjellander
  *      27/12/86 hit, J. Kjellander
  *      20/3/92  lsysla, J. Kjellander
+ *      2007-09-23 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -333,7 +331,7 @@ extern DBTmat  lklsyi;
     DBCsys csy;
 
 /*
-***Fyll i namnparameterdata.
+***Add attributes.
 */
     rdmptr->hed_rd.blank = pnp->blank;
     rdmptr->hed_rd.pen   = pnp->pen;
@@ -345,7 +343,7 @@ extern DBTmat  lklsyi;
     rdmptr->wdt_rd       = pnp->width;
     rdmptr->pcsy_rd      = lsysla;
 /*
-***Lagra i gm.
+***Insert into DB.
 */
     if ( pnp->save )
       {
@@ -358,7 +356,7 @@ extern DBTmat  lklsyi;
       rdmptr->hed_rd.hit = 0;
       }
 /*
-***Rita.
+***Display.
 */
     if ( rdmptr->pcsy_rd > 0 ) DBread_csys(&csy,NULL,rdmptr->pcsy_rd);
     WPdrdm((DBAny *)rdmptr,&csy,la,GWIN_ALL);
@@ -376,19 +374,17 @@ extern DBTmat  lklsyi;
        DBVector *p2,
        V2NAPA   *pnp)
 
-/*      Skapar RDIM, lagrar i GM och ritar.
+/*      Create radius dimension (RDIM).
  *
- *      In: id     => Pekare till identitet.
- *          refid  => Pekare till id för refererad cirkel.
- *          p1     => Pekare till måttets brytpunkt.
- *          p2     => Pekare till måttets slutpunkt.
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => C ptr to RDIM ID.
+ *          refid  => C ptr to ARC ID.
+ *          p1     => C ptr to break position.
+ *          p2     => C ptr to end position.
+ *          pnp    => C ptr to attributes.
  *
- *      Ut: Inget.
- *
- *      Felkod:      0 = Ok.
- *              EX1402 = Den refererade storhten finns ej i GM
- *              EX1462 = Kan ej lagra radiemått i GM.
+ *      Return:      0 = Ok.
+ *              EX1402 = Arc does not exist in DB
+ *              EX1412 = refid is not an arc
  *
  *      (C)microform ab  4/8/85 J. Kjellander
  *
@@ -408,31 +404,36 @@ extern DBTmat  lklsyi;
     DBSeg   seg[4];
     DBRdim  rdim;
 
+ /*
+***Varkon pre SVN#30 saved RDIM DB-geometry in BASIC.
+***From SVN#30 RDIM data is saved in LOCAL coordinates.
+*/
 /*
 ***Transformera till basic.
-*/
+*
     if ( lsyspk != NULL )
       {
       GEtfpos_to_local(p1,&lklsyi,p1);
       GEtfpos_to_local(p2,&lklsyi,p2);
       }
-/*
-***Hämta la för den refererade cirkeln.
+*
+***Get the arc DBptr.
 */
     if ( DBget_pointer('I',refid,&la,&typ) < 0 )
          return(erpush("EX1402",""));
+
     if ( typ != ARCTYP )
          return(erpush("EX1412",""));
 /*
-***Läs cirkeldata.
+***Get arc data from DB.
 */
     DBread_arc(&oldarc,seg,la);
 /*
-***Beräkna mått-data.
+***Calculate RDIM data (3 pos).
 */
-    GE822(&oldarc,p1,p2,&rdim);
+    GE822(&oldarc,seg,p1,p2,lsyspk,&rdim);
 /*
-***Lagra i gm och rita.
+***Store in DB and display.
 */
     return(EXerdm(id,&rdim,pnp));
   }
@@ -445,16 +446,14 @@ extern DBTmat  lklsyi;
        DBAdim *admptr,
        V2NAPA *pnp)
 
-/*      Skapar vinkelmått, lagrar i GM och ritar.
+/*      Create angular dimension, store in DB and display.
  *
- *      In: id     => Pekare till identitet.
- *          admptr => Pekare till GM-struktur.
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => C ptr to ADIM ID.
+ *          admptr => C ptr to ADIM data.
+ *          pnp    => C ptr to attributes.
  *
- *      Ut: Inget.
- *
- *      Felkod:      0 = Ok.
- *              EX1472 = Kan ej lagra vinkelmått i GM.
+ *      Return:      0 = Ok.
+ *              EX1462 = Can't store ADIM in DB.
  *
  *      (C)microform ab  15/11/85 B. Doverud
  *
@@ -469,7 +468,7 @@ extern DBTmat  lklsyi;
     DBCsys csy;
 
 /*
-***Fyll i namnparameterdata.
+***Add attributes.
 */
     admptr->hed_ad.blank = pnp->blank;
     admptr->hed_ad.pen   = pnp->pen;
@@ -481,7 +480,7 @@ extern DBTmat  lklsyi;
     admptr->wdt_ad       = pnp->width;
     admptr->pcsy_ad      = lsysla;
 /*
-***Lagra i gm.
+***Insert into DB.
 */
     if ( pnp->save )
       {
@@ -494,7 +493,7 @@ extern DBTmat  lklsyi;
       admptr->hed_ad.hit = 0;
       }
 /*
-***Rita.
+***Display.
 */
     if ( admptr->pcsy_ad > 0 ) DBread_csys(&csy,NULL,admptr->pcsy_ad);
     WPdrdm((DBAny *)admptr,&csy,la,GWIN_ALL);
@@ -513,22 +512,19 @@ extern DBTmat  lklsyi;
        DBshort   alt,
        V2NAPA   *pnp)
 
-/*      Skapar ADIM, lagrar i GM och ritar.
+/*      Create angular dimension (ADIM).
  *
- *      In: id     => Pekare till identitet.
- *          refid  => Pekare till id för refererad linje-1.
- *          refid  => Pekare till id för refererad linje-2.
- *          pos    => Pekare till textens läge.
- *          alt    => Alternativ, + eller - 1,2,3 eller 4.
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => C ptr to ADIM ID.
+ *          refid  => C ptr to line 1 ID.
+ *          refid  => C ptr to line 2 ID.
+ *          pos    => C ptr to text position.
+ *          alt    => Alternative, + or - 1,2,3 eller 4.
+ *          pnp    => C ptr to attributes.
  *
- *      Ut: Inget.
- *
- *      Felkod:      0 = Ok.
- *              EX1402 = Den refererade storhten finns ej i GM
- *              EX1412 = Otillåten geometri-typ för denna operation
- *              EX1532 = Kan ej beräkna mått-data
- *              EX1472 = Kan ej lagra vinkelmått i GM.
+ *      Return:      0 = Ok.
+ *              EX1402 = Can't find entity in DB.
+ *              EX1412 = Illegal entity type.
+ *              EX1532 = Cant calculate ADIM data.
  *
  *      (C)microform ab  4/8/85 J. Kjellander
  *
@@ -537,6 +533,7 @@ extern DBTmat  lklsyi;
  *      14/10/85 Uppdatering av referensräknare, J. Kjellander
  *      20/11/85 Anrop till EXeadm, B. Doverud
  *      27/12/86 hit, J. Kjellander
+ *      2007-09-24 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -546,40 +543,44 @@ extern DBTmat  lklsyi;
     DBLine   lin1,lin2;
     DBAdim   adim;
 
-/*
+ /*
+***Varkon pre SVN#30 saved ADIM DB-geometry in BASIC.
+***From SVN#30 ADIM data is saved in LOCAL coordinates.
+*
 ***Transformera till basic.
-*/
+*
     if ( lsyspk != NULL ) GEtfpos_to_local(pos,&lklsyi,pos);
-/*
-***Hämta la för den 1:a refererade linjen.
+*
+***Get DBptr for first line.
 */
     if ( DBget_pointer('I',refid1,&la,&typ) < 0 )
          return(erpush("EX1402",""));
     if ( typ != LINTYP )
          return(erpush("EX1412",""));
 /*
-***Läs linjedata.
+***Get line data.
 */
     DBread_line(&lin1,la);
 /*
-***Hämta la för den 2:a refererade linjen.
+***Get DBptr for second line.
 */
     if ( DBget_pointer('I',refid2,&la,&typ) < 0 )
          return(erpush("EX1402",""));
     if ( typ != LINTYP )
          return(erpush("EX1412",""));
 /*
-***Läs linjedata.
+***Get line data.
 */
     DBread_line(&lin2,la);
 /*
-***Beräkna mått-data.
+***Calculate ADIM data.
 */
-    if ( GE823(&lin1,&lin2,pos,alt,&adim) < 0 )
+    if ( GE823(&lin1,&lin2,pos,alt,lsyspk,&adim) < 0 )
          return(erpush("EX1532",""));
 /*
-***Lagra i gm och rita.
+***Store in DB and display.
 */
     return(EXeadm(id,&adim,pnp));
   }
+
 /********************************************************/

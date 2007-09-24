@@ -477,13 +477,13 @@ askwdt:
         }
       else if ( typ == RDMTYP )
         {
-        DBread_rdim(&rdm,la);
+        DBread_rdim(&rdm,NULL,la);
         rdm.wdt_rd = width;
         DBupdate_rdim(&rdm,la);
         }
       else if ( typ == ADMTYP )
         {
-        DBread_adim(&adm,la);
+        DBread_adim(&adm,NULL,la);
         adm.wdt_ad = width;
         DBupdate_adim(&adm,la);
         }
@@ -1486,13 +1486,13 @@ loop:
       }
     else if ( typ == RDMTYP )
       {
-      DBread_rdim(&rdm,la);
+      DBread_rdim(&rdm,NULL,la);
       dauto = rdm.auto_rd;
       tsiz = rdm.tsiz_rd;
       }
     else
       {
-      DBread_adim(&adm,la);
+      DBread_adim(&adm,NULL,la);
       dauto = adm.auto_ad;
       tsiz = adm.tsiz_ad;
       }
@@ -1642,12 +1642,12 @@ loop:
       }
     else if ( typ == RDMTYP )
       {
-      DBread_rdim(&rdm,la);
+      DBread_rdim(&rdm,NULL,la);
       asiz = rdm.asiz_rd;
       }
     else
       {
-      DBread_adim(&adm,la);
+      DBread_adim(&adm,NULL,la);
       asiz = adm.asiz_ad;
       }
 /*
@@ -1793,13 +1793,13 @@ loop:
       }
     else if ( typ == RDMTYP )
       {
-      DBread_rdim(&rdm,la);
+      DBread_rdim(&rdm,NULL,la);
       dauto = rdm.auto_rd;
       ndig = rdm.ndig_rd;
       }
     else
       {
-      DBread_adim(&adm,la);
+      DBread_adim(&adm,NULL,la);
       dauto = adm.auto_ad;
       ndig = adm.ndig_ad;
       }
@@ -1988,13 +1988,13 @@ loop:
       }
     else if ( typ == RDMTYP )
       {
-      DBread_rdim(&rdm,la);
+      DBread_rdim(&rdm,NULL,la);
       rdm.auto_rd = dauto;
       DBupdate_rdim(&rdm,la);
       }
     else
       {
-      DBread_adim(&adm,la);
+      DBread_adim(&adm,NULL,la);
       adm.auto_ad = dauto;
       DBupdate_adim(&adm,la);
       }

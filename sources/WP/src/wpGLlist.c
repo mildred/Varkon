@@ -12,7 +12,7 @@
 *    WPmodl_all();       Make OpenGL displaylist for all entities
 *    WPmodl_highlight(); Make OpenGL displaylist for highlighted entities
 *    WPdodl_highlight(); Delete all highlight lists.
-*    WPsodl_all();       Show (execute) all OpenGL displaylists in a window
+*    WPsodl_all();       Show (execute) all displaylists in a window
 *    WPeodls();          Executes OpenGL DisplayList 1 for Selection
 *    WPnrrw();           Normalizes view box
 *
@@ -71,8 +71,8 @@ static void  pr_txt(WPRWIN *rwinpt, DBText *txt, char *str);
 static void  pr_xht(WPRWIN *rwinpt, DBHatch *xht, DBfloat crdvek[]);
 static void  pr_ldm(WPRWIN *rwinpt, DBLdim *ldm, DBCsys *csyptr);
 static void  pr_cdm(WPRWIN *rwinpt, DBCdim *cdm, DBCsys *csyptr);
-static void  pr_rdm(WPRWIN *rwinpt, DBRdim *rdm);
-static void  pr_adm(WPRWIN *rwinpt, DBAdim *adm);
+static void  pr_rdm(WPRWIN *rwinpt, DBRdim *rdm, DBCsys *csyptr);
+static void  pr_adm(WPRWIN *rwinpt, DBAdim *adm, DBCsys *csyptr);
 static void  pr_bpl(WPRWIN *rwinpt, DBBplane *bpl);
 static void  pr_msh(WPRWIN *rwinpt, DBMesh *mesh);
 static void  pr_csy(WPRWIN *rwinpt, DBCsys *csy, DBptr la);
@@ -88,7 +88,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
     WPRWIN *rwinpt)
 
 /*    Calculates the bounding box of the model.
- * 
+ *
  *    In: rwinpt = C-ptr to WPRWIN
  *
  *    Return: 0
@@ -98,6 +98,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
  *    1998-10-27 Bugfix deallokering, J.Kjellander
  *    2004-07-10 Mesh J.Kjellander, �rebro university
  *    2007-06-16 1.19, J.Kjellander
+ *    2007-09-24 3D dims, J.Kjellander
  *
  ******************************************************!*/
 
@@ -256,71 +257,73 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A Linear dimension.
 */
          case LDMTYP:
-         DBread_ldim(&ldm,NULL,la);
-         if ( ldm.p1_ld.x_gm < xmin ) xmin = ldm.p1_ld.x_gm;
-         if ( ldm.p1_ld.x_gm > xmax ) xmax = ldm.p1_ld.x_gm;
-         if ( ldm.p1_ld.y_gm < ymin ) ymin = ldm.p1_ld.y_gm;
-         if ( ldm.p1_ld.y_gm > ymax ) ymax = ldm.p1_ld.y_gm;
+         DBread_ldim(&ldm,&csy,la);
+         k = -1;
+         WPplld(&ldm,&csy,&k,x,y,z,a);
 
-         if ( ldm.p2_ld.x_gm < xmin ) xmin = ldm.p2_ld.x_gm;
-         if ( ldm.p2_ld.x_gm > xmax ) xmax = ldm.p2_ld.x_gm;
-         if ( ldm.p2_ld.y_gm < ymin ) ymin = ldm.p2_ld.y_gm;
-         if ( ldm.p2_ld.y_gm > ymax ) ymax = ldm.p2_ld.y_gm;
-
-         if ( ldm.p3_ld.x_gm < xmin ) xmin = ldm.p3_ld.x_gm;
-         if ( ldm.p3_ld.x_gm > xmax ) xmax = ldm.p3_ld.x_gm;
-         if ( ldm.p3_ld.y_gm < ymin ) ymin = ldm.p3_ld.y_gm;
-         if ( ldm.p3_ld.y_gm > ymax ) ymax = ldm.p3_ld.y_gm;
+         for ( i=0; i<=k; ++i )
+           {
+           if ( x[i] < xmin ) xmin = x[i];
+           if ( x[i] > xmax ) xmax = x[i];
+           if ( y[i] < ymin ) ymin = y[i];
+           if ( y[i] > ymax ) ymax = y[i];
+           if ( z[i] < zmin ) zmin = z[i];
+           if ( z[i] > zmax ) zmax = z[i];
+           }
          break;
 /*
 ***A Circular dimension.
 */
          case CDMTYP:
-         DBread_cdim(&cdm,NULL,la);
-         if ( cdm.p1_cd.x_gm < xmin ) xmin = cdm.p1_cd.x_gm;
-         if ( cdm.p1_cd.x_gm > xmax ) xmax = cdm.p1_cd.x_gm;
-         if ( cdm.p1_cd.y_gm < ymin ) ymin = cdm.p1_cd.y_gm;
-         if ( cdm.p1_cd.y_gm > ymax ) ymax = cdm.p1_cd.y_gm;
+         DBread_cdim(&cdm,&csy,la);
+         k = -1;
+         WPplcd(&cdm,&csy,&k,x,y,z,a);
 
-         if ( cdm.p2_cd.x_gm < xmin ) xmin = cdm.p2_cd.x_gm;
-         if ( cdm.p2_cd.x_gm > xmax ) xmax = cdm.p2_cd.x_gm;
-         if ( cdm.p2_cd.y_gm < ymin ) ymin = cdm.p2_cd.y_gm;
-         if ( cdm.p2_cd.y_gm > ymax ) ymax = cdm.p2_cd.y_gm;
-
-         if ( cdm.p3_cd.x_gm < xmin ) xmin = cdm.p3_cd.x_gm;
-         if ( cdm.p3_cd.x_gm > xmax ) xmax = cdm.p3_cd.x_gm;
-         if ( cdm.p3_cd.y_gm < ymin ) ymin = cdm.p3_cd.y_gm;
-         if ( cdm.p3_cd.y_gm > ymax ) ymax = cdm.p3_cd.y_gm;
+         for ( i=0; i<=k; ++i )
+           {
+           if ( x[i] < xmin ) xmin = x[i];
+           if ( x[i] > xmax ) xmax = x[i];
+           if ( y[i] < ymin ) ymin = y[i];
+           if ( y[i] > ymax ) ymax = y[i];
+           if ( z[i] < zmin ) zmin = z[i];
+           if ( z[i] > zmax ) zmax = z[i];
+           }
          break;
 /*
 ***A Radius dimension.
 */
          case RDMTYP:
-         DBread_rdim(&rdm,la);
-         if ( rdm.p1_rd.x_gm < xmin ) xmin = rdm.p1_rd.x_gm;
-         if ( rdm.p1_rd.x_gm > xmax ) xmax = rdm.p1_rd.x_gm;
-         if ( rdm.p1_rd.y_gm < ymin ) ymin = rdm.p1_rd.y_gm;
-         if ( rdm.p1_rd.y_gm > ymax ) ymax = rdm.p1_rd.y_gm;
+         DBread_rdim(&rdm,&csy,la);
+         k = -1;
+         WPplrd(&rdm,&csy,&k,x,y,z,a);
 
-         if ( rdm.p2_rd.x_gm < xmin ) xmin = rdm.p2_rd.x_gm;
-         if ( rdm.p2_rd.x_gm > xmax ) xmax = rdm.p2_rd.x_gm;
-         if ( rdm.p2_rd.y_gm < ymin ) ymin = rdm.p2_rd.y_gm;
-         if ( rdm.p2_rd.y_gm > ymax ) ymax = rdm.p2_rd.y_gm;
-
-         if ( rdm.p3_rd.x_gm < xmin ) xmin = rdm.p3_rd.x_gm;
-         if ( rdm.p3_rd.x_gm > xmax ) xmax = rdm.p3_rd.x_gm;
-         if ( rdm.p3_rd.y_gm < ymin ) ymin = rdm.p3_rd.y_gm;
-         if ( rdm.p3_rd.y_gm > ymax ) ymax = rdm.p3_rd.y_gm;
+         for ( i=0; i<=k; ++i )
+           {
+           if ( x[i] < xmin ) xmin = x[i];
+           if ( x[i] > xmax ) xmax = x[i];
+           if ( y[i] < ymin ) ymin = y[i];
+           if ( y[i] > ymax ) ymax = y[i];
+           if ( z[i] < zmin ) zmin = z[i];
+           if ( z[i] > zmax ) zmax = z[i];
+           }
          break;
 /*
 ***An angular dimension.
 */
          case ADMTYP:
-         DBread_adim(&adm,la);
-         if ( adm.pos_ad.x_gm < xmin ) xmin = adm.pos_ad.x_gm;
-         if ( adm.pos_ad.x_gm > xmax ) xmax = adm.pos_ad.x_gm;
-         if ( adm.pos_ad.y_gm < ymin ) ymin = adm.pos_ad.y_gm;
-         if ( adm.pos_ad.y_gm > ymax ) ymax = adm.pos_ad.y_gm;
+         DBread_adim(&adm,&csy,la);
+         k = -1;
+         WPplad(&adm,&csy,1.0,&k,x,y,z,a);
+
+         for ( i=0; i<=k; ++i )
+           {
+           if ( x[i] < xmin ) xmin = x[i];
+           if ( x[i] > xmax ) xmax = x[i];
+           if ( y[i] < ymin ) ymin = y[i];
+           if ( y[i] > ymax ) ymax = y[i];
+           if ( z[i] < zmin ) zmin = z[i];
+           if ( z[i] > zmax ) zmax = z[i];
+           }
          break;
 /*
 ***A B-plane.
@@ -639,17 +642,17 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A radius dimension.
 */
          case RDMTYP:
-         DBread_rdim(&rdm,la);
+         DBread_rdim(&rdm,&csy,la);
          if ( rdm.wdt_rd != actwdt ) set_linewidth(rwinpt,rdm.wdt_rd);
-         pr_rdm(rwinpt,&rdm);
+         pr_rdm(rwinpt,&rdm,&csy);
          break;
 /*
 ***An angular dimension.
 */
          case ADMTYP:
-         DBread_adim(&adm,la);
+         DBread_adim(&adm,&csy,la);
          if ( adm.wdt_ad != actwdt ) set_linewidth(rwinpt,adm.wdt_ad);
-         pr_adm(rwinpt,&adm);
+         pr_adm(rwinpt,&adm,&csy);
          break;
 /*
 ***A B-plane.
@@ -850,17 +853,17 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A radius dimension.
 */
        case RDMTYP:
-       DBread_rdim(&rdm,la);
+       DBread_rdim(&rdm,&csy,la);
        glLineWidth((GLfloat)width_to_pixels(rwinpt,rdm.wdt_rd) + 1);
-       pr_rdm(rwinpt,&rdm);
+       pr_rdm(rwinpt,&rdm,&csy);
        break;
 /*
 ***An angular dimension.
 */
        case ADMTYP:
-       DBread_adim(&adm,la);
+       DBread_adim(&adm,&csy,la);
        glLineWidth((GLfloat)width_to_pixels(rwinpt,adm.wdt_ad) + 1);
-       pr_adm(rwinpt,&adm);
+       pr_adm(rwinpt,&adm,&csy);
        break;
 /*
 ***A B-plane.
@@ -1629,7 +1632,8 @@ static void    pr_cdm(
 
 static void    pr_rdm(
        WPRWIN *rwinpt,
-       DBRdim *rdmptr)
+       DBRdim *rdmptr,
+       DBCsys *csyptr)
 
 /*     Process Radius dimension.
  * 
@@ -1650,7 +1654,7 @@ static void    pr_rdm(
 ***Create graphical representation.
 */
    k = -1;
-   WPplrd(rdmptr,&k,x,y,z,a);
+   WPplrd(rdmptr,csyptr,&k,x,y,z,a);
 /*
 ***Give the polyline to OpenGL.
 */
@@ -1675,7 +1679,8 @@ static void    pr_rdm(
 
 static void    pr_adm(
        WPRWIN *rwinpt,
-       DBAdim *admptr)
+       DBAdim *admptr,
+       DBCsys *csyptr)
 
 /*     Process Angular dimension.
  * 
@@ -1702,7 +1707,7 @@ static void    pr_adm(
 ***Create graphical representation.
 */
    k = -1;
-   WPplad(admptr,scale,&k,x,y,z,a);
+   WPplad(admptr,csyptr,scale,&k,x,y,z,a);
 /*
 ***Give the polyline to OpenGL.
 */
