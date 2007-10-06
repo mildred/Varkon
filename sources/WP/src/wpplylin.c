@@ -170,7 +170,7 @@ static double curnog = 1.0;
  {
     DBptr     la;
     DBetype   typ;
-    int       k,i,n;
+    int       k,i;
     char      str[V3STRLEN+1];
     double    x[PLYMXV],y[PLYMXV],z[PLYMXV];
     char      a[PLYMXV];
@@ -287,19 +287,11 @@ static double curnog = 1.0;
         break;
 
         case XHTTYP:
-        DBread_xhatch(&xht,crdvek,la);
+        DBread_xhatch(&xht,crdvek,&csy,la);
         if ( !xht.hed_xh.blank  &&  WPnivt(gwinpt->nivtab,xht.hed_xh.level) )
           {
-          i =  0;
-          n =  4*xht.nlin_xh;
-
-          while ( i < n )
-            {
-            x[++k] = crdvek[i++];
-            y[k]   = crdvek[i++];
-            x[++k] = crdvek[i++];
-            y[k]   = crdvek[i++];
-            }
+          WPplxh(&xht,crdvek,&csy,&k,x,y,z,a);
+          WPpply(gwinpt,k,x,y,z);
           }
         break;
 

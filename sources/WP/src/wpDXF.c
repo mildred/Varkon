@@ -176,7 +176,7 @@ static short dxffnt(FILE *filpek, short typ, DBfloat lgt);
        case ADMTYP: DBread_adim(&gmpost.adm_un,&csy,la);
                     dxfoad(filpek,&gmpost.adm_un,&csy,origo); break;
 
-       case XHTTYP: DBread_xhatch(&gmpost.xht_un,xhtcrd,la);
+       case XHTTYP: DBread_xhatch(&gmpost.xht_un,xhtcrd,&csy,la);
                     dxfoxh(filpek,&gmpost.xht_un,xhtcrd,origo); break;
        }
      }

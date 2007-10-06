@@ -34,17 +34,6 @@
 #include "../include/EX.h"
 #include <string.h>
 
-/* Tabell för gpitoa */
-
-static short tal[] = {
-9000, 8000, 7000, 6000, 5000, 4000, 3000, 2000, 1000,
-900, 800, 700, 600, 500, 400, 300, 200, 100,
-90, 80, 70, 60, 50, 40, 30, 20, 10 };
-
-static short *acc_tab[] = { &tal[0], &tal[9], &tal[18]};
-
-static char ch[] = {'9','8','7','6','5','4','3','2','1','0'};
-
 /* Tabell för gpaton */
 
 static double tab_1[] = {

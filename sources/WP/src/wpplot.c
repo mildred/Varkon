@@ -245,8 +245,8 @@ loop:
 ***Hatch.
 */
         case XHTTYP:
-        DBread_xhatch(&gmpost.xht_un,xhcrds,la);
-        WPplxh(&gmpost.xht_un,xhcrds,&k,x,y,z,a);
+        DBread_xhatch(&gmpost.xht_un,xhcrds,&csy,la);
+        WPplxh(&gmpost.xht_un,xhcrds,&csy,&k,x,y,z,a);
         width = gmpost.xht_un.wdt_xh;
         break;
 /*

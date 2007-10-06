@@ -579,7 +579,7 @@ extern DBTmat *lsyspk;
         break;
 
       case XHTTYP:
-        DBread_xhatch(&ngmpst.xht_un,xhtcrd,la);
+        DBread_xhatch(&ngmpst.xht_un,xhtcrd,NULL,la);
         GEtfHatch_to_local(&ngmpst.xht_un,xhtcrd,ptr);
         status = EXexht(id,&ngmpst.xht_un,xhtcrd,att);
         break;

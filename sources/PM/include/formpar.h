@@ -141,7 +141,7 @@
 /*
 ***VXHT = 18, XHATCH(-,<flo>,<flo>,<ref>[,<ref>])
 */
-     "-2:fe.fe.re.49(re)",
+     "-5:fe.fe.re.49(re)",
 /*
 ***VPART = 19, PART(-,-,<ref>)
 */
@@ -868,11 +868,11 @@
 /*
 ***VAREA  = 199, AREA.
 */
-     "f2:fe.re.49(re)",
+     "f5:fe.re.49(re)",
 /*
 ***VCGRAV = 200, CGRAV.
 */
-     "v2:fe.re.49(re)",
+     "v5:fe.re.49(re)",
 /*
 ***VSETB = 201, SET_GLOBAL
 */

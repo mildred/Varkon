@@ -503,9 +503,9 @@ extern DBTmat *lsyspk;
 ***Crosshatch.
 */
       case XHTTYP:
-      DBread_xhatch((DBHatch *)&gmpost.xht_un,crdvek,la);
-      if ( draw ) WPdrxh(&gmpost.xht_un,crdvek,la,win_id);
-      else        WPdlxh(&gmpost.xht_un,crdvek,la,win_id);
+      DBread_xhatch((DBHatch *)&gmpost.xht_un,crdvek,&csy,la);
+      if ( draw ) WPdrxh(&gmpost.xht_un,crdvek,&csy,la,win_id);
+      else        WPdlxh(&gmpost.xht_un,crdvek,&csy,la,win_id);
       break;
 /*
 ***Längdmått.

@@ -1153,11 +1153,11 @@ error:
   {
     int     typarr[V2MPMX];                 /* Parametertyper */
     char    oldval[V2MPMX][V3STRLEN];       /* Gamla värden */
-    char   *osparr[V2MPMX];         
+    char   *osparr[V2MPMX];
     char    newval[V2MPMX][V3STRLEN];       /* Nya värden */
-    char   *nsparr[V2MPMX];         
+    char   *nsparr[V2MPMX];
     char    pmtarr[V2MPMX][V3STRLEN+1];     /* Promptar */
-    char   *pmparr[V2MPMX];         
+    char   *pmparr[V2MPMX];
     short   maxtkn[V2MPMX];                 /* Stränglängder */
     short   pant;                           /* Antal parametrar */
     short   i,status;

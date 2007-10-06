@@ -86,7 +86,6 @@
 ***Save hatch record.
 */
     return(inpost((GMUNON *)xhtpek,idpek,lapek,sizeof(DBHatch)));
-
   }
 
 /********************************************************/
@@ -95,15 +94,21 @@
         DBstatus DBread_xhatch(
         DBHatch *xhtpek,
         DBfloat *crdpek,
+        DBCsys  *csyptr,
         DBptr    la)
 
 /*      Read a hatch entity from DB.
  *
- *      In: xhtpek => C ptr to hatch record.
- *          crdpek => C ptr to hatch line coordinates or NULL.
+ *      In: xhtpek => C ptr to recieve hatch data.
+ *          crdpek => C ptr to recieve hatch line
+ *                    coordinates or NULL.
+ *          csyptr => C ptr to recieve coordinate
+ *                    system data or NULL.
  *          la     => Hatch address in DB.
  *
- *      Ut: *xhtpek => Snitt-post.
+ *      Out: *xhtpek => Hatch data.
+ *           *crdpek => Hatch line coordinates (2D).
+ *           *csyptr => Coordinate system data.
  *
  *      Return: 0
  *
@@ -112,6 +117,7 @@
  *      17/3/88     crdpek=NULL, J.Kjellander
  *      22/3/92     GMPOSTV1, J.Kjellander
  *      2007-09-01  GMPOSTV2, J.Kjellander
+ *      2007-09-30  3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -127,6 +133,7 @@
       {
       case GMPOSTV2:
       V3MOME(hedpek,xhtpek,sizeof(DBHatch));
+      if ( csyptr != NULL  &&  xhtpek->pcsy_xh > 0 ) DBread_csys(csyptr,NULL,xhtpek->pcsy_xh);
       break;
 
       case GMPOSTV1:
@@ -243,7 +250,7 @@
 /*
 ***Read hatch record.
 */
-    DBread_xhatch(&xhatch,NULL,la);
+    DBread_xhatch(&xhatch,NULL,NULL,la);
 /*
 ***Delete hatch lines.
 */

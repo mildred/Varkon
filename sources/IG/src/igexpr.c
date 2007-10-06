@@ -1120,19 +1120,20 @@ end:
 
 static short gnpend(pm_ptr *pexnpt)
 
-/*      Create END(ref) position expression.
+/*      Create ENDP(ref)/STARTP(ref) position expression.
  *
  *      Out: *pexnpt => PM ptr to expression.
  *
  *      Return:  0 => Ok.
  *          REJECT => Operation cancelled.
- *          GOMAIN => Back to mainmenu.
+ *          GOMAIN => Back to main menu.
  *
  *      (C)microform ab 1/11/85 J. Kjellander
  *
  *      20/3/86    Anrop pmtcon, pmclie B. Doverud
  *      6/10/86    GOMAIN, J. Kjellander
  *      1997-04-21 STARTP/ENDP, J.Kjellander
+ *      2007-09-29 Removed prompt, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1168,7 +1169,7 @@ static short gnpend(pm_ptr *pexnpt)
 ***Create STARTP/ENDP function expression.
 */
       typ = LINTYP+ARCTYP+CURTYP;
-      if ( (status=genrfs(331,&typ,&exnpt,&end,&right,(short)0)) != 0 ) goto exit;
+      if ( (status=genrfs(0,&typ,&exnpt,&end,&right,(short)0)) != 0 ) goto exit;
 
       pmtcon(exnpt,(pm_ptr)NULL,&arglst,&dummy);
 
@@ -1189,25 +1190,24 @@ exit:
 
 static short gnpon(pm_ptr *pexnpt)
 
-/*      Huvudrutin fï¿½r position pï¿½ en storhet med fast
- *      eller temporï¿½r referens.
+/*      Create ON(ref), ON(ref,t) or ON(ref,uv) position
+ *      expression.
  *
- *      In: pexnpt => Pekare till pm_ptr variabel.
+ *      Out: *pexnpt => PM ptr to expression.
  *
- *      Ut: *pexnpt => PM-pekare till expression node.
- *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => Huvudmenyn
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to main menu.
  *
  *      (C)microform ab 16/1/85 J. Kjellander
  *
  *      28/10/85 Ny def. av PMLITVA, J. Kjellander
- *      28/10/85 ï¿½nde och sida, J. Kjellander
+ *      28/10/85 Ände och sida, J. Kjellander
  *      20/3/86  Anrop pmtcon, pmclie B. Doverud
- *      24/3/86  Felutgï¿½ng B. Doverud
+ *      24/3/86  Felutgång B. Doverud
  *      6/10/86  GOMAIN, J. Kjellander
  *      1998-09-24 b_plan, J.Kjellander
+ *      2007-09-29 Removed prompt, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1225,7 +1225,7 @@ static short gnpon(pm_ptr *pexnpt)
     static char dstr[V3STRLEN+1] = "0.5";
 
 /*
-***Temporï¿½r referens.
+***Temp ref.
 */
     if ( tmpref)
       {
@@ -1238,22 +1238,19 @@ static short gnpon(pm_ptr *pexnpt)
       pmclie( &litstr, pexnpt);
       }
 /*
-***Fast referens.
+***True ref.
 */
     else
       {
 /*
-***Skapa referens.
+***Create ref.
 */
       typ = POITYP+LINTYP+ARCTYP+CURTYP+CSYTYP+BPLTYP+
             TXTTYP+LDMTYP+CDMTYP+RDMTYP+ADMTYP+SURTYP;
-      if ( (status=genrfs(52,&typ,&exnpt1,&end,&right,(short)0)) != 0 ) goto exit;
-/*
-***Alla typer av storheter krï¿½ver en referens som argument.
-*/
+      if ( (status=genrfs(0,&typ,&exnpt1,&end,&right,(short)0)) != 0 ) goto exit;
       pmtcon(exnpt1,(pm_ptr)NULL,&retla,&dummy);
 /*
-***Trï¿½dstorheter har en FLOAT som ytterligare parameter.
+***Add parameter value for wireframe geometry.
 */
       if ( typ == LINTYP  ||  typ == ARCTYP  ||  typ == CURTYP )
         {
@@ -1262,7 +1259,7 @@ static short gnpon(pm_ptr *pexnpt)
         strcpy(dstr,istr);
         }
 /*
-***Ytor har en VECTOR som ytterligare argument.
+***Add U,V values for surfaces.
 */
       else if ( typ == SURTYP  ||  typ == BPLTYP )
         {
@@ -1270,17 +1267,17 @@ static short gnpon(pm_ptr *pexnpt)
         pmtcon(exnpt2,retla,&arglst,&dummy);
         }
 /*
-***ï¿½vriga storheter har ingen ytterligare parameter.
+***Nothing to ad for other entities.
 */
       else arglst = retla;
 /*
-***Skapa funktionsuttrycksnoden.
+***Create function expression.
 */
       stlook("ON",&kind,&ref);
       pmcfue(ref,arglst,pexnpt);
       }
 /*
-***Avslutning.
+***The end.
 */
 exit:
     return(status);
@@ -1291,28 +1288,26 @@ exit:
 
 static short gnpint(pm_ptr *pexnpt)
 
-/*      Huvudrutin fï¿½r position skï¿½rning mellan storheter
- *      med fast eller temporï¿½r referens.
+/*      Create INTERSECT(ref1,ref2,alt) position expression.
  *
- *      In: pexnpt => Pekare till pm_ptr variabel.
+ *      Out: *pexnpt => PM ptr to expression.
  *
- *      Ut: *pexnpt => PM-pekare till expression-node.
- *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => Huvudmenyn.
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to main menu.
  *
  *      (C)microform ab 10/1/85 J. Kjellander
  *
  *      28/10/85 Ny def. av PMLITVA, J. Kjellander
- *      28/10/85 ï¿½nde och sida, J. Kjellander
+ *      28/10/85 Ände och sida, J. Kjellander
  *      6/3/86   Ny defaulthantering, B. Doverud
  *      20/3/86  Anrop pmtcon, pmclie B. Doverud
- *      24/3/86  Felutgï¿½ng B. Doverud
+ *      24/3/86  Felutgång B. Doverud
  *      7/10/86  GOMAIN, J. Kjellander
  *      20/11/89 Neg. intnr, J. Kjellander
  *      23/12/91 Bplan och koord.sys, J. Kjellander
  *      7/9/95   Ytor, J. Kjellander
+ *      2007-09-29 Removed prompt, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1328,7 +1323,7 @@ static short gnpint(pm_ptr *pexnpt)
     PMLITVA  litstr;
 
 /*
-***Temporï¿½r referens.
+***Temp ref.
 */
     if ( tmpref || (v3mode == RIT_MOD) )
       {
@@ -1341,16 +1336,16 @@ static short gnpint(pm_ptr *pexnpt)
       pmclie( &litstr, pexnpt);
       }
 /*
-***Fast referens.
+***True ref.
 */
     else
       {
 /*
-***Lï¿½s in 2 referenser.
+***Create the two refs.
 */
       typ1 = LINTYP+ARCTYP+CURTYP;
       if ( modtyp == 3 ) typ1 += BPLTYP+CSYTYP+SURTYP;
-      if ( (status=genrfs(324,&typ1,&exnpt1,&end,
+      if ( (status=genrfs(0,&typ1,&exnpt1,&end,
                           &right,(short)0)) != 0 ) goto exit;
 
       typ2 = LINTYP+ARCTYP+CURTYP;
@@ -1358,10 +1353,10 @@ static short gnpint(pm_ptr *pexnpt)
                             typ1 != CSYTYP  &&
                             typ1 != SURTYP )
         typ2 += BPLTYP+CSYTYP+SURTYP;
-      if ( (status=genrfs(325,&typ2,&exnpt2,&end,
+      if ( (status=genrfs(0,&typ2,&exnpt2,&end,
                           &right,(short)0)) != 0 ) goto exit;
 /*
-***Om skï¿½rning linje/linje, alt = -1.
+***If line/line, alt = -1.
 */
       if ( typ1 == LINTYP && typ2 == LINTYP )
          {
@@ -1370,26 +1365,24 @@ static short gnpint(pm_ptr *pexnpt)
          pmclie( &litstr, &exnpt3);
          }
 /*
-***Annars lï¿½s in alternativ.
+***If not, ask user for alt value.
 */
       else
          {
          if ( (status=IGcint(327,"1",istr,&exnpt3)) < 0 ) goto exit;
          }
 /*
-***Skapa argumentlistan.
+***Create expression.
 */
-      pmtcon( exnpt1, (pm_ptr)NULL, &retla, &dummy);
-      pmtcon( exnpt2, retla, &retla, &dummy);
-      pmtcon( exnpt3, retla, &arglst, &dummy);
-/*
-***Skapa funktionsuttrycksnoden.
-*/
+      pmtcon(exnpt1,(pm_ptr)NULL,&retla,&dummy);
+      pmtcon(exnpt2,retla,&retla,&dummy);
+      pmtcon(exnpt3,retla,&arglst,&dummy);
+
       stlook("INTERSECT",&kind,&ref);
       pmcfue( ref, arglst, pexnpt);
       }
 /*
-***Avslutning.
+***The end.
 */
 exit:
     return(status);
@@ -1401,36 +1394,35 @@ exit:
 
 static short gnpcen(pm_ptr *pexnpt)
 
-/*      Huvudrutin fï¿½r position i krï¿½kningscentrum med fast
- *      eller temporï¿½r referens.
+/*      Create CENTRE(ref,t) position expression.
  *
- *      In: pexnpt => Pekare till pm_ptr variabel.
+ *      Out: *pexnpt => PM ptr to expression.
  *
- *      Ut: *pexnpt => PM-pekare till expression node.
- *
- *      FV:      0 => Ok.
- *          REJECT => Operationen avbruten.
- *          GOMAIN => Huvudmenyn
+ *      Return:  0 => Ok.
+ *          REJECT => Operation cancelled.
+ *          GOMAIN => Back to main menu.
  *
  *      (C)microform ab 26/4/87 J. Kjellander
+ *
+ *      2007-09-29 Removed prompt, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    DBetype   typ;
-    pm_ptr  retla,arglst,ref,dummy;
-    pm_ptr  exnpt1,exnpt2;
-    stidcl  kind;
-    bool    end,right;
-    char    istr[V3STRLEN+1];
-    short   status;
-    PMLITVA litstr;
-    DBVector   posvec;
+    DBetype  typ;
+    pm_ptr   retla,arglst,ref,dummy;
+    pm_ptr   exnpt1,exnpt2;
+    stidcl   kind;
+    bool     end,right;
+    char     istr[V3STRLEN+1];
+    short    status;
+    PMLITVA  litstr;
+    DBVector posvec;
 
     static char dstr[V3STRLEN+1] = "0.0";
 
 /*
-***Temporï¿½r referens.
+***Temp ref.
 */
     if ( tmpref)
       {
@@ -1443,17 +1435,17 @@ static short gnpcen(pm_ptr *pexnpt)
       pmclie( &litstr, pexnpt);
       }
 /*
-***Fast referens.
+***True ref.
 */
     else
       {
 /*
-***Skapa referens.
+***Create reference.
 */
       typ = ARCTYP+CURTYP;
-      if ( (status=genrfs(53,&typ,&exnpt1,&end,&right,(short)0)) != 0 ) goto exit;
+      if ( (status=genrfs(0,&typ,&exnpt1,&end,&right,(short)0)) != 0 ) goto exit;
 /*
-***Om arc, sï¿½tt parametervï¿½rdet till 0.
+***An arc can use t=0.
 */
       if ( typ == ARCTYP )
         {
@@ -1462,7 +1454,7 @@ static short gnpcen(pm_ptr *pexnpt)
         pmclie( &litstr, &exnpt2);
         }
 /*
-***Om kurva lï¿½s i parametervï¿½rde.
+***If it's a curve, ask user for t value.
 */
       else
         {
@@ -1470,18 +1462,16 @@ static short gnpcen(pm_ptr *pexnpt)
         strcpy(dstr,istr);
         }
 /*
-***Skapa argumentlistan.
+***Create expression.
 */
       pmtcon( exnpt1, (pm_ptr)NULL, &retla, &dummy);
       pmtcon( exnpt2, retla, &arglst, &dummy);
-/*
-***Skapa funktionsuttrycksnoden.
-*/
+
       stlook("CENTRE",&kind,&ref);
       pmcfue( ref, arglst, pexnpt);
       }
 /*
-***Avslutning.
+***The end.
 */
 exit:
     return(status);
@@ -1497,10 +1487,10 @@ exit:
         bool    *right,
         short    utstat)
 
-/*      Tï¿½nder hï¿½rkors. Lï¿½ser in koordinat + pektecken.
- *      Gï¿½r sï¿½kning i displayfil via gpgtla() med mask
- *      som beror av pek-tecknet. Med utstat <> 0 tillï¿½ts
- *      rutinen avsluta med status = utstat fï¿½rutom de
+/*      Select entity (pick with mouse).
+ *
+ *      Med utstat <> 0 tillåts
+ *      rutinen avsluta med status = utstat förutom de
  *      vanliga REJECT och GOMAIN.
  *
  *      In: idvek  => Pekare till array av DBId   .

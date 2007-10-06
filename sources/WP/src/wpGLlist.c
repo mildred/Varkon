@@ -68,7 +68,7 @@ static void  pr_lin(WPRWIN *rwinpt, DBLine *lin);
 static void  pr_arc(WPRWIN *rwinpt, DBArc *arc, DBSeg *arcseg);
 static void  pr_cur(WPRWIN *rwinpt, DBCurve *cur, DBSeg *graseg);
 static void  pr_txt(WPRWIN *rwinpt, DBText *txt, char *str);
-static void  pr_xht(WPRWIN *rwinpt, DBHatch *xht, DBfloat crdvek[]);
+static void  pr_xht(WPRWIN *rwinpt, DBHatch *xht, DBfloat crdvek[], DBCsys *csy);
 static void  pr_ldm(WPRWIN *rwinpt, DBLdim *ldm, DBCsys *csyptr);
 static void  pr_cdm(WPRWIN *rwinpt, DBCdim *cdm, DBCsys *csyptr);
 static void  pr_rdm(WPRWIN *rwinpt, DBRdim *rdm, DBCsys *csyptr);
@@ -241,16 +241,18 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A Hatch.
 */
          case XHTTYP:
-         DBread_xhatch(&xht,crdvek,la);
-         i = 0;
-         while ( i <  4*xht.nlin_xh )
+         DBread_xhatch(&xht,crdvek,&csy,la);
+         k = -1;
+         WPplxh(&xht,crdvek,&csy,&k,x,y,z,a);
+
+         for ( i=0; i<=k; ++i )
            {
-           if ( crdvek[i] < xmin ) xmin = crdvek[i];
-           if ( crdvek[i] > xmax ) xmax = crdvek[i];
-           ++i;
-           if ( crdvek[i] < ymin ) ymin = crdvek[i];
-           if ( crdvek[i] > ymax ) ymax = crdvek[i];
-           ++i;
+           if ( x[i] < xmin ) xmin = x[i];
+           if ( x[i] > xmax ) xmax = x[i];
+           if ( y[i] < ymin ) ymin = y[i];
+           if ( y[i] > ymax ) ymax = y[i];
+           if ( z[i] < zmin ) zmin = z[i];
+           if ( z[i] > zmax ) zmax = z[i];
            }
          break;
 /*
@@ -618,9 +620,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A hatch.
 */
          case XHTTYP:
-         DBread_xhatch(&xht,crdvek,la);
+         DBread_xhatch(&xht,crdvek,&csy,la);
          if ( xht.wdt_xh != actwdt ) set_linewidth(rwinpt,xht.wdt_xh);
-         pr_xht(rwinpt,&xht,crdvek);
+         pr_xht(rwinpt,&xht,crdvek,&csy);
          break;
 /*
 ***A linear dimension.
@@ -829,9 +831,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 ***A hatch.
 */
        case XHTTYP:
-       DBread_xhatch(&xht,crdvek,la);
+       DBread_xhatch(&xht,crdvek,&csy,la);
        glLineWidth((GLfloat)width_to_pixels(rwinpt,xht.wdt_xh) + 1);
-       pr_xht(rwinpt,&xht,crdvek);
+       pr_xht(rwinpt,&xht,crdvek,&csy);
        break;
 /*
 ***A linear dimension.
@@ -1491,7 +1493,8 @@ static void    pr_txt(
 static void     pr_xht(
        WPRWIN  *rwinpt,
        DBHatch *xht,
-       DBfloat  crdvek[])
+       DBfloat  crdvek[],
+       DBCsys  *csyptr)
 
 /*     Process Hatch.
  * 
@@ -1512,7 +1515,7 @@ static void     pr_xht(
 ***Create 3D polyline.
 */
    k = -1;
-   WPplxh(xht,crdvek,&k,x,y,z,a);
+   WPplxh(xht,crdvek,csyptr,&k,x,y,z,a);
 /*
 ***Give it to OpenGL.
 */

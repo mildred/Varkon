@@ -295,7 +295,7 @@ static void drwarr(WPGWIN *gwinpt, GC arr_gc, int ix1, int iy1,
    WPVIEW minvy;
 
 /*
-***Calculate bounding box. 
+***Calculate bounding box.
 */
    WPmsiz(gwinpt,&minvy);
 /*

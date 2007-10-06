@@ -746,10 +746,10 @@ DBstatus DBdelete_text(DBptr la);
 
 /* Crosshatch insert, read, update and delete */
 
-DBstatus DBinsert_xhatch(DBHatch *xhtptr, gmflt *crdptr,
+DBstatus DBinsert_xhatch(DBHatch *xhtptr, DBfloat *crdptr,
                          DBId  *idptr,  DBptr *laptr);
-DBstatus DBread_xhatch(DBHatch *xhtptr, gmflt *crdptr, DBptr la);
-DBstatus DBupdate_xhatch(DBHatch *xhtptr, gmflt *crdptr, DBptr la);
+DBstatus DBread_xhatch(DBHatch *xhtptr, DBfloat *crdptr, DBCsys *csyptr, DBptr la);
+DBstatus DBupdate_xhatch(DBHatch *xhtptr, DBfloat *crdptr, DBptr la);
 DBstatus DBdelete_xhatch(DBptr la);
 
 /* Linear dimension insert, read, update and delete */

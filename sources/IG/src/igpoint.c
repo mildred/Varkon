@@ -120,7 +120,7 @@ static short poipm(char *typ);
 ***Skapa position.
 */
 start:
-    if ( (status=IGcpos(264,&exnpt)) < 0 ) goto end;
+    if ( (status=IGcpos(71,&exnpt)) < 0 ) goto end;
 /*
 ***Skapa listan med obligatoriska parametrar.
 */

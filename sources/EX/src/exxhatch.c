@@ -6,7 +6,6 @@
 *    EXexht();     Create xhatch
 *    EXxht();      Create XHATCH
 *
-*
 *    This file is part of the VARKON Execute Library.
 *    URL:  http://www.varkon.com
 *
@@ -23,8 +22,6 @@
 *    You should have received a copy of the GNU Library General Public
 *    License along with this library; if not, write to the Free
 *    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*
 *
 *********************************************************/
 
@@ -47,7 +44,7 @@ extern DBTmat  lklsyi;
        DBfloat  crdvek[],
        V2NAPA  *pnp)
 
-/*      Create a hatch entity.
+/*      Create a hatch (XHATCH), store in DB and display.
  *
  *      In: id     => C ptr to hatch ID
  *          xhtpek => C ptr to hatch record
@@ -64,11 +61,13 @@ extern DBTmat  lklsyi;
  *      27/12/86   hit, J.Kjellander
  *      20/3/92    lsysla, J.Kjellander
  *      2007-09-01 WIDTH, J.Kjellander
+ *      2007-09-30 3D, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    DBptr la;
+    DBptr  la;
+    DBCsys csy;
 
 /*
 ***Add attribute data and csys.
@@ -96,7 +95,8 @@ extern DBTmat  lklsyi;
 /*
 ***Display hatch.
 */
-    WPdrxh(xhtpek,crdvek,la,GWIN_ALL);
+    if ( xhtpek->pcsy_xh > 0 ) DBread_csys(&csy,NULL,xhtpek->pcsy_xh);
+    WPdrxh(xhtpek,crdvek,&csy,la,GWIN_ALL);
 /*
 ***The end.
 */
@@ -106,7 +106,7 @@ extern DBTmat  lklsyi;
 /********************************************************/
 /*!******************************************************/
 
-       short EXxht(
+       short   EXxht(
        DBId   *id,
        DBId   *ridvek,
        DBshort nref,
@@ -114,23 +114,20 @@ extern DBTmat  lklsyi;
        DBfloat ang,
        V2NAPA *pnp)
 
-/*      Skapa snitt.
+/*      Create a XHATCH.
  *
- *      In: id     => Pekare till snittets identitet.
- *          ridvek => Pekare till vektor med referenser.
- *          nref   => Antal referenser.
- *          dist   => Avstånd mellan snittlinjer.
- *          ang    => Lutning på snittlinjerna.
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => C ptr to hatch entity ID.
+ *          ridvek => C ptr to array of refs.
+ *          nref   => Number of refs.
+ *          dist   => Hatch line distance.
+ *          ang    => Hatch line angle.
+ *          pnp    => C ptr to attributes.
  *
- *      Ut: Inget.
- *
- *      FV:      0 = Ok.
- *          EX1402 = Den refererade storhten finns ej i GM
- *          EX1412 = Otillåten geometri-typ för denna operation
- *          EX1552 = Kan ej beräkna snitt-data
- *          EX1542 = Kan ej lagra snitt i GM.
- *          EX1962 = Fel från malloc().
+ *      Return:  0 = Ok.
+ *          EX1402 = Entity does not exist in DB
+ *          EX1412 = Illegal entity type
+ *          EX1552 = Can't calculate hatch data
+ *          EX1962 = malloc() error.
  *
  *      (C)microform ab 19/8/85 J. Kjellander
  *
@@ -142,6 +139,7 @@ extern DBTmat  lklsyi;
  *      27/12/86 hit, J. Kjellander
  *      24/7/90  Kurvor, J. Kjellander
  *      9/6/93   Dynamiska segment, J. Kjellander
+ *      2007-10-06 3D, J.Kjellander
  *
  ******************************************************!*/
 
@@ -151,15 +149,17 @@ extern DBTmat  lklsyi;
     short    i,nlin,narc,ncur,status;
     DBfloat  angt;
     DBfloat  crdvek[4*GMXMXL];
-    DBLine  *linvek=NULL,*lpvek[GMMXXH];
-    DBArc   *arcvek=NULL,*apvek[GMMXXH];
-    DBCurve *curvek=NULL,*cpvek[GMMXXH];
-    DBSeg   *spvek[GMMXXH];
+    DBLine  *lpvek[GMMXXH],lin[GMMXXH];
+    DBArc   *apvek[GMMXXH],arc[GMMXXH];
+    DBSeg   *aspvek[GMMXXH],arcseg[GMMXXH][4];
+    DBCurve *cpvek[GMMXXH],cur[GMMXXH];
+    DBSeg   *cspvek[GMMXXH];
     DBHatch  xht;
+    DBVector pos;
 
 /*
-***Hämta geometri-data för samtliga refererade storheter och
-***lagra i mallokerade minnesareor.
+***Get the geometry of all referenced entities and save
+***in mallocated C memory.
 */
     nlin = narc = ncur = 0;
 
@@ -171,36 +171,36 @@ extern DBTmat  lklsyi;
       switch ( typ )
          {
          case (LINTYP):
-         if ( nlin == 0 )
-           {
-           if ( (linvek=(DBLine *)v3mall((unsigned)(GMMXXH*sizeof(GMLIN)),
-                           "EXxht")) == NULL ) return(erpush("EX1962",""));
-           }
-         DBread_line(&linvek[nlin],la);
-         lpvek[nlin] = &linvek[nlin];
-         ++nlin;
+         DBread_line(&lin[nlin],la);
+         lpvek[nlin] = &lin[nlin];
+         if ( lsyspk != NULL ) GEtfLine_to_local(lpvek[nlin],lsyspk,lpvek[nlin]);
+       ++nlin;
          break;
 
          case (ARCTYP):
-         if ( narc == 0 )
+         DBread_arc(&arc[narc],&arcseg[narc][0],la);
+         if ( arc[narc].ns_a == 0 )
            {
-           if ( (arcvek=(DBArc *)v3mall((unsigned)(GMMXXH*sizeof(GMARC)),
-                           "EXxht")) == NULL ) return(erpush("EX1962",""));
+           pos.x_gm = arc[narc].x_a;
+           pos.y_gm = arc[narc].y_a;
+           pos.z_gm = 0.0;
+
+           if ( GE300(&pos,arc[narc].r_a,arc[narc].v1_a,arc[narc].v2_a,NULL,
+                 &arc[narc],&arcseg[narc][0],3) < 0 ) return(erpush("GE7213","GE300"));
            }
-         DBread_arc(&arcvek[narc],NULL,la);
-         apvek[narc] = &arcvek[narc];
-         ++narc;
+         apvek[narc] = &arc[narc];
+         aspvek[narc] = &arcseg[narc][0];
+         if ( lsyspk != NULL )
+           GEtfArc_to_local(apvek[narc],aspvek[narc],lsyspk,apvek[narc],aspvek[narc]);
+       ++narc;
          break;
 
          case (CURTYP):
-         if ( ncur == 0 )
-           {
-           if ((curvek=(DBCurve *)v3mall((unsigned)(GMMXXH*sizeof(GMCUR)),
-                          "EXxht")) == NULL ) return(erpush("EX1962",""));
-           }
-         DBread_curve(&curvek[ncur],NULL,&spvek[ncur],la);
-         cpvek[ncur] = &curvek[ncur];
-         ++ncur;
+         DBread_curve(&cur[ncur],NULL,&cspvek[ncur],la);
+         cpvek[ncur] = &cur[ncur];
+         if ( lsyspk != NULL )
+           GEtfCurve_to_local(cpvek[narc],cspvek[narc],NULL,lsyspk,cpvek[narc],cspvek[narc],NULL);
+       ++ncur;
          break;
 
          default:
@@ -209,7 +209,7 @@ extern DBTmat  lklsyi;
          }
       }
 /*
-***Vinkel och avstånd.
+***Angle and distance.
 */
     xht.dist_xh = dist;
 
@@ -218,30 +218,27 @@ extern DBTmat  lklsyi;
     xht.ang_xh = angt;
     xht.nlin_xh = 0;
 /*
-***Generera snittlinjer.
+***Calculate hatch line coordinates.
 */
-    if ( GEhatch2D(lpvek,nlin,apvek,narc,cpvek,spvek,ncur,&xht,crdvek) < 0 )
+    if ( GEhatch2D(lpvek,nlin,apvek,aspvek,narc,cpvek,cspvek,ncur,lsyspk,&xht,crdvek) < 0 )
       {
       status = erpush("EX1552","");
       goto end;
       }
 /*
-***Lagra i gm och rita.
+***Save in DB and display.
 */
     status = EXexht(id,&xht,crdvek,pnp);
 /*
-***Deallokera minne.
+***Release C memory allocated for curve segments.
 */
 end:
-    if ( nlin > 0 ) v3free(linvek,"EXxht");
-    if ( narc > 0 ) v3free(arcvek,"EXxht");
     if ( ncur > 0 )
       {
-      v3free(curvek,"EXxht");
-      for ( i=0; i<ncur; ++i ) DBfree_segments(spvek[i]);
+      for ( i=0; i<ncur; ++i ) DBfree_segments(cspvek[i]);
       }
 /*
-***Slut.
+***The end.
 */
     return(status);
   }

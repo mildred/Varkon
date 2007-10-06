@@ -342,13 +342,13 @@ DBstatus GE823(DBLine *l1, DBLine *l2, DBVector *p, short alt, DBTmat *lsyspk, D
 
 /* Hatching/area/cgrav. */
 
-DBstatus GEhatch2D(DBLine *lpvek[], short nlin, DBArc *apvek[], short narc,
-                   DBCurve *cpvek[], DBSeg *spvek[], short ncur,
+DBstatus GEhatch2D(DBLine *lpvek[], short nlin, DBArc *apvek[], DBSeg *aspvek[], short narc,
+                   DBCurve *cpvek[], DBSeg *spvek[], short ncur, DBTmat *lsyspk,
                    DBHatch *xhtpek, DBfloat crdvek[]);
-DBstatus GEarea2D(DBLine *lpvek[], short nlin, DBArc *apvek[], short narc,
+DBstatus GEarea2D(DBLine *lpvek[], short nlin, DBArc *apvek[], DBSeg *aspvek[], short narc,
                   DBCurve *cpvek[], DBSeg *spvek[], short ncur, DBfloat dist,
                   DBfloat *area, DBVector *tp);
-DBstatus GEint_2Dlb(DBLine *lpvek[], short nlin, DBArc *apvek[], short narc,
+DBstatus GEint_2Dlb(DBLine *lpvek[], short nlin, DBArc *apvek[], DBSeg *aspvek[], short narc,
                     DBCurve *cpvek[], DBSeg *spvek[], short ncur, DBfloat px,
                     DBfloat py, DBfloat k, DBfloat t[], short *ts);
 

@@ -459,7 +459,7 @@ askwdt:
         }
       else if ( typ == XHTTYP )
         {
-        DBread_xhatch(&xht,NULL,la);
+        DBread_xhatch(&xht,NULL,NULL,la);
         xht.wdt_xh = width;
         DBupdate_xhatch(&xht,NULL,la);
         }
@@ -596,7 +596,7 @@ loop:
       }
     else
       {
-      DBread_xhatch(&xht,NULL,la);
+      DBread_xhatch(&xht,NULL,NULL,la);
       font = xht.fnt_xh;
       dashl = xht.lgt_xh;
       }
@@ -852,7 +852,7 @@ loop:
     else
       {
       if ( v3mode & BAS_MOD ) pmchnp(idvek,PMXFONT,exnpt,&retla);
-      DBread_xhatch(&xht,NULL,la);
+      DBread_xhatch(&xht,NULL,NULL,la);
       xht.fnt_xh = font;
       DBupdate_xhatch(&xht,NULL,la);
       }

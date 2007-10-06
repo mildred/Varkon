@@ -457,10 +457,10 @@ loop:
 ***Hatch.
 */
        case XHTTYP:
-       DBread_xhatch(&gmpost.xht_un,xhcrds,la);
+       DBread_xhatch(&gmpost.xht_un,xhcrds,&csy,la);
        if ( !gmpost.hed_un.blank  &&  WPnivt(actwin->nivtab,gmpost.hed_un.level) )
          {
-         WPplxh(&gmpost.xht_un,xhcrds,&k,x,y,z,a);
+         WPplxh(&gmpost.xht_un,xhcrds,&csy,&k,x,y,z,a);
          }
        break;
 /*

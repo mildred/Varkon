@@ -477,9 +477,9 @@ short WPexfn();
 /*
 ***wpxhatch.c
 */
-short WPdrxh(DBHatch *xhtpek, DBfloat crdvek[], DBptr la, DBint win_id);
-short WPdlxh(DBHatch *xhtpek, DBfloat crdvek[], DBptr la, DBint win_id);
-short WPplxh(DBHatch *xhtptr, DBfloat  crdvek[], int *n,
+short WPdrxh(DBHatch *xhtpek, DBfloat crdvek[], DBCsys *csyptr, DBptr la, DBint win_id);
+short WPdlxh(DBHatch *xhtpek, DBfloat crdvek[], DBCsys *csyptr, DBptr la, DBint win_id);
+short WPplxh(DBHatch *xhtptr, DBfloat crdvek[], DBCsys *csyptr, int *n,
              double x[], double y[], double z[], char a[]);
 
 /*

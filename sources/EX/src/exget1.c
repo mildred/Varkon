@@ -225,7 +225,7 @@
       break;
 
       case XHTTYP:
-      DBread_xhatch(&xht,NULL,la);
+      DBread_xhatch(&xht,NULL,NULL,la);
      *width = xht.wdt_xh;
       break;
 
@@ -834,7 +834,7 @@
 /*
 ***Läs snitt-posten och returnera snitt-data.
 */
-    DBread_xhatch(snitt,lindat,la);
+    DBread_xhatch(snitt,lindat,NULL,la);
 
     return(0);
   }

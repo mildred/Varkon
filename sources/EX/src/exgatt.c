@@ -184,7 +184,7 @@ extern V2NAPA defnap;
       break;
 
       case XHTTYP:
-      DBread_xhatch(&gmpost.xht_un,NULL,la);
+      DBread_xhatch(&gmpost.xht_un,NULL,NULL,la);
       pnp->xfont  = gmpost.xht_un.fnt_xh;
       pnp->xdashl = gmpost.xht_un.lgt_xh;
       *pcsypk     = gmpost.xht_un.pcsy_xh;

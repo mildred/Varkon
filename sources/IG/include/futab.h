@@ -83,17 +83,17 @@ static FUATTR futab[] =
  {IGbpln, FALSE, RIT_MOD+BAS2_MOD},          /* f27  B-Plan */
  {IGlipt, FALSE, BAS3_MOD},                  /* f28  Linje tang. en storhet */
  {IGli2t, FALSE, BAS3_MOD},                  /* f29  Linje tang. 2 cirklar */
- { IGld0, FALSE, RIT_MOD+BAS_MOD},           /* f30  Längdmått horisontellt */
+ { IGld0, FALSE, RIT_MOD+BAS_MOD},           /* f30  Create horizontal LDIM */
 
- { IGld1, FALSE, RIT_MOD+BAS_MOD},           /* f31  Längdmått vertikalt */
- { IGld2, FALSE, RIT_MOD+BAS_MOD},           /* f32  Längdmått parallellt */
- { IGcd0, FALSE, RIT_MOD+BAS_MOD},           /* f33  Diametermått horisont. */
- { IGcd1, FALSE, RIT_MOD+BAS_MOD},           /* f34  Diametermått vertikalt */
- { IGcd2, FALSE, RIT_MOD+BAS_MOD},           /* f35  Diametermått parallellt */
+ { IGld1, FALSE, RIT_MOD+BAS_MOD},           /* f31  Create vertical LDIM */
+ { IGld2, FALSE, RIT_MOD+BAS_MOD},           /* f32  Create parallell LDIM */
+ { IGcd0, FALSE, RIT_MOD+BAS_MOD},           /* f33  Create horizontal CDIM */
+ { IGcd1, FALSE, RIT_MOD+BAS_MOD},           /* f34  Create vertical CDIM */
+ { IGcd2, FALSE, RIT_MOD+BAS_MOD},           /* f35  Create parallell CDIM */
 
- {IGrdim, FALSE, RIT_MOD+BAS_MOD},           /* f36  Radiemått */
- {IGadim, FALSE, RIT_MOD+BAS_MOD},           /* f37  Vinkelmått */
- { IGxht, FALSE, RIT_MOD+BAS2_MOD},          /* f38  Snittmarkering */
+ {IGrdim, FALSE, RIT_MOD+BAS_MOD},           /* f36  Create RDIM */
+ {IGadim, FALSE, RIT_MOD+BAS_MOD},           /* f37  Create ADIM */
+ { IGxht, FALSE, RIT_MOD+BAS_MOD},           /* f38  Create XHATCH */
  {IGlipe, FALSE, RIT_MOD+BAS2_MOD},          /* f39  Linje v-rät mot annan */
  {IGlifr, FALSE, RIT_MOD+BAS2_MOD},          /* f40  Linje mellan 2 pos */
 
