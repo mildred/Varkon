@@ -210,6 +210,7 @@ bool  WPialt(char *ps, char *ts, char *fs, bool pip);
 short WPilse(char *rubrik, char *defstr, char *strlst[],
              int actalt, int nstr, char *altstr);
 short WPselect_partname(int source, char *namlst[], int nstr, char *name);
+short WPselect_sysmode(int *mode);
 
 /*
 ***wpgetpos.c
@@ -622,3 +623,10 @@ bool  WPbutton_mcwin(WPMCWIN *mcwptr, XButtonEvent *butev);
 bool  WPkey_mcwin(XKeyEvent *keyev);
 void  WPunfocus_mcwin();
 short WPdelete_mcwin(WPMCWIN *mcwptr);
+
+/*
+***wpSBAR.c
+*/
+short WPcreate_slidebar(wpw_id pid, int dir, WPSBAR **outptr);
+void  WPexpose_slidebar(WPSBAR *sbptr);
+bool  WPbutton_slidebar(WPSBAR *sbptr, XButtonEvent *butev);

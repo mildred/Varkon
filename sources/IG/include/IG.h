@@ -490,7 +490,6 @@ bool  IGials(char *ps, char *ts, char *fs, bool  pip);
 */
 short IGgene();
 short IGexpl();
-short IGlsjb();
 short IGdljb();
 short IGmvrr();
 short IGload();

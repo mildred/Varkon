@@ -6,7 +6,6 @@
 /*                                                                  */
 /*  IGgene();     Starts Varkon in generic mode                     */
 /*  IGexpl();     Starts Varkon in explicit mode                    */
-/*  IGlsjb();     Lists jobs                                        */
 /*  IGdljb();     Deletes jobs                                      */
 /*  IGmvrr();     Copies RES-file to RIT-file                       */
 /*  IGload();     Loads new job                                     */
@@ -30,7 +29,7 @@
 /*  IGgrst();     Returns resource value                            */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
-/*  URL:  http://www.tech.oru.se/cad/varkon                         */
+/*  URL:  http://varkon.sourceforge.net                             */
 /*                                                                  */
 /*  This library is free software; you can redistribute it and/or   */
 /*  modify it under the terms of the GNU Library General Public     */
@@ -84,7 +83,7 @@ extern char *mktemp();
 ***Prototypes for internal functions.
 */
 static short iginjb();
-static short igldjb();
+static short load_jobdata();
 static short igsvjb();
 static short iginmo();
 static short getmta(short *typ, short *att);
@@ -233,27 +232,6 @@ static short igebas()
        }
      }
 
- }
-
-/******************************************************!*/
-/*!******************************************************/
-
-       short  IGlsjb()
-
-/*     Varkon-funktion för att lista job.
- *
- *     Felkoder:
- *
- *     (C) microform ab 28/9/95  J. Kjellander.
- *
- ******************************************************!*/
-
- {
-   char buf[JNLGTH+1];
-
-   IGselj(buf);
-
-   return(0);
  }
 
 /******************************************************!*/
@@ -454,7 +432,7 @@ static short igebas()
   {
     short  status;
     bool   newjob;
- 
+
 /*
 ***Init pen number.
 */
@@ -476,7 +454,7 @@ static short igebas()
 /*return(erpush("EX1862",filnam));
 ***Ladda jobbfil.
 */
-      if ( (status=igldjb()) == -1 ) iginjb();
+      if ( (status=load_jobdata()) == -1 ) iginjb();
       else if ( status < 0 ) goto errend;
 /*
 ***Ladda ritfil.
@@ -494,7 +472,7 @@ static short igebas()
 */
     else
       {
-      if ( (status=igldjb()) == -1 ) iginjb();
+      if ( (status=load_jobdata()) == -1 ) iginjb();
       else if ( status < 0 ) goto errend;
 
       if ( (status=IGldmo()) == -1 )
@@ -2520,9 +2498,9 @@ static short iginjb()
 /********************************************************/
 /*!******************************************************/
 
-static short igldjb()
+static short load_jobdata()
 
-/*      Load a .JOB-file from disc.
+/*      Load jobdata.
  *
  *      FV:   0 = Ok.
  *           -1 = Filen finns ej.

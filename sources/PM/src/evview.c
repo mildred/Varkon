@@ -4,7 +4,7 @@
 *    ========
 *
 *    This file is part of the VARKON Program Module Library.
-*    URL: http://www.varkon.com
+*    URL: http://varkon.sourceforge.net
 *
 *    This file includes the following routines:
 *
@@ -469,7 +469,6 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
  ******************************************************!*/
 
   {
-   short   status;
    WPVIEW  modvy;
    PMLITVA litval;
    WPWIN  *winptr;
@@ -481,7 +480,7 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
 /*
 ***Calculate bounding rectangle of projected model.
 */
-    WPmsiz(winptr->ptr,&modvy);
+    WPmsiz((WPGWIN *)winptr->ptr,&modvy);
 /*
 ***If there is no model or it has no size, return zeros.
 */
@@ -493,7 +492,7 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
       }
 /*
 ***Else return 2D view limits in p1 and p2.
-*/    
+*/
     litval.lit.vec_va.x_val = modvy.modwin.xmin;
     litval.lit.vec_va.y_val = modvy.modwin.ymin;
     inwvar(proc_pv[1].par_ty,

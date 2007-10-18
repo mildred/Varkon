@@ -7,7 +7,7 @@
 /*  IGinit();      Inits IG                                         */
 /*  IGlmdf();      Loads MDF-file                                   */
 /*  IGexfu();      Executes function                                */
-/*  IGdofu();      Executes function                                */        
+/*  IGdofu();      Executes function                                */
 /*  IGatoc();      Interpret %ASCII-code                            */
 /*  IGstmu();      Stores menu im allocated memory                  */
 /*  IGsini();      Inits signals                                    */
@@ -18,7 +18,7 @@
 /*  notimpl();     Dummy-routine                                    */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
-/*  URL:  http://www.tech.oru.se/cad/varkon                         */
+/*  URL:  http://varkon.sourceforge.net                             */
 /*                                                                  */
 /*  This library is free software; you can redistribute it and/or   */
 /*  modify it under the terms of the GNU Library General Public     */

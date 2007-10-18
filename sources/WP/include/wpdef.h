@@ -417,23 +417,38 @@ bool       mapped;                /* Mappat i X, ja/nej */
 } WPIWIN;
 
 /*
-***A List window.
+***A Slidebar.
 */
-#define WP_LWSMAX     3           /* Max antal sub-fönster i ett WPIWIN */
+#define WP_SBARH      0           /* Horizontal slidebar */
+#define WP_SBARV      1           /* Vertical slidebar */
 
 typedef struct
 {
 WPWID      id;                    /* ID */
-WPWGEO     geo;                   /* Geometri */
-WPWIN      wintab[WP_LWSMAX];     /* Subfönster, scroll och save */
-FILE      *filpek;                /* Pekare till list-fil */
-char       filnam[V3PTHLEN+1];    /* Listfilens namn (inkl. path) */
-char       rubrik[V3STRLEN+1];    /* Listans rubrik, dvs. lst_ini(rubrik) */
-DBint      maxrln;                /* Max radlängd */
-DBint      rstart;                /* Radbörjan */
-DBint      trant;                 /* Totalt antal rader */
-DBint      frant;                 /* Antal rader i fönstret */
-bool       sscrol;                /* TRUE=Sid-scroll, FALSE=Rad-scroll */
+WPWGEO     geo;                   /* Geometry */
+int        dir;                   /* WP_SBARH or WP_SBARV */
+int        butstart;              /* Button start coordinate */
+int        butend;                /* Button end coordinate */
+} WPSBAR;
+
+/*
+***A List window.
+*/
+#define WP_LWSMAX     3           /* Max number of sub windows */
+
+typedef struct
+{
+WPWID      id;                    /* ID */
+WPWGEO     geo;                   /* Geometry */
+FILE      *filpek;                /* Ptr to temporary list-file */
+char       filnam[V3PTHLEN+1];    /* List file name (incl. path) */
+char       rubrik[V3STRLEN+1];    /* List title */
+DBint      maxrln;                /* Max line length */
+DBint      nl_first;              /* First visible line */
+DBint      nl_tot;                /* Total number of lines */
+DBint      nl_vis;                /* Number of lines visible in window */
+WPSBAR    *psbar_h;               /* Pointer to opt. horizontal slidebar */
+WPSBAR    *psbar_v;               /* Pointer to opt. vertical slidebar */
 } WPLWIN;
 
 /*

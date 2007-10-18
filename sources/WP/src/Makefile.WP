@@ -60,7 +60,8 @@ OBJECTS = ../lib/WPlib.a(wpinit.o)       \
           ../lib/WPlib.a(wptooltip.o)    \
           ../lib/WPlib.a(wpattributes.o) \
           ../lib/WPlib.a(wpjob.o)        \
-          ../lib/WPlib.a(wpMCWIN.o)
+          ../lib/WPlib.a(wpMCWIN.o)      \
+          ../lib/WPlib.a(wpSBAR.o)
 
 # WPlib.a depends on the objects. 
 

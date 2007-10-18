@@ -4,7 +4,7 @@
 *    ========
 *
 *    This file is part of the VARKON WindowPac Library.
-*    URL: http://www.tech.oru.se/cad/varkon
+*    URL: http://varkon.sourceforge.net
 *
 *    This file includes:
 *
@@ -92,7 +92,7 @@ XFontStruct *xfs;             /* Tills vidare bara !!!! */
     XrmValue value;
 
 /*
-***Nollstï¿½ll fnttab.
+***Nollställ fnttab.
 */
     for ( i=0; i<FNTTBSIZ; ++i )
       {

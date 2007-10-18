@@ -10,7 +10,7 @@
 /*  errmes();    Display error stack                                */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
-/*  URL:  http://www.tech.oru.se/cad/varkon                         */
+/*  URL:  http://varkon.sourceforge.net                             */
 /*                                                                  */
 /*  This library is free software; you can redistribute it and/or   */
 /*  modify it under the terms of the GNU Library General Public     */
@@ -37,21 +37,25 @@
 #include "../../WP/include/WP.h"
 #include <string.h>
 
-#define ESTKSZ 25          /* Felstackens storlek */
-#define INSLEN 256         /* Max längd på insert-strängen */
+#define ESTKSZ 25          /* Size of error stack */
+#define INSLEN 256         /* Insert string max length */
 
+/*
+***The error stack holds error reports.
+*/
 typedef struct errrpt
   {
-  char   module[3];         /* Modul, 2 tecken + Ön */
-  short  errnum;            /* Felnummer */
-  short  sev;               /* Severity-code */
-  char   insert[INSLEN+1];  /* Insert-sträng, tecken + \n */
+  char   module[3];         /* Module, 2 chars + \n */
+  short  errnum;            /* Error number, 3 digits */
+  short  sev;               /* Severity-code, 1 digit */
+  char   insert[INSLEN+1];  /* Insert string, chars + \n */
   } ERRRPT;
 
 ERRRPT  errstk[ESTKSZ];
 
-/* errstk är felmeddelandestacken */
-
+/*
+***Global variables.
+*/
 extern bool  igbflg;
 extern char  jobdir[],jobnam[];
 
@@ -112,17 +116,6 @@ extern char  jobdir[],jobnam[];
     short i;
 
 /*
-***Ev. debug.
-*/
-#ifdef DEBUG
-    if ( dbglev(IGEPAC) == 33 )
-      {
-      fprintf(dbgfil(IGEPAC),"***Start-erpush***\n");
-      fprintf(dbgfil(IGEPAC),"Felkod=%s\n",code);
-      fprintf(dbgfil(IGEPAC),"Insert=%s\n",str);
-      }
-#endif
-/*
 ***Insertsträngar får inte vara längre än INSLEN tecken.
 */
     if ( strlen(str) > INSLEN ) str[INSLEN] = '\0';
@@ -151,16 +144,6 @@ extern char  jobdir[],jobnam[];
     errstk[0].sev = sevval;
 
     strcpy(errstk[0].insert,str);
-/*
-***Ev. debug.
-*/
-#ifdef DEBUG
-    if ( dbglev(IGEPAC) == 33 )
-      {
-      fprintf(dbgfil(IGEPAC),"Severity=%d\n",sevval);
-      fprintf(dbgfil(IGEPAC),"***Slut-erpush***\n");
-      }
-#endif
 /*
 ***Om severity 4 rapportera felet och bryt ner systemet.
 */

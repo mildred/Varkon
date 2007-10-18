@@ -29,6 +29,7 @@
 */
 #include "geotol.h"
 #include <math.h>
+#include <memory.h>
 
 #ifdef DEBUG
 #include "../../IG/include/debug.h"

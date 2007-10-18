@@ -11,7 +11,7 @@
 *    EXsvgm();       Interface-routine for SAVE_GM
 *
 *    This file is part of the VARKON Execute Library.
-*    URL:  http://www.varkon.com
+*    URL:  http://varkon.sourceforge.net
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -256,7 +256,7 @@ werror:
 ***Read lines until EOF.
 ***fgets() stops reading AFTER newline or EOF and then adds a \0.
 ***fgets() returns NULL on EOF or error.
-*/ 
+*/
    while ( fgets(line,V3STRLEN,jf) != NULL )
      {
 /*

@@ -4,7 +4,7 @@
 *    ======
 *
 *    This file is part of the VARKON Analyzer Library.
-*    URL: http://www.varkon.com
+*    URL: http://varkon.sourceforge.net
 *
 *    main function for the MBS analyser.
 *
@@ -26,8 +26,6 @@
 *    You should have received a copy of the GNU Library General Public
 *    License along with this library; if not, write to the Free
 *    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*    Updated 2005-08-02 Johan Kjellander, Örebro university
 *
 ***********************************************************************/
 

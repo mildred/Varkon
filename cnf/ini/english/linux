@@ -137,6 +137,13 @@ varkon.rwin.icon_6.name:        Varkon_levels.xpm
 varkon.rwin.icon_6.action:      f197
 varkon.rwin.icon_6.tooltip:     Blank, unblank or list levels
 !*
+!***Resources for the system mode dialogue.
+!*
+varkon.mode.explicit:            Drafting mode
+varkon.mode.explicit.tooltip:    Edit or create drawings (RES-files)
+varkon.mode.generic:             Programming mode
+varkon.mode.generic.tooltip:     Edit or create modules (MBO-files)
+!*
 !***Resources for the partname dialogue.
 !*
 varkon.partname.title:           Select part
@@ -221,10 +228,6 @@ varkon.print.manual.scale:       Print scale
 varkon.list.title:               Listing - 
 varkon.list.geometry:            +200+100
 varkon.list.title.jobnam:        True
-varkon.list.row:                 Row
-varkon.list.page:                Page
-varkon.list.save:                Save
-varkon.list.kill:                Close
 varkon.list.printer:             lpr
 !*
 !***Resources for the error message listwindow.

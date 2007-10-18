@@ -61,7 +61,7 @@ typedef          double DBfloat;   /* Always 64-bit float */
 */
 
 typedef DBint   DBptr;        /* A DB virtual address (pointer) may be < 0 */
-#define DBNULL (DBptr)0       /* A DB NULL pointer */
+#define   DBNULL (DBptr)0       /*  A DB NULL pointer */
 typedef DBshort DBstatus;     /* A DB function return value */
 typedef DBint   DBseqnum;     /* A DB ID sequence value */
 typedef DBint   DBordnum;     /* A DB ID order value */
@@ -821,6 +821,11 @@ DBstatus DBread_named_data(char *key, DBint *type, DBint *size,
                            DBint *count, char **datptr);
 DBstatus DBdelete_named_data(char *key);
 
+/* DB jobdata import and export. */
+
+DBstatus DBimport_jobfile(char *filepath);
+DBstatus DBexport_jobfile(char *filepath);
+
 /* DBId to DBptr etc. */
 
 DBstatus DBget_pointer(char fcode, DBId *id, DBptr *laptr, DBetype *typptr);
@@ -828,7 +833,7 @@ DBstatus DBget_id(DBptr la, DBId *idptr);
 DBstatus DBget_highest_id(DBseqnum *numptr);
 DBstatus DBget_free_id(DBseqnum *numptr);
 
-/* GM search and traversal */
+/* DB search and traversal */
 
 DBstatus DBset_root_id(DBId *id);
 DBstatus DBget_next_ptr(DBint trmode, DBetype typmsk, char *name,

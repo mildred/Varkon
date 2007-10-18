@@ -4,7 +4,7 @@
 *    =========
 *
 *    This file is part of the VARKON WindowPac Library.
-*    URL: http://www.tech.oru.se/cad/varkon
+*    URL: http://varkon.sourceforge.net
 *
 *    This file includes:
 *
@@ -71,7 +71,8 @@ static int  iwin_y;          /* even after a user move */
    char    *namlst[WPMAXVIEWS],rubrik[81],view_name[WPVNLN+1],
            *str,close[81],help[81],save[81],delete[81],
             csys[81],camera[81],ed_pmt[81],buf[81],csystt[81],
-            cameratt[81],savett[81],deletett[81];
+            cameratt[81],savett[81],deletett[81],closett[81],
+            helptt[81];
    char    *typ[20];
    int      n_views,actalt,i,rad,radant,wm_x1,wm_y1,wm_x2,wm_y2,
             wintype;
@@ -171,7 +172,9 @@ start:
    if ( !WPgrst("varkon.view.delete.text",delete) )      strcpy(delete,"Delete");
    if ( !WPgrst("varkon.view.delete.tooltip",deletett) ) strcpy(deletett,"");
    if ( !WPgrst("varkon.input.close",close) )            strcpy(close,"Close");
+   if ( !WPgrst("varkon.input.close.tooltip",closett) )  strcpy(closett,"");
    if ( !WPgrst("varkon.input.help",help) )              strcpy(help,"Help");
+   if ( !WPgrst("varkon.input.help.tooltip",helptt) )    strcpy(helptt,"");
 
    strcpy(ed_pmt,IGgtts(1662));
 /*
@@ -380,10 +383,14 @@ start:
    alt_y += ly;
    status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)3,
                            close,close,"",WP_BGND2,WP_FGND,&close_id);
+   butptr = (WPBUTT *)iwinpt->wintab[close_id].ptr;
+   strcpy(butptr->tt_str,closett);
 
    alt_x  = main_dx - ly - lowlen2;
    status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)2,
                            help,help,"",WP_BGND2,WP_FGND,&help_id);
+   butptr = (WPBUTT *)iwinpt->wintab[help_id].ptr;
+   strcpy(butptr->tt_str,helptt);
 /*
 ***Show the dialogue.
 */

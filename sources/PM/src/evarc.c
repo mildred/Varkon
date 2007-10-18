@@ -4,7 +4,7 @@
 *    =======
 *
 *    This file is part of the VARKON Program Module Library.
-*    URL: http://www.varkon.com
+*    URL: http://varkon.sourceforge.net
 *
 *    evarfr();     Evaluerar ARC_1POS
 *    evar2p();     Evaluerar ARC_2POS

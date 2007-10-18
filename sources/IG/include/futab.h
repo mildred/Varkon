@@ -263,7 +263,7 @@ static FUATTR futab[] =
  {notimpl,FALSE, RIT_MOD+BAS_MOD},           /* Fd. f177 Aktivera basic */
  {IGlspr, FALSE, RIT_MOD+BAS_MOD},           /* f178 Lista projekt */
  {IGdlpr, FALSE, RIT_MOD+BAS_MOD},           /* f179 Ta bort projekt */
- {IGlsjb, FALSE, RIT_MOD+BAS_MOD},           /* f180 Lista jobb */
+ {notimpl,FALSE, RIT_MOD+BAS_MOD},           /* Fd. f180 Lista jobb */
 
  {IGsusw, FALSE, BAS3_MOD},                  /* f181 Svept yta */
  {IGsuru, FALSE, BAS3_MOD},                  /* f182 Regelyta */

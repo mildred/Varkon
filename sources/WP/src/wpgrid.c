@@ -57,7 +57,7 @@ static short get_resolution(WPGWIN *gwinpt, double *pdx, double *pdy);
 /*!******************************************************/
 
          short WPgrid_dialogue(DBint grw_id)
-        
+
 /*      The grid dialogue.
  *
  *      In: grw_id = ID of WPGWIN that called us.
@@ -69,7 +69,8 @@ static short get_resolution(WPGWIN *gwinpt, double *pdx, double *pdy);
   {
    char     rubrik[81],close[81],help[81],edit[81],pos[81],
             res[81],show[81],hide[81],move[81],movett[81],
-            edittt[81],showtt[81],hidett[81],bs1[81],bs2[81];
+            edittt[81],showtt[81],hidett[81],bs1[81],bs2[81],
+            closett[81],helptt[81];
    char    *typ[20];
    int      bh,wm_x1,wm_y1,wm_x2,wm_y2,butlen,bl1,bl2;
    short    status,main_dx,main_dy,alt_x,alt_y,butlen1,butlen2,ly,lm;
@@ -114,19 +115,21 @@ start:
 ***Window title, position, resolution, move, edit, show, hide,
 ***close and help from the ini-file.
 */
-   if ( !WPgrst("varkon.grid.title",rubrik) )        strcpy(rubrik,"Grid");
-   if ( !WPgrst("varkon.grid.position.text",pos) )   strcpy(pos,"Position");
-   if ( !WPgrst("varkon.grid.resolution.text",res) ) strcpy(res,"Resolution");
-   if ( !WPgrst("varkon.grid.show.text",show) )      strcpy(show,"Show");
-   if ( !WPgrst("varkon.grid.show.tooltip",showtt) ) strcpy(showtt,"");
-   if ( !WPgrst("varkon.grid.hide.text",hide) )      strcpy(hide,"Hide");
-   if ( !WPgrst("varkon.grid.hide.tooltip",hidett) ) strcpy(hidett,"");
-   if ( !WPgrst("varkon.grid.move.text",move) )      strcpy(move,"Move");
-   if ( !WPgrst("varkon.grid.move.tooltip",movett) ) strcpy(movett,"");
-   if ( !WPgrst("varkon.grid.edit.text",edit) )      strcpy(edit,"Edit");
-   if ( !WPgrst("varkon.grid.edit.tooltip",edittt) ) strcpy(edittt,"");
-   if ( !WPgrst("varkon.input.close",close) )        strcpy(close,"Close");
-   if ( !WPgrst("varkon.input.help",help) )          strcpy(help,"Help");
+   if ( !WPgrst("varkon.grid.title",rubrik) )           strcpy(rubrik,"Grid");
+   if ( !WPgrst("varkon.grid.position.text",pos) )      strcpy(pos,"Position");
+   if ( !WPgrst("varkon.grid.resolution.text",res) )    strcpy(res,"Resolution");
+   if ( !WPgrst("varkon.grid.show.text",show) )         strcpy(show,"Show");
+   if ( !WPgrst("varkon.grid.show.tooltip",showtt) )    strcpy(showtt,"");
+   if ( !WPgrst("varkon.grid.hide.text",hide) )         strcpy(hide,"Hide");
+   if ( !WPgrst("varkon.grid.hide.tooltip",hidett) )    strcpy(hidett,"");
+   if ( !WPgrst("varkon.grid.move.text",move) )         strcpy(move,"Move");
+   if ( !WPgrst("varkon.grid.move.tooltip",movett) )    strcpy(movett,"");
+   if ( !WPgrst("varkon.grid.edit.text",edit) )         strcpy(edit,"Edit");
+   if ( !WPgrst("varkon.grid.edit.tooltip",edittt) )    strcpy(edittt,"");
+   if ( !WPgrst("varkon.input.close",close) )           strcpy(close,"Close");
+   if ( !WPgrst("varkon.input.close.tooltip",closett) ) strcpy(closett,"");
+   if ( !WPgrst("varkon.input.help",help) )             strcpy(help,"Help");
+   if ( !WPgrst("varkon.input.help.tooltip",helptt) )   strcpy(helptt,"");
 /*
 ***What is the 1.2*length of the longest text ?
 ***Don't include the title, it will fit anyhow.
@@ -267,10 +270,14 @@ start:
    alt_y += bh;
    status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,butlen2,bh,(short)3,
                            close,close,"",WP_BGND2,WP_FGND,&close_id);
+   butptr = (WPBUTT *)iwinpt->wintab[close_id].ptr;
+   strcpy(butptr->tt_str,closett);
 
    alt_x  = main_dx - ly - butlen2;
    status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,butlen2,bh,(short)2,
                            help,help,"",WP_BGND2,WP_FGND,&help_id);
+   butptr = (WPBUTT *)iwinpt->wintab[help_id].ptr;
+   strcpy(butptr->tt_str,helptt);
 /*
 ***Show the dialogue.
 */

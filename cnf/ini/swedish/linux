@@ -309,10 +309,6 @@ varkon.print.manual.scale:       Skala
 varkon.list.title:             Listning - 
 varkon.list.geometry:          +200+100
 varkon.list.title.jobnam:      True
-varkon.list.row:               Rad
-varkon.list.page:              Sida
-varkon.list.save:              Spara
-varkon.list.kill:              Stäng
 varkon.list.printer:           lpr
 !*
 !***Listfönster används också för felrapportering.

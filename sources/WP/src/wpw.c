@@ -4,7 +4,7 @@
 *    =====
 *
 *    This file is part of the VARKON WindowPac Library.
-*    URL: http://www.tech.oru.se/cad/varkon
+*    URL: http://varkon.sourceforge.net
 *
 *    This file includes:
 *
@@ -1184,7 +1184,7 @@ evloop:
         wpw_id WPwfpx(
         Window   x_id)
 
-/*      Letar upp id fï¿½r fï¿½rï¿½ldern till ett sub-
+/*      Letar upp id för fï¿½rï¿½ldern till ett sub-
  *      fï¿½nster med visst X-id. Om fï¿½nstret med
  *      det angivna X-id:t ï¿½r en fï¿½rï¿½lder returneras
  *      ID fï¿½r fï¿½nstret (fï¿½rï¿½ldern) sjï¿½lvt.
@@ -1258,29 +1258,19 @@ evloop:
             }
           break;
 /*
-***WPLWIN-fï¿½nster. Kolla fï¿½nstret sjï¿½lvt och 
-***sï¿½k igenom alla sub-fï¿½nster.
+***WPLWIN window. Check for hit in window itself
+**and subwindows.
 */
           case TYP_LWIN:
           lwinpt = (WPLWIN *)wpwtab[i].ptr;
-          if ( lwinpt->id.x_id == x_id ) return((wpw_id)i);
-
-          for ( j=0; j<WP_LWSMAX; ++j )
-            {
-            if ( lwinpt->wintab[j].ptr != NULL )
-              {
-              switch ( lwinpt->wintab[j].typ ) 
-                {
-                case TYP_BUTTON:
-                buttpt = (WPBUTT *)lwinpt->wintab[j].ptr;
-                if ( buttpt->id.x_id == x_id ) return((wpw_id)i);
-                break;
-                }
-              }
-            }
+          if       ( x_id == lwinpt->id.x_id )          return((wpw_id)i);
+          else if ( lwinpt->psbar_h != NULL &&
+                      x_id == lwinpt->psbar_h->id.x_id ) return(lwinpt->id.w_id);
+          else if ( lwinpt->psbar_v != NULL &&
+                      x_id == lwinpt->psbar_v->id.x_id ) return(lwinpt->id.w_id);
           break;
 /*
-***Grafiskt fï¿½nster.
+***WPGWIN.
 */
           case TYP_GWIN:
           gwinpt = (WPGWIN *)wpwtab[i].ptr;
@@ -1289,7 +1279,7 @@ evloop:
           else if ( x_id == gwinpt->mcw_ptr->resize_xid ) return((wpw_id)i);
           break;
 /*
-***OpenGL fï¿½nster.
+***WPRWIN.
 */
           case TYP_RWIN:
           rwinpt = (WPRWIN *)wpwtab[i].ptr;
@@ -1299,7 +1289,7 @@ evloop:
         }
      }
 /*
-***Ingen trï¿½ff.
+***No hit.
 */
     return((wpw_id)-1);
   }

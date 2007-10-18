@@ -4,6 +4,7 @@
 *    =======
 *
 *    This file is part of the VARKON Program Module Library.
+*    URL: http://varkon.sourceforge.net
 *
 *    This file includes the following routines:
 *

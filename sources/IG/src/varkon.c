@@ -9,7 +9,7 @@
 /*  igcenv();  Check/register WIN32 environment                     */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
-/*  URL:  http://www.tech.oru.se/cad/varkon                         */
+/*  URL:  http://varkon.sourceforge.net                             */
 /*                                                                  */
 /*  This library is free software; you can redistribute it and/or   */
 /*  modify it under the terms of the GNU Library General Public     */
@@ -298,6 +298,11 @@ extern bool  IGfacc();
      }
 #endif
 /*
+***Test of mode selector.
+*
+int modeJK;
+   WPselect_sysmode(&modeJK);
+*
 ***On the WIN32 platform init ms and check that environment
 ***variables are registred.
 */

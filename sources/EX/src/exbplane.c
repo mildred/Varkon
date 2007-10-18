@@ -8,7 +8,7 @@
 *
 *
 *    This file is part of the VARKON Execute Library.
-*    URL:  http://www.varkon.com
+*    URL:  http://varkon.sourceforge.net
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -23,8 +23,6 @@
 *    You should have received a copy of the GNU Library General Public
 *    License along with this library; if not, write to the Free
 *    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*
 *
 *********************************************************/
 
@@ -44,10 +42,10 @@ extern DBTmat  lklsyi;
 
 /*!******************************************************/
 
-       short EXebpl(
-       DBId   *id,
+       short     EXebpl(
+       DBId     *id,
        DBBplane *bplpek,
-       V2NAPA *pnp)
+       V2NAPA   *pnp)
 
 /*      Skapar B-plan.
  *
