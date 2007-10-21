@@ -141,18 +141,6 @@ short WPload_WPGWIN(FILE *jf);
 short WPload_WPRWIN(FILE *jf);
 
 /*
-***wpLWIN.c
-*/
-short WPinla(char *hs);
-short WPalla(char *s, short rs);
-short WPexla(bool show);
-bool  WPxplw(WPLWIN *lwinpt);
-bool  WPbtlw(WPLWIN *lwinpt, XButtonEvent *butev, wpw_id *serv_id);
-bool  WPcrlw(WPLWIN *lwinpt, XCrossingEvent *croev);
-bool  WPcmlw(WPLWIN *lwinpt, XClientMessageEvent *clmev);
-short WPdllw(WPLWIN *lwinpt);
-
-/*
 ***wpfont.c
 */
 short         WPfini();
@@ -341,6 +329,19 @@ void    WPrepaint_RWIN(DBint win_id, bool resize);
 short   WPerrw(DBint win_id);
 short   WPdlrw(WPRWIN *rwinpt);
 WPRWIN *WPgrwp(Window x_id);
+
+/*
+***wpLWIN.c
+*/
+short WPinla(char *hs);
+short WPalla(char *s, short rs);
+short WPexla(bool show);
+bool  WPxplw(WPLWIN *lwinpt);
+bool  WPbtlw(WPLWIN *lwinpt, XButtonEvent *butev, wpw_id *serv_id);
+bool  WPcrlw(WPLWIN *lwinpt, XCrossingEvent *croev);
+bool  WPcmlw(WPLWIN *lwinpt, XClientMessageEvent *clmev);
+bool  WPcolw(WPLWIN *lwinpt, XConfigureEvent *conev);
+short WPdllw(WPLWIN *lwinpt);
 
 /*
 ***wpviews.c

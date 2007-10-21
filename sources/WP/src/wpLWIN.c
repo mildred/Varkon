@@ -16,6 +16,7 @@
 *    WPbtlw();     Button routine for WPLWIN
 *    WPcrlw();     Crossing routine for WPLWIN
 *    WPcmlw();     ClientMessage routine for WPLWIN
+*    WPcolw();     Configure routine for WPLWIN
 *    WPdllw();     Delete WPLWIN
 *
 *    This library is free software; you can redistribute it and/or
@@ -145,7 +146,8 @@ static short savelw(WPLWIN *lwinpt);
 
     if ( WPstrl(hs) > dx ) dx = WPstrl(hs);
 
-    lwinptr->maxrln = dx;
+    lwinptr->maxchars = 0;
+    lwinptr->maxlen   = dx;
 
     lwinptr->nl_first = 0;    /* First visible line */
     lwinptr->nl_tot   = 0;    /* Total number of lines */
@@ -196,17 +198,19 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***Check line length. Truncate at V3STRLEN.
 */
-    nstkn = strlen(s); 
+    nstkn = strlen(s);
     if ( nstkn > V3STRLEN )
       {
       s[V3STRLEN] = '\0';
       nstkn = V3STRLEN;
       }
+
+    if ( nstkn > actlwin->maxchars ) actlwin->maxchars = nstkn;
 /*
 ***Line length in pixels.
 */
     lt = WPstrl(s);
-    if ( lt > actlwin->maxrln ) actlwin->maxrln = lt;
+    if ( lt > actlwin->maxlen ) actlwin->maxlen = lt;
 /*
 ***If line is shorter than V3STRLEN, pad with space.
 */
@@ -230,7 +234,7 @@ static short savelw(WPLWIN *lwinpt);
 
       for ( i=0; i<rs - 1; i++ )
         {
-        ++actlwin->nl_tot;
+      ++actlwin->nl_tot;
         fprintf(actlwin->filpek,"%s\n",mell);
         }
       }
@@ -306,7 +310,8 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***WPLWIN width.
 */
-    dx = WPstrh() + actlwin->maxrln + WPstrh();
+    dx = 2*WPstrh() + actlwin->maxlen + WPstrh();
+    if ( dx > 0.3*DisplayWidth(xdisp,xscr) ) dx = 0.3*DisplayWidth(xdisp,xscr);
 /*
 ***WPLWIN position.
 */
@@ -333,9 +338,19 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***Add optional slidebar(s).
 */
-    status = WPcreate_slidebar(actlwin->id.w_id,WP_SBARV,&sbptr);
-    actlwin->psbar_v = sbptr;
-    sbptr->id.p_id = actlwin->id.w_id;
+    if ( actlwin->nl_vis < actlwin->nl_tot )
+      {
+      status = WPcreate_slidebar(actlwin->id.w_id,WP_SBARV,&sbptr);
+      actlwin->psbar_v = sbptr;
+      sbptr->id.p_id = actlwin->id.w_id;
+      }
+
+    if ( actlwin->maxlen > actlwin->geo.dx - 2*WPstrh() )
+      {
+      status = WPcreate_slidebar(actlwin->id.w_id,WP_SBARH,&sbptr);
+      actlwin->psbar_h = sbptr;
+      sbptr->id.p_id = actlwin->id.w_id;
+      }
 /*
 ***Display.
 */
@@ -369,7 +384,7 @@ static short savelw(WPLWIN *lwinpt);
 
   {
     char    rad[V3STRLEN+3];
-    int     j,tx,ty,a,b,px,py,butsiz;
+    int     j,tx,ty,a,b,px,py,butsiz,dx,nskip;
     double  c,d;
 
 /*
@@ -382,24 +397,45 @@ static short savelw(WPLWIN *lwinpt);
 */
     WPgwsz(lwinpt->id.x_id,&a,&b,&px,&py,&c,&d);
 /*
-***Optional slidebar status.
+***How many lines are possible to display ?
+*/
+    lwinpt->nl_vis = py/WPstrh() - 4;
+/*
+***Optional vertical slidebar status.
 */
     if ( (lwinpt->nl_tot > lwinpt->nl_vis) && (lwinpt->psbar_v != NULL) )
       {
       butsiz = lwinpt->psbar_v->butend - lwinpt->psbar_v->butstart;
-      if ( lwinpt->psbar_v->butstart == 0 ) lwinpt->nl_first = 0;
-      else                                 lwinpt->nl_first = ((double)lwinpt->psbar_v->butstart/
-                                            ((double)(lwinpt->psbar_v->geo.dy - butsiz))*
-                                            (lwinpt->nl_tot - lwinpt->nl_vis)) + 1;
-      if ( lwinpt->nl_first > lwinpt->nl_tot - lwinpt->nl_vis )
+      if ( lwinpt->psbar_v->butstart == 0 )
+        {
+        lwinpt->nl_first = 0;
+        }
+      else
+        {
+        lwinpt->nl_first = ((double)lwinpt->psbar_v->butstart/
+                           ((double)(lwinpt->psbar_v->geo.dy - butsiz))*
+                            (lwinpt->nl_tot - lwinpt->nl_vis));
+        }
+
+      if ( lwinpt->nl_first > (lwinpt->nl_tot - lwinpt->nl_vis) )
         lwinpt->nl_first = lwinpt->nl_tot - lwinpt->nl_vis - 1;
       }
 /*
-***How many lines are visible ?
+***Optional horizontal slidebar status.
 */
-    lwinpt->nl_vis = py/WPstrh() - 4;
+    dx = lwinpt->geo.dx - 2*WPstrh();
+    if ( lwinpt->psbar_v != NULL ) dx -= WPstrh();
+
+    if ( ( lwinpt->maxlen > dx ) && (lwinpt->psbar_h != NULL) )
+      {
+      butsiz = lwinpt->psbar_h->butend - lwinpt->psbar_h->butstart;
+      nskip = ((double)lwinpt->psbar_h->butstart/((double)(dx - butsiz)))*
+              ((double)(lwinpt->maxlen - dx)/(double)lwinpt->maxlen)*
+              lwinpt->maxchars;
+      }
+    else nskip = 0;
 /*
-***Current position in pixels.
+***Current Y position in pixels.
 */
     tx = ty = 2*WPstrh();
 /*
@@ -427,7 +463,7 @@ static short savelw(WPLWIN *lwinpt);
         {
         ty +=  WPstrh();
         rad[V3STRLEN] = '\0';
-        WPwstr(lwinpt->id.x_id,tx,ty,rad);
+        if ( strlen(rad) > nskip ) WPwstr(lwinpt->id.x_id,tx,ty,&rad[nskip]);
         }
       else break;
       }
@@ -459,10 +495,10 @@ static short savelw(WPLWIN *lwinpt);
  *      In: iwinpt    = C ptr to WPLWIN.
  *          butev     = C ptr to X-event.
  *
- *      Out: *serv_id = ID of subwindow that served the event.
+ *      Out: *serv_id = ID of window that served the event.
  *
- *      Out: TRUE =  Event served.
- *           FALSE = This window (with subwindows) not involved.
+ *      return: TRUE =  Event served.
+ *              FALSE = This window (with subwindows) not involved.
  *
  *      (C)microform ab 6/12/93 J. Kjellander
  *
@@ -472,35 +508,28 @@ static short savelw(WPLWIN *lwinpt);
  ******************************************************!*/
 
   {
+   bool hit;
 
 /*
 ***Mouse event in the actual WPLWIN ?
 */
-    if ( butev->window == lwinpt->id.x_id )
+    if ( butev->window == lwinpt->id.x_id  &&
+         butev->type   == ButtonPress )
       {
-     *serv_id = lwinpt->id.w_id;
-
       switch ( butev->button )
         {
 /*
-***TODO
-*/
-        case 1:
-        break;
-/*
-***
-*/
-        case 2:
-        break;
-/*
-***
+****Rightclick = Save/Print.
 */
         case 3:
-        break;
+        savelw(lwinpt);
+       *serv_id = lwinpt->id.w_id;
+        return(TRUE);
 /*
 ***Something else should not be possible.
 */
         default:
+        WPbell();
         return(FALSE);
         }
       return(TRUE);
@@ -508,16 +537,25 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***Optional slidebars.
 */
+    hit = FALSE;
+
     if ( lwinpt->psbar_v != NULL  &&  butev->window == lwinpt->psbar_v->id.x_id )
       {
       WPbutton_slidebar(lwinpt->psbar_v,butev);
      *serv_id = lwinpt->id.w_id;
-      return(TRUE);
+      hit = TRUE;
+      }
+
+    if ( lwinpt->psbar_h != NULL  &&  butev->window == lwinpt->psbar_h->id.x_id )
+      {
+      WPbutton_slidebar(lwinpt->psbar_h,butev);
+     *serv_id = lwinpt->id.w_id;
+      hit = TRUE;
       }
 /*
 ***The end.
 */
-    return(FALSE);
+    return(hit);
   }
 
 /********************************************************/
@@ -528,6 +566,7 @@ static short savelw(WPLWIN *lwinpt);
         XCrossingEvent *croev)
 
 /*      Crossing handler for WPLWIN with sub windows.
+ *      (Not currently needed, maybe later... )
  *
  *      In: lwinpt = C ptr to WPLWIN.
  *
@@ -579,6 +618,156 @@ static short savelw(WPLWIN *lwinpt);
 /********************************************************/
 /*!******************************************************/
 
+        bool             WPcolw(
+        WPLWIN          *lwinpt,
+        XConfigureEvent *conev)
+
+/*      Configure handler for WPLWIN. Handles user
+ *      resize.
+ *
+ *      In: lwinpt = C-ptr to WPLWIN.
+ *          conev  = C-ptr to ConfigureEvent.
+ *
+ *      Return: TRUE.
+ *
+ *      (C)2007-10-21 J.Kjellander
+ *
+ ******************************************************!*/
+
+  {
+   int     olddx,olddy,newdx,newdy,ddx,ddy;
+   XEvent  event;
+   WPSBAR *sbptr;
+
+/*
+***To prevent multiple updates of the window during resize
+***by the user, remove pending StructureNotify events.
+*/
+  while ( XCheckMaskEvent(xdisp, StructureNotifyMask, &event)  &&
+          event.type == ConfigureNotify)
+    V3MOME(&event.xconfigure,conev,sizeof(XConfigureEvent));
+/*
+***Old size.
+*/
+   olddx = lwinpt->geo.dx; olddy = lwinpt->geo.dy;
+/*
+***What is the new size ?
+*/
+   newdx = conev->width;
+   newdy = conev->height;
+/*
+***How big is the change ?
+*/
+   ddx = newdx - olddx; ddy = newdy - olddy;
+/*
+***The window changed size i X direction.  Update
+***window geometry and optional slidebars.
+*/
+   if ( ddx != 0.0 )
+     {
+     lwinpt->geo.dx = newdx;
+/*
+***A vertical slidebar needs to be moved in the X direction.
+*/
+     if ( lwinpt->psbar_v != NULL )
+       {
+       lwinpt->psbar_v->geo.x = newdx - WPstrh();
+       XMoveWindow(xdisp,lwinpt->psbar_v->id.x_id,lwinpt->psbar_v->geo.x,0);
+       }
+/*
+***A horizontal slidebar may have to be resized or deleted.
+*/
+     if ( lwinpt->psbar_h != NULL )
+       {
+       if ( lwinpt->geo.dx < lwinpt->maxlen + 3*WPstrh() )
+         {
+         lwinpt->psbar_h->geo.dx = newdx - WPstrh();
+         lwinpt->psbar_h->butstart = 0;
+         lwinpt->psbar_h->butend = ((double)(lwinpt->geo.dx - 3*WPstrh())/
+                                    (double)lwinpt->maxlen)*
+                                    (lwinpt->geo.dx - 3*WPstrh());
+         if ( lwinpt->psbar_h->butend < 15 ) lwinpt->psbar_h->butend = 15;
+         XResizeWindow(xdisp,lwinpt->psbar_h->id.x_id,
+                             lwinpt->psbar_h->geo.dx,WPstrh());
+         }
+       else
+         {
+         XDestroyWindow(xdisp,lwinpt->psbar_h->id.x_id);
+         v3free((char *)lwinpt->psbar_h,"WPcolw");
+         lwinpt->psbar_h = NULL;
+         }
+       }
+/*
+***If there is no horizontal slidebar, one may have to be added.
+*/
+     else if ( lwinpt->geo.dx < lwinpt->maxlen + 3*WPstrh() )
+       {
+       WPcreate_slidebar(lwinpt->id.w_id,WP_SBARH,&sbptr);
+       lwinpt->psbar_h = sbptr;
+       sbptr->id.p_id = lwinpt->id.w_id;
+       XMapWindow(xdisp,sbptr->id.x_id);
+       }
+     }
+/*
+***The window changed size i Y direction.  Update
+***window geometry and optional slidebars.
+*/
+   if ( ddy != 0.0 )
+     {
+     lwinpt->geo.dy = newdy;
+/*
+***A horizontal slidebar needs to be moved in the Y direction.
+*/
+     if ( lwinpt->psbar_h != NULL )
+       {
+       lwinpt->psbar_h->geo.y = newdy - WPstrh();
+       XMoveWindow(xdisp,lwinpt->psbar_h->id.x_id,0,lwinpt->psbar_h->geo.y);
+       }
+/*
+***A vertical slidebar may have to be resized or deleted.
+*/
+     if ( lwinpt->psbar_v != NULL )
+       {
+       if ( lwinpt->nl_vis < lwinpt->nl_tot )
+         {
+         lwinpt->psbar_v->geo.dy = newdy - WPstrh();
+         lwinpt->psbar_v->butstart = 0;
+         lwinpt->psbar_v->butend = (double)((double)lwinpt->nl_vis/
+                                   (double)lwinpt->nl_tot)*lwinpt->psbar_v->geo.dy;
+         if ( lwinpt->psbar_v->butend < 15 ) lwinpt->psbar_v->butend = 15;
+         XResizeWindow(xdisp,lwinpt->psbar_v->id.x_id,WPstrh(),lwinpt->psbar_v->geo.dy);
+         }
+       else
+         {
+         XDestroyWindow(xdisp,lwinpt->psbar_v->id.x_id);
+         v3free((char *)lwinpt->psbar_v,"WPcolw");
+         lwinpt->psbar_v = NULL;
+         }
+       }
+/*
+***If there is no vertical slidebar, one may have to be added.
+*/
+     else if ( lwinpt->nl_vis < lwinpt->nl_tot )
+       {
+       WPcreate_slidebar(lwinpt->id.w_id,WP_SBARV,&sbptr);
+       lwinpt->psbar_v = sbptr;
+       sbptr->id.p_id = lwinpt->id.w_id;
+       XMapWindow(xdisp,sbptr->id.x_id);
+       }
+     }
+/*
+***Expose the WPLWIN.
+*/
+   WPxplw(lwinpt);
+/*
+***The end.
+*/
+   return(TRUE);
+  }
+
+/********************************************************/
+/*!******************************************************/
+
         short   WPdllw(
         WPLWIN *lwinpt)
 
@@ -622,7 +811,7 @@ static short savelw(WPLWIN *lwinpt);
         int   dy,
         char *wtitle)
 
-/*      Creates a WPLWIN in X
+/*      Creates a WPLWIN in X.
  *
  *      In: x,y    = Window position.
  *          dx,dy  = Window size.
@@ -690,7 +879,8 @@ static short savelw(WPLWIN *lwinpt);
 */
     XSelectInput(xdisp,actlwin->id.x_id,ExposureMask    |
                                         ButtonPressMask |
-                                        ButtonReleaseMask);
+                                        ButtonReleaseMask |
+                                        StructureNotifyMask);
 /*
 ***The end.
 */
@@ -703,26 +893,22 @@ static short savelw(WPLWIN *lwinpt);
  static short savelw(
         WPLWIN *lwinpt)
 
-/*      Sparar det angivna listfï¿½nstret eller
- *      hela listfilen pï¿½ fil eller utskrift till valfri skrivare.
+/*      Save to file or print WPLWIN contents.
  *
- *      In: lwinpt = C-pekare till list-fï¿½nster.
- *
- *      Ut: Inget.
- *
- *      FV: 0.
+ *      In: lwinpt = C ptr to WPLWIN.
  *
  *      (C)microform ab 7/8/92 U. Andersson 
  *
  *      8/12/93 Omarbetad, J. Kjellander
  *      1997-01-25 printer, J.Kjellander
- *      1998-03-11 Lï¿½ngre rader, J.Kjellander
- *      2004-09-03 English texts, Johan Kjellander, ï¿½rebro university
+ *      1998-03-11 Längre rader, J.Kjellander
+ *      2004-09-03 English texts, Johan Kjellander, Örebro university
+ *      2007-10-20 Slidebars, J.Kjellander
  *
  ******************************************************!*/
 
   {
-   int   radb,r = 0;
+   int   first,count;
    char *slt = "Entire list or window";
    char *est = "e";
    char *wst = "w";  
@@ -738,25 +924,20 @@ static short savelw(WPLWIN *lwinpt);
    static char dstr[V3PTHLEN] = "";
 
 /*
-***Anrop till alternativ funktionen WPialt
-***ska vi spara hela listan eller bara fï¿½nstret?. 
+***Entire list or only current window ?
 */
     hela = WPialt(slt,est,wst,FALSE);
 /*
-***Spara aktiv radbï¿½rjan.
+***First line.
 */
-    radb = lwinpt->nl_first;
+    if ( hela )  first = 0;
+    else         first = lwinpt->nl_first;
 /*
-***Ska vi spara hela listan?. 
-*/
-    if ( hela == TRUE )  lwinpt->nl_first = 0;
-/*
-***Anrop till alternativ funktionen WPialt
-***spara pï¿½ fil eller skrivare. 
+***Save to file or print ?
 */
     fil = WPialt(spt,fst,pst,FALSE);
 /*
-***Vad skall filen heta ?
+***File name ?
 */
     if ( dstr[0] == '\0' )
       {
@@ -765,7 +946,7 @@ static short savelw(WPLWIN *lwinpt);
       strcat(dstr,LSTEXT);
       }
 
-    if ( fil == TRUE )
+    if ( fil )
       {
       status = IGssip("","Enter filename :",fnam,dstr,V3PTHLEN);
       if ( status < 0 ) goto end;
@@ -776,24 +957,23 @@ static short savelw(WPLWIN *lwinpt);
       strcpy(fnam,dstr);
       }
 /*
-***ï¿½ppna listfil fï¿½r lï¿½sning.
+***Open list file.
 */
     lwinpt->filpek = fopen(lwinpt->filnam,"r");
 /*
-***ï¿½ppna  ny fil fï¿½r skrivning.
+***Create and open temporary file.
 */
     tempfil = fopen(fnam,"w+");
 /*
-***Skriv in ï¿½verskrift och en tomrad fï¿½rst i tmpfil.
+***Write header
 */
     fprintf(tempfil,"%s\n\n",lwinpt->rubrik);
 /*
-***Spara listfilen pï¿½ en valfri fil.
-***Vilken rad ska vi bï¿½rja lï¿½sningen ifrï¿½n.
+***Write listfile contents.
 */
-     fseek(lwinpt->filpek,lwinpt->nl_first*81,SEEK_SET);
+     fseek(lwinpt->filpek,first*(V3STRLEN+1),SEEK_SET);
 
-     if ( hela == TRUE ) 
+     if ( hela )
        {
        while ( fgets(rad,V3STRLEN+2,lwinpt->filpek) != NULL) 
          {
@@ -801,31 +981,28 @@ static short savelw(WPLWIN *lwinpt);
          fprintf(tempfil,"%s\n",rad);
          }
        }
-     else 
+     else
        {
+       count = 0;
        while ( fgets(rad,V3STRLEN+2,lwinpt->filpek) != NULL &&
-               r < lwinpt->nl_vis ) 
+               count < lwinpt->nl_vis )
          {
          rad[V3STRLEN] = '\0';
          fprintf(tempfil,"%s\n",rad);
-         ++r;
+       ++count;
          }
        }
 /*
-***Stï¿½ng filerna.
+***Close files.
 */
     fclose(lwinpt->filpek);
     fclose(tempfil);
 /*
-***Tilldela radbï¿½rjan sitt ursprungliga vï¿½rde.
-*/
-    lwinpt->nl_first = radb;
-/*
-***Ev. utskrift pï¿½ skrivare.
+***Possible printout.
 */
     if ( !WPgrst("varkon.list.printer",printer) ) strcpy(printer,"lp");
 
-    if ( fil == FALSE )
+    if ( !fil )
       {
       strcpy(oscmd,"cat ");
       strcat(oscmd,fnam);
@@ -834,7 +1011,7 @@ static short savelw(WPLWIN *lwinpt);
       EXos(oscmd,2);
       }
 /*
-***Slut.
+***The end.
 */
 end:
     return(0);

@@ -142,7 +142,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
     width  = DisplayWidth(xdisp,xscr);
     height = DisplayHeight(xdisp,xscr);
 
-    xhint.flags  = USPosition | USSize | PMinSize | PMaxSize;   
+    xhint.flags  = USPosition | USSize | PMinSize | PMaxSize;
     xhint.x      = x;
     xhint.y      = y;
     xhint.width  = dx;
@@ -776,8 +776,6 @@ static void cre_toolbar(WPGWIN *gwinpt);
  *      In: gwinpt = C-ptr to WPGWIN.
  *          conev  = C-ptr to ConfigureEvent.
  *
- *      Out: Nothing.   
- *
  *      Return: TRUE.
  *
  *      (C)microform ab 8/2/94 J. Kjellander
@@ -795,7 +793,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
     bool   right,left,up,down;
     Window child;
     XEvent event;
-   
+
 /*
 ***To prevent multiple updates of the window during resize
 ***by the user, remove pending StructureNotify events.
@@ -811,7 +809,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
 /*
 ***Where is the window now ? Only way to be
 ***sure is with XTranslate...
-*/ 
+*/
     XTranslateCoordinates(xdisp,gwinpt->id.x_id,
                       DefaultRootWindow(xdisp),0,0,&newx,&newy,&child);
 /*
@@ -844,14 +842,13 @@ static void cre_toolbar(WPGWIN *gwinpt);
       else           up   = TRUE;
       }
 /*
-***Om f�nstret �nnu inte har "reparentiserats" av WM
-***kan en flyttning av f�nstret inte bero p� anv�ndaren
-***av systemet utan m�ste bero p� WM:s garnering av
-***f�nstret med egna ramar etc. Is�fall sparar vi p�
-***oss denna f�rflyttning s� att vi vet hur stor den �r.
-***F�r att detta s�kert bara ska ske en g�n s�tter vi
-***reprntflaggan till TRUE. Det verkar som tex. KDE inte
-***g�r reparent �ver huvud taget. 2007-02-02 J.Kjellander
+***If the window is not yet "reparentisized" by the WM
+***the event is probably not caused by the user but rather
+***by the fact that the WM has dressed the window with it's
+***own borders etc.
+***If that is the case, we save the move so we know
+***how big it is and set the reprnt flag = TRUE. Some WM's
+***may not reparentisize at all, KDE for example.
 */
     if ( !gwinpt->reprnt )
       {
@@ -860,10 +857,9 @@ static void cre_toolbar(WPGWIN *gwinpt);
       gwinpt->reprnt = TRUE;
       }
 /*
-***Om ovanst�ende garnering �nnu inte skett, dvs. (wmandx,wmandy) = 0
-***men f�nstret �nd� "reparentiserats" har WM valt att g�ra saker i
-***en annan ordning �n normalt. Is�fall tolkar vi denna f�rsta f�rflyttning
-***som garnering i alla fall.
+***If dressing has not yet been done (wmandx,wmandy) = 0 but the
+***window has been reparented the WM is doing things in another order.
+***In that case we treat the first move as dressing anyway.
 */
     else if ( gwinpt->wmandx == 0  &&  gwinpt->wmandy == 0 )
       {
@@ -871,7 +867,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
       gwinpt->wmandy += dy;
       }
 /*
-***Lagra den nya f�nstergeometrin i WPGWIN-posten.
+***Save new window geometry with WPGWIN.
 */
     gwinpt->geo.x  = newx;
     gwinpt->geo.y  = newy;
@@ -879,19 +875,14 @@ static void cre_toolbar(WPGWIN *gwinpt);
     gwinpt->geo.dy = newdy;
     gwinpt->geo.bw = conev->border_width;
 /*
-***Vad �r det som har h�nt ?
-***Om f�nstret har �ndrat storlek ber�knar vi nytt modell-
-***f�nster, viewport mm. s� att bilden efter automatisk repaint
-***ligger kvar p� samma st�lle som f�rut �ven om f�nstrets origo
-***pga. �ndringen har flyttats.
+***If the window changed size set up a new model window and viewport
+***so that the image after repaint stays in the same position with
+***the same scale.
 */
     if ( ( ddx != 0.0 ) || ( ddy != 0.0 ) )
       {
 /*
-***Under all omst�ndigheter skall grafiska arean �ndra storlek.
-***Detta g�r vi genom att flytta origo till det nya nedre v�nstra
-***h�rnet och justera xmax och ymax d�refter oavsett om det �r
-***h�gra eller v�nstra alt. �vre eller nedre kanten som har �ndrats.
+***Under all circomstances the graphical area changed size.
 */
       gwinpt->vy.scrwin.xmax += ddx;
       gwinpt->vy.scrwin.ymax += ddy;
@@ -900,26 +891,32 @@ static void cre_toolbar(WPGWIN *gwinpt);
 */
       gwinpt->mcw_ptr->geo.y  = gwinpt->geo.dy - gwinpt->mcw_ptr->geo.dy;
       gwinpt->mcw_ptr->geo.dx = gwinpt->geo.dx;
+
       XMoveResizeWindow(xdisp,gwinpt->mcw_ptr->messcom_xid,gwinpt->mcw_ptr->geo.x,
                                                             gwinpt->mcw_ptr->geo.y,
                                                             gwinpt->mcw_ptr->geo.dx,
                                                             gwinpt->mcw_ptr->geo.dy);
+
       XMoveResizeWindow(xdisp,gwinpt->mcw_ptr->resize_xid,gwinpt->mcw_ptr->geo.x,
                                                            gwinpt->mcw_ptr->geo.y-5,
                                                            gwinpt->mcw_ptr->geo.dx,
                                                            5);
-      gwinpt->mcw_ptr->cmdptr->geo.x = gwinpt->mcw_ptr->geo.dx - gwinpt->mcw_ptr->cmdptr->geo.dx - 5;
-      gwinpt->mcw_ptr->cmdptr->geo.y = gwinpt->mcw_ptr->geo.dy - gwinpt->mcw_ptr->cmdptr->geo.dy - 5;
-      XMoveResizeWindow(xdisp,gwinpt->mcw_ptr->cmdptr->id.x_id,gwinpt->mcw_ptr->cmdptr->geo.x,
-                                                                gwinpt->mcw_ptr->cmdptr->geo.y,
-                                                                gwinpt->mcw_ptr->cmdptr->geo.dx,
-                                                                gwinpt->mcw_ptr->cmdptr->geo.dy);
+
+      gwinpt->mcw_ptr->cmdptr->geo.x = gwinpt->mcw_ptr->geo.dx -
+                                       gwinpt->mcw_ptr->cmdptr->geo.dx - 5;
+      gwinpt->mcw_ptr->cmdptr->geo.y = gwinpt->mcw_ptr->geo.dy -
+                                       gwinpt->mcw_ptr->cmdptr->geo.dy - 5;
+
+      XMoveResizeWindow(xdisp,gwinpt->mcw_ptr->cmdptr->id.x_id,
+                              gwinpt->mcw_ptr->cmdptr->geo.x,
+                              gwinpt->mcw_ptr->cmdptr->geo.y,
+                              gwinpt->mcw_ptr->cmdptr->geo.dx,
+                              gwinpt->mcw_ptr->cmdptr->geo.dy);
 /*
-***Hur blir det med modellf�nstret ? H�r justerar vi den kant som
-***verkligen har �ndrats s� att bilden ligger still p� sk�rmen.
+***Update the model window so that the image stays in the same position.
 */
-    oldmdx = gwinpt->vy.modwin.xmax - gwinpt->vy.modwin.xmin;
-    oldmdy = gwinpt->vy.modwin.ymax - gwinpt->vy.modwin.ymin;
+      oldmdx = gwinpt->vy.modwin.xmax - gwinpt->vy.modwin.xmin;
+      oldmdy = gwinpt->vy.modwin.ymax - gwinpt->vy.modwin.ymin;
 
       if ( right )
         gwinpt->vy.modwin.xmax += (double)ddx/(double)olddx*oldmdx;
@@ -933,7 +930,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
       if ( down )
         gwinpt->vy.modwin.ymin -= (double)ddy/(double)olddy*oldmdy;
 /*
-***Nya 2D transformationskonstanter.
+***New 2D transformation constants.
 */
       gwinpt->vy.k2x =
         (gwinpt->vy.scrwin.xmax - gwinpt->vy.scrwin.xmin) /
@@ -946,12 +943,11 @@ static void cre_toolbar(WPGWIN *gwinpt);
       gwinpt->vy.k1y =
         gwinpt->vy.scrwin.ymin - gwinpt->vy.modwin.ymin * gwinpt->vy.k2y;
 /*
-***Rita om f�nstret.
+***Repaint.
 */
       WPrepaint_GWIN((wpw_id)gwinpt->id.w_id);
 /*
-***F�reg�ende vy skall nu kunna visas i det nya f�nstret, allts�
-***m�ste �ven dennas modellf�nster uppdateras.
+***Update previous view.
 */
       if ( gwinpt->old_vy.status != VIEW_NOT_USED )
         {
@@ -985,14 +981,14 @@ static void cre_toolbar(WPGWIN *gwinpt);
         }
       }
 /*
-***Om f�nstret inte har �ndrat storlek beh�ver vi inte g�ra s� mycket.
+***Om the window didn't change size we do nothing.
 */
     else
       {
       ;
       }
 /*
-***Slut.
+***The end.
 */
     return(TRUE);
   }

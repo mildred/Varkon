@@ -443,7 +443,8 @@ WPWGEO     geo;                   /* Geometry */
 FILE      *filpek;                /* Ptr to temporary list-file */
 char       filnam[V3PTHLEN+1];    /* List file name (incl. path) */
 char       rubrik[V3STRLEN+1];    /* List title */
-DBint      maxrln;                /* Max line length */
+DBint      maxchars;              /* Number of chars in longest line */
+DBint      maxlen;                /* Max line length in pixels */
 DBint      nl_first;              /* First visible line */
 DBint      nl_tot;                /* Total number of lines */
 DBint      nl_vis;                /* Number of lines visible in window */

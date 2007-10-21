@@ -479,6 +479,7 @@ WPWIN wpwtab[WTABSIZ];
  *      (C)microform ab 8/2/94 J. Kjellander
  *
  *      1998-10-29 WPRWIN, J.Kjellander
+ *      2007-10-21 WPLWIN, J.Kjellander
  *
  ******************************************************!*/
 
@@ -488,6 +489,7 @@ WPWIN wpwtab[WTABSIZ];
     WPWIN  *winptr;
     WPGWIN *gwinpt;
     WPRWIN *rwinpt;
+    WPLWIN *lwinpt;
 
 /*
 ***S�k igenom wpwtab och kolla om n�got av f�nstren
@@ -516,6 +518,15 @@ WPWIN wpwtab[WTABSIZ];
           if ( rwinpt->id.x_id == conev->window )
             {
             WPcorw(rwinpt,conev);
+            status = TRUE;
+            }
+          break;
+
+          case TYP_LWIN:
+          lwinpt = (WPLWIN *)winptr->ptr;
+          if ( lwinpt->id.x_id == conev->window )
+            {
+            WPcolw(lwinpt,conev);
             status = TRUE;
             }
           break;
