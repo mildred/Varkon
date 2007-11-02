@@ -264,10 +264,10 @@ start:
      str    = namlst[4*rad];
 
      if ( 4*rad == actalt )
-       status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+       status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                                str,str,"",WP_BGND3,WP_FGND,&alt_id[4*rad]);
      else
-       status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+       status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                                str,str,"",WP_BGND2,WP_FGND,&alt_id[4*rad]);
 /*
 ***Button in the 2:nd column.
@@ -278,10 +278,10 @@ start:
        str    = namlst[(4*rad)+1];
 
        if ( (4*rad)+1 == actalt )
-         status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+         status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                           str,str,"",WP_BGND3,WP_FGND,&alt_id[(4*rad)+1]);
        else
-         status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+         status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                           str,str,"",WP_BGND2,WP_FGND,&alt_id[(4*rad)+1]);
        }
 /*
@@ -293,10 +293,10 @@ start:
        str    = namlst[(4*rad)+2];
 
        if ( (4*rad)+2 == actalt )
-         status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+         status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                           str,str,"",WP_BGND3,WP_FGND,&alt_id[(4*rad)+2]);
        else
-         status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+         status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                           str,str,"",WP_BGND2,WP_FGND,&alt_id[(4*rad)+2]);
        }
 /*
@@ -308,10 +308,10 @@ start:
        str    = namlst[(4*rad)+3];
 
        if ( (4*rad)+3 == actalt )
-         status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+         status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                           str,str,"",WP_BGND3,WP_FGND,&alt_id[(4*rad)+3]);
        else
-         status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
+         status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,uplen,uph,(short)1,
                           str,str,"",WP_BGND2,WP_FGND,&alt_id[(4*rad)+3]);
        }
      }
@@ -320,22 +320,19 @@ start:
 */
    alt_x  = main_dx/8;;
    alt_y  = radant*(uph + ly) + lowh;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y-1,6*main_dx/8,1,(short)0,
-                           "","","",WP_BOTS,WP_BOTS,&but_id);
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,6*main_dx/8,1,(short)0,
-                           "","","",WP_TOPS,WP_TOPS,&but_id);
+   WPcreate_3Dline(iwin_id,alt_x,alt_y,alt_x + 6*main_dx/8,alt_y);
 /*
 ***Csys and Camera.
 */
    alt_x  = ly;
    alt_y  += lowh;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
                            csys,csys,"",WP_BGND2,WP_FGND,&csys_id);
    butptr = (WPBUTT *)iwinpt->wintab[csys_id].ptr;
    strcpy(butptr->tt_str,csystt);
 
    alt_x  = ly + lowlen1 + lm;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
                            camera,camera,"",WP_BGND2,WP_FGND,&camera_id);
    butptr = (WPBUTT *)iwinpt->wintab[camera_id].ptr;
    strcpy(butptr->tt_str,cameratt);
@@ -344,13 +341,13 @@ start:
 */
    alt_x  = ly;
    alt_y += ly + lowh;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
                            save,save,"",WP_BGND2,WP_FGND,&save_id);
    butptr = (WPBUTT *)iwinpt->wintab[save_id].ptr;
    strcpy(butptr->tt_str,savett);
 
    alt_x  = ly + lowlen1 + lm;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)2,
                            delete,delete,"",WP_BGND2,WP_FGND,&delete_id);
    butptr = (WPBUTT *)iwinpt->wintab[delete_id].ptr;
    strcpy(butptr->tt_str,deletett);
@@ -359,8 +356,8 @@ start:
 */
    alt_x  = ly;
    alt_y += lowh + lowh;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,WPstrl(ed_pmt),lowh,(short)0,
-                           ed_pmt,ed_pmt,"",WP_BGND1,WP_FGND,&edit_id);
+   status = WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(ed_pmt),lowh,
+                           ed_pmt,&edit_id);
 
    alt_x  = ly + WPstrl(ed_pmt) + lm;
    status = WPmced((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)1,
@@ -372,22 +369,19 @@ start:
 */
    alt_x  = main_dx/8;
    alt_y += lowh + lowh;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y-1,6*main_dx/8,1,(short)0,
-                           "","","",WP_BOTS,WP_BOTS,&but_id);
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,6*main_dx/8,1,(short)0,
-                           "","","",WP_TOPS,WP_TOPS,&but_id);
+   WPcreate_3Dline(iwin_id,alt_x,alt_y,alt_x + 6*main_dx/8,alt_y);
 /*
 ***Close and help.
 */
    alt_x  = ly;
    alt_y += ly;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)3,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)3,
                            close,close,"",WP_BGND2,WP_FGND,&close_id);
    butptr = (WPBUTT *)iwinpt->wintab[close_id].ptr;
    strcpy(butptr->tt_str,closett);
 
    alt_x  = main_dx - ly - lowlen2;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)2,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)2,
                            help,help,"",WP_BGND2,WP_FGND,&help_id);
    butptr = (WPBUTT *)iwinpt->wintab[help_id].ptr;
    strcpy(butptr->tt_str,helptt);

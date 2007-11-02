@@ -508,7 +508,7 @@ loop:
    alt_x  = ly;
    alt_y  = ly;
    altlen = WPstrl(persp);
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                    (short)0,persp,persp,"",WP_BGND2,WP_FGND,&dum_id);
 /*
 ***Toggle-button för ON/OFF.
@@ -522,19 +522,19 @@ loop:
    else                diston = TRUE;
 
    if ( diston == FALSE )
-     WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+     WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                      (short)1,off,on,"",WP_BGND2,WP_FGND,&onoff_id);
 /*
 ***Om perspektiv redan är satt skall avståndet visas.
 */
    else
      {
-     WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+     WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                      (short)1,on,off,"",WP_BGND2,WP_FGND,&onoff_id);
      alt_x  = ly;
      alt_y  = ly + alth + ly;
      altlen = WPstrl(dist);
-     WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+     WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                      (short)0,dist,dist,"",WP_BGND2,WP_FGND,&dist_id);
 
      alt_x  = (short)(ly + altlen + 10);
@@ -550,17 +550,17 @@ loop:
    alt_y  = (short)(ly + 2*(alth + ly) + ly);
    alth   = (short)(2*WPstrh());
    altlen = (short)(WPstrl(okey) + 15);
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                    (short)2,okey,okey,"",WP_BGND2,WP_FGND,&okey_id);
 
    alt_x  = (short)(alt_x + altlen + lm);
    altlen = (short)(WPstrl(reject) + 15);
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                    (short)2,reject,reject,"",WP_BGND2,WP_FGND,&reject_id);
 
    altlen = (short)(WPstrl(help) + 15);
    alt_x  = (short)(main_dx - altlen - lm);
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                    (short)2,help,help,"",WP_BGND2,WP_FGND,&help_id);
 /*
 ***Klart för visning.
@@ -635,7 +635,7 @@ loop:
        alt_x  = ly;
        alt_y  = ly + alth + ly;
        altlen = WPstrl(dist);
-       WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
+       WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,
                        (short)0,dist,dist,"",WP_BGND2,WP_FGND,&dist_id);
 
        alt_x  = (short)(ly + altlen + 10);
@@ -923,18 +923,18 @@ exit:
 ***Button för skala = 1.0.
 */
    alt_x  = ly + altlen + lm;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)1,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)1,
                            "1.0","1.0","",WP_BGND2,WP_FGND,&one_id);
 /*
 ***Dubbla och halva.
 */
    alt_x  = ly;
    alt_y  = ly + alth + ly;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)1,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)1,
                            dubbla,dubbla,"",WP_BGND2,WP_FGND,&dubbla_id);
 
    alt_x  = ly + altlen + lm;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)1,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)1,
                           half,half,"",WP_BGND2,WP_FGND,&half_id);
 /*
 ***Avbryt och hjälp.
@@ -942,11 +942,11 @@ exit:
    alt_x  = (short)(ly);
    alt_y  = (short)(ly + 2*(alth + ly) + ly);
    alth   = (short)(2*WPstrh());
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)2,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)2,
                            reject,reject,"",WP_BGND2,WP_FGND,&reject_id);
 
    alt_x  = ly + altlen + lm;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)2,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,(short)2,
                            help,help,"",WP_BGND2,WP_FGND,&help_id);
 /*
 ***Klart för visning.

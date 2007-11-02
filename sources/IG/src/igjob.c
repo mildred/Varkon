@@ -2148,7 +2148,16 @@ l1:
    if ( nstr > 0 )
      {
 #ifdef UNIX
-     status = WPilse(mesbuf,"",pekarr,actalt,nstr,newjob);
+     /*status = WPilse(mesbuf,"",pekarr,actalt,nstr,newjob); */
+char filter[6];
+   strcpy(filter,"*");
+   strcat(filter,typ);
+   status = WPfile_selector(mesbuf,jobdir,FALSE,"",filter,FALSE,newjob);
+   if ( status == 0 )
+    {
+    i = strlen(newjob) - 4;
+    newjob[i] = '\0';
+    }
 #endif
 
 #ifdef WIN32

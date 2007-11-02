@@ -1372,6 +1372,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
           {
           gwinpt->wintab[nsub].typ = TYP_BUTTON;
           gwinpt->wintab[nsub].ptr = (char *)buttpt;
+          buttpt->type = FUNCBUTTON;
 /*
 ***Action code, default = "f0".
 */

@@ -1889,6 +1889,7 @@ static short setup_ogl(
           {
           rwinpt->wintab[nsub].typ = TYP_BUTTON;
           rwinpt->wintab[nsub].ptr = (char *)buttpt;
+          buttpt->type = FUNCBUTTON;
 /*
 ***Get the .action resource value. If missing, use "f0".
 */

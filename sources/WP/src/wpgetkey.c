@@ -147,7 +147,7 @@ start:
 ***Optional mid button is always = GOMAIN.
 ***Right button is normally = REJECT.
 ***Normally a ButtonRelease is the event that triggers
-***an action but in  WPGWIN/WPRWIN we also need to handle ButtonPress.
+***an action but in  WPGWIN/WPRWIN/WPSBAR we also need to handle ButtonPress.
 ***A button press is usually preceeded by a crosing event in that window.
 ***A tooltip may thus have been ordered but not yet displayed. To avoid
 ***that a ButtonPress always turns off any pending displays of tooltips.

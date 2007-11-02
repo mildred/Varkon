@@ -246,13 +246,20 @@ bool  WPcmiw(WPIWIN *iwinpt, XClientMessageEvent *clmev);
 short WPdliw(WPIWIN *iwinptr);
 
 /*
-***wpBUTT.
+***wpBUTT.c.
 */
-short WPcrfb(int pid, short x, short y, short dx, short dy, char *butstr,
-             char *akod, short anum, DBint *bid);
-short WPmcbu(wpw_id pid, short x, short y, short dx, short dy, short bw,
+short WPcrlb(int pid, short x, short y, short dx, short dy, char *butstr,
+             DBint *bid);
+short WPcrtb(int pid, short x, short y, char *butstr, DBint *bid);
+short WPcrpb(wpw_id pid, short x, short y, short dx, short dy, short bw,
              char *str1, char *str2, char *fstr, short cb, short cf,
              DBint *bid);
+short WPcrsb(wpw_id pid, short x, short y, short dx, short dy, short bw,
+             char *str1, char *str2, char *fstr, short cb, short cf,
+             DBint *bid);
+short WPcrfb(int pid, short x, short y, short dx, short dy, char *butstr,
+             char *akod, short anum, DBint *bid);
+
 short WPwcbu(Window px_id, short x, short y, short dx, short dy, short bw,
              char *str1, char *str2, char *fstr, short cb, short cf,
              WPBUTT **outptr);
@@ -342,6 +349,27 @@ bool  WPcrlw(WPLWIN *lwinpt, XCrossingEvent *croev);
 bool  WPcmlw(WPLWIN *lwinpt, XClientMessageEvent *clmev);
 bool  WPcolw(WPLWIN *lwinpt, XConfigureEvent *conev);
 short WPdllw(WPLWIN *lwinpt);
+
+/*
+***wpMCWIN.c
+*/
+short WPcreate_mcwin(wpw_id grw_id, int dy);
+short WPaddmess_mcwin(char *str,int type);
+void  WPclear_mcwin();
+bool  WPexpose_mcwin(WPMCWIN *mcwptr);
+bool  WPbutton_mcwin(WPMCWIN *mcwptr, XButtonEvent *butev);
+bool  WPkey_mcwin(XKeyEvent *keyev);
+void  WPunfocus_mcwin();
+short WPdelete_mcwin(WPMCWIN *mcwptr);
+
+/*
+***wpSBAR.c
+*/
+short WPcreate_slidebar(wpw_id pid, int x, int y, int dx, int dy, int dir,
+                        int bstart, int bend, WPSBAR **outptr);
+void  WPexpose_slidebar(WPSBAR *sbptr);
+bool  WPbutton_slidebar(WPSBAR *sbptr, XButtonEvent *butev);
+short WPdelete_slidebar(WPSBAR *sbptr);
 
 /*
 ***wpviews.c
@@ -614,20 +642,15 @@ short WPatdi();
 short WPprint_dialogue(DBint grw_id);
 
 /*
-***wpMCWIN.c
+***wpDECRN.c
 */
-short WPcreate_mcwin(wpw_id grw_id, int dy);
-short WPaddmess_mcwin(char *str,int type);
-void  WPclear_mcwin();
-bool  WPexpose_mcwin(WPMCWIN *mcwptr);
-bool  WPbutton_mcwin(WPMCWIN *mcwptr, XButtonEvent *butev);
-bool  WPkey_mcwin(XKeyEvent *keyev);
-void  WPunfocus_mcwin();
-short WPdelete_mcwin(WPMCWIN *mcwptr);
+short WPcreate_3Dline(int pid, short x1, short y1, short x2, short y2);
+bool  WPexpose_decoration(WPDECRN *dcrptr);
+short WPdelete_decoration(WPDECRN *dcrptr);
 
 /*
-***wpSBAR.c
+***wpfsect.c
 */
-short WPcreate_slidebar(wpw_id pid, int dir, WPSBAR **outptr);
-void  WPexpose_slidebar(WPSBAR *sbptr);
-bool  WPbutton_slidebar(WPSBAR *sbptr, XButtonEvent *butev);
+short WPfile_selector(char *title, char *def_path, bool path_edit,
+                      char *def_file, char *def_filter, bool filter_edit,
+                      char *outfile);

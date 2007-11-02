@@ -253,6 +253,11 @@ varkon.input.close.tooltip:     Close this window
 varkon.input.save:              Save
 varkon.input.delete:            Delete
 varkon.input.apply:             Apply
+varkon.input.path.tooltip:      Path is not yet implemented
+varkon.input.file:              Filename:
+varkon.input.file.tooltip:      Enter filename and select OK
+varkon.input.filter:            Filter:
+varkon.input.filter.tooltip:    Filter is not yet implemented
 !*
 !***Resources for the alternative popup.
 !*
@@ -375,9 +380,9 @@ varkon.act_csys_pen:             2
 !*
 !***Varkon GUI system colors.
 !*
-varkon.background:               gray84
-varkon.buttonColor:              gray90
-varkon.selectedButtonColor:      gray75
+varkon.background:               gray82
+varkon.buttonColor:              gray88
+varkon.selectedButtonColor:      gray70
 varkon.highlightedButtonColor:   SteelBlue
 varkon.foreground:               Black
 varkon.topShadowColor:           White

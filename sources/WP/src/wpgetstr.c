@@ -471,14 +471,11 @@ loop:
     if ( *str1 != '\0' )
       {
       if ( *str2 == '\0' )
-        WPmcbu((wpw_id)md->iwin_id,x,y,md->tdx,md->tdy,(short)0,
-                                str1,"","",WP_BGND1,WP_FGND,&pmt_id);
+        WPcrlb((wpw_id)md->iwin_id,x,y,md->tdx,md->tdy,str1,&pmt_id);
       else
         {
-        WPmcbu((wpw_id)md->iwin_id,x,y,md->tdx,md->tdy/2,(short)0,
-                                str1,"","",WP_BGND1,WP_FGND,&pmt_id);
-        WPmcbu((wpw_id)md->iwin_id,x,y+md->tdy/2,md->tdx,md->tdy/2,(short)0,
-                                str2,"","",WP_BGND1,WP_FGND,&pmt_id);
+        WPcrlb((wpw_id)md->iwin_id,x,y,md->tdx,md->tdy/2,str1,&pmt_id);
+        WPcrlb((wpw_id)md->iwin_id,x,y+md->tdy/2,md->tdx,md->tdy/2,str2,&pmt_id);
         }
       }
 /*
@@ -487,8 +484,7 @@ loop:
    x = md->iwin_dx/8;
    y = md->ly + md->tdy + md->lm +
                 md->max_ed*(WPstrh() + md->lm + md->ih + md->lm) + md->ly;
-   WPmcbu(md->iwin_id,x,y-1,6*md->iwin_dx/8,1,(short)0,"","","",WP_BOTS,WP_BOTS,&pmt_id);
-   WPmcbu(md->iwin_id,x,y  ,6*md->iwin_dx/8,1,(short)0,"","","",WP_TOPS,WP_TOPS,&pmt_id);
+   WPcreate_3Dline(md->iwin_id,x,y,x+6*md->iwin_dx/8,y);
 /*
 ***Ber�kna Ok-f�nstrets storlek och placering och skapa.
 */
@@ -502,7 +498,7 @@ loop:
     md->ok_y  = md->ly + md->tdy + md->lm +
                 md->max_ed*(WPstrh() + md->lm + md->ih + md->lm) + md->ly + md->ly;
 
-    WPmcbu((wpw_id)md->iwin_id,md->ok_x,md->ok_y,md->ok_dx,md->ok_dy,
+    WPcrpb((wpw_id)md->iwin_id,md->ok_x,md->ok_y,md->ok_dx,md->ok_dy,
                         (short)2,okey,okey,"",WP_BGND2,WP_FGND,&md->ok_id);
    butptr = (WPBUTT *)(md->iwinpt->wintab[md->ok_id].ptr);
    strcpy(butptr->tt_str,okeytt);
@@ -514,7 +510,7 @@ loop:
     md->av_x  = md->lx + md->ok_dx + md->lx;
     md->av_y  = md->ok_y;
 
-    WPmcbu((wpw_id)md->iwin_id,md->av_x,md->av_y,md->av_dx,md->av_dy,
+    WPcrpb((wpw_id)md->iwin_id,md->av_x,md->av_y,md->av_dx,md->av_dy,
                   (short)2,reject,reject,"",WP_BGND2,WP_FGND,&md->av_id);
    butptr = (WPBUTT *)(md->iwinpt->wintab[md->av_id].ptr);
    strcpy(butptr->tt_str,rejecttt);
@@ -528,7 +524,7 @@ loop:
       x  = md->lx + md->ok_dx + md->lx + md->av_dx + md->lx;
       y  = md->ok_y;
 
-      WPmcbu((wpw_id)md->iwin_id,x,y,dx,dy,
+      WPcrpb((wpw_id)md->iwin_id,x,y,dx,dy,
                (short)2,next,next,"",WP_BGND2,WP_FGND,&md->nxt_id);
       }
 /*
@@ -539,7 +535,7 @@ loop:
     md->hlp_x  = md->iwin_dx - md->lx - md->hlp_dx;
     md->hlp_y  = md->ok_y;
 
-    WPmcbu((wpw_id)md->iwin_id,md->hlp_x,md->hlp_y,md->hlp_dx,md->hlp_dy,
+    WPcrpb((wpw_id)md->iwin_id,md->hlp_x,md->hlp_y,md->hlp_dx,md->hlp_dy,
                 (short)2,help,help,"",WP_BGND2,WP_FGND,&md->hlp_id);
    butptr = (WPBUTT *)(md->iwinpt->wintab[md->hlp_id].ptr);
    strcpy(butptr->tt_str,helptt);
@@ -655,18 +651,17 @@ loop:
 */
       if ( *ips[i] != '\0' ) pdx = WPstrl(ips[i]);
       else                   pdx = 1;
-      WPmcbu(md->iwin_id,x,y-WPstrh()-md->ly,pdx,WPstrh(),
-                 (short)0,ips[i],"","",WP_BGND1,WP_FGND,&md->pmt_id[j]);
+      WPcrlb(md->iwin_id,x,y-WPstrh()-md->ly,pdx,WPstrh(),ips[i],&md->pmt_id[j]);
 /*
 ***Sj�lva edit-f�ltet.
-*/     
+*/
       if ( maxtkn[i] < 1 ) maxtkn[i] = 1;
       WPmced(md->iwin_id,x,y,dx,dy,(short)2,is[i],maxtkn[i],&md->ed_id[j]);
 /*
 ***Ev. pos/ref-knapp.
 */
       if ( typarr[i] == C_VEC_VA  ||  typarr[i] == C_REF_VA )
-        WPmcbu(md->iwin_id,x+dx+2,y,md->ih+1,md->ih+1,
+        WPcrpb(md->iwin_id,x+dx+2,y,md->ih+1,md->ih+1,
                  (short)1,"V","V","",WP_BGND2,WP_FGND,&md->but_id[j]);
       else md->but_id[j] = -1;
 /*

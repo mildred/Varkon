@@ -441,16 +441,25 @@ static char *pidpath();   /* Returnerar path till PID-katalogen */
    else            actalt = -1;
 /*
 ***Låt användaren välja.
-*/   
+*/
 #ifdef UNIX
-   status = WPilse(IGgtts(401),"",pekarr,actalt,nstr,projekt);
+   /*status = WPilse(IGgtts(401),"",pekarr,actalt,nstr,projekt);*/
+/*
+***Test of file  selector.
+*/
+   status = WPfile_selector(IGgtts(401),path,FALSE,"","*.PID",FALSE,projekt);
+   if ( status == 0 )
+    {
+    i = strlen(projekt) - 4;
+    projekt[i] = '\0';
+    }
 #endif
 #ifdef WIN32
    status = msilse(20,20,IGgtts(401),"",pekarr,actalt,nstr,projekt);
 #endif
-  
+
    actfun = oldafu;
- 
+
    if ( status <  0 ) return(status);
 /*
 ***Han kan ha matat in ett PID-namn från tangentbordet så det är

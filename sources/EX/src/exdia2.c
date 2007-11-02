@@ -159,7 +159,7 @@ extern int msilse();
         char  *strarr,
         DBint *nf)
 
-/*      Gör "ls" på en filkatalog. Denna rutin hette 
+/*      Gör "ls" på en filkatalog. Denna rutin hette
  *      tidigare igdir().
  *
  *      In:

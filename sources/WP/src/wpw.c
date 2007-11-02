@@ -630,13 +630,9 @@ WPWIN wpwtab[WTABSIZ];
         short WPwshw(
         DBint w_id)
 
-/*      Visar ett f�nster.
+/*      Show a window.
  *
  *      In: w_id  = Entry i wpwtab.
- *
- *      Ut: Inget.   
- *
- *      Felkod: .
  *
  *      (C)microform ab 6/12/93 J. Kjellander
  *
@@ -761,7 +757,7 @@ WPWIN wpwtab[WTABSIZ];
     MNUALT              *altptr;
 
 /*
-***Kolla att f�nstret finns.
+***Check that the window exists.
 */
     if ( (winptr=WPwgwp((wpw_id)iwin_id)) == NULL )
       {
@@ -814,7 +810,10 @@ evloop:
         }
       goto evloop;
 /*
-***ButtonPress is always associated with a WPRWIN.
+***ButtonPress is associated with a WPGWIN
+***(rubberbanding), WPRWIN (pan/scale/rot) or a
+***slidebar in a WPLWIN or WPIWIN. A ButtonPress
+***in a WPIWIN-slidebar is treated as an event.
 ***Use WPwfpx() to get the WP-id of the window that
 ***created the event. WPwfpx() returns the parent
 ***of the window if it has one or the window itself
@@ -822,9 +821,21 @@ evloop:
 */
       case ButtonPress:
       par_id = WPwfpx(butev->window);
-      if ( par_id < 0 ) goto evloop;
-      if ( wpwtab[par_id].typ == TYP_RWIN )
-        WPbtrw((WPRWIN *)wpwtab[par_id].ptr,butev,&serv_id);
+      if ( (par_id=WPwfpx(butev->window)) >= 0 )
+        {
+        if ( wpwtab[par_id].typ == TYP_RWIN ||
+             wpwtab[par_id].typ == TYP_GWIN ||
+             wpwtab[par_id].typ == TYP_LWIN ) WPwbut(butev,&serv_id);
+
+        else if ( wpwtab[par_id].typ == TYP_IWIN )
+          {
+          if ( WPwbut(butev,&serv_id) )
+            {
+           *subw_id = (DBint)serv_id;
+            return(0);
+            }
+          }
+        }
       goto evloop;
 /*
 ***If it is a ButtonRelease, it may come from a WPLWIN...
@@ -1211,34 +1222,35 @@ evloop:
  *      (C)microform ab 15/12/93 J. Kjellander
  *
  *      1998-03-27 WPRWIN, J.Kjellander
+ *      2007-10-28 Slidebars, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    short    i,j;
-    WPIWIN  *iwinpt;
-    WPLWIN  *lwinpt;
-    WPGWIN  *gwinpt;
-    WPRWIN  *rwinpt;
-    WPBUTT  *buttpt;
-    WPEDIT  *edtptr;
-    WPICON  *icoptr;
+    short   i,j;
+    WPIWIN *iwinpt;
+    WPLWIN *lwinpt;
+    WPGWIN *gwinpt;
+    WPRWIN *rwinpt;
+    WPBUTT *buttpt;
+    WPEDIT *edtptr;
+    WPICON *icoptr;
+    WPSBAR *sbptr;
 
 /*
-***S�k igenom hela wpwtab efter f�nster.
+***Loop through wpwtab.
 */
     for ( i=0; i<WTABSIZ; ++i)
       {
       if ( wpwtab[i].ptr != NULL )
         {
 /*
-***Vilken typ av f�nster �r det ?
+***What kind of window.
 */
         switch ( wpwtab[i].typ )
           {
 /*
-***WPIWIN-f�nster. Kolla f�nstret sj�lvt och 
-***s�k igenom alla sub-f�nster.
+***WPIWIN.
 */
           case TYP_IWIN:
           iwinpt = (WPIWIN *)wpwtab[i].ptr;
@@ -1264,21 +1276,35 @@ evloop:
                 icoptr = (WPICON *)iwinpt->wintab[j].ptr;
                 if ( icoptr->id.x_id == x_id ) return((wpw_id)i);
                 break;
+
+                case TYP_SBAR:
+                sbptr = (WPSBAR *)iwinpt->wintab[j].ptr;
+                if ( sbptr->id.x_id == x_id ) return((wpw_id)i);
+                break;
                 }
               }
             }
           break;
 /*
-***WPLWIN window. Check for hit in window itself
-**and subwindows.
+***WPLWIN window.
 */
           case TYP_LWIN:
           lwinpt = (WPLWIN *)wpwtab[i].ptr;
-          if       ( x_id == lwinpt->id.x_id )          return((wpw_id)i);
-          else if ( lwinpt->psbar_h != NULL &&
-                      x_id == lwinpt->psbar_h->id.x_id ) return(lwinpt->id.w_id);
-          else if ( lwinpt->psbar_v != NULL &&
-                      x_id == lwinpt->psbar_v->id.x_id ) return(lwinpt->id.w_id);
+
+          if ( x_id == lwinpt->id.x_id )
+            {
+            return((wpw_id)i);
+            }
+          else if ( (sbptr=(WPSBAR *)lwinpt->wintab[0].ptr) != NULL &&
+                     x_id == sbptr->id.x_id )
+            {
+            return(lwinpt->id.w_id);
+            }
+          else if ( (sbptr=(WPSBAR *)lwinpt->wintab[1].ptr) != NULL &&
+                     x_id == sbptr->id.x_id )
+            {
+            return(lwinpt->id.w_id);
+            }
           break;
 /*
 ***WPGWIN.
@@ -1287,7 +1313,7 @@ evloop:
           gwinpt = (WPGWIN *)wpwtab[i].ptr;
           if ( x_id == gwinpt->id.x_id ) return((wpw_id)i);
           else if ( x_id == gwinpt->mcw_ptr->messcom_xid ) return((wpw_id)i);
-          else if ( x_id == gwinpt->mcw_ptr->resize_xid ) return((wpw_id)i);
+          else if ( x_id == gwinpt->mcw_ptr->resize_xid )  return((wpw_id)i);
           break;
 /*
 ***WPRWIN.

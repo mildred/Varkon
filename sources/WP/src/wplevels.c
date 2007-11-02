@@ -220,8 +220,7 @@ static void update_names();
 */
    alt_x = numlen + lm;
    alt_y = ly + list_size*(uph+lm) + uph + uph;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,WPstrl(name),lowh,(short)0,
-                            name,name,"",WP_BGND1,WP_FGND,&but_id);
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(name),lowh,name,&but_id);
 
    alt_y += lowh;
    WPmced((wpw_id)iwin_id,alt_x,alt_y,15*WPstrl("A"),lowh,(short)1,
@@ -230,7 +229,7 @@ static void update_names();
    strcpy(edtptr->tt_str,namett);
 
    alt_x += 15*WPstrl("A") + lm;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)1,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)1,
                                apply,apply,"",WP_BGND2,WP_FGND,&nb_id);
    butptr = (WPBUTT *)iwinpt->wintab[nb_id].ptr;
    strcpy(butptr->tt_str,namett);
@@ -239,8 +238,7 @@ static void update_names();
 */
    alt_x  = numlen + lm;
    alt_y += lowh + ly;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,WPstrl(range),lowh,(short)0,
-                            range,range,"",WP_BGND1,WP_FGND,&but_id);
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(range),lowh,range,&but_id);
 
    alt_y += lowh;
    WPmced((wpw_id)iwin_id,alt_x,alt_y,15*WPstrl("A"),lowh,(short)1,
@@ -249,7 +247,7 @@ static void update_names();
    strcpy(edtptr->tt_str,rangett);
 
    alt_x += 15*WPstrl("A") + lm;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)1,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen1,lowh,(short)1,
                                apply,apply,"",WP_BGND2,WP_FGND,&rb_id);
    butptr = (WPBUTT *)iwinpt->wintab[rb_id].ptr;
    strcpy(butptr->tt_str,rangett);
@@ -258,7 +256,7 @@ static void update_names();
 */
    alt_x  = numlen + lm;
    alt_y += lowh + lowh;
-   WPmcbu((wpw_id)iwin_id,alt_x,alt_y,1.2*WPstrl(used),lowh,(short)1,
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,1.2*WPstrl(used),lowh,(short)1,
                            used,used,"",WP_BGND2,WP_FGND,&used_id);
    butptr = (WPBUTT *)iwinpt->wintab[used_id].ptr;
    strcpy(butptr->tt_str,usedtt);
@@ -267,22 +265,19 @@ static void update_names();
 */
    alt_x  = main_dx/8;
    alt_y += lowh + lowh;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y-1,6*main_dx/8,1,(short)0,
-                           "","","",WP_BOTS,WP_BOTS,&but_id);
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,6*main_dx/8,1,(short)0,
-                           "","","",WP_TOPS,WP_TOPS,&but_id);
+   WPcreate_3Dline(iwin_id,alt_x,alt_y,alt_x + 6*main_dx/8,alt_y);
 /*
 ***Close and help.
 */
    alt_x  = main_dx/10;
    alt_y += ly;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)3,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)3,
                            close,close,"",WP_BGND2,WP_FGND,&close_id);
    butptr = (WPBUTT *)iwinpt->wintab[close_id].ptr;
    strcpy(butptr->tt_str,closett);
 
    alt_x  = 9*main_dx/10 - lowlen2;
-   status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)2,
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,lowlen2,lowh,(short)2,
                            help,help,"",WP_BGND2,WP_FGND,&help_id);
    butptr = (WPBUTT *)iwinpt->wintab[help_id].ptr;
    strcpy(butptr->tt_str,helptt);
@@ -312,8 +307,7 @@ start:
      alt_y  = ly + i*(uph+lm);
      sprintf(numstr,"%d",level);
 
-     status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,numlen,uph,(short)0,
-                               numstr,numstr,"",WP_BGND1,WP_FGND,&level_id[i]);
+     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,numlen,uph,numstr,&level_id[i]);
 /*
 ***Name edit.
 */
@@ -327,10 +321,10 @@ start:
 */
      alt_x  += namelen + lm;
      if ( level_status )
-       status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,statlen,uph,(short)1,
+       status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,statlen,uph,(short)1,
                                blank,unblank,"",WP_BGND2,WP_FGND,&blank_id[i]);
      else
-       status = WPmcbu((wpw_id)iwin_id,alt_x,alt_y,statlen,uph,(short)1,
+       status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,statlen,uph,(short)1,
                                unblank,blank,"",WP_BGND2,WP_FGND,&blank_id[i]);
      }
 /*
@@ -347,7 +341,7 @@ start:
      sprintf(scrlstr,"+ %d",nplus);
 
 
-     WPmcbu((wpw_id)iwin_id,alt_x,alt_y,scrllen,uph,(short)2,
+     WPcrpb((wpw_id)iwin_id,alt_x,alt_y,scrllen,uph,(short)2,
                            scrlstr,scrlstr,"",WP_BGND2,WP_FGND,&plus_id);
      butptr = (WPBUTT *)iwinpt->wintab[plus_id].ptr;
      strcpy(butptr->tt_str,plustt);
@@ -359,7 +353,7 @@ start:
      alt_x  = numlen + lm;
      alt_y  = ly + i*(uph+lm);
      sprintf(scrlstr,"- %d",nminus);
-     WPmcbu((wpw_id)iwin_id,alt_x,alt_y,scrllen,uph,(short)2,
+     WPcrpb((wpw_id)iwin_id,alt_x,alt_y,scrllen,uph,(short)2,
                            scrlstr,scrlstr,"",WP_BGND2,WP_FGND,&minus_id);
      butptr = (WPBUTT *)iwinpt->wintab[minus_id].ptr;
      strcpy(butptr->tt_str,minustt);

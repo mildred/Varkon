@@ -69,6 +69,7 @@
  *      (C)2005-08-04 J. Kjellander, Örebro university
  *         2006-01-29 Bug fix Sören Larsson
  *                    (all points did not returne a value) 
+ *         2007-11-02 Removed compiler warnings, J.Kjellander
  *
  ******************************************************!*/
 
@@ -95,7 +96,7 @@
 ***Create local coordinate system with p1 as origin and
 ***p2 as X-axis.
 */
-   if ( status = GEmktf_2p(p1,p2,NULL,&pmat) < 0 ) return(status);
+   if ( (status=GEmktf_2p(p1,p2,NULL,&pmat)) < 0 ) return(status);
 /*
 ***For each position, start with X-check. If inside X-limits,
 ***check for radius inside.
@@ -130,12 +131,11 @@
          if ( pst == NULL )  return(0);
          else               *(pst+i) = 1;
          }
-       else if ( pst > NULL ) *(pst+i) = 0;
+       else if ( pst != NULL ) *(pst+i) = 0;
        }
-     else if ( pst > NULL ) *(pst+i) = 0; /* line added 2006-01-30 sl */
+     else if ( pst != NULL ) *(pst+i) = 0; /* line added 2006-01-30 sl */
      }
     return(0);
-    
   }
 
 /********************************************************/

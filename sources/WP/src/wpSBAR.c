@@ -11,6 +11,7 @@
 *    WPcreate_slidebar(); Create WPSBAR
 *    WPexpose slidebar(); Expose WPSBAR
 *    WPbutton_slidebar(); Button handler (scroll) for WPSBAR
+*    WPdelete_slidebar(); Delete WPSBAR
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -32,32 +33,45 @@
 #include "../../IG/include/IG.h"
 #include "../include/WP.h"
 
+#define CBTHOLD 3   /* Threshold (pixels moved) for callback */
+
 /*!******************************************************/
 
         short    WPcreate_slidebar(
         int      pid,
+        int      sx,
+        int      sy,
+        int      sdx,
+        int      sdy,
+        int      bstart,
+        int      bend,
         int      dir,
         WPSBAR **outptr)
 
 /*      Creates a WPSBAR.
  *
- *      In: pid = Parent window ID.
- *          dir = WP_SBARH or WP_SBARV.
+ *      In: pid    = Parent window ID.
+ *          sx,sy  = Position (relative to parent).
+ *          sdx,dy = Size.
+ *          bstart = Button start position.
+ *          bend   = Button end position.
+ *          dir    = WP_SBARH or WP_SBARV.
  *
  *      Out: *outptr = Pointer to WPSBAR.
  *
  *      Return:  0 = Ok.
  *              -3 = Programming error.
  *
- *      (C)2007-10-18 J. Kjellander
+ *      (C)2007-10-28 J. Kjellander
  *
  ******************************************************!*/
 
   {
    WPWIN               *winptr;
    WPLWIN              *lwinpt;
+   WPIWIN              *iwinpt;
    Window               pxid,sbxid;
-   int                  pdx,pdy,sx,sy,sdx,sdy,wintype;
+   int                  i,sb_id,wintype;
    XSetWindowAttributes xwina;
    unsigned long        xwinm;
    WPSBAR              *sbptr;
@@ -67,7 +81,7 @@
 */
    if ( (winptr=WPwgwp(pid)) == NULL ) return(-3);
 /*
-***Parent geometry etc.
+***Parent X ID.
 */
    wintype = winptr->typ;
 
@@ -76,32 +90,15 @@
      case TYP_LWIN:
      lwinpt = (WPLWIN *)winptr->ptr;
      pxid   = lwinpt->id.x_id;
-     pdx    = lwinpt->geo.dx;
-     pdy    = lwinpt->geo.dy;
+     break;
+
+     case TYP_IWIN:
+     iwinpt = (WPIWIN *)winptr->ptr;
+     pxid   = iwinpt->id.x_id;
      break;
 
      default:
      return(-3);
-     }
-/*
-***Slidebar window position and size relative
-***to parent window.
-*/
-   switch ( dir )
-     {
-     case WP_SBARV:
-     sx  = pdx - WPstrh();
-     sy  = 0;
-     sdx = WPstrh();
-     sdy = pdy - WPstrh();
-     break;
-
-     case WP_SBARH:
-     sx  = 0;
-     sy  = pdy - WPstrh();
-     sdx = pdx - WPstrh();
-     sdy = WPstrh();
-     break;
      }
 /*
 ***Create the X window.
@@ -124,35 +121,45 @@
    if ( (sbptr=(WPSBAR *)v3mall(sizeof(WPSBAR),"WPcreate_slidebar")) == NULL )
       return(-3);
 
-   sbptr->id.w_id = (wpw_id)NULL;
-   sbptr->id.p_id = pid;
-   sbptr->id.x_id = sbxid;
+   sbptr->id.w_id  = (wpw_id)NULL;
+   sbptr->id.p_id  = pid;
+   sbptr->id.x_id  = sbxid;
 
-   sbptr->geo.x =  sx;
-   sbptr->geo.y =  sy;
-   sbptr->geo.dx = sdx;
-   sbptr->geo.dy = sdy;
-   sbptr->geo.bw = 0;
+   sbptr->geo.x    = sx;
+   sbptr->geo.y    = sy;
+   sbptr->geo.dx   = sdx;
+   sbptr->geo.dy   = sdy;
+   sbptr->geo.bw   = 0;
 
-   sbptr->dir = dir;
+   sbptr->butstart = bstart;
+   sbptr->butend   = bend;
+   sbptr->dir      = dir;
+   sbptr->cback    = NULL;
 /*
-***Slidebar button size.
+***Add the slidebar to the parent window.
 */
    switch ( wintype )
      {
      case TYP_LWIN:
-     sbptr->butstart = 0;
-     if ( sbptr->dir == WP_SBARV )
-       {
-       sbptr->butend   = (double)((double)lwinpt->nl_vis/(double)lwinpt->nl_tot)*sdy;
-       if ( (sbptr->butend - sbptr->butstart) < 15 ) sbptr->butend = 15;
-       }
-     else
-       {
-       sbptr->butend = ((double)(sdx - 2*WPstrh())/(double)lwinpt->maxlen)*
-                                (sdx - 2*WPstrh());
-       if ( (sbptr->butend - sbptr->butstart) < 15 ) sbptr->butend = 15;
-       }
+     i = 0;
+     while ( i < WP_LWSMAX  &&  lwinpt->wintab[i].ptr != NULL ) ++i;
+     if ( i == WP_LWSMAX ) return(-3);
+     else sb_id = i;
+
+     lwinpt->wintab[sb_id].typ = TYP_SBAR;
+     lwinpt->wintab[sb_id].ptr = (char *)sbptr;
+     sbptr->id.w_id = sb_id;
+     break;
+
+     case TYP_IWIN:
+     i = 0;
+     while ( i < WP_IWSMAX  &&  iwinpt->wintab[i].ptr != NULL ) ++i;
+     if ( i == WP_IWSMAX ) return(-3);
+     else sb_id = i;
+
+     iwinpt->wintab[sb_id].typ = TYP_SBAR;
+     iwinpt->wintab[sb_id].ptr = (char *)sbptr;
+     sbptr->id.w_id = sb_id;
      break;
      }
 /*
@@ -175,33 +182,17 @@
  *
  *      In: buttptr = C ptr to WPSBAR.
  *
- *      (C)2007-10-18J.Kjellander
+ *      (C)2007-10-28 J.Kjellander
  *
  ******************************************************!*/
 
   {
-   WPWIN  *winptr;
-   WPLWIN *lwinpt;
-   int     pdx,pdy,x1,y1,x2,y2;
-   Window  pxid;
+   int     x1,y1,x2,y2;
 
 /*
 ***Clear window.
 */
    XClearWindow(xdisp,sbptr->id.x_id);
-/*
-***Parent size etc.
-*/
-   winptr=WPwgwp(sbptr->id.p_id);
-
-   if ( winptr->typ == TYP_LWIN )
-     {
-     lwinpt = (WPLWIN *)winptr->ptr;
-     pxid   = lwinpt->id.x_id;
-     pdx    = lwinpt->geo.dx;
-     pdy    = lwinpt->geo.dy;
-     }
-   else return;
 /*
 ***Horizontal or vertical ?
 */
@@ -304,15 +295,17 @@
  *      In: sbptr = C ptr to WPSBAR.
  *          butev = X11 Button event.
  *
- *      (C)2007-10-18 J. Kjellander
+ *      (C)2007-10-28 J. Kjellander
  *
  ******************************************************!*/
 
   {
-   int     butsize,mouse_pos,mouse_offset,sblen,wintype;
+   int     butsize,mouse_pos,cb_pos,mouse_offset,
+           sblen,wintype,diff;
    XEvent  event;
    WPWIN  *winptr;
    WPLWIN *lwinpt;
+   WPIWIN *iwinpt;
 
 /*
 ***Check that it was a ButtonPress.
@@ -333,7 +326,8 @@
 /*
 ***Grab the pointer.
 */
-   XGrabPointer(xdisp,sbptr->id.x_id,FALSE,ButtonReleaseMask | ButtonMotionMask,GrabModeAsync,
+   XGrabPointer(xdisp,sbptr->id.x_id,FALSE,ButtonReleaseMask |
+                ButtonMotionMask,GrabModeAsync,
                 GrabModeAsync,None,None,CurrentTime);
 /*
 ***Slidebar length.
@@ -350,6 +344,11 @@
 */
    mouse_offset = mouse_pos - sbptr->butstart;
 /*
+***Callback will be called when mouse has moved
+***more than CBTHOLD. Initially move = 0.
+*/
+   cb_pos = mouse_pos;
+/*
 ***Ptr to parent window.
 */
    winptr = WPwgwp(sbptr->id.p_id);
@@ -360,10 +359,13 @@
      case TYP_LWIN:
      lwinpt = (WPLWIN *)winptr->ptr;
      break;
-/*
+
+     case TYP_IWIN:
+     iwinpt = (WPIWIN *)winptr->ptr;
+     break;
+
      default:
      return(FALSE);
-*/
      }
 /*
 ***Start of event loop.
@@ -375,8 +377,7 @@ loop:
      {
 /*
 ***Mouse move. Check that mouse is moving within slidebar
-***limits, update the button position and the parent
-***window.
+***limits.
 */
      case MotionNotify:
      if ( sbptr->dir == WP_SBARV ) mouse_pos = event.xmotion.y;
@@ -390,31 +391,45 @@ loop:
        if ( sbptr->dir == WP_SBARV ) mouse_pos = event.xmotion.y;
        else                          mouse_pos = event.xmotion.x;
        }
-
-
 /*
-     while ( XPending(xdisp) )
-       {
-       XNextEvent(xdisp,&event);
-       if ( event.type == MotionNotify )
-         {
-         if ( sbptr->dir == WP_SBARV ) mouse_pos = event.xmotion.y;
-         else                          mouse_pos = event.xmotion.x;
-         }
-       }
+***Update button position.
 */
-
      if ( mouse_pos < mouse_offset )
        mouse_pos = mouse_offset;
      else if ( mouse_pos > sblen - butsize + mouse_offset )
        mouse_pos = sblen - butsize + mouse_offset;
+
      sbptr->butstart = mouse_pos - mouse_offset;
      sbptr->butend   = sbptr->butstart + butsize;
+/*
+***If pointer has moved more than CBTHOLD since last
+***execution of a callback, update parent window by
+***execute callback again.
+*/
+     diff = abs(cb_pos - mouse_pos);
 
      switch ( wintype )
        {
        case TYP_LWIN:
-       WPxplw(lwinpt);
+       if ( sbptr->cback != NULL )
+         {
+         if ( diff > CBTHOLD )
+           {
+           sbptr->cback(lwinpt);
+           cb_pos = mouse_pos;
+           }
+         }
+       break;
+
+       case TYP_IWIN:
+       if ( sbptr->cback != NULL )
+         {
+         if ( diff > CBTHOLD )
+           {
+           sbptr->cback(iwinpt);
+           cb_pos = mouse_pos;
+           }
+         }
        break;
        }
 
@@ -429,7 +444,11 @@ loop:
      switch ( wintype )
        {
        case TYP_LWIN:
-       WPxplw(lwinpt);
+       if ( sbptr->cback != NULL ) sbptr->cback(lwinpt);
+       break;
+
+       case TYP_IWIN:
+       if ( sbptr->cback != NULL ) sbptr->cback(iwinpt);
        break;
        }
 
@@ -440,6 +459,31 @@ loop:
      default:
      goto loop;
      }
+  }
+
+/********************************************************/
+/*!******************************************************/
+
+        short   WPdelete_slidebar(
+        WPSBAR *sbptr)
+
+/*      Delete a WPSBAR.
+ *
+ *      In: sbptr = C ptr to WPSBAR.
+ *
+ *      (C)2007-10-28, J.Kjellander
+ *
+ ******************************************************!*/
+
+  {
+/*
+***Release allocated C memory.
+*/
+   v3free((char *)sbptr,"WPdelete_slidebar");
+/*
+***The end.
+*/
+   return(0);
   }
 
 /********************************************************/

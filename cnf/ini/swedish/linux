@@ -306,10 +306,10 @@ varkon.print.manual.scale:       Skala
 !***och texter i knapparna. Resursen printer styr vilken
 !***skrivare som skall användas.
 !*
-varkon.list.title:             Listning - 
-varkon.list.geometry:          +200+100
-varkon.list.title.jobnam:      True
-varkon.list.printer:           lpr
+varkon.list.title:              Listning - 
+varkon.list.geometry:           +200+100
+varkon.list.title.jobnam:       True
+varkon.list.printer:            lpr
 !*
 !***Listfönster används också för felrapportering.
 !***Följande resurs styr fellistans rubrik.
@@ -319,23 +319,28 @@ varkon.error.title:            -----------------FELRAPPORT-----------------
 !***Inmatningsfönstrets placering och storlek kan inte
 !***påverkas härifrån. Däremot följande texter.
 !*
-varkon.input.title:            Inmatning
-varkon.input.geometry:         +250+200
-varkon.input.page:             Sida
-varkon.input.okey:             Ok
-varkon.input.okey.tooltip:     Acceptera ändringar och verkställ
-varkon.input.reject:           Avbryt
-varkon.input.reject.tooltip:   Avbryt denna funktion utan att verkställa ändringar
-varkon.input.on:               På
-varkon.input.off:              Av
-varkon.input.next:             Bläddra
-varkon.input.help:             Hjälp
-varkon.input.help.tooltip:     Visa manualsidan för denna funktion
-varkon.input.close:            Stäng
-varkon.input.close.tooltip:    Stäng detta fönster
-varkon.input.save:             Spara
-varkon.input.delete:           Ta bort
-varkon.input.apply:            Verkställ
+varkon.input.title:             Inmatning
+varkon.input.geometry:          +250+200
+varkon.input.page:              Sida
+varkon.input.okey:              Ok
+varkon.input.okey.tooltip:      Acceptera ändringar och verkställ
+varkon.input.reject:            Avbryt
+varkon.input.reject.tooltip:    Avbryt denna funktion utan att verkställa ändringar
+varkon.input.on:                På
+varkon.input.off:               Av
+varkon.input.next:              Bläddra
+varkon.input.help:              Hjälp
+varkon.input.help.tooltip:      Visa manualsidan för denna funktion
+varkon.input.close:             Stäng
+varkon.input.close.tooltip:     Stäng detta fönster
+varkon.input.save:              Spara
+varkon.input.delete:            Ta bort
+varkon.input.apply:             Verkställ
+varkon.input.path.tooltip:      Filkatalog att visa
+varkon.input.file:              Filnamn:
+varkon.input.file.tooltip:      Ange ett filnamn och tryck på OK
+varkon.input.filter:            Filter:
+varkon.input.filter.tooltip:    Filer att visa (Unix shell syntax)
 !*
 !***Alternativfönstrets placering och titel.
 !*
@@ -460,9 +465,9 @@ varkon.act_csys_pen:           2
 !*
 !***Systemfärger.
 !*
-varkon.background:               gray84
-varkon.buttonColor:              gray90
-varkon.selectedButtonColor:      gray75
+varkon.background:               gray82
+varkon.buttonColor:              gray88
+varkon.selectedButtonColor:      gray70
 varkon.highlightedButtonColor:   SteelBlue
 varkon.foreground:               Black
 varkon.topShadowColor:           White
