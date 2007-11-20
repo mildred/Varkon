@@ -39,7 +39,7 @@
 #include "../../AN/include/AN.h"
 #include "../../WP/include/WP.h"
 
-extern short    v3mode,modtyp;
+extern short    sysmode,modtyp;
 extern pm_ptr   actmod;
 extern DBseqnum snrmax;
 extern DBptr    lsysla;
@@ -102,7 +102,7 @@ extern struct   ANSYREC sy;
 ***Everything ok, add statement to end of module. In RIT-mode,
 ***reset PM stack pointer.
 */
-    if ( v3mode & BAS_MOD )
+    if ( sysmode & GENERIC )
       {
       if ( pmlmst(actmod, retla) < 0 ) return(erpush("IG5233",typ));
       }
@@ -180,7 +180,7 @@ extern struct   ANSYREC sy;
 ***Everything ok, add procedure call to end of module. In RIT-mode,
 ***reset PM stack pointer.
 */
-    if ( v3mode & BAS_MOD )
+    if ( sysmode & GENERIC )
       {
       if ( pmlmst(actmod, retla) < 0 ) return(erpush("IG5263",typ));
       }
@@ -229,7 +229,7 @@ extern struct   ANSYREC sy;
 /*
 ***Om ritmodulen aktiv, returnera GM:s idmax + 1.
 */
-    if ( v3mode == RIT_MOD )
+    if ( sysmode == EXPLICIT )
       {
       DBget_highest_id(&idmax);
       if ( idmax == -1 ) idmax = 0;
@@ -435,7 +435,7 @@ edit:
 */
     if ( pmamir((DBId *)idmat)  &&  IGialt(175,67,68,FALSE) )
       {
-      status = IGramo();
+      status = IGrun_active();
       if ( status < 0 )
         { 
         pmrgps(lstla,statla);

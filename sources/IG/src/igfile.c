@@ -412,14 +412,11 @@ loop:
         char *tststr)
 
 /*      Jämför 2 strängar varav en med wildcard "*".
- *      Godtyckligt antal stjärnor får förekomma i 
+ *      Godtyckligt antal stjärnor får förekomma i
  *      söksträngen (wc_str) varsomhelst men inte intill
  *      varandra. Om så returneras FALSE.
  *
  *      Om någon av strängarna = "" returneras FALSE.
- *
- *      OBS ! Kopia av denna rutin finns i DBtraverse.c
- *      IGcmpw() används fn. inte !
  *
  *      In: wc_str => Sträng med 0, 1 eller flera stjärnor.
  *          tststr => Sträng utan stjärnor.

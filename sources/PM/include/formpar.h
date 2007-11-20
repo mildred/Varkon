@@ -3,13 +3,14 @@
 *  ===============
 *
 *  This file is part of the Program Module Library.
+*  URL: http://varkon.sourceforge.net
 *
 *  This library is free software; you can redistribute it and/or
 *  modify it under the terms of the GNU Library General Public
 *  License as published by the Free Software Foundation; either
 *  version 2 of the License, or (at your option) any later
 *  version.
-* 
+*
 *  This library is distributed in the hope that it will be
 *  useful, but WITHOUT ANY WARRANTY; without even the implied
 *  warranty of MERCHANTABILITY or FITNESS FOR A PARTICULAR
@@ -20,8 +21,6 @@
 *  Public License along with this library; if not, write to the
 *  Free Software Foundation, Inc., 675 Mass Ave, Cambridge,
 *  MA 02139, USA.
-*
-*  (C) J.Kjellander, Örebro university
 *
 ********************************************************************/
 /*******************************************************************
@@ -49,16 +48,16 @@
 *                  o = conformant array of string = st_o_p
 *                  p = conformant array of int    = st_p_p
 *
-*   Classes:          
+*   Classes:
 *                  e = expresssion = ST_EXPCL
 *                  v = variable = ST_VARCL
 *                  d = default = ST_DEFCL
 *
-*   Geometry:       
+*   Geometry: 2 is not used, all routines are 3 or 5
 *                  5 = 2D and 3D
 *                  2 = only 2D
 *                  3 = only 3D
-*                              
+*
 ********************************************************************/
 /*
 ***Parameter lists for Varkon MBS functions and procedures.
@@ -147,7 +146,7 @@
 */
      "-5:1(re)",
 /*
-***VIONSUR = 20, INV_ON_SUR(ref,p,kod,nï¿½start_uvï¿½
+***VIONSUR = 20, INV_ON_SUR(ref,p,kod,n[,start_uv])
 */
      "v3:re.ve.ie.ie.1(ve)",
 /*
@@ -523,11 +522,11 @@
 /*
 ***VSYMB = 113, SYMB.
 */
-     "-2:se.ve.1(fe<1.0>.1(fe<0.0>))",
+     "-5:se.ve.1(fe<1.0>.1(fe<0.0>))",
 /*
 ***VTRIM = 114, TRIM.
 */
-     "-2:re.ie.re.1(ie<1>)",
+     "-5:re.ie.re.1(ie<1>)",
 /*
 ***VDEL = 115, DEL.
 */
@@ -1195,23 +1194,23 @@
 /*
 ***VGRID = 280, GRID_VIEW(0/1);
 */
-     "-2:ie",
+     "-5:ie",
 /*
 ***VGRIDX = 281, GRIDX_VIEW(x_val);
 */
-     "-2:fe",
+     "-5:fe",
 /*
 ***VGRIDY = 282, GRIDY_VIEW(y_val);
 */
-     "-2:fe",
+     "-5:fe",
 /*
 ***VGRIDDX = 283, GRIDDX_VIEW(dx_val);
 */
-     "-2:fe",
+     "-5:fe",
 /*
 ***VGRIDDY = 284, GRIDDY_VIEW(dy_val);
 */
-     "-2:fe",
+     "-5:fe",
 /*
 ***VSRTGM = 285, SET_ROOT_GM([id]);
 */

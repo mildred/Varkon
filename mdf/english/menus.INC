@@ -1,18 +1,16 @@
+! English menus for Varkon 2.0
 
-! Varkon standard menues
-! Latest update for version 1.19A
-! Johan Kjellander
-!
-m2  = "MAIN MENU 2D"
+m1  = "VARKON-DRAFTING"
       "file",m5
-      "create",m13
-      "edit",m15
+      "create",m11
+      "edit",m49
       "view",m67
+      "delete",m80
       "analysis",m75
       "settings",m9
       "help",m22;
 
-m3  = "MAIN MENU 3D"
+m2  = "VARKON-GENERIC"
       "file",m5
       "create",m11
       "edit",m15
@@ -21,31 +19,10 @@ m3  = "MAIN MENU 3D"
       "settings",m9
       "help",m22;
 
-m4  = "DRAFTING"
-      "file",m6
-      "create",m13
-      "edit",m49
-      "view",m67
-      "delete",m80
-      "analysis",m75
-      "settings",m9
-      "help",m22;
-
 m5  = "FILE"
       "new/open",m47
       "save",f175
       "save as",m45
-      "export",m24
-      "delete job",f184
-      "macro",f152
-      "shell",f125
-      "exit",f123
-      "save/exit",f122;
-
-m6  = "FILE"
-      "new/open",m47
-      "save",f175
-      "save as",m48
       "export",m24
       "delete job",f184
       "macro",f152
@@ -76,13 +53,13 @@ m11 = "CREATE"
       "arc",m55
       "curve",m60
       "surface",m12
-      "coordsys",m26
-      "text",f50
+      "coordsys",m25
+      "text",m23
       "dimension",m50
       "tcopy",m10
       "group",f55
       "part",f25
-      "import",m43;
+      "import",m39;
 
 m12 = "SURFACE"
       "bplane",f26
@@ -96,29 +73,6 @@ m12 = "SURFACE"
       "trimmed",f234
       "composite",f236
       "import",f237;
-
-m13 = "CREATE"
-      "point",f20
-      "line",m41
-      "arc",m56
-      "curve",m61
-      "text",m23
-      "dimension",m50
-      "coordsys",m25
-      "group",f55
-      "part",f25
-      "import",m39;
-
-m14 = "ATTRIBUTE"
-      "pen",f96
-      "level",f90
-      "linewidth",f186
-      "lines",m42
-      "arcs",m57
-      "curves",m21
-      "text",m51
-      "dimensions",m31
-      "hatching",m32;
 
 m15 = "EDIT"
       "pen",f11
@@ -164,12 +118,6 @@ m20 = "POINT"
       "free",f19
       "projected",f21;
 
-m21 = "CURVES"
-      "solid",f164
-      "dashed",f165
-      "centre",f166
-      "dash length",f167;
-
 m22 = "HELP"
       "about Varkon",M184
       "help",f153;
@@ -192,37 +140,22 @@ m25 = "COORDSYS"
       "3 pos",f105
       "pos/angles",f9;
 
-m26 = "COORD. SYSTEM"
-      "3 pos",f104
-      "pos/angles",f14;
-
 m30 = "LINEAR DIMENSION"
       "horizontal",f30
       "vertical ",f31
       "parallell",f32;
-
-m31 = "DIMENSIONS"
-      "text size",f80
-      "arrow size",f81
-      "decimals",f82
-      "auto",f83
-      "no auto",f84;
-
-m32 = "HATCHING"
-      "solid",f85
-      "dashed",f86
-      "centre",f87
-      "dash length",f88;
 
 m33 = "DIAMETER DIMENSION"
       "horizontal",f33
       "vertical ",f34
       "parallell",f35;
 
-m39 = "IMPORT-2D"
-      "iges",p1624
-      "dxf",p388
-      "plotfile",f145;
+m39 = "IMPORT"
+      "IGES",p1624
+      "DXF-2D",p388
+      "DXF-3D",p389
+      "STL",p1623
+      "PLT",f145;
 
 m40 = "LINE"
       "2f two pos",f22
@@ -232,25 +165,6 @@ m40 = "LINE"
       "pa pos/angle ",f24
       "pt pos/tan",f28
       "t  tan/tan",f29;
-
-m41 = "LINE"
-      "2  two pos",f40
-      "pl parallell",f42
-      "pr perpendicular",f39
-      "pa pos/angle",f43
-      "pt pos/tan",f44
-      "2t tan/tan",f45;
-
-m42 = "LINES"
-      "solid",f46
-      "dashed",f47
-      "centre",f48
-      "dash length",f49;
-
-m43 = "IMPORT-3D"
-      "iges",p1624
-      "dxf",p389
-      "stl",p1623;
 
 m45 = "SAVE AS"
       "all files",f201
@@ -262,11 +176,6 @@ m45 = "SAVE AS"
 m47 = "NEW/OPEN"
       "save first",f124
       "don't save",f120;
-
-m48 = "SAVE AS"
-      "all files",f201
-      "JOB-file",f119
-      "RIT-file",f121;
 
 m49 = "EDIT"
       "edit",m81
@@ -284,32 +193,12 @@ m50 = "DIMENSION"
       "angle",f37
       "hatch",f38;
 
-m51 = "TEXT"
-      "height",f51
-      "width",f52
-      "slant",f53
-      "font",f172
-      "tpmode",f227;
-
 m55 = "ARC"
       "1 pos/angles",f56
       "2 pos/radius",f57
       "3 pos",f58
       "offset",f59
       "fillet",f65;
-
-m56 = "ARC"
-      "1 pos/angles",f60
-      "2 pos/radius",f61
-      "3 pos",f62
-      "offset",f63
-      "fillet",f64;
-
-m57 = "ARCS"
-      "solid",f66
-      "dashed"  ,f67
-      "centre",f68
-      "dash length",f69;
 
 m60 = "CURVES"
       "spline",m89
@@ -320,14 +209,6 @@ m60 = "CURVES"
       "isoparam",f230
       "intersect",f183
       "silhouette",f233
-      "approx",f231;
-
-m61 = "CURVES"
-      "spline",m89
-      "conic",f161
-      "offset",f163
-      "composite",f75
-      "trimmed",f232
       "approx",f231;
 
 m62 = "HIDE"
@@ -350,10 +231,6 @@ m67 = "VIEW"
       "OpenGL window",f200
       "hide",m62;
 
-m73 = "POSITION MENU"
-      "on",f118
-      "off",f117;
-
 m75 = "ANALYSIS"
       "formula",M393
       "geometry",m76 
@@ -372,8 +249,8 @@ m76 = "GEOMETRY"
       "cgrav",M417;
 
 m77 = "SYSTEM"
-      "gm-data",f140
-      "pm-data",f139;
+      "DB-data",f140
+      "PM-data",f139;
 
 m79 = "PART/GROUP"
       "one part",M379

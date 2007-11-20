@@ -4,7 +4,7 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*  IGangm();    List GM-metadata                                   */
+/*  IGandb();    List DB-metadata                                   */
 /*  IGanpm();    List PM-metadata                                   */
 /*  IGlitb();    List IDTAB                                         */
 /*  IGrgmp();    Reads DB-pointer                                   */
@@ -40,12 +40,13 @@
 extern V3MDAT   sydata;
 extern V3MSIZ   sysize;
 extern DBseqnum huvidm;
+extern int      sysmode;
 
 /*!******************************************************/
 
-       short IGangm()
+       short IGandb()
 
-/*      Listar GM-metadata.
+/*      Listar DB-metadata.
  *
  *      In: Inget.
  *
@@ -307,12 +308,12 @@ extern DBseqnum huvidm;
 /*
 ***Serienummer.
 */
-    if ( sydata.opmode == BAS_MOD )
+    if ( sysmode == GENERIC )
       {
       sprintf(buf,"VARKON-3D/B %d.%d%c Serienummer #%d",sydata.vernr,
             sydata.revnr,sydata.level,sydata.sernr);
       }
-    else if ( sydata.opmode == RIT_MOD )
+    else if ( sysmode == EXPLICIT )
       {
       sprintf(buf,"VARKON-3D/R %d.%d%c Serienummer #%d",sydata.vernr,
             sydata.revnr,sydata.level,sydata.sernr);
@@ -337,7 +338,7 @@ extern DBseqnum huvidm;
 /*
 ***Modul-data.
 */
-    if ( sydata.opmode == BAS_MOD )
+    if ( sysmode == GENERIC )
       {
       pmrmod(&mhed);
       sprintf(buf,"Modulens serienummer : %d",mhed.system.sernr);

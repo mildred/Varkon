@@ -144,9 +144,9 @@ short WPload_WPRWIN(FILE *jf);
 ***wpfont.c
 */
 short         WPfini();
-short         WPgfnr(char *fntnam);
-XFontStruct  *WPgfnt(short fntnum);
-short         WPsfnt(short fntnum);
+int           WPgfnr(char *fntnam);
+XFontStruct  *WPgfnt(int fntnum);
+void          WPsfnt(int fntnum);
 int           WPstrl(char *fstring);
 short         WPgtsl(char *str, char *font, int *plen);
 int           WPstrh();
@@ -155,7 +155,6 @@ int           WPftpy(int dy);
 short         WPwstr(Window wid, int x, int y, char *s);
 short         WPdivs(char text[], int  maxpix, int *tdx, int *tdy,
                      char str1[], char str2[]);
-short         WPd3db(char *winptr, int wintyp);
 
 /*
 ***wpwait.c
@@ -645,8 +644,11 @@ short WPprint_dialogue(DBint grw_id);
 ***wpDECRN.c
 */
 short WPcreate_3Dline(int pid, short x1, short y1, short x2, short y2);
+short WPcreate_fillrect(int pid, short x, short y,
+                        short dx, short dy, short color);
 bool  WPexpose_decoration(WPDECRN *dcrptr);
 short WPdelete_decoration(WPDECRN *dcrptr);
+short WPd3db(char *winptr, int wintyp);
 
 /*
 ***wpfsect.c

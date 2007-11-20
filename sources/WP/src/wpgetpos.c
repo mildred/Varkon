@@ -13,7 +13,7 @@
 *    WPgmc3();   Returns 3D-model coordinate
 *    WPgtsc();   Returns screen coordinate in pixels
 *    WPgtsw();   Returns rubberband rectangle
-*    WPneww();   Interactive creation of new window
+*    WPneww();   Interactive creation of new WPGWIN
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public

@@ -34,8 +34,6 @@
 #include "../../IG/include/IG.h"
 #include "../../EX/include/EX.h"
 
-extern short  modtyp;
-
 extern V2REFVA *geop_id;    /* ingeop.c *identp  Storhetens ID */
 extern PMPARVA *geop_pv;    /* ingeop.c *pv      Access structure for MBS routines */
 extern short    geop_pc;    /* ingeop.c parcount Number of actual parameters */

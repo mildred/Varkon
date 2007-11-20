@@ -48,8 +48,6 @@
 #include "../include/indef.h"
 #include <ctype.h>
 
-extern short modtyp;
-
 /*
 ***standard types
 */

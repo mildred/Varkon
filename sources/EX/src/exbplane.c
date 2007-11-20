@@ -35,7 +35,6 @@
 #include <string.h>
 
 extern char    jobdir[];
-extern char    asydir[];
 extern DBptr   lsysla;
 extern DBTmat *lsyspk;
 extern DBTmat  lklsyi;

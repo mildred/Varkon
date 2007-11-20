@@ -69,7 +69,7 @@ V3MDAT  sydata =
              0,0,0,0,0,
              " ",        /* Sysname */
              " ",        /* Dummy */
-             BAS_MOD,    /* opmode */
+             GENERIC,    /* opmode */
              0,          /* Module protection code */
              " ",        /* Release */
              " ",        /* Version */

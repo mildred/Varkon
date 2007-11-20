@@ -33,7 +33,7 @@
 #include "../include/WP.h"
 #include <string.h>
 
-extern char jobdir[],jobnam[],mbsdir[],mbodir[];
+extern char jobdir[],jobnam[];
 
 /*
 ***For some reason popen and pclose dont seem to be defined
@@ -113,7 +113,7 @@ loop:
        IGfdel(tmpnam);
        if ( WPgrst("varkon.mbsedit.autoexec",buf)  &&
             strcmp(buf,"True") == 0  &&
-            IGramo() < 0 ) errmes();
+            IGrun_active() < 0 ) errmes();
        }
 /*
 ***Compile errors.
@@ -145,21 +145,23 @@ loop:
  *      (C)microform ab 1996-02-06 J. Kjellander
  *
  *      1998-04-01 Ny WPilse(), J.Kjellander
- *      2007-05-27 1.19 J.Kjellander
+ *      2007-11-20 2.0 J.Kjellander
  *
  ******************************************************!*/
 
  {
    short status;
-   char  mesbuf[V3STRLEN];
+   char  mesbuf[V3STRLEN],libdir[V3PTHLEN];
    char *pekarr[1000],strarr[20000];
    int   nstr;
 
    static char namn[JNLGTH+5] = "";
 /*
-***Create file list. mbsdir/XXX.MBS
+***Create file list. jobdir/lib/XXX.MBS
 */
-   IGdir(mbsdir,MBSEXT,1000,20000,pekarr,strarr,&nstr);
+   strcpy(libdir,jobdir);
+   strcat(libdir,"lib/");
+   IGdir(libdir,MBSEXT,1000,20000,pekarr,strarr,&nstr);
 /*
 ***Let user select.
 */
@@ -168,7 +170,7 @@ loop:
 /*
 ***Edit.
 */
-   edit(mbsdir,namn);
+   edit(libdir,namn);
 /*
 ***Compile.
 */
@@ -176,7 +178,7 @@ loop:
 
    if ( WPialt(mesbuf,IGgtts(67),IGgtts(68),FALSE) )
      {
-     if ( comp(mbsdir,namn,mbodir) )
+     if ( comp(libdir,namn,NULL) )
        {
        WPexla(FALSE);
        clheap();
@@ -204,19 +206,21 @@ loop:
  *
  *      (C)microform ab 1996-02-06 J. Kjellander
  *
- *      2007-05-27 1.19 J.Kjellander
+ *      2007-11-20 2.0 J.Kjellander
  *
  ******************************************************!*/
 
  {
-   char  mesbuf[V3STRLEN];
+   char  mesbuf[V3STRLEN],libdir[V3PTHLEN];
    char *pekarr[1000],strarr[20000];
    int   i,nstr,errant;
 
 /*
-***Create file list. mbsdir/XXX.MBS
+***Create file list. jobdir/lib/XXX.MBS
 */
-   IGdir(mbsdir,MBSEXT,1000,20000,pekarr,strarr,&nstr);
+   strcpy(libdir,jobdir);
+   strcat(libdir,"lib/");
+   IGdir(libdir,MBSEXT,1000,20000,pekarr,strarr,&nstr);
 /*
 ***Compile all.
 */
@@ -224,7 +228,7 @@ loop:
 
    for ( i=0; i<nstr; ++i )
      {
-     if ( comp(mbsdir,pekarr[i],mbodir) )
+     if ( comp(libdir,pekarr[i],NULL) )
        {
        WPexla(FALSE);
        sprintf(mesbuf,"%s%s %s",pekarr[i],MBSEXT,IGgtts(466));

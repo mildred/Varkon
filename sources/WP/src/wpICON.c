@@ -54,7 +54,7 @@
  *
  *      In: pid   = Förälder.
  *          x     = Läge i X-led.
- *          y     = Läge i Y-led.   
+ *          y     = Läge i Y-led.
  *          bw    = Ramens bredd.
  *          fnam  = Ikon-fil.
  *          cb    = Bakgrundsfärg.
@@ -261,7 +261,7 @@
  *
  *      In: px_id  = Parent window X-id.
  *          x      = X-position.
- *          y      = Y-position.   
+ *          y      = Y-position.
  *          fnam   = Pixmap file.
  *          cb     = Not used.
  *          cf     = Not used.

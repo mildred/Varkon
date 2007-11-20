@@ -46,8 +46,6 @@
 #include "../include/IG.h"
 #include "../../WP/include/WP.h"
 
-extern short modtyp;
-
 static short curpm(char *typ, bool tang);
 static short cucpm(char *typ);
 

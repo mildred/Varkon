@@ -3,19 +3,12 @@
 #
 # varkon
 #
-# Startscript fï¿½r VARKON.
-#
-# Parametrar = inga eller en (projekt) eller tvï¿½ (projekt och jobb)
-#
-# (C)ï¿½rebro universitet 2004
-#
-# 2006-09-22 Sï¿½ren Larsson, ï¿½revbo universitet
-#            Relativ sï¿½kvï¿½g till VARKON_ROOT 
+# Startscript för svensk version av VARKON 2.0.
 #
 #######################################################
 
-# VARKON_ROOT ï¿½r systemets huvudkatalog. Om resten
-# av systemet ï¿½r installerat under denna pï¿½ normalt
+# VARKON_ROOT är systemets huvudkatalog. Om resten
+# av systemet är installerat under denna pï¿½ normalt
 # vis rï¿½cker det att ï¿½ndra VARKON_ROOT fï¿½r att kunna
 # starta. ï¿½vriga environmentparametrar ï¿½r kopplade till
 # VARKON_ROOT men kan fï¿½rstï¿½s ï¿½ndras om sï¿½ ï¿½nskas.
@@ -25,16 +18,13 @@ VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`
 # VARKON_ROOT=/home/username/varkon/varkon_1.99X
 export VARKON_ROOT
 
-# Svenska menyfiler.
-VARKON_MDF=$VARKON_ROOT/mdf/swedish
-export VARKON_MDF
+# Default jobkatalog.
+VARKON_DJD=$VARKON_ROOT/job
+export VARKON_DJD
 
-# PID-filer, hï¿½r ï¿½r det vanligt att man istï¿½llet vï¿½ljer
-# tex. $HOME/pid sï¿½ att gamla projekt blir kvar nï¿½r en
-# ny VARKON-version installeras. Alla anvï¿½ndare mï¿½ste
-# ha bï¿½de skriv- och lï¿½s-rï¿½ttigheter till denna katalog.
-VARKON_PID=$VARKON_ROOT/pid
-export VARKON_PID
+# Svenska menyfiler.
+VARKON_MDF=$VARKON_ROOT/mdf/swedish/x11.MDF
+export VARKON_MDF
 
 # Felmeddelandefiler
 VARKON_ERM=$VARKON_ROOT/erm
@@ -113,6 +103,6 @@ $VARKON_BIN/xvarkon -GLOBAL -i$VARKON_INI/linux
 # i den egna filen. Det ï¿½r det sist laddade som gï¿½ller. ï¿½ndra inte
 # i standardfilen. 
 
-# Vill man kï¿½ra systemet i ritnings-mode lï¿½gger man till "-r" pï¿½
+# Vill man köra systemet i ritnings-mode lägger man till "-EXPLICIT" på
 # kommandoraden.
-# $VARKON_BIN/xvarkon -r $1 $2 -i$VARKON_INI/linux
+# $VARKON_BIN/xvarkon -EXPLICIT $1 $2 -i$VARKON_INI/linux

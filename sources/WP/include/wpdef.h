@@ -51,13 +51,20 @@
 #define WP_SPENS 9               /* Number of system pens */
 #define WP_BGND1 WP_NPENS        /* Background for WPIWIN's, varkon.background */
 #define WP_BGND2 WP_NPENS+1      /* Background for WPBUTT's, varkon.buttonColor */
-#define WP_BGND3 WP_NPENS+2      /* Background for "selected" WPBUTT's, varkon.selectedButtonColor */
+#define WP_BGND3 WP_NPENS+2      /* Selected WPBUTT, varkon.selectedButtonColor */
 #define WP_FGND  WP_NPENS+3      /* Foreground, varkon.foreground */
 #define WP_TOPS  WP_NPENS+4      /* Top shadow, varkon.topShadowColor */
 #define WP_BOTS  WP_NPENS+5      /* Bottom shadow, varkon.bottomShadowColor */
 #define WP_NOTI  WP_NPENS+6      /* Button highlight, varkon.highlightedButtonColor */
 #define WP_TTIP  WP_NPENS+7      /* Tooltip background, varkon.tooltipColor */
 #define WP_ENTHG WP_NPENS+8      /* Entity highlight, varkon.highlightedEntityColor */
+
+/*
+***Text fonts.
+*/
+#define WP_FNTSMALL    0         /* Small text font */
+#define WP_FNTNORMAL   1         /* Normal size text font */
+#define WP_FNTBIG      2         /* Large size font for headlines etc. */
 
 /*
 ***Rubberband modes.
@@ -241,7 +248,8 @@ struct
 /*
 ***A decoration.
 */
-#define    LINE3DDECRN  1      /* 3D line */
+#define    LINE3DDECRN   1     /* 3D line */
+#define    FILLRECTDECRN 2     /* A filled rectangle */
 
 typedef struct
 {
@@ -250,7 +258,8 @@ int        type;               /* Type of decoration */
 int        x1;                 /* Start position */
 int        y1;
 int        x2;                 /* End position */
-int        y2; 
+int        y2;
+short      color;              /* Fill color */
 } WPDECRN;
 
 /*
@@ -268,7 +277,7 @@ WPWID      id;                 /* ID */
 WPWGEO     geo;                /* Geometry */
 WPWCOL     color;              /* Colors */
 int        type;               /* Button type */
-short      font;               /* Font number */
+int        font;               /* Font number */
 char       stron[81];          /* Text ON */
 char       stroff[81];         /* Text OFF */
 bool       status;             /* Logical state, default = FALSE */

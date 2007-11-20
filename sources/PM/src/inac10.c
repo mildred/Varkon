@@ -536,35 +536,10 @@ evaluat LT ( NOT GE )
 */
             if ( valp->lit_type == C_REF_VA )
               {
-#ifdef DEBUG
-   if ( dbglev(PMPAC) == 2 )
-     {
-     fprintf(dbgfil(PMPAC),"***inevex-C_REF_VA***\n");
-     fprintf(dbgfil(PMPAC),"valp->lit.ref_va[0].p_nextre=%d\n",
-                                      valp->lit.ref_va[0].p_nextre);
-     fprintf(dbgfil(PMPAC),"valp->lit.ref_va[0].seq_val=%d\n",
-                                      valp->lit.ref_va[0].seq_val);
-     fprintf(dbgfil(PMPAC),"valp->lit.ref_va[0].ord_val=%d\n\n",
-                                      valp->lit.ref_va[0].ord_val);
-     fflush(dbgfil(PMPAC));
-     }
-#endif
               k = 0;
               while ( valp->lit.ref_va[k].p_nextre != NULL )
                 {
                 ++k;
-#ifdef DEBUG
-   if ( dbglev(PMPAC) == 2 )
-     {
-     fprintf(dbgfil(PMPAC),"valp->lit.ref_va[%d].p_nextre=%d\n",
-                                      k,valp->lit.ref_va[k].p_nextre);
-     fprintf(dbgfil(PMPAC),"valp->lit.ref_va[%d].seq_val=%d\n",
-                                      k,valp->lit.ref_va[k].seq_val);
-     fprintf(dbgfil(PMPAC),"valp->lit.ref_va[%d].ord_val=%d\n",
-                                      k,valp->lit.ref_va[k].ord_val);
-     fflush(dbgfil(PMPAC));
-     }
-#endif
 /*
 ***I samband med byte av OS till ODT 3.0 slutade följande rad att 
 ***fungera.

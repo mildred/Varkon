@@ -8,15 +8,17 @@
 !***************************************************************
 
 !*
-!***Text font for menus etc.
+!***Text fonts.
 !*
-!varkon.font:                    fixed
-!varkon.font:                   6x13
-!varkon.font:                   7x13
-varkon.font:                   9x15
-!varkon.font: -adobe-times-medium-r-normal--18-180-75-75-p-94-iso8859-1
-!varkon.font:                   10x20
-!varkon.font:                   12x24
+varkon.font.normal:             9x15
+!varkon.font.big:                10x20
+
+!varkon.font.normal:            fixed
+!varkon.font.small:            6x13
+varkon.font.small:            lucidasans-bold-10
+!varkon.font.normal:            7x13
+!varkon.font.normal:            12x24
+varkon.font.big: -adobe-times-medium-r-normal--18-180-75-75-p-94-iso8859-1
 !*
 !***Resources for f216, "Edit active module in MBS format".
 !***Default editor is vi in a xterm window which should work
@@ -49,7 +51,7 @@ varkon.margin_up  :             32
 !*
 !***Contents of the graphical window titlebar.
 !*
-varkon.title.project:           True
+varkon.title:                   True
 varkon.title.jobname:           True
 varkon.title.viewname:          True
 !*
@@ -139,10 +141,11 @@ varkon.rwin.icon_6.tooltip:     Blank, unblank or list levels
 !*
 !***Resources for the system mode dialogue.
 !*
-varkon.mode.explicit:            Drafting mode
-varkon.mode.explicit.tooltip:    Edit or create drawings (RES-files)
-varkon.mode.generic:             Programming mode
-varkon.mode.generic.tooltip:     Edit or create modules (MBO-files)
+varkon.mode.what:               What do you want to do now ?
+varkon.mode.explicit:            - Edit or create a drawing (RES-file)
+varkon.mode.generic:             - Edit or create a module (MBO-file)
+varkon.mode.learnmore:           - Learn more about VARKON
+varkon.mode.exit:                - Exit
 !*
 !***Resources for the partname dialogue.
 !*
@@ -178,7 +181,7 @@ varkon.menu.button_9.text:       grid
 varkon.menu.button_9.tooltip:    Use grid for position input
 varkon.menu.level.tooltip:       Set the currently active level number
 varkon.menu.pen.tooltip:         Set the currently active pen or color number
-varkon.menu.width.tooltip:       Set the currently active linewidth (for all entities)
+varkon.menu.width.tooltip:       Set the currently active linewidth
 varkon.menu.csy.tooltip:         Set the currently active coordinate system
 varkon.menu.csy.title:           Activate csys
 varkon.menu.local.tooltip:       Pick a coordinate system to activate, MODE_LOCAL(#n); in MBS
@@ -253,7 +256,7 @@ varkon.input.close.tooltip:     Close this window
 varkon.input.save:              Save
 varkon.input.delete:            Delete
 varkon.input.apply:             Apply
-varkon.input.path.tooltip:      Path is not yet implemented
+varkon.input.up.tooltip:        Display files in parent directory
 varkon.input.file:              Filename:
 varkon.input.file.tooltip:      Enter filename and select OK
 varkon.input.filter:            Filter:

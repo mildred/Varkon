@@ -412,7 +412,7 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***Colors.
 */
-   XSetBackground(xdisp,xgc,WPgcol(WP_BGND1));
+   XSetBackground(xdisp,xgc,WPgcol(0)); /*WP_BGND1));*/
    XSetForeground(xdisp,xgc,WPgcol(1));
 /*
 ***Current WPLWIN size.
@@ -848,10 +848,10 @@ static short savelw(WPLWIN *lwinpt);
 ***Deallocate memory for subwindows.
 */
    sbptr = (WPSBAR *)lwinpt->wintab[0].ptr;
-   if ( sbptr != NULL ) v3free((char *)sbptr,"WPdllw");
+   if ( sbptr != NULL ) WPdelete_slidebar(sbptr);
 
    sbptr = (WPSBAR *)lwinpt->wintab[1].ptr;
-   if ( sbptr != NULL ) v3free((char *)sbptr,"WPdllw");
+   if ( sbptr != NULL ) WPdelete_slidebar(sbptr);
 /*
 ***Free memory for the WPLWIN itself.
 */
@@ -900,7 +900,7 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***Attributes.
 */
-    xwina.background_pixel = WPgcol(WP_BGND1);
+    xwina.background_pixel = WPgcol(0); /*WP_BGND1);*/
     xwina.border_pixel = BlackPixel( xdisp, xscr );
     xwina.override_redirect = False;
     xwina.save_under = False;

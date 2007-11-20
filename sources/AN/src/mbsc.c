@@ -60,7 +60,7 @@ V3MDAT sydata = {                  /* System constants */
                 0, 0, 0, 0, 0,
                 "",                /* Sysname          */
                 "",                /* Not used         */
-                BAS_MOD,           /* opmode           */
+                GENERIC,           /* opmode           */
                 0,                 /* Skyddskod MN860610 */
                 "",                /* Release          */
                 "",                /* Version          */

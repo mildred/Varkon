@@ -39,7 +39,7 @@
 #include <string.h>
 
 extern V3MDAT  sydata;
-extern short   modtyp,modatt;
+extern int     sysmode;
 extern int     posmode;
 extern bool    relpos;
 extern char    jobnam[],jobdir[],tmprit[],actcnm[],svnversion[];
@@ -436,7 +436,7 @@ werror:
 /*
 ***Om vi kör bas-moulen heter pagefilen någonting.RES.
 */
-    if ( sydata.opmode == BAS_MOD )
+    if ( sysmode == GENERIC )
       {
       strcpy(resfil,jobdir);
       strcat(resfil,jobnam);

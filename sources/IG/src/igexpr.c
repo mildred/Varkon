@@ -48,7 +48,7 @@
 #include <math.h>
 
 extern bool    tmpref;
-extern short   v3mode,modtyp;
+extern short   sysmode,modtyp;
 extern int     posmode;
 extern bool    relpos;
 extern MNUALT  smbind[];
@@ -748,7 +748,7 @@ start:
 ***Relative or ordinary position ?
 */
     if ( relpos ) status = gnprel(pexnpt);
-    else         status = gnpany(pexnpt);
+    else          status = gnpany(pexnpt);
 /*
 ***Clear the promt.
 */
@@ -979,7 +979,7 @@ static short gnpabs(pm_ptr *pexnpt)
 ***Main prompt.
 */
     if ( relpos ) pnr = 66;
-    else         pnr = 326;
+    else          pnr = 326;
 /*
 ***Get string values.
 */
@@ -1325,7 +1325,7 @@ static short gnpint(pm_ptr *pexnpt)
 /*
 ***Temp ref.
 */
-    if ( tmpref || (v3mode == RIT_MOD) )
+    if ( tmpref || (sysmode == EXPLICIT) )
       {
       if ( (status=igpint(&posvec)) != 0 ) goto exit;
 

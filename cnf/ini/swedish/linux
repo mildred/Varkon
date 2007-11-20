@@ -46,16 +46,14 @@
 !**************************************************************
 
 !*
-!***varkon.font är namnet på den font som skall användas
-!***av VARKON i menyer, inmatningsfönster, listfönster
-!***osv. och som default font i fönster skapade i MBS.
+!***Fonter.
 !*
-!varkon.font:                   fixed
-!varkon.font:                   6x13
-!varkon.font:                   7x13
-varkon.font:                   9x15
-!varkon.font:                   10x20
-!varkon.font:                   12x24
+!varkon.font.normal:             fixed
+!varkon.font.small:              6x13
+varkon.font.small:              7x13
+varkon.font.normal:             9x15
+varkon.font.big:                10x20
+!varkon.font.big:                12x24
 !*
 !***varkon.mbsedit är resurser för funktionen "editera aktiv
 !***modul", f216. När funktionen aktiveras skapar VARKON ett
@@ -64,21 +62,29 @@ varkon.font:                   9x15
 !***andra subprocess för kompilering och slutligen, om autoexec
 !***är satt till True, körs aktiv modul om automatiskt.
 !*
-varkon.mbsedit.emulator:          xterm -title MBS-Edit -e
-varkon.mbsedit.editor:            vi
+varkon.mbsedit.emulator:        xterm -title MBS-Edit -e
+varkon.mbsedit.editor:          vi
 !varkon.mbsedit.emulator:
-!varkon.mbsedit.editor:           kwrite
-varkon.mbsedit.compiler:          mbsc
-varkon.mbsedit.autocompile:       True
-varkon.mbsedit.autoexec:          True
+!varkon.mbsedit.editor:          kwrite
+varkon.mbsedit.compiler:        mbsc
+varkon.mbsedit.autocompile:     True
+varkon.mbsedit.autoexec:        True
 !*
 !***varkon.html_viewer används av hjälpsystemet för att starta en
 !***HTML-browser. Om denna resurs är definierad skickar VARKON
 !***aktuell hjälpfil till den angivna browsern. Om den inte är
 !***definierad listar VARKON filen i ett listfönster.
 !*
-!varkon.html_viewer:               konqueror
-!varkon.html_viewer:               netscape
+!varkon.html_viewer:             konqueror
+!varkon.html_viewer:             netscape
+!*
+!***Texter för mode-dialogen.
+!*
+varkon.mode.what:               Vad vill du göra nu ?
+varkon.mode.explicit:           - Ändra eller skapa en ritning (RES-fil)
+varkon.mode.generic:            - Ändra eller skapa en modul (MBO-fil)
+varkon.mode.learnmore:          - Veta mer om VARKON
+varkon.mode.exit:               - Avsluta
 !*
 !***varkon.grawin_1.geometry styr det grafiska huvud-fönstrets
 !***storlek och placering på vanligt X-Windows maner.
@@ -98,21 +104,19 @@ varkon.grawin_1.geometry:       700x500+200
 !***Grafiska fönster kan förses med en osynlig marginal så
 !***att plats reserveras för tryckknappar/ikoner om man vill.
 !*
-varkon.margin_up:                32
+varkon.margin_up:               32
 !varkon.margin_down:             22
 !varkon.margin_left:             70
 !varkon.margin_right:            50
 !*
 !***Med varkon.title kan man ändra den text som skrivs ut i det grafiska
-!***huvud-fönstrets ram. Om varkon.title.project är True skrivs aktuellt
-!***projektnamn ut. Om varkon.title.jobnam är satt till True läggs
+!***huvud-fönstrets ram. Om varkon.title.jobnam är satt till True läggs
 !***dessutom aktuellt jobnamn till automatiskt. Om varkon.title.viewname
 !***är True skrivs även vynamnet ut i fönsterramen.
 !*
-!varkon.title:                  VARKON-3D
-varkon.title.project:          True
-varkon.title.jobname:          True
-varkon.title.viewname:         True
+varkon.title:                   True
+varkon.title.jobname:           True
+varkon.title.viewname:          True
 !*
 !***Snabbvalsknappar kan placeras var som helst i de grafiska
 !***fönstren. Läge och storlek ges av resursen varkon.button_n.geometry
@@ -257,7 +261,7 @@ varkon.menu.button_9.text:       rast
 varkon.menu.button_9.tooltip:    Ange positioner med raster
 varkon.menu.level.tooltip:       Byt aktivt nivånummer
 varkon.menu.pen.tooltip:         Byt aktivt pennummer (färg)
-varkon.menu.width.tooltip:       Sätt aktiv linjebredd (för alla sorts storheter)
+varkon.menu.width.tooltip:       Sätt aktiv linjebredd
 varkon.menu.csy.tooltip:         Byt aktivt koordinatsystem
 varkon.menu.csy.title:           Aktivera ksys
 varkon.menu.local.tooltip:       Välj ett koordinatsystem att aktivera, MODE_LOCAL(#n); i MBS
@@ -336,6 +340,7 @@ varkon.input.close.tooltip:     Stäng detta fönster
 varkon.input.save:              Spara
 varkon.input.delete:            Ta bort
 varkon.input.apply:             Verkställ
+varkon.input.up.tooltip:        Gå en nivå uppåt i filstrukturen
 varkon.input.path.tooltip:      Filkatalog att visa
 varkon.input.file:              Filnamn:
 varkon.input.file.tooltip:      Ange ett filnamn och tryck på OK

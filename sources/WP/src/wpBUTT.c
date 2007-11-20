@@ -590,7 +590,7 @@
     WPBUTT              *butptr;
 
 /*
-***Create the X window..
+***Create the X window.
 */
     xwina.background_pixel  = WPgcbu(WPwfpx(px_id),cb);
     xwina.border_pixel      = WPgcbu(WPwfpx(px_id),WP_BGND1);
@@ -612,11 +612,11 @@
     butptr->id.p_id = (wpw_id)NULL;
     butptr->id.x_id = xwin_id;
 
-    butptr->geo.x =  x;
-    butptr->geo.y =  y;
-    butptr->geo.dx =  dx;
-    butptr->geo.dy =  dy;
-    butptr->geo.bw =  bw;
+    butptr->geo.x  = x;
+    butptr->geo.y  = y;
+    butptr->geo.dx = dx;
+    butptr->geo.dy = dy;
+    butptr->geo.bw = bw;
 
     butptr->color.bckgnd = cb;
     butptr->color.forgnd = cf;
@@ -629,7 +629,7 @@
     butptr->status = FALSE;
     butptr->hlight = FALSE;
 
-    if ( fstr[0] == '\0' ) butptr->font = 0;
+    if ( fstr[0] == '\0' ) butptr->font = WP_FNTNORMAL;
     else if ( (butptr->font=WPgfnr(fstr)) < 0 )
                          return(erpush("WP1102",fstr));
 /*
@@ -676,12 +676,15 @@
 ***visual as the OpenGL window. Other windows can
 ***use xgc.
 */
+
+/* NOTE wrong font used here */
+
    switch ( wpwtab[butptr->id.p_id].typ )
      {
      case TYP_RWIN:
      rwinpt = (WPRWIN *)wpwtab[butptr->id.p_id].ptr;
      but_gc = rwinpt->win_gc;
-     xfs    = WPgfnt(0);
+     xfs    = WPgfnt(WP_FNTNORMAL);
      XSetFont(xdisp,but_gc,xfs->fid);
      break;
 
@@ -849,7 +852,7 @@
  ******************************************************!*/
 
  {
-   int    x,y;
+   int    x,y,orgcol;
 
 /*
 ***LABELBUTTON's dont react on crossing events.
@@ -864,10 +867,12 @@
      switch ( butptr->type )
        {
        case TEXTBUTTON:
+       orgcol = butptr->color.bckgnd;
        butptr->color.bckgnd = WP_NOTI;
        XSetWindowBackground(xdisp,butptr->id.x_id,WPgcol(WP_NOTI));
        WPxpbu(butptr);
        XFlush(xdisp);
+       butptr->color.bckgnd = orgcol;
        break;
 
        case PUSHBUTTON:
@@ -890,15 +895,14 @@
        }
      }
 /*
-***Leave => Reset window border color to WP_BGND.
+***Leave => Reset window border color.
 */
    else if ( butptr->hlight )
      {
      switch ( butptr->type )
        {
        case TEXTBUTTON:
-       butptr->color.bckgnd = WP_BGND1;
-       XSetWindowBackground(xdisp,butptr->id.x_id,WPgcol(WP_BGND1));
+       XSetWindowBackground(xdisp,butptr->id.x_id,WPgcol(butptr->color.bckgnd));
        WPxpbu(butptr);
        XFlush(xdisp);
        break;

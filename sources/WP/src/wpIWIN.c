@@ -49,7 +49,7 @@
 /*      Create WPIWIN window.
  *
  *      In: x     = L�ge i X-led.
- *          y     = L�ge i Y-led.   
+ *          y     = L�ge i Y-led.
  *          dx    = Storlek i X-led.
  *          dy    = Storlek i Y-led.
  *          label = F�nstertitel.
@@ -88,7 +88,7 @@
     xwina.save_under        = False;
 
     xwinm = ( CWBackPixel        | CWBorderPixel |
-              CWOverrideRedirect | CWSaveUnder );  
+              CWOverrideRedirect | CWSaveUnder );
 /*
 ***Skapa ett popup-f�nster med 1 pixels ram.
 */
@@ -168,39 +168,39 @@
 /*
 ***Expose all children.
 */
-    for ( i=0; i<WP_IWSMAX; ++i )
-      {
-      subptr = iwinptr->wintab[i].ptr;
-      if ( subptr != NULL )
-        {
-        switch ( iwinptr->wintab[i].typ )
-          {
-          case TYP_EDIT:
-          WPxped((WPEDIT *)subptr);
-          break;
+   for ( i=0; i<WP_IWSMAX; ++i )
+     {
+     subptr = iwinptr->wintab[i].ptr;
+     if ( subptr != NULL )
+       {
+       switch ( iwinptr->wintab[i].typ )
+         {
+         case TYP_EDIT:
+         WPxped((WPEDIT *)subptr);
+         break;
 
-          case TYP_BUTTON:
-          WPxpbu((WPBUTT *)subptr);
-          break;
+         case TYP_BUTTON:
+         WPxpbu((WPBUTT *)subptr);
+         break;
 
-          case TYP_ICON:
-          WPxpic((WPICON *)subptr);
-          break;
+         case TYP_ICON:
+         WPxpic((WPICON *)subptr);
+         break;
 
-          case TYP_SBAR:
-          WPexpose_slidebar((WPSBAR *)subptr);
-          break;
+         case TYP_SBAR:
+         WPexpose_slidebar((WPSBAR *)subptr);
+         break;
 
-          case TYP_DECRN:
-          WPexpose_decoration((WPDECRN *)subptr);
-          break;
-          }
-        }
-      }
+         case TYP_DECRN:
+         WPexpose_decoration((WPDECRN *)subptr);
+         break;
+         }
+       }
+     }
 /*
 ***The end.
 */
-    return(TRUE);
+   return(TRUE);
   }
 
 /********************************************************/

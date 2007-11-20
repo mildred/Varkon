@@ -1,12 +1,12 @@
 #!/bin/sh
 #######################################################
 #
-# Startscript for Varkon 1.19
+# Startscript for Unix Varkon 1.19
 #
 # See the comments below for instructions on
 # how to configure your installation.
 #
-# (C)ï¿½rebro university 2007
+# (C)Örebro university 2007
 #
 #######################################################
 
@@ -20,9 +20,12 @@ VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`
 # VARKON_ROOT=/home/username/varkon/varkon_1.Xx
 export VARKON_ROOT
 
-# Standard menufiles  (*.MDF, *.INC)
+# Default working directory.
+VARKON_DJD=$VARKON_ROOT/job
+export VARKON_DJD
 
-VARKON_MDF=$VARKON_ROOT/mdf/english
+# Menufile to load at startup.
+VARKON_MDF=$VARKON_ROOT/mdf/english/x11.MDF
 export VARKON_MDF
 
 # Project files  (*.PID)
@@ -44,7 +47,7 @@ export VARKON_ERM
 VARKON_DOC=$VARKON_ROOT/man
 export VARKON_DOC
 
-# System module library   (*.MBO)
+# User module library (*.MBS/*.MBO)
 
 VARKON_LIB=$VARKON_ROOT/lib
 export VARKON_LIB
@@ -124,6 +127,10 @@ $VARKON_BIN/xvarkon -GLOBAL -i$VARKON_INI/linux
 # $VARKON_BIN/xvarkon -GLOBAL  \
 # -i$VARKON_INI/linux -i$HOME/cnf/ini/english/my_own_inifile
 
-# If you want to run the system in pure drafting mode, add
-# "-r" to the command line.
-# $VARKON_BIN/xvarkon -r -i$VARKON_INI/linux
+# If you want to run the system in EXPLICIT mode only, add
+# "-EXPLICIT" to the command line and the system will not
+# prompt for this every time you start.
+# $VARKON_BIN/xvarkon -EXPLICIT -i$VARKON_INI/linux
+# 
+# You can also use -GENERIC to force the system to start
+# in generic mode.

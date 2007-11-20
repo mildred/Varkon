@@ -1,18 +1,16 @@
+! Swedish menus for Varkon 2.0
 
-! Varkons standardmenyer
-! Senast uppdaterade för version 1.19A
-! J.Kjellander
-!
-m2  = "HUVUDMENY-2D"
+m1  = "VARKON-RITNING"
       "arkiv",m5
-      "skapa",m13
-      "ändra",m15
+      "skapa",m11
+      "redigera",m49
+      "ta bort",m80
       "visa",m67
       "analys",m75
       "inställningar",m9
       "hjälp",m22;
 
-m3  = "HUVUDMENY-3D"
+m2  = "VARKON-GENERISK"
       "arkiv",m5
       "skapa",m11
       "ändra",m15
@@ -21,31 +19,10 @@ m3  = "HUVUDMENY-3D"
       "inställningar",m9
       "hjälp",m22;
 
-m4  = "RITMODUL"
-      "arkiv",m6
-      "skapa",m13
-      "redigera",m49
-      "ta bort",m80
-      "visa",m67 
-      "analys",m75  
-      "inställningar",m9
-      "hjälp",m22;
-
 m5  = "ARKIV"
       "öppna",m47
       "spara",f175
       "spara som",m45
-      "exportera",m24
-      "ta bort jobb",f184
-      "macro",f152
-      "kom till OS",f125
-      "sluta",f123
-      "spara/sluta",f122;
-
-m6  = "ARKIV"
-      "öppna",m47
-      "spara",f175
-      "spara som",m48
       "exportera",m24
       "ta bort jobb",f184
       "macro",f152
@@ -63,7 +40,7 @@ m9  = "INSTÄLLNINGAR"
       "attribut",f16
       "modul",f127
       "projekt",m7;
-      
+
 m10 = "TCOPY"
       "translation",f239
       "rotation",f240
@@ -76,12 +53,13 @@ m11 = "SKAPA"
       "cirkelbåge",m55
       "kurvor",m60
       "ytor",m12
-      "koordsystem",m26
-      "text",f50
+      "koordsystem",m25
+      "text",m23
+      "måttsättning",m50
       "tcopy",m10
       "grupp",f55
       "part",f25
-      "importera",m43;
+      "importera",m39;
 
 m12 = "YTOR"
       "bplan",f26
@@ -96,31 +74,8 @@ m12 = "YTOR"
       "sammansatt",f236
       "importera",f237;
 
-m13 = "SKAPA"
-      "punkt",f20
-      "linje",m41
-      "cirkelbåge",m56
-      "kurvor",m61
-      "text",m23
-      "måttsättning",m50
-      "koordsystem",m25
-      "grupp",f55
-      "part",f25
-      "importera",m39;
-
-m14 = "ATTRIBUT"
-      "penna",f96
-      "nivå",f90
-      "linjebredd",f186
-      "linjer",m42
-      "cirklar",m57
-      "kurvor",m21
-      "text",m51
-      "mått",m31
-      "snitt",m32;
-
 m15 = "ÄNDRA"
-      "penna",f11
+      "penna",f7
       "nivå",f12
       "linjebredd",f185
       "attribut",m16
@@ -163,12 +118,6 @@ m20 = "PUNKT"
       "fri",f19
       "projicerad",f21;
 
-m21 = "KURVOR"
-      "heldragna",f164
-      "streckade",f165
-      "centrum",f166
-      "strecklängd",f167;
-
 m22 = "HJÄLP"
       "om Varkon",M184
       "hjälp",f153;
@@ -191,37 +140,22 @@ m25 = "KOORDSYSTEM"
       "3 pos",f105
       "pos/vinkel",f9;
 
-m26 = "KOORDSYSTEM"
-      "3 pos",f104
-      "pos/vinklar",f14;
-
 m30 = "LÄNGDMÅTT"
       "horisontellt",f30
       "vertikalt",f31
       "parallellt",f32;
-
-m31 = "MÅTT"
-      "sifferstorlek",f80
-      "pilstorlek",f81
-      "decimaler",f82
-      "auto",f83
-      "ej auto",f84;
-
-m32 = "SNITT"
-      "heldragna",f85
-      "streckade",f86
-      "centrum",f87
-      "strecklängd",f88;
 
 m33 = "DIAMETERMÅTT"
       "horisontellt",f33
       "vertikalt",f34
       "parallellt",f35;
 
-m39 = "IMPORT-2D"
-      "iges",p1624
-      "dxf",p388
-      "plotfile",f145;
+m39 = "IMPORTERA"
+      "IGES",p1624
+      "DXF-2D",p388
+      "DXF-3D",p389
+      "STL",p1623
+      "PLT",f145;
 
 m40 = "LINJE"
       "2f två pos",f22
@@ -231,25 +165,6 @@ m40 = "LINJE"
       "pv pos/vinkel",f24
       "pt pos/tan",f28
       "t  tan/tan",f29;
-
-m41 = "LINJE"
-      "2  två pos",f40
-      "pl parallell",f42
-      "v  vinkelrät",f39
-      "pv pos/vinkel",f43
-      "pt pos/tan",f44
-      "t  tan/tan",f45;
-
-m42 = "LINJER"
-      "heldragna",f46
-      "streckade",f47
-      "centrum",f48
-      "strecklängd",f49;
-
-m43 = "IMPORT-3D"
-      "iges",p1624
-      "dxf",p389
-      "stl",p1623;
 
 m45 = "SPARA SOM"
       "alla filer",f201
@@ -261,11 +176,6 @@ m45 = "SPARA SOM"
 m47 = "ÖPPNA"
       "lagra först",f124
       "inget lagras",f120;
-
-m48 = "SPARA SOM"
-      "alla filer",f201
-      "JOB-fil",f119
-      "RIT-fil",f121;
 
 m49 = "REDIGERA"
       "ändra",m81
@@ -283,32 +193,12 @@ m50 = "MÅTTSÄTTNING"
       "vinkelmått",f37
       "snitt",f38;
 
-m51 = "TEXTER"
-      "höjd",f51
-      "bredd",f52
-      "lutning",f53
-      "typsnitt",f172
-      "tpmode",f227;
-
 m55 = "CIRKELBÅGE"
       "1 pos/vinklar",f56
       "2 pos/radie",f57
       "3 pos",f58
       "offset",f59
       "hörnradie",f65;
-
-m56 = "CIRKELBÅGE"
-      "1 pos/vinklar",f60
-      "2 pos/radie",f61
-      "3 pos",f62
-      "offset",f63
-      "hörnradie",f64;
-
-m57 = "CIRKLAR"
-      "heldragna",f66
-      "streckade",f67
-      "centrum",f68
-      "strecklängd",f69;
 
 m60 = "KURVOR"
       "spline",m89
@@ -319,14 +209,6 @@ m60 = "KURVOR"
       "isoparam",f230
       "skärning",f183
       "siluett",f233
-      "approx",f231;
-
-m61 = "KURVOR"
-      "spline",m89
-      "kägelsnitt",f161
-      "offset",f163
-      "sammansatt",f75
-      "trimmad",f232
       "approx",f231;
 
 m62 = "DOLDA KONT"
@@ -367,8 +249,8 @@ m76 = "GEOMETRI"
       "tyngdpunkt",M417;
 
 m77 = "SYSTEMDATA"
-      "gm-data",f140
-      "pm-data",f139;
+      "DB-data",f140
+      "PM-data",f139;
 
 m79 = "PART/GRUPP"
       "en part",M379
@@ -388,7 +270,7 @@ m80 = "TA BORT"
       "tänd alla",f214;
 
 m81 = "ÄNDRA"
-      "penna",f11
+      "penna",f7
       "nivå",f12
       "linjebredd",f185
       "attribut",m16

@@ -46,7 +46,7 @@
 
 extern char    jobnam[];
 extern int     actpen;
-extern short   actfun,v3mode;
+extern short   actfun,sysmode;
 extern bool    rstron;
 extern DBptr   lsysla;
 
@@ -683,8 +683,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
               break;
 
               case 190:
-              if ( v3mode == BAS3_MOD ) WPperp(gwinpt,x,y);
-              else XBell(xdisp,100);
+              WPperp(gwinpt,x,y);
               break;
 
               case 191:

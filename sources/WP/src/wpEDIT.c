@@ -994,7 +994,7 @@ extern MNUALT smbind[];
 /*
 ***Fokus AV !
 */
-    else                            
+    else
       {
       XSetWindowBorder(xdisp,edtptr->id.x_id,WPgcol(WP_BGND1));
       edtptr->focus = FALSE;

@@ -8,7 +8,7 @@
 *
 *    Pretty print routins for PM structures to MBS source format
 *
-*    short ppinit()    Initiera pretty-printern
+*    short ppinit()    Init pretty printer
 *    short pprsts()    print statement to string
 *    short pprst()     print statement
 *    short pprsl()     print statement list
@@ -16,7 +16,7 @@
 *    short pprex()     print expression
 *    short pprel()     print expression list
 *
-*    short pprmo();    print modul
+*    short pprmo();    print module
 *
 *    short pprpa()     print module parameter
 *    short pprpl()     print module parameter list
@@ -49,6 +49,7 @@
 
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
+#include "../../WP/include/WP.h"
 #include <string.h>
 #include <ctype.h>
 
@@ -1240,12 +1241,12 @@ static short ppindl = DEFINDL;
    ppinit(mode,filpek);
 
    if ( ( status = pmgmod( (pm_ptr)0, &np ) ) != 0 )
-      {  
+      {
       return( status );         /* Error */
       }
 
    if ( np->monocl != MODULE )
-      {  
+      {
       return( erpush( "PM2542", "" ) );   /*Error  Not a module node */
       }
 
@@ -1259,9 +1260,10 @@ static short ppindl = DEFINDL;
    else if ( np->moat_ == MACRO )  pprint( "MACRO " );
 
    modtyp = np->moty_;
-
+/*
    if ( np->moty_ == _2D ) ppkeyw( "DRAWING " );
    else if ( np->moty_ == _3D ) ppkeyw( "GEOMETRY " );
+*/
 
    if ( ( status = pmgstr( np->mona_, &str ) ) != 0 ) return( status );
 

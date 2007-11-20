@@ -979,7 +979,9 @@ evloop:
 */
     winptr->typ = TYP_UNDEF;
     winptr->ptr = NULL;
-   
+/*
+***The end.
+*/
     return(0);
   }
 

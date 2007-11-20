@@ -107,7 +107,7 @@ typedef DBuint DBetype;       /* A GM entity type, POITYP, LINTYP etc.. short->i
 #define LINTYP (DBetype)2     /* Line */
 #define ARCTYP (DBetype)4     /* Arc */
 #define CURTYP (DBetype)8     /* Curve */
-#define SURTYP (DBetype)16    /* Surface */                             
+#define SURTYP (DBetype)16    /* Surface */
 #define TXTTYP (DBetype)32    /* Text */
 #define XHTTYP (DBetype)64    /* Hatch */
 #define LDMTYP (DBetype)128   /* Linear dimension */

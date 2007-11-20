@@ -65,7 +65,7 @@ static double tab_9[] = {
       0.00000009, 0.000000009, 0.0000000009};
 
 extern char    jobdir[];
-extern char    asydir[];
+/*extern char    asydir[]; */
 extern DBptr   lsysla;
 extern DBTmat *lsyspk;
 extern DBTmat  lklsyi;
@@ -171,10 +171,12 @@ static double gpaton(char *pos);
     strcat(sfnam,SYMEXT);
     if ( (fp=fopen(sfnam,"r")) == NULL )
       {
+/*
       strcpy(sfnam,asydir);
       strcat(sfnam,nam);
       strcat(sfnam,SYMEXT);
       if ( (fp=fopen(sfnam,"r")) == NULL )
+*/
             return(erpush("EX1582",nam));
       }
 /*

@@ -76,7 +76,7 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
        func_vp->lit.vec_va.z_val = func_pv[ 3 ].par_va.lit.float_va;
 
    return( 0 );
-  }  
+  }
 
 /*!******************************************************/
 /*!******************************************************/

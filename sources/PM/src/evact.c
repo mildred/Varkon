@@ -78,7 +78,7 @@
 
 extern V2NAPA defnap;
 extern V3MDAT sydata;
-extern char   pidnam[],jobnam[],jobdir[],svnversion[];
+extern char   jobnam[],jobdir[],svnversion[];
 extern pm_ptr actmod;
 extern DBptr  lsysla;
 
@@ -1130,11 +1130,12 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
  *      (C)microform ab 13/9/95 J. Kjellander
  *
  *      2001-03-06 In-Param changed to Global variables, R Svedin
+ *      2007-11-18 pidnam=jobdir, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    strcpy(func_vp->lit.str_va,pidnam);
+    strcpy(func_vp->lit.str_va,jobdir);
 
     return(0);
   }

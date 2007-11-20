@@ -71,7 +71,6 @@
 
 extern char  jobdir[];          /* Current job directory            */
 extern char  jobnam[];          /* Current job name                 */
-extern char  pidnam[];          /* Current project                  */
 
 /*!------------ Error messages and warnings ------------------------*/
 /*                                                                  */
@@ -327,7 +326,6 @@ extern char  pidnam[];          /* Current project                  */
      fprintf(f_dat, " \n");  
      fprintf(f_dat, "Job name:      %s \n", jobnam );  
      fprintf(f_dat, "Job directory: %s \n", jobdir );  
-     fprintf(f_dat, "Project:       %s \n", pidnam );  
      fprintf(f_dat, " \n");  
      fprintf(f_dat,"Surface type: %s  \n", c_styp );
      fprintf(f_dat, " \n");  

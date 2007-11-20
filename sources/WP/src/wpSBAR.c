@@ -141,11 +141,8 @@
    switch ( wintype )
      {
      case TYP_LWIN:
-     i = 0;
-     while ( i < WP_LWSMAX  &&  lwinpt->wintab[i].ptr != NULL ) ++i;
-     if ( i == WP_LWSMAX ) return(-3);
-     else sb_id = i;
-
+     if ( dir == WP_SBARV ) sb_id = 0;
+     else                   sb_id = 1;
      lwinpt->wintab[sb_id].typ = TYP_SBAR;
      lwinpt->wintab[sb_id].ptr = (char *)sbptr;
      sbptr->id.w_id = sb_id;

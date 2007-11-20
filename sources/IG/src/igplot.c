@@ -6,7 +6,7 @@
 /*                                                                  */
 /*  IGcgkm();  Create PLT-file GKS formatted                        */
 /*  IGcdxf();  Create DXF-file                                      */
-/*  IGshll();  Shell command                                        */
+/*  IGshell(); Shell command                                        */
 /*  IGhid1();  Hide on screen                                       */
 /*  IGhid2();  Hide to PLT-file                                     */
 /*  IGhid3();  Hide on screen and to file                           */
@@ -420,7 +420,7 @@ gomain:
 /********************************************************/
 /*!******************************************************/
 
-       short IGshll()
+       short IGshell()
 
 /*      Kommando till shell.
  *

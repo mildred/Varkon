@@ -4,10 +4,9 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*  IGgene();     Starts Varkon in generic mode                     */
-/*  IGexpl();     Starts Varkon in explicit mode                    */
+/*  IGgeneric();  Starts Varkon in generic mode                     */
+/*  IGexplicit(); Starts Varkon in explicit mode                    */
 /*  IGdljb();     Deletes jobs                                      */
-/*  IGmvrr();     Copies RES-file to RIT-file                       */
 /*  IGload();     Loads new job                                     */
 /*  IGldmo();     Loads module                                      */
 /*  IGsjpg();     Saves all                                         */
@@ -17,12 +16,12 @@
 /*  IGsjbn();     Saves jobdata with new name                       */
 /*  IGcatt();     Change module attribute                           */
 /*  IGexit();     Exits                                             */
-/*  IGexsn();     Exit without saving                               */
-/*  IGexsa();     Exit with saving                                  */
+/*  IGexit_sn();  Exit without saving                               */
+/*  IGexit_sa();  Exit with saving                                  */
 /*  IGexsd();     Exit with saving and decompiling                  */
 /*  IGnjsd();     Save, decompile and new job                       */
 /*  IGnjsa();     Save and new job                                  */
-/*  IGsjsa();     Save and continue                                 */
+/*  IGsave_all(); Save and continue                                 */
 /*  IGnjsn();     New job without saving                            */
 /*  IGselj();     Select job from list                              */
 /*  IGchjn();     Change name of current job                        */
@@ -64,9 +63,9 @@ char   tmprit[V3PTHLEN+1];
 /* Namn på temporär .RIT-fil under körning. */
 
 extern pm_ptr   actmod,pmstkp;
-extern bool     tmpref,rstron,igxflg,igbflg,jnflag,relpos;
-extern char     pidnam[],jobnam[],jobdir[],mdffil[],actcnm[];
-extern short    modtyp,modatt,v3mode,actfun,igmatt,igmtyp,pant,mant;
+extern bool     tmpref,rstron,igxflg,igbflg,relpos,startup_complete;
+extern char     jobnam[],jobdir[],mdffil[],actcnm[];
+extern short    modtyp,modatt,sysmode,actfun,igmatt,pant,mant;
 extern int      posmode;
 extern DBptr    msysla,lsysla;
 extern DBseqnum snrmax;
@@ -86,7 +85,6 @@ static short iginjb();
 static short load_jobdata();
 static short igsvjb();
 static short iginmo();
-static short getmta(short *typ, short *att);
 static short igsvmo();
 static short igingm();
 static short igldgm();
@@ -94,91 +92,57 @@ static short igsvgm();
 static short init_macro();
 static short newjob_macro();
 static short exit_macro();
-static short igebas();
+static short main_loop();
 
-/*!******************************************************/
+/********************************************************/
 
-       short  IGgene()
+       short  IGgeneric()
 
 /*     Start Varkon in generic mode.
 *
-*      Felkoder : IG0252 = Kan ej starta Basmodulen
-*
-*      (C) microform ab 2/3/88  J. Kjellander.
-*
-*      12/12/94 v3mode, J. Kjellander
+*      (C)2007-11-07 J. Kjellander.
 *
 *******************************************************!*/
 
  {
-
 /*
-***Kolla att basmodulen ingår.
+***Start system in generic mode.
 */
-   if ( sydata.opmode != BAS_MOD )
-     {
-     erpush("IG0252","");
-     return(EREXIT);
-     }
+   sysmode = GENERIC;
 /*
-***Starta basmodulen med meny 0.
+***Go.
 */
-   v3mode = BAS2_MOD;
-
-   return(igebas());
-
+   return(main_loop());
  }
 
 /******************************************************!*/
 /*!******************************************************/
 
-       short  IGexpl()
+       short  IGexplicit()
 
-/*     Start Varkon in 2D explicit mode.
+/*     Start Varkon in explicit mode.
 *
-*      (C) microform ab 2/3/88  J. Kjellander.
-*
-*      12/12/94 v3mode, J. Kjellander
+*      (C)2007-11-07 J. Kjellander.
 *
 *******************************************************!*/
 
  {
-   short status;
-
 /*
-***Ställ om opmode i sydata och anropa basmodulen
-***med v3mode = RIT_MOD.
+***Start system in explicit mode.
 */
-   if ( sydata.opmode == BAS_MOD )
-     {
-     sydata.opmode = RIT_MOD;
-     v3mode = RIT_MOD;
-     status = igebas();
-     sydata.opmode = BAS_MOD;
-     }
-   else
-     {
-     v3mode = RIT_MOD;
-     status = igebas();
-     }
-
-   return(status);
-
+   sysmode = EXPLICIT;
+/*
+***Go.
+*/
+   return(main_loop());
  }
 
 /******************************************************!*/
 /*!******************************************************/
 
-static short igebas()
+static short main_loop()
 
-/*     Huvudrutin för Basmodulen.
-*
-*      In : Inget.
-*
-*      Felkoder : IG0232 = Du har ej valt projekt
-*                 IG0242 = Projektet finns ej
-*                 IG0262 = Kan ej ladda menyer
-*                 IG0342 = %s otillåtet jobnamn
+/*     Varkon main loop.
 *
 *      (C) microform ab 2/3/88  J. Kjellander.
 *
@@ -190,26 +154,22 @@ static short igebas()
    short status,alt;
 
 /*
-***Ladda menyerna. 
-*/
-   if ( IGinit(mdffil) < 0 )
-     {
-     erpush("IG0262",mdffil);
-     return(EREXIT);
-     }
-/*
-***Global initiering av PM.
+***Init PM.
 */
    if ( pminit() < 0 ) return(EREXIT);
 /*
-***Starta basmodulen.
+***Load jobnam[].
 */
    pant = 0;
    mant = 0;
 
    if ( (status=IGload()) < 0 ) return(status);
 /*
-***Loopa med IGexfu() och meny 0 = Huvudmenyn.
+***System is now started.
+*/
+   startup_complete = TRUE;
+/*
+***Loop with IGexfu() and menu 0 = Main menu.
 */
    for (;;)
      {
@@ -231,179 +191,6 @@ static short igebas()
        return(EREXIT);
        }
      }
-
- }
-
-/******************************************************!*/
-/*!******************************************************/
-
-       short  IGdljb()
-
-/*     Varkon-funktion för att ta bort job.
- *
- *     Felkoder : IG0452 = Jobbet %s är aktivt.
- *
- *     (C) microform ab 28/9/95  J. Kjellander.
- *
- *******************************************************!*/
-
- {
-    char  job[JNLGTH+1];
-    char  jobfil[V3PTHLEN+1];
-    char  mbsfil[V3PTHLEN+1];
-    char  mbofil[V3PTHLEN+1];
-    char  resfil[V3PTHLEN+1];
-    char  pltfil[V3PTHLEN+1];
-    char  ritfil[V3PTHLEN+1];
-    short status;
-
-/*
-***Läs in jobbnamn.
-*/
-    status = IGselj(job);
-    if ( status < 0 ) return(status);
-/*
-***Kolla att det inte är aktivt.
-*/
-   if ( strcmp(job,jobnam) == 0 )
-     {
-     erpush("IG0452",job);
-     errmes();
-     return(0);
-     }
-/*
-***Ta bort ev. JOB-fil ?
-*/
-   strcpy(jobfil,jobdir);
-   strcat(jobfil,job);
-   strcat(jobfil,JOBEXT);
-
-   if ( IGftst(jobfil)  &&  IGialt(442,67,68,FALSE) ) IGfdel(jobfil);
-/*
-***Ta bort ev. MBO-fil ?
-*/
-   strcpy(mbofil,jobdir);
-   strcat(mbofil,job);
-   strcat(mbofil,MODEXT);
-
-   if ( IGftst(mbofil)  &&  IGialt(443,67,68,FALSE)  &&
-                            IGialt(444,67,68,FALSE)  ) IGfdel(mbofil);
-/*
-***Ta bort ev. MBS-fil ?
-*/
-   strcpy(mbsfil,jobdir);
-   strcat(mbsfil,job);
-   strcat(mbsfil,MBSEXT);
-
-   if ( IGftst(mbsfil)  &&  IGialt(445,67,68,FALSE)  &&
-                            IGialt(446,67,68,FALSE) ) IGfdel(mbsfil);
-/*
-***Ta bort ev. RES-fil ?
-*/
-   strcpy(resfil,jobdir);
-   strcat(resfil,job);
-   strcat(resfil,RESEXT);
-
-   if ( IGftst(resfil)  &&  IGialt(447,67,68,FALSE) ) IGfdel(resfil);
-/*
-***Ta bort ev. RIT-fil ?
-*/
-   strcpy(ritfil,jobdir);
-   strcat(ritfil,job);
-   strcat(ritfil,RITEXT);
-
-   if ( IGftst(ritfil)  &&  IGialt(448,67,68,FALSE)  &&
-                            IGialt(449,67,68,FALSE) ) IGfdel(ritfil);
-/*
-***Ta bort ev. PLT-fil ?
-*/
-   strcpy(pltfil,jobdir);
-   strcat(pltfil,job);
-   strcat(pltfil,PLTEXT);
-
-   if ( IGftst(pltfil)  &&  IGialt(450,67,68,FALSE) ) IGfdel(pltfil);
-
-   return(0);
- }
-
-/******************************************************!*/
-/*!******************************************************/
-
-       short  IGmvrr()
-
-/*     Varkon-funktion för att kopiera en RES-fil
- *     till en RIT-fil.
- *
- *     Felkoder : IG0232 = Du har ej valt projekt
- *                IG0242 = Projektet finns ej.
- *                IG0312 = Resultatfil finns ej
- *
- *     (C) microform ab 16/3/88  J. Kjellander.
- *
- *******************************************************!*/
-
- {
-    char  job[JNLGTH+1];
-    char  resfil[V3PTHLEN+1];
-    char  ritfil[V3PTHLEN+1];
-    short status;
-    FILE  *fpk;
-
-/*
-***Kolla att pidnam finns.
-*/
-   if ( pidnam[0] == '\0' )
-     {
-     erpush("IG0232","");
-     errmes();
-     return(0);
-     }
-/*
-***Ladda aktuell PID-fil.
-*/
-    if ( IGldpf(pidnam) < 0 )
-      {
-      erpush("IG0242",pidnam);
-      errmes();
-      return(0);
-      }
-/*
-***Läs in jobnamn.
-*/
-    status = IGssip("",IGgtts(400),job,"",JNLGTH);
-    if ( status < 0 ) return(status);
-/*
-***Kolla om RES-filen finns.
-*/
-   strcpy(resfil,jobdir);
-   strcat(resfil,job);
-   strcat(resfil,RESEXT);
-
-   if ( (fpk=fopen(resfil,"r")) == 0 )
-     {
-     erpush("IG0312",resfil);
-     errmes();
-     return(0);
-     }
-   fclose(fpk);
-/*
-***Kolla om RIT-filen finns.
-*/
-   strcpy(ritfil,jobdir);
-   strcat(ritfil,job);
-   strcat(ritfil,RITEXT);
-
-   if ( (fpk=fopen(ritfil,"r")) != 0 )
-     {
-     fclose(fpk);
-     if ( !IGialt(419,67,68,TRUE) ) return(0);
-     }
-/*
-***Kopiera.
-*/
-   if ( IGfcpy(resfil,ritfil) < 0 ) errmes();
-
-   return(0);
  }
 
 /******************************************************!*/
@@ -442,12 +229,13 @@ static short igebas()
 */
    EXclear_levels();
 /*
+***EXPLICIT mode.
 ***Om ritmodulen aktiv, initiera PM först och ladda sedan
 ***jobbfilen. PM-initiering medför ju återställning av
 ***alla attribut. Om detta görs efter laddning av job-filen
 ***skrivs attribut lagrade i jobbfilen över av iginmo().
 */
-    if ( v3mode == RIT_MOD )
+    if ( sysmode == EXPLICIT )
       {
       if ( iginmo() < 0 ) goto errend;
       pmgstp(&pmstkp);
@@ -468,6 +256,7 @@ static short igebas()
       else newjob = FALSE;
       }
 /*
+***GENERIC mode.
 ***Om basmodulen aktiv, gör tvärtom.
 */
     else
@@ -488,12 +277,6 @@ static short igebas()
         if (status < 0 ) goto errend;
         newjob = FALSE;
         }
-
-      if ( v3mode & BAS_MOD )
-        {
-        if ( modtyp == 2 ) v3mode = BAS2_MOD;
-        else v3mode = BAS3_MOD;
-        }
 /*
 ***Ladda ev. resultatfil. Om resultatfil saknas men modulfil
 ***fanns kanske vi ska börja med att köra modulen.
@@ -505,15 +288,15 @@ static short igebas()
           {
           if ( igxflg || IGialt(118,67,68,TRUE) )
             {
-            IGramo();
-            if ( igbflg ) return(IGexsn());
+            IGrun_active();
+            if ( igbflg ) return(IGexit_sn());
             }
           }
         }
       else if ( status == 0  &&  igbflg )
         {
-        IGramo();
-        return(IGexsn());
+        IGrun_active();
+        return(IGexit_sn());
         }
       else if ( status < 0 ) goto errend;
       }
@@ -577,6 +360,92 @@ errend:
 /********************************************************/
 /*!******************************************************/
 
+       short  IGdljb()
+
+/*     Delete job files.
+ *
+ *     Felkoder : IG0452 = Job %s is active.
+ *
+ *     (C) microform ab 28/9/95  J. Kjellander.
+ *
+ *     2007-11-14 2.0, J.Kjellander
+ *
+ *******************************************************!*/
+
+ {
+    char  job[JNLGTH+1];
+    char  jobfil[V3PTHLEN+1];
+    char  mbsfil[V3PTHLEN+1];
+    char  mbofil[V3PTHLEN+1];
+    char  resfil[V3PTHLEN+1];
+    char  pltfil[V3PTHLEN+1];
+    short status;
+
+/*
+***Get job name.
+*/
+    status = IGselj(job);
+    if ( status < 0 ) return(status);
+/*
+***Check that it is not active.
+*/
+   if ( strcmp(job,jobnam) == 0 )
+     {
+     erpush("IG0452",job);
+     errmes();
+     return(0);
+     }
+/*
+***Remove JOB-file ?
+*/
+   strcpy(jobfil,jobdir);
+   strcat(jobfil,job);
+   strcat(jobfil,JOBEXT);
+
+   if ( IGftst(jobfil)  &&  IGialt(442,67,68,FALSE) ) IGfdel(jobfil);
+/*
+***Remove MBO-file ?
+*/
+   strcpy(mbofil,jobdir);
+   strcat(mbofil,job);
+   strcat(mbofil,MODEXT);
+
+   if ( IGftst(mbofil)  &&  IGialt(443,67,68,FALSE)  &&
+                            IGialt(444,67,68,FALSE)  ) IGfdel(mbofil);
+/*
+***Remove MBS-file ?
+*/
+   strcpy(mbsfil,jobdir);
+   strcat(mbsfil,job);
+   strcat(mbsfil,MBSEXT);
+
+   if ( IGftst(mbsfil)  &&  IGialt(445,67,68,FALSE)  &&
+                            IGialt(446,67,68,FALSE) ) IGfdel(mbsfil);
+/*
+***Remove RES-file ?
+*/
+   strcpy(resfil,jobdir);
+   strcat(resfil,job);
+   strcat(resfil,RESEXT);
+
+   if ( IGftst(resfil)  &&  IGialt(447,67,68,FALSE) ) IGfdel(resfil);
+/*
+***Remove PLT-file ?
+*/
+   strcpy(pltfil,jobdir);
+   strcat(pltfil,job);
+   strcat(pltfil,PLTEXT);
+
+   if ( IGftst(pltfil)  &&  IGialt(450,67,68,FALSE) ) IGfdel(pltfil);
+/*
+***The end.
+*/
+   return(0);
+ }
+
+/******************************************************!*/
+/*!******************************************************/
+
 static short igsvjb()
 
 /*      Lagrar ett jobb.
@@ -624,13 +493,9 @@ static short igsvjb()
 
 static short iginmo()
 
-/*      Initierar (skapar) ny modul.
+/*      Creates a new module.
  *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      Felkoder: IG0143 => Kan ej skapa modul
+ *      Return: IG0143 => Can't create module.
  *
  *      (C)microform ab 20/10/85 J. Kjellander
  *
@@ -638,31 +503,27 @@ static short iginmo()
  *      7/10/86  Time, J. Kjellander
  *      2/3/92   igmtyp/igmatt, J. Kjellander
  *      1996-02-26 Krypterat serienummer, J. Kjellander
+ *      2007-11-07 2.0, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    short    status;
     int      y,m,d,h,min,s;
     PMMODULE modhed;
 
 /*
-***Ta reda på den blivande modulens typ och attribut.
-*/
-    if ( (status=getmta(&modtyp,&modatt)) < 0 ) return(status);
-/*
-***Nollställ och initiera PM.
+***Init PM.
 */
     if ( pmclea() < 0 ) goto error;
     if ( incrts() < 0 ) goto error;
     inrdnp();
 /*
-***Initiera ett modulhuvud.
+***Create a default module head.
 */
     modhed.parlist = (pm_ptr)NULL;
-    modhed.stlist = (pm_ptr)NULL;
-    modhed.idmax = 0;
-    modhed.ldsize = 0;
+    modhed.stlist  = (pm_ptr)NULL;
+    modhed.idmax   = 0;
+    modhed.ldsize  = 0;
     modhed.system.sernr = sydata.sernr;
     modhed.system.vernr = sydata.vernr;
     modhed.system.revnr = sydata.revnr;
@@ -686,23 +547,29 @@ static short iginmo()
     strcpy(modhed.system.release,sydata.release);
     strcpy(modhed.system.version,sydata.version);
 
-    modhed.system.mpcode = 0;
+    modhed.system.mpcode    = 0;
     modhed.system.ser_crypt = sydata.ser_crypt;
 /*
-***Skapa modulen.
+***Module type and attribute. Module type is always _3D
+***and module attribute is igmatt (LOCAL/GLOBAL/BASIC).
+***Default for igmatt is GLOBAL but this may be changed
+***by a command line argument.
 */
-    modhed.mtype = (char)modtyp;
-    modhed.mattri = (char)modatt;
+    modhed.mtype  = (char)_3D;
+    modhed.mattri = (char)igmatt;
+/*
+***Create the module.
+*/
     if (pmcmod(jobnam,&modhed,&actmod) < 0 ) goto error;
 /*
-***Initiera största sekvensnummer.
+***Largest sequence number at this stage is 0.
+***No entities have been created yet.
 */
     snrmax = 0;
 /*
-***Initiera koordinatsystem. Modulens system = BASIC och inget
-***loaklt aktivt.
+***Init active coordinate system.
 */
-  if ( v3mode & BAS_MOD )
+  if ( sysmode & GENERIC )
     {
     lsyspk = NULL;
     lsysla = DBNULL;
@@ -713,126 +580,19 @@ static short iginmo()
     EXmsini();
     strcpy(actcnm,IGgtts(223));
 /*
-***Modul skapad.
+***Message to user.
 */
     WPaddmess_mcwin(IGgtts(308),WP_MESSAGE);
     }
-
+/*
+***The end.
+*/
     return(0);
 /*
-***Felutgång.
+***Error exit.
 */
 error:
     return(erpush("IG0143",""));
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static short getmta(
-        short *typ,
-        short *att)
-
-/*      Tar reda på vilken typ och vilket attribut
- *      en ny modul skall ha.
- *
- *      In: typ = Pekare till utdata.
- *          att = Pekare till utdata.
- *
- *      Ut: *typ = _2D eller _3D.
- *          *att = LOCAL, GLOBAL eller BASIC
- *
- *      FV: 0, REJECT eller GOMAIN.
- *
- *      (C)microform ab 8/11/95 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-    short alt;
-
-/*
-***I ritmodulen är alla "moduler" DRAWING och BASIC.
-*/
-  if ( v3mode == RIT_MOD )
-    {
-   *typ = _2D;
-   *att = BASIC;
-    }
-/*
-***I basmodulen kan en modul ha typen DRAWING (_2D) eller
-***GEOMETRY (_3D).
-*/
-  else
-    {
-#ifdef WIN32
-    if ( igmtyp == IGUNDEF  ||  igmatt == IGUNDEF )
-      return(msdl01(typ,att));
-    else
-      {
-     *att = igmatt;
-     *typ = igmtyp;
-      return(0);
-      }
-#endif
-    if ( igmtyp == IGUNDEF )
-      {
-      IGexfu( 144, &alt);
-      switch ( alt )
-        {
-        case 1:
-       *typ = _3D;
-        break;
-
-        case 2:
-       *typ = _2D;
-        break;
-
-        case REJECT:
-        return(REJECT);
-
-        case GOMAIN:
-        return(GOMAIN);
-
-        default:
-        return(-1);
-        }
-      }
-    else *typ = igmtyp;
-/*
-***Attribut kan vara LOCAL, GLOBAL eller BASIC..
-*/
-    if ( igmatt == IGUNDEF )
-      {
-      IGexfu( 145, &alt);
-      switch ( alt )
-        {
-        case 1:
-       *att = LOCAL;
-        break;
- 
-        case 2:
-       *att = GLOBAL;
-        break;
-
-        case 3:
-       *att = BASIC;
-        break;
-
-        case REJECT:
-        return(REJECT);
-
-        case GOMAIN:
-        return(GOMAIN);
-
-        default:
-        return(-1);
-        }
-      }
-    else *att = igmatt;
-    }
-
-    return(0);
   }
 
 /********************************************************/
@@ -972,7 +732,7 @@ static short igingm()
 
     strcpy(filnam,jobdir);
 
-    if ( v3mode == RIT_MOD )
+    if ( sysmode == EXPLICIT )
       {
       strcpy(templ,jobnam);
       strcat(templ,".XXXXXX");
@@ -1001,14 +761,10 @@ static short igingm()
 
 static short igldgm()
 
-/*      Laddar resultafil.
+/*      Load a RES-file.
  *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      Felkoder:  0 => Ok.
- *                -1 => Kan ej ladda resultat.
+ *      Error:  0 => Ok.
+ *             -1 => Can't load RES-file.
  *
  *      (C)microform ab 20/10/85 J. Kjellander
  *
@@ -1016,6 +772,7 @@ static short igldgm()
  *      5/4/86     Ny felhantering, J. Kjellander
  *      29/11/88   Temporärfil, J. Kjellander
  *      1999-02-09 Ny felhantering, J.Kjellander
+ *      2007-11-14 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1024,18 +781,16 @@ static short igldgm()
     short status;
 
 /*
-***Bilda filnamn utan extension.
+***Create a filename with path but no extension.
 */
     strcpy(filnam,jobdir);
     strcat(filnam,jobnam);
 /*
-***Ritpaketet, kolla om filen finns. Finns den,
-***kopieras den till en temporärfil och temporärfilen
-***laddas. Finns den inte returneras -1.
+***In explicit mode load a temporary copy.
 */
-    if ( v3mode == RIT_MOD )
+    if ( sysmode == EXPLICIT )
       {
-      strcat(filnam,RITEXT);
+      strcat(filnam,RESEXT);
       if ( IGftst(filnam) )
         {
         strcpy(tmprit,jobdir);
@@ -1047,7 +802,7 @@ static short igldgm()
                     DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
         if ( status < 0 )
           {
-          errmes();       /* Allvarligare fel */
+          errmes();
           return(status);
           }
         else
@@ -1056,13 +811,13 @@ static short igldgm()
           return(0);
           }
         }
-      else return(-1);    /* Filen finns ej */
+      else return(-1);
       }
 /*
-***Basmodulen ! Prova att ladda gammal resultatfil.
-***Status =  0 => Filen har laddats.
-***Status = -1 => Filen finns ej.
-***Status < -1 => Allvarligare fel, tex. filen tom.
+***In generic mode we load the RES-file itself.
+***Status =  0 => File loaded.
+***Status = -1 => File does not exist.
+***Status < -1 => System error.
 */
     else
       {
@@ -1075,10 +830,10 @@ static short igldgm()
         WPaddmess_mcwin(IGgtts(214),WP_MESSAGE);
         return(0);
         }
-      else if ( status == -1 ) return(-1);  /* Filen finns ej */
+      else if ( status == -1 ) return(-1);
       else
         {
-        errmes();                           /* Allvarligare fel */
+        errmes();
         return(-1);
         }
       }
@@ -1089,13 +844,9 @@ static short igldgm()
 
 static short igsvgm()
 
-/*      Lagra resultatfil.
+/*      Save RES-file.
  *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      Felkoder: IG0193 => Kan ej lagra resultatfilen
+ *      Error: IG0193 => Can't save file.
  *
  *      (C)microform ab 16/6/85 J. Kjellander
  *
@@ -1105,28 +856,29 @@ static short igsvgm()
     char  filnam[V3PTHLEN+1];
 
 /*
-***Lagra resultatfil.
+***Save the current DB.
 */
     if ( DBexit() < 0 ) return(erpush("IG0193",jobnam));
 
 /*
-***Resultatfil lagrad.
+***A message to the user.
 */
-    if ( v3mode & BAS_MOD ) WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
+    if ( sysmode & GENERIC ) WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
 /*
-***Om ritpaketet, kopiera den temporära arbetsfilen
-***till en .RIT-fil.
+***In explicit mode copy temporary file to .RES.
 */
     else
      {
      strcpy(filnam,jobdir);
      strcat(filnam,jobnam);
-     strcat(filnam,RITEXT);
+     strcat(filnam,RESEXT);
      IGfcpy(tmprit,filnam);
      IGfdel(tmprit);
      WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
      }
-
+/*
+***The end.
+*/
     return(0);
   }
 
@@ -1156,7 +908,7 @@ static short igsvgm()
 /*
 ***Lagra modul.
 */
-    if ( v3mode & BAS_MOD  &&  igsvmo() < 0 ) errmes();
+    if ( sysmode & GENERIC  &&  igsvmo() < 0 ) errmes();
 /*
 ***Lagra resultat.
 */
@@ -1171,16 +923,18 @@ static short igsvgm()
 
         short IGsaln()
 
-/*      Lagrar allt med nytt namn.
+/*      Save everything as.
  *
- *      FV: 0      = OK
- *          REJECT = Avsluta
- *          GOMAIN = Huvudmenyn
+ *      return: 0  = OK
+ *          REJECT = Cancel
+ *          GOMAIN = Main menu
  *
- *      Felkod: IG0342 = Otillåtet jobnamn
- *              IG0422 = Nytt namn = aktuellt namn
+ *      Error: IG0342 = Illegal job name
+ *             IG0422 = New name = current name
  *
  *      (C)microform ab 1998-09-16 J. Kjellander
+ *
+ *      2007-11-14 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1196,12 +950,12 @@ static short igsvgm()
     static char newnam[JNLGTH+1] = "";
 
 /*
-***Läs in nytt jobbnamn.
+***Get new name.
 */
     status = IGssip(IGgtts(210),IGgtts(267),newnam,newnam,JNLGTH);
     if ( status < 0 ) return(status);
 /*
-***Kolla att namnet är ok.
+***Is it valid ?
 */
    if ( igckjn(newnam) < 0 )
      {
@@ -1210,7 +964,7 @@ static short igsvgm()
      goto exit;
      }
 /*
-***Kolla att det nya namnet inte är lika med aktuellt jobbnamn.
+***Is it different from the current ?
 */
     if ( strcmp(newnam,jobnam) == 0 )
       {
@@ -1219,7 +973,7 @@ static short igsvgm()
       goto exit;
       }
 /*
-***Kolla om det redan finns ett jobb med det angivna namnet.
+***Does a job with this name already exist ?
 */
     flag = FALSE;
 
@@ -1228,39 +982,31 @@ static short igsvgm()
     strcat(path,JOBEXT);
     if ( IGftst(path) ) flag = TRUE;
 
-    if ( v3mode == !RIT_MOD )
+    if ( sysmode == GENERIC )
       {
       strcpy(path,jobdir);
       strcat(path,newnam);
       strcat(path,MODEXT);
       if ( IGftst(path) ) flag = TRUE;
+      }
 
-      strcpy(path,jobdir);
-      strcat(path,newnam);
-      strcat(path,RESEXT);
-      if ( IGftst(path) ) flag = TRUE;
-      }
-   else
-     {
-      strcpy(path,jobdir);
-      strcat(path,newnam);
-      strcat(path,RITEXT);
-      if ( IGftst(path) ) flag = TRUE;
-      }
+    strcpy(path,jobdir);
+    strcat(path,newnam);
+    strcat(path,RESEXT);
+    if ( IGftst(path) ) flag = TRUE;
 
     if ( flag  &&  !IGialt(1626,67,68,TRUE) ) goto exit;
 /*
-***Lagra jobfil.
+***Save job file.
 */
     strcpy(tmpnam,jobnam);
     strcpy(jobnam,newnam);
     if ( igsvjb() < 0 ) errmes();
     strcpy(jobnam,tmpnam);
 /*
-***Lagra ev. modul. Ändra namnet i modulhuvudet tillfälligt
-***och skriv ut.
+***Save module.
 */
-    if ( v3mode != RIT_MOD )
+    if ( sysmode == GENERIC )
       {
       pmrmod(&modhed);
       strcpy(modhed.mname,newnam);
@@ -1273,42 +1019,34 @@ static short igsvgm()
       pmumod(&modhed);
       }
 /*
-***Lagra GM.
+***Save DB.
 */
     if ( DBexit() < 0 ) return(erpush("IG0193",jobnam));
 /*
-***Kopiera den lagrade pagefilen till en fil med det nya namnet.
+***Copy the saved DB file to a RES-file.
 */
-    if ( v3mode == RIT_MOD ) strcpy(resfil,tmprit);
-    else
-      {
-      strcpy(resfil,jobdir);
-      strcat(resfil,jobnam);
-      strcat(resfil,RESEXT);
-      } 
- 
+    strcpy(resfil,jobdir);
+    strcat(resfil,jobnam);
+    strcat(resfil,RESEXT);
+
     strcpy(newfil,jobdir);
     strcat(newfil,newnam);
-    if ( v3mode == RIT_MOD ) strcat(newfil,RITEXT);
-    else strcat(newfil,RESEXT);
-/*
-***Kopiera filen.
-*/
-    if ( (status=IGfcpy(resfil,newfil)) < 0 )
-      return(status);
+    strcat(newfil,RESEXT);
+
+    if ( (status=IGfcpy(resfil,newfil)) < 0 ) return(status);
     else
       {
-      if ( v3mode == RIT_MOD ) WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
-      else                     WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
+      if ( sysmode == EXPLICIT ) WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
+      else                       WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
       }
 /*
-***Öppna GM igen.
+***Load DB again.
 */
     DBload(resfil,sysize.gm,
            DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
-    IGptma(196,IG_MESS);     
+    WPaddmess_mcwin(IGgtts(196),WP_MESSAGE);
 /*
-***Slut.
+***The end.
 */
 exit:
     return(0);
@@ -1372,22 +1110,19 @@ exit:
 
         short IGsgmn()
 
-/*      Lagra GM med nytt namn.
+/*      Save DB as.
  *
- *      In: Inget.
+ *      Return: 0  = OK
+ *          REJECT = Cancel
+ *          GOMAIN = Main menu
  *
- *      Ut: Inget.
- *
- *      FV: 0      = OK
- *          REJECT = avsluta
- *          GOMAIN = huvudmenyn
- *
- *      Felkod: IG0082 = Resultatfilens namn = jobbnamn
+ *      Error: IG0082 = New name = current
  *
  *      (C)microform ab 30/7/85 J. Kjellander
  *
  *      6/10/86  GOMAIN, B. Doverud
  *      2/2/93   copy på VAX, J. Kjellander
+ *      2007-11-14 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1396,9 +1131,6 @@ exit:
     char    resfil[V3PTHLEN+1];
     char    newfil[V3PTHLEN+1];
     char    newnam[JNLGTH+1];
-#ifdef VMS
-    char    oscmd[2*(V3PTHLEN+1)+20];
-#endif
 
 /*
 ***Läs in nytt filnamn.
@@ -1407,7 +1139,7 @@ loop:
     status = IGssip(IGgtts(279),IGgtts(267),newnam,"",JNLGTH);
     if ( status < 0 ) return(status);
 /*
-***Kolla att det nya namnet inte är lika med aktuellt jobbnamn.
+***Check that new name <> current.
 */
     if ( strcmp(newnam,jobnam) == 0 )
       {
@@ -1416,56 +1148,38 @@ loop:
       goto loop;
       }
 /*
-***Lagra GM.
+***Save DB.
 */
     if ( DBexit() < 0 ) return(erpush("IG0193",jobnam));
 /*
-***Kopiera den lagrade pagefilen till en fil med det nya namnet.
+***Copy DB file to new name.
 */
     else
       {
-      if ( v3mode == RIT_MOD ) strcpy(resfil,tmprit);
-      else
-        {
-        strcpy(resfil,jobdir);
-        strcat(resfil,jobnam);
-        strcat(resfil,RESEXT);
-        } 
- 
+      strcpy(resfil,jobdir);
+      strcat(resfil,jobnam);
+      strcat(resfil,RESEXT);
+
       strcpy(newfil,jobdir);
       strcat(newfil,newnam);
-      if ( v3mode == RIT_MOD ) strcat(newfil,RITEXT);
-      else strcat(newfil,RESEXT);
-/*
-***Kopiera filen, på VAXEN kan inte IGfcpy() användas.
-*/
-#ifdef UNIX
-      if ( (status=IGfcpy(resfil,newfil)) < 0 )
-        return(status);
-      else
-        {
-        if ( v3mode == RIT_MOD ) WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
-        else                     WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
-        }
-      }
-#endif
+      strcat(newfil,RESEXT);
 
-#ifdef WIN32
       if ( (status=IGfcpy(resfil,newfil)) < 0 )
         return(status);
       else
         {
-        if ( v3mode == RIT_MOD ) WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
-        else                     WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
+        if ( sysmode == EXPLICIT ) WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
+        else                       WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
         }
       }
-#endif
 /*
-***Öppna GM igen.
+***Load DB again.
 */
     DBload(resfil,sysize.gm,
            DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
-
+/*
+***The end.
+*/
     return(0);
   }
 
@@ -1652,9 +1366,9 @@ l1:
 /********************************************************/
 /*!******************************************************/
 
-        short IGexsn()
+        short IGexit_sn()
 
-/*      Exit without saving.
+/*      Exit and save nothing.
  *
  *      (C)microform ab 16/6/85 J. Kjellander
  *
@@ -1686,7 +1400,7 @@ l1:
 */
    gmclpf();
 
-   if ( v3mode == RIT_MOD ) IGfdel(tmprit);
+   if ( sysmode == EXPLICIT ) IGfdel(tmprit);
    else
      {
      strcpy(resfil,jobdir);
@@ -1707,13 +1421,9 @@ l1:
 /********************************************************/
 /*!******************************************************/
 
-        short IGexsa()
+        short IGexit_sa()
 
-/*      Sluta och lagra allt. f122.
- *
- *      In: Inget.
- *
- *      Ut: Inget.
+/*      Exit and save all. f122.
  *
  *      (C)microform ab 16/6/85 J. Kjellander
  *
@@ -1721,40 +1431,27 @@ l1:
  *      13/4/86  IGexit, J. Kjellander
  *      26/9/95  jnflag, J. Kjellander
  *      1998-03-12 exit_macro, J.Kjellander
+ *      2007-11-18 2.0, J.Kjellander
  *
  ******************************************************!*/
 
   {
-   short status;
-   char  newnam[JNLGTH+1];
 
 /*
-***Om inget riktigt jobnamn ännu har definierats
-***frågar vi om detta nu och byter namn på jobbet.
-*/
-   if ( !jnflag )
-     {
-     if ( (status=IGssip(IGgtts(193),IGgtts(400),newnam,"",JNLGTH)) < 0 )
-        return(status);
-
-     if ( IGchjn(newnam) < 0 )
-       {
-       errmes();
-       return(0);
-       }
-     }
-/*
-***Kör ev. exit_macro.
+***Run optional exit_macro.
 */
    exit_macro();
 /*
-***Lagra allt.
+***Save all.
 */
    IGsjpg();
 /*
-***Avsluta.
+***Clear graphics.
 */
    WPclrg();
+/*
+***The end.
+*/
    return(EXIT);
   }
 
@@ -1782,7 +1479,7 @@ l1:
 /*
 ***Sluta och lagra.
 */
-    else return(IGexsa());
+    else return(IGexit_sa());
   }
 
 /********************************************************/
@@ -1817,11 +1514,7 @@ l1:
 
         short IGnjsa()
 
-/*      Lagra allt och nytt jobb.
- *
- *      In: Inget.
- *
- *      Ut: Inget.
+/*      Save all and start/load new job.
  *
  *      FV: 0      = OK
  *          REJECT = avsluta
@@ -1832,6 +1525,7 @@ l1:
  *      6/10/86  GOMAIN, B. Doverud
  *      26/9/95  IGselj(), J. Kjellander
  *      1998-03-12 exit_macro, J.Kjellander
+ *      2007-11-18 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1841,22 +1535,7 @@ l1:
     char   oldnam[JNLGTH+1];
 
 /*
-***Om inget riktigt jobnamn ännu har definierats
-***frågar vi om detta nu och byter namn på jobbet.
-*/
-   if ( !jnflag )
-     {
-     if ( (status=IGssip(IGgtts(193),IGgtts(400),newnam,"",JNLGTH)) < 0 )
-        return(status);
-
-     if ( IGchjn(newnam) < 0 )
-       {
-       errmes();
-       return(0);
-       }
-     }
-/*
-***Läs in nytt jobnamn.
+***Get new job name.
 */
    status = IGselj(newnam);
    if      ( status == REJECT ) return(REJECT);
@@ -1866,24 +1545,21 @@ l1:
      return(0);
      }
 /*
-***Kör ev. exit_macro.
+***Run optional exit_macro.
 */
     exit_macro();
 /*
-***Lagra allt.
+***Save all.
 */
     IGsjpg();
 /*
-***Lagra nya namnet men spara först det gamla så att
-***vi kan byta tillbaks om det inte går att ladda det
-***nya jobbet.
+***Swap jobname.
 */
     strcpy(oldnam,jobnam);
     strcpy(jobnam,newnam);
 /*
-***Ladda/skapa nytt jobb, ny modul och nytt resultat.
-***Om det inte går eller avbryts av användaren laddar
-***vi tillbaks det gamla jobbet igen.
+***Try to load the new job. If not successful,
+***load old job again.
 */
     WPclrg();
 
@@ -1899,13 +1575,12 @@ l1:
       }
     else
 /*
-***New job loaded. v3mode could now have changed and a new
-***main menu might be needed, ie. 2D->3D etc. If this function
-***was called through the menu handler return(GOMAIN) is enough
-***to fix this but if the function is called by a button GOMAIN
+***New job loaded. If this function was called through the menu
+***handler return(GOMAIN) is enough to display the main menu
+***but if the function is called by a button GOMAIN
 ***will not be propagated back all the way (because buttons can't
-***return that information) so to be sure we fix it by updating
-***the mein menu here.
+***return that information) so to be sure we fix it by activating
+***the main menu here.
 */
     {
     WPactivate_menu(&mnutab[IGgmmu()]);
@@ -1916,58 +1591,39 @@ l1:
 /********************************************************/
 /*!******************************************************/
 
-        short IGsjsa()
+        short IGsave_all()
 
-/*      Lagra allt och fortsätt.
+/*      Save all.
  *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      FV: 0      = OK
- *          REJECT = avsluta
- *          GOMAIN = huvudmenyn
+ *      Return: 0  = OK
+ *          REJECT = Cancel
+ *          GOMAIN = Main menu
  *
  *      (C)microform ab 28/9/95 J. Kjellander
  *
  *      1998-02-06 WIN32, J.Kjellander
+ *      2007-11-14 2.0, J.Kjellander
  *
  ******************************************************!*/
 
   {
-   short  status;
-   char   newnam[JNLGTH+1],ritfil[V3PTHLEN+1];
+   char resfil[V3PTHLEN+1];
 
 /*
-***Om inget riktigt jobnamn ännu har definierats
-***frågar vi om detta nu och byter namn på jobbet.
-*/
-   if ( !jnflag )
-     {
-     if ( (status=IGssip(IGgtts(193),IGgtts(400),newnam,"",JNLGTH)) < 0 )
-        return(status);
-
-     if ( IGchjn(newnam) < 0 )
-       {
-       errmes();
-       return(0);
-       }
-     }
-/*
-***Lagra JOB-fil.
+***Save the JOB-file.
 */
    if ( igsvjb() < 0 ) errmes();
 /*
-***Kanske även MBO-fil.
+***Optionally also a MBO-file.
 */
-   if ( v3mode & BAS_MOD )
+   if ( sysmode & GENERIC )
      {
      if ( igsvmo() < 0 ) errmes();
      }
 /*
-***Och kanske även RIT-fil.
+***In explicit mode also the RES-file.
 */
-   if ( v3mode == RIT_MOD )
+   if ( sysmode == EXPLICIT )
      {
      if ( DBexit() < 0 )
        {
@@ -1976,36 +1632,25 @@ l1:
        return(0);
        }
 
-     strcpy(ritfil,jobdir);
-     strcat(ritfil,jobnam);
-     strcat(ritfil,RITEXT);
+     strcpy(resfil,jobdir);
+     strcat(resfil,jobnam);
+     strcat(resfil,RESEXT);
 
-#ifdef UNIX
-     if ( IGfcpy(tmprit,ritfil) < 0 )
+     if ( IGfcpy(tmprit,resfil) < 0 )
        {
        errmes();
        return(0);
        }
-#endif
-
-#ifdef WIN32
-     if ( IGfcpy(tmprit,ritfil) < 0 )
-       {
-       errmes();
-       return(0);
-       }
-#endif
 /*
-***Öppna GM igen.
+***Load DB again.
 */
      if ( DBload(tmprit,sysize.gm,
           DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL) < 0 ) errmes();
      }
-/*
-***Å så ett litet meddelande.
-*/
    WPaddmess_mcwin(IGgtts(196),WP_MESSAGE);
-
+/*
+***The end.
+*/
    return(0);
   }
 
@@ -2014,15 +1659,11 @@ l1:
 
         short IGnjsn()
 
-/*      Lagra inget och nytt jobb.
+/*      Save nothing and load/start new job.
  *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      FV: 0      = OK
- *          REJECT = avsluta
- *          GOMAIN = huvudmenyn
+ *      Return: 0  = OK
+ *          REJECT = Operation cancelled
+ *          GOMAIN = Main menu
  *
  *      (C)microform ab 6/10/86 J. Kjellander
  *
@@ -2030,6 +1671,7 @@ l1:
  *      26/9/95  tmprit, J. Kjellander
  *      26/9/95  IGselj(), J. Kjellander
  *      1998-03-12 exit_macro, J.Kjellander
+ *      2007-11-18 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -2039,7 +1681,7 @@ l1:
     char   resfil[V3PTHLEN+1];
 
 /*
-***Läs in nytt jobnamn.
+***Get new jobname.
 */
    status = IGselj(newnam);
    if      ( status == REJECT ) return(REJECT);
@@ -2049,15 +1691,15 @@ l1:
      return(0);
      }
 /*
-***Kör ev. exit_macro.
+***Run optional exit_macro.
 */
     exit_macro();
 /*
-***Lagra inget.
+***Save nothing.
 */
    gmclpf();
 
-   if ( v3mode & BAS_MOD )
+   if ( sysmode & GENERIC )
      {
      strcpy(resfil,jobdir);
      strcat(resfil,jobnam);
@@ -2066,13 +1708,11 @@ l1:
      }
    else IGfdel(tmprit);
 /*
-***Lagra nya namnet. Eftersom detta namn är givet av användaren
-***sätter vi nu jnflaggan till true.
+***Update jobnam.
 */
     strcpy(jobnam,newnam);
-    jnflag = TRUE;
 /*
-***Ladda/skapa nytt jobb, ny modul och nytt resultat.
+***Load new job.
 */
     WPclrg();
 
@@ -2096,95 +1736,57 @@ l1:
 
         short IGselj(char *newjob)
 
-/*      Interaktiv funktion för att välja jobb.
+/*      Select a new job (and jobdir).
  *
- *      In: newjob = Pekare till utdata.
+ *      Out: *newjob = New job name.
  *
- *      Ut: *newjob = Jobbnamn eller odefinierat.
+ *      Return: 0      = Ok.
+ *              REJECT = Cancel.
  *
- *      FV:  0      = Ok.
- *           REJECT = Avbryt.
- *          -1      = Kan ej skapa pipe till "ls".
+ *      Error: IG0342 = Illegal job name.
  *
- *      Felkoder: IG0342 = %s är ett otillåtet jobbnamn.
- *                IG0442 = Kan ej öppna pipe %s
- *
- *      (C)microform ab 25/9/95 J. Kjellander
- *
- *      1998-11-03 actfun, J.Kjellander
+ *      (C)2007-11-20 J.Kjellander
  *
  ******************************************************!*/
 
   {
    short status,oldafu;
-   char *pekarr[1000],strarr[20000];
-   char  typ[5],mesbuf[V3STRLEN+1];
-   int   i,nstr,actalt;
+   char  typ[5],filter[6],newdir[V3PTHLEN];
+   int   i;
 
 /*
-***Skapa filförteckning.
+***Filter.
 */
-   if ( v3mode & BAS_MOD ) strcpy(typ,MODEXT);
-   else                    strcpy(typ,RITEXT);
-
-   IGdir(jobdir,typ,1000,20000,pekarr,strarr,&nstr);
+   if ( sysmode & GENERIC ) strcpy(typ,MODEXT);
+   else                     strcpy(typ,RESEXT);
 /*
-***Vilket av dem är aktivt ?
-*/
-   for ( i=0; i<nstr; ++i ) if ( strcmp(pekarr[i],jobnam) == 0 ) break;
-
-   if ( i < nstr ) actalt =  i;
-   else            actalt = -1;
-/*
-***Aktiv funktion, specialare för hjälp-systemet.
+***Set active function.
 */
    oldafu = actfun;
    actfun = 1001;
 /*
-***Låt användaren välja.
+***Call the file selector. On return we have a filename with
+***extension, XXX.MBO or XXX-RES and jobdir may have changed.
 */
-   sprintf(mesbuf,"%s - %s ",pidnam,IGgtts(210));
-
-   if ( nstr > 0 )
-     {
-#ifdef UNIX
-     /*status = WPilse(mesbuf,"",pekarr,actalt,nstr,newjob); */
-char filter[6];
-   strcpy(filter,"*");
-   strcat(filter,typ);
-   status = WPfile_selector(mesbuf,jobdir,FALSE,"",filter,FALSE,newjob);
-   if ( status == 0 )
-    {
-    i = strlen(newjob) - 4;
-    newjob[i] = '\0';
-    }
-#endif
-
-#ifdef WIN32
-     status = msilse(mesbuf,"",pekarr,actalt,nstr,newjob);
-#endif
-     }
+    strcpy(newdir,jobdir);
+    strcpy(filter,"*");
+    strcat(filter,typ);
+    status = WPfile_selector(IGgtts(210),newdir,FALSE,"",filter,FALSE,newjob);
+    if ( status == 0 )
+      {
+      i = strlen(newjob) - 4;
+      newjob[i] = '\0';
+      if ( igckjn(newjob) < 0 ) return(erpush("IG0342",newjob));
+      strcpy(jobdir,newdir);
+      }
 /*
-***Om det inte finns några jobb att välja mellan räcker det
-***med en enkel fråga.
+***Reset active function.
 */
-   else
-     {
-     status=IGssip(mesbuf,IGgtts(210),newjob,"",JNLGTH);
-     }
-
    actfun = oldafu;
-
-   if ( status <  0 ) return(status);
 /*
-***Han kan ha matat in ett JOB-namn från tangentbordet så det är
-***bäst att kolla att det följer reglerna.
+***The end.
 */
-   if ( igckjn(newjob) < 0 ) return(erpush("IG0342",newjob));
-/*
-***Slut.
-*/
-   return(0);
+   return(status);
   }
 
 /********************************************************/
@@ -2192,14 +1794,12 @@ char filter[6];
 
         short IGchjn(char *newnam)
 
-/*      Ändrar namn på aktivt jobb.
+/*      Change the name of the active job.
  *
- *      In: newnam = Nytt jobbnamn.
+ *      In: newnam = New jobname.
  *
- *      Ut: Inget.
- *
- *      Felkoder: IG0342 = Jobnamnet %s är ej tillåtet
- *                IG0422 = Jobbet finns redan
+ *      Error: IG0342 = Illegal jobname
+ *             IG0422 = Job already exists
  *
  *      (C)microform ab 26/9/95 J. Kjellander
  *
@@ -2211,47 +1811,35 @@ char filter[6];
     PMMODULE   modhed;
 
 /*
-***Kolla att det är ett tillåtet namn.
+***Check that the new name is valid.
 */
     if ( igckjn(newnam) < 0 ) return(erpush("IG0342",newnam));
 /*
-***Kolla at inte ett jobb med detta namn finns redan.
+***Check that a job with this name does not exist.
 */
-    strcpy(filnam,jobdir);
-    strcat(filnam,newnam);
-    strcat(filnam,JOBEXT);
-    if ( IGftst(filnam) ) return(erpush("IG0422",newnam));
-
-    if ( v3mode & BAS_MOD )
+    if ( sysmode & GENERIC )
       {
       strcpy(filnam,jobdir);
       strcat(filnam,newnam);
       strcat(filnam,MODEXT);
-      if ( IGftst(filnam) ) return(erpush("IG0422",newnam));
-
-      strcpy(filnam,jobdir);
-      strcat(filnam,newnam);
-      strcat(filnam,RESEXT);
       if ( IGftst(filnam) ) return(erpush("IG0422",newnam));
       }
     else
       {
       strcpy(filnam,jobdir);
       strcat(filnam,newnam);
-      strcat(filnam,RITEXT);
+      strcat(filnam,RESEXT);
       if ( IGftst(filnam) ) return(erpush("IG0422",newnam));
       }
 /*
-***Kör vi basmodulen skall vi ändra namnet i modulhuvudet....
+***Rename active module and RES-file.
 */
-    if ( v3mode & BAS_MOD )
+    if ( sysmode & GENERIC )
       {
       pmrmod(&modhed);
       strcpy(modhed.mname,newnam);
       pmumod(&modhed);
-/*
-***samt byta namn på resultatfilen.
-*/
+
       strcpy(oldres,jobdir);
       strcat(oldres,jobnam);
       strcat(oldres,RESEXT);
@@ -2261,7 +1849,7 @@ char filter[6];
       IGfmov(oldres,newres);
       }
 /*
-***Kör vi ritmodulen räcker det att byta namn på temporärfilen.
+***In explicit mode it's enough to rename the temp-file.
 */
     else
       {
@@ -2275,17 +1863,16 @@ char filter[6];
       strcpy(tmprit,newres);
       }
 /*
-***Sist av allt byter vi aktivt jobnamn.
+***Save the new job name.
 */
    strcpy(jobnam,newnam);
-   jnflag = TRUE;
 /*
-***Och uppdaterar fönsterramen.
+***Update window border.
 */
-#ifdef UNIX
    WPupwb(NULL);
-#endif
-
+/*
+***The end.
+*/
    return(0);
   }
 

@@ -63,7 +63,7 @@ char  *fstmem;         /* ptr to first empty element in txtmem */
 MNUDAT mnutab[MNUMAX]; /* Menus */
 MNUALT smbind[SMBMAX]; /* Shortcuts */
 
-extern short  v3mode;
+extern short  sysmode;
 extern short  mant;
 extern pm_ptr pmstkp;
 extern bool   igbflg;
@@ -153,9 +153,8 @@ static void sigtrp(int sigval);
 */
    for ( i=0; i<MNUMAX; i++ ) mnutab[i].rubr = NULL;
 /*
-***Initiera aktiv huvudmeny. 0 är detsamma som systemets
-***default-meny dvs. 2 för BAS_2MOD, 3 för BAS3_MOD och
-***4 för RIT_MOD.
+***Which menu is the main menu ?
+***3 for GENERIC, 4 for EXPLICIT or user defined.
 */
    IGsmmu((short)0);
 /*
@@ -520,7 +519,7 @@ errend:
 ***Läs in alternativ.
 */
 loop:
-    if ( v3mode == RIT_MOD  &&  mnum == 4 ) pmsstp(pmstkp);
+    if ( sysmode == EXPLICIT  &&  mnum == 4 ) pmsstp(pmstkp);
     IGgalt(&altptr,&alttyp);
 /*
 ***altptr == NULL => backa 1 meny eller alla.
@@ -572,21 +571,19 @@ loop:
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
        short IGdofu(
        short atyp,
        short anum)
 
-/*      Skriver ut en ny meny eller anropar en Varkon-
- *      funktion eller eller skapa en part-sats.
+/*      Executes different types of actions.
  *
- *      In: atyp   => Typ av aktion.
- *          anum   => Alternativ.
+ *      In: atyp   => Type of action.
+ *          anum   => Alternative.
  *
- *      Felkoder : IG0043 => f%s kan ej anropas i detta sammanhang
- *                 IG2202 => f%s finns ej i systemet
- *                 IG2292 => f%s kräver X-Windows
+ *      Felkoder : IG0043 => f%s may not be used in this context
+ *                 IG2202 => f%s does not exist
  *
  *      (C)microform ab 9/1/85 J. Kjellander
  *
@@ -596,6 +593,7 @@ loop:
  *      9/12/84  Ny futab, J. Kjellander
  *      1997-01-15 f153, J.Kjellander
  *      2007-01-03 Removed GP, J.Kjellander
+ *      2007-11-14 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -604,7 +602,7 @@ loop:
     short dummy,status,oldfun;
 
 /*
-***Initiering.
+***Init.
 */
     status = 0;
 /*
@@ -612,16 +610,16 @@ loop:
 */
     WPclear_tooltip();
 /*
-***Vilken aktionskod är det ?
+***What kind of action is it ? A menu maybe ?
 */
-    switch (atyp)
+    switch ( atyp )
       {
       case MENU:
       return(IGexfu(anum,&dummy));
       break;
 /*
-***En modul skall anropas. Då får inte en annan vara aktiv
-***redan. Modul får bara anropas från meny.
+***A module call. Check that another module is not
+***already executing.
 */
       case PART:
       case RUN:
@@ -632,8 +630,8 @@ loop:
         return(0);
         }
 /*
-***Ett part- eller macro-anrop kan avslutas med GOMAIN eller
-***REJECT, annars är det fel.
+***Part- or macro- calls can return REJECT or GOMAIN or
+***error.
 */
       if ( atyp == MFUNC ) status = IGcall_macro(IGgtts(anum));
       else                 status = IGcall_part(IGgtts(anum),atyp);
@@ -643,7 +641,7 @@ loop:
       else if ( status < 0 ) errmes();
       break;
 /*
-***Funktion, kolla att funktionsnumret är rimligt stort.
+***A C function, check that the function number is valid.
 */
       case CFUNC:
       if ( anum < 1  ||  anum > FTABSIZ )
@@ -654,19 +652,17 @@ loop:
         return(0);
         }
 /*
-***Om denna funktion anropas i en annan funktion eller
-***under körning av modul måste den vara en sån som
-***får det.
+***If a function is already actice, check that this function
+***can interrupt.
 */
-      if ( actfun != -1  &&  futab[anum-1].snabb == FALSE )
+      if ( actfun != -1  &&  futab[anum-1].call == FALSE )
         {
         WPbell();
         return(0);
         }
 /*
-***Om anum = actfun betyder det att vi försöker
-***anropa samma funktion 2 ggr. efter varandra utan att
-***göra klart. Detta skall väl inte vara möjligt.
+***If anum = actfun something must be wrong. There is no
+***reason for a function to call itself.
 */
       if ( anum == actfun )
         {
@@ -674,28 +670,20 @@ loop:
         return(0);
         }
 /*
-***Spara actfun så den kan återställas efter att
-***funktionen anum har anropats. Om anum = actfun försöker
-***vi anropa samma funktion 2 ggr. efter varandra utan att
-***göra klart. Detta skall väl inte vara möjligt. Funktionen
-***Hjälp (IGhelp()=f153) skall inte vis hjälp om sig själv
-***ifall den anropas utan om den situation som gällde när
-***den anropades.
+***Save actfun. f153 (IGhelp()) should not display help
+***about itself.
 */
       oldfun = actfun;
       if ( anum != 153 ) actfun = anum;
 /*
-***Anropa funktionen. Om den klassats för NONE_MOD
-***anropar vi den ändå så att notimpl() eller wpunik()
-***får ta hand om felhanteringen.
+***Call the function if it is allowed in this context.
 */
-      if ( (futab[anum-1].modul & v3mode)  ||
-                             (futab[anum-1].modul == NONE_MOD) )
+      if ( (futab[anum-1].mode & sysmode) )
         {
         status = ((*futab[anum-1].fnamn)());
         }
 /*
-***Vissa får bara användas i RIT eller BAS-2D osv.
+***The function is not allowed in this context.
 */
       else
         {
@@ -703,12 +691,14 @@ loop:
         erpush("IG0043",errbuf);
         errmes();
         }
-
+/*
+***Reset actfun.
+*/
       actfun = oldfun;
       break;
       }
 /*
-***Slut.
+***The end.
 */
     return(status);
   }
@@ -985,7 +975,7 @@ static void sigtrp(int sigval)
      case SIGTERM:
      signal(SIGHUP,SIG_IGN);
      signal(SIGTERM,SIG_IGN);
-     if ( v3mode & (BAS_MOD+RIT_MOD) ) IGexsa();
+     if ( sysmode & (GENERIC+EXPLICIT) ) IGexit_sa();
      IGexit();
      break;
 /*
@@ -999,7 +989,7 @@ static void sigtrp(int sigval)
 ***Quit, normalt <DEL>.
 */
      case SIGQUIT:
-     if ( v3mode & (BAS_MOD+RIT_MOD) ) IGexsa();
+     if ( sysmode & (GENERIC+EXPLICIT) ) IGexit_sa();
      IGexit();
      break;
      }

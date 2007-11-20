@@ -34,6 +34,9 @@
 #include "../include/WP.h"
 #include <math.h>
 
+extern V3MDAT  sydata;
+extern char    svnversion[];
+
 /*********************************************************/
 
      bool  WPialt(
@@ -496,14 +499,14 @@ exit:
 /*    This dialogue is used by IG to let the user select
  *    a module to use in creating a PART statement.
  *
- *   In:   source => Initial source, 1=jobdir, 2=mbodir
+ *   In:   source => Initial source, 1=jobdir, 2=jobdir/lib
  *         namlst => Array of C ptrs to part names
  *         nstr   => Number of names
  *
  *   Out: *name = The name of the selected module
  *
  *   Return:  1 = Switch to jobdir
- *            2 = Switch to mbodir
+ *            2 = Switch to jobdir/lib
  *            3 = Too many modules
  *            0 = Ok.
  *       REJECT = Cancel.
@@ -796,55 +799,69 @@ exit:
  *******************************************************!*/
 
  {
-   char     expl[81],expltt[81],gen[81],gentt[81],close[81],closett[81],
-            help[81],helptt[81];
-   short    butlen,ly,bh,lm,iwin_x,iwin_y,main_dx,main_dy,alt_x,alt_y;
-   DBint    iwin_id,expl_id,gen_id,close_id,help_id,but_id;
+   char     expl[81],gen[81],exit[81],learn[81],line1[81],
+            line2[81],line3[81],line4[81];
+   short    status,tlen,air1,air2,bh1,bh2,iwin_x,iwin_y,main_dx,
+            main_dy,alt_x,alt_y;
+   DBint    iwin_id,expl_id,gen_id,exit_id,learn_id,but_id,dum_id;
    WPWIN   *winptr;
    WPIWIN  *iwinpt;
    WPBUTT  *butptr;
 
 /*
-***Explicit-, generic-, exit- and help-texts and
-***tooltips from the ini-file.
+***Line 1 = Welcome to VARKON
+***Line 2 = version X.X.X svn#X
+***Line 3 = an open source CAD-tool
 */
-   if ( !WPgrst("varkon.mode.explicit",expl) )           strcpy(expl,"Explicit");
-   if ( !WPgrst("varkon.mode.explicit.tooltip",expltt) ) strcpy(expltt,"");
-   if ( !WPgrst("varkon.mode.generic",gen) )             strcpy(gen,"Generic");
-   if ( !WPgrst("varkon.mode.generic.tooltip",gentt) )   strcpy(gentt,"");
+   strcpy(line1,"Welcome to VARKON");
+   sprintf(line2,"version %d.%d%c svn#%s",(int)sydata.vernr,
+                 (int)sydata.revnr,sydata.level,svnversion);
+   strcpy(line3,"an open source CAD-tool");
+/*
+***Line 4 = What would you like to do next ?
+***Explicit-, generic-, exit- and learn-texts.
+*/
+   if ( !WPgrst("varkon.mode.what",line4) )      strcpy(line4,"What next ?");
+   if ( !WPgrst("varkon.mode.explicit",expl) )   strcpy(expl,"Explicit");
+   if ( !WPgrst("varkon.mode.generic",gen) )     strcpy(gen,"Generic");
+   if ( !WPgrst("varkon.mode.learnmore",learn) ) strcpy(learn,"Help");
+   if ( !WPgrst("varkon.mode.exit",exit) )       strcpy(exit,"Exit");
+/*
+***Length and heights of texts.
+*/
+   WPsfnt(WP_FNTBIG);
+   bh1  = WPstrh();
+   tlen = WPstrl(line1);
+   if ( WPstrl(line4) > tlen ) tlen = WPstrl(line4);
 
-   if ( !WPgrst("varkon.input.close",close) )            strcpy(close,"Close");
-   if ( !WPgrst("varkon.input.close.tooltip",closett) )  strcpy(closett,"");
-   if ( !WPgrst("varkon.input.help",help) )              strcpy(help,"Help");
-   if ( !WPgrst("varkon.input.help.tooltip",helptt) )    strcpy(helptt,"");
+   WPsfnt(WP_FNTNORMAL);
+   bh2 =  WPstrh();
+   if ( WPstrl(line2) > tlen ) tlen = WPstrl(line2);
+   if ( WPstrl(line3) > tlen ) tlen = WPstrl(line3);
+   if ( WPstrl(expl)  > tlen ) tlen = WPstrl(expl);
+   if ( WPstrl(gen)   > tlen ) tlen = WPstrl(gen);
+   if ( WPstrl(exit)  > tlen ) tlen = WPstrl(exit);
+   if ( WPstrl(learn) > tlen ) tlen = WPstrl(learn);
 /*
-***What is the 1.2*length of the longest text ?
+***Calculate outside air (air1) and air between (air2).
 */
-   butlen = 0;
-   if ( WPstrl(expl)  > butlen ) butlen = WPstrl(expl);
-   if ( WPstrl(gen)   > butlen ) butlen = WPstrl(gen);
-   if ( WPstrl(close) > butlen ) butlen = WPstrl(close);
-   if ( WPstrl(help)  > butlen ) butlen = WPstrl(help);
-   butlen *= 1.2;
-/*
-***Calculate outside air (ly), button height (bh) and air between (lm).
-*/
-   ly = 1.2*WPstrh();
-   bh = 1.8*WPstrh();
-   lm = 0.8*WPstrh();
+   air1 = 1.3*bh1;
+   air2 = 0.5*bh2;
 /*
 ***Window position.
 */
-   iwin_x = 100;
-   iwin_y = 50;
+   iwin_x = 200;
+   iwin_y = 200;
 /*
 ***Calculate the window size in X-direction.
 */
-   main_dx = ly + butlen + lm + butlen + ly;
+   main_dx = air1 + air1 + tlen + air1;
 /*
 ***Calculate the window size in Y-direction.
 */
-   main_dy = ly + bh + lm + bh + ly;
+   main_dy = air1 + bh1 + air2 + bh2 + air2 + bh2 + air1 +
+             + air1 + bh1 + air1 + bh2 + air2 + bh2 + air2 + bh2 +
+             air2 + bh2 + air1;
 /*
 ***Create the dialogue window as a WPIWIN.
 */
@@ -855,41 +872,67 @@ exit:
    winptr = WPwgwp((wpw_id)iwin_id);
    iwinpt = (WPIWIN *)winptr->ptr;
 /*
-***Explicit and generic buttons.
+***Line 1.
 */
-   alt_x  = ly;
-   alt_y  = ly;
-   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,butlen,bh,(short)1,
-                           expl,expl,"",WP_BGND2,WP_FGND,&expl_id);
-   butptr = (WPBUTT *)iwinpt->wintab[expl_id].ptr;
-   strcpy(butptr->tt_str,expltt);
-
-   alt_x  = main_dx - ly - butlen;
-   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,butlen,bh,(short)1,
-                           gen,gen,"",WP_BGND2,WP_FGND,&gen_id);
-   butptr = (WPBUTT *)iwinpt->wintab[gen_id].ptr;
-   strcpy(butptr->tt_str,gentt);
+   alt_x = air1;
+   alt_y = air1;
+   WPcrlb(iwin_id,alt_x,alt_y,tlen,bh1,line1,&dum_id);
+   butptr = (WPBUTT *)iwinpt->wintab[dum_id].ptr;
+   butptr->font = WP_FNTBIG;
 /*
-***Close and help.
+***Line 2.
 */
-   alt_x  = ly;
-   alt_y += bh + lm;
-   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,butlen,bh,(short)1,
-                           close,close,"",WP_BGND2,WP_FGND,&close_id);
-   butptr = (WPBUTT *)iwinpt->wintab[close_id].ptr;
-   strcpy(butptr->tt_str,closett);
-
-   alt_x  = main_dx - ly - butlen;
-   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,butlen,bh,(short)1,
-                           help,help,"",WP_BGND2,WP_FGND,&help_id);
-   butptr = (WPBUTT *)iwinpt->wintab[help_id].ptr;
-   strcpy(butptr->tt_str,helptt);
+   alt_x  = air1;
+   alt_y += bh1 + air2;
+   WPcrlb(iwin_id,alt_x,alt_y,tlen,bh1,line2,&dum_id);
+/*
+***Line 3.
+*/
+   alt_x  = air1;
+   alt_y += bh2 + air2;
+   WPcrlb(iwin_id,alt_x,alt_y,tlen,bh1,line3,&dum_id);
+/*
+***A 3D line.
+*/
+   alt_x = (main_dx - tlen)/2;
+   alt_y += bh2 + air1;
+   WPcreate_3Dline(iwin_id,alt_x,alt_y,alt_x+tlen,alt_y);
+/*
+***Line 4.
+*/
+   alt_x  = air1;
+   alt_y += bh2 + air1;
+   WPcrlb(iwin_id,alt_x,alt_y,tlen,bh1,line4,&dum_id);
+   butptr = (WPBUTT *)iwinpt->wintab[dum_id].ptr;
+   butptr->font = WP_FNTBIG;
+/*
+***Explicit.
+*/
+   alt_x += air1;
+   alt_y += bh2 + air1;
+   WPcrtb((wpw_id)iwin_id,alt_x,alt_y,expl,&expl_id);
+/*
+***Generic.
+*/
+   alt_y += bh2 + air2;
+   WPcrtb((wpw_id)iwin_id,alt_x,alt_y,gen,&gen_id);
+/*
+***Learn more.
+*/
+   alt_y += bh2 + air2;
+   WPcrtb((wpw_id)iwin_id,alt_x,alt_y,learn,&learn_id);
+/*
+***Exit.
+*/
+   alt_y += bh2 + air2;
+   WPcrtb((wpw_id)iwin_id,alt_x,alt_y,exit,&exit_id);
 /*
 ***Show the dialogue and wait for action.
 */
    WPwshw(iwin_id);
-   XRaiseWindow(xdisp,iwinpt->id.x_id);
-
+/*
+***Wait for action.
+*/
 loop:
    WPwwtw(iwin_id,SLEVEL_V3_INP,&but_id);
 /*
@@ -897,6 +940,8 @@ loop:
 */
    if ( but_id == expl_id )
      {
+    *mode = EXPLICIT;
+     status = 0;
      goto exit;
      }
 /*
@@ -904,19 +949,22 @@ loop:
 */
    else if ( but_id == gen_id )
      {
+    *mode = GENERIC;
+     status = 0;
      goto exit;
      }
 /*
-***Close button.
+***Exit button.
 */
-   else if ( but_id == close_id )
+   else if ( but_id == exit_id )
      {
+     status = REJECT;
      goto exit;
      }
 /*
-***Help button.
+***Learn more button.
 */
-   else if ( but_id == help_id )
+   else if ( but_id == learn_id )
      {
      IGhelp();
      goto loop;
@@ -937,7 +985,7 @@ exit:
 /*
 ***The end.
 */
-   return(0);
+   return(status);
   }
 
 /********************************************************/

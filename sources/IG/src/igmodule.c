@@ -4,10 +4,11 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*    IGevlp();   Evaluate parameters of active module              */
-/*    IGramo();   Run active module interactively                   */
-/*    IGream();   Run active module from macro                      */
-/*    IGprtm();   Decompile to file                                 */
+/*    IGevlp();        Evaluate parameters of active module         */
+/*    IGrun_active();  Run active module interactively              */
+/*    IGream();        Run active module from macro                 */
+/*    IGedit_active(); Edit module in MBS mode                      */
+/*    IGprtm();        Decompile to file                            */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
 /*  URL:  http://varkon.sourceforge.net                             */
@@ -44,7 +45,6 @@
 
 extern pm_ptr  actmod;
 extern DBptr   lsysla;
-extern short   modtyp;
 extern char    jobdir[],jobnam[];
 extern V3MDAT  sydata;
 
@@ -93,7 +93,7 @@ errend:
 /********************************************************/
 /*!******************************************************/
 
-        short IGramo()
+        short IGrun_active()
 
 /*      Interaktive function for "Run active module".
  *
@@ -142,7 +142,7 @@ errend:
 
 /*      Kör om aktiv modul. Nollst'ller inte RTS eller
  *      parameterpool.
- *      Används även av MACRO. Gamla IGramo().
+ *      Används även av MACRO.
  *
  *      In: Inget.
  *
@@ -263,6 +263,24 @@ errend:
   }
 
 /********************************************************/
+/********************************************************/
+
+       short  IGedit_active()
+
+/*     Edit active module in MBS mode.
+*
+*      (C)2007-11-20 J. Kjellander.
+*
+*******************************************************!*/
+
+ {
+/*
+***Call WP.
+*/
+   return(WPamod());
+ }
+
+/******************************************************!*/
 /*!******************************************************/
 
         short IGprtm()

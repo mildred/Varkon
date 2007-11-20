@@ -38,8 +38,6 @@
 extern DBTmat  *lsyspk;
 #endif
 
-extern short  modtyp;      /* indicate module type, from GM-part */
-
 extern PMPARVA *func_pv;   /* Access structure for MBS routines */
 extern short    func_pc;   /* Number of actual parameters */
 extern PMLITVA *func_vp;   /* Pekare till resultat. */

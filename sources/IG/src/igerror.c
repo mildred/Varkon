@@ -59,6 +59,9 @@ ERRRPT  errstk[ESTKSZ];
 extern bool  igbflg;
 extern char  jobdir[],jobnam[];
 
+extern bool  startup_complete;
+extern FILE *startup_logfile;
+
 /*!******************************************************/
 
         short erinit()
@@ -108,6 +111,7 @@ extern char  jobdir[],jobnam[];
  *      7/3/95   max 80 tecken i str, J. Kjellander
  *      1998-03-11 INSLEN, J.Kjellander
  *      2004-02-21 IGialt(), J.Kjellander
+ *      2007-11-17 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -115,6 +119,16 @@ extern char  jobdir[],jobnam[];
     int   errval,sevval;
     short i;
 
+/*
+***If system startup is not yet completed, write
+***error message to startup_logfile and return 
+***neg status.
+*/
+   if ( startup_complete == FALSE )
+     {
+     fprintf(startup_logfile,"%s %s\n",code,str);
+     return(-1);
+     }
 /*
 ***Insertsträngar får inte vara längre än INSLEN tecken.
 */
@@ -151,7 +165,7 @@ extern char  jobdir[],jobnam[];
       {
       errmes();
       IGialt(457,458,458,TRUE);
-      IGexsa();
+      IGexit_sa();
       }
 /*
 ***Returnera severity.

@@ -54,9 +54,9 @@ static WPGWIN *wt_win = NULL;
    skall visa v�ntameddelandet. */
 
 
-extern char        pidnam[],jobnam[];
-extern MNUALT      smbind[];
-extern V3MDAT      sydata;
+extern char   jobnam[];
+extern MNUALT smbind[];
+extern V3MDAT sydata;
 
 /*!*******************************************************/
 
@@ -382,10 +382,6 @@ static  WPBUTT *buttpt = 0;
  *     In: gwinpt => C-pekare till grafiskt f�nster
  *                   eller NULL f�r huvudf�nstret.
  *
- *     Ut: Inget.
- *
- *     FV: 0
- *
  *     (C)microform ab 28/1/95 J. Kjellander
  *
  *     2/9/95  varkon.title.project, J. Kjellander
@@ -412,33 +408,20 @@ static  WPBUTT *buttpt = 0;
      }
    else grawin = gwinpt;
 /*
-***Om det �r huvudf�nstret inleder vi med en s�rskild titel-resurs.
+***The main WPGWIN can have a full title with Varkon
+***version etc.
 */
    if ( grawin->id.w_id == GWIN_MAIN )
      {
      if ( !WPgrst("varkon.title",title) )
        {
-       if ( sydata.opmode == BAS_MOD )
-         sprintf(title,"VARKON-3D/B %d.%d%c",sydata.vernr,sydata.revnr,
-                                             sydata.level);
-       else
-         sprintf(title,"VARKON-3D/R %d.%d%c",sydata.vernr,sydata.revnr,
-                                             sydata.level);
+       sprintf(title,"VARKON %d.%d%c",sydata.vernr,sydata.revnr,
+                                      sydata.level);
        }
-/*
-***Om varkon.title.project �r satt skriver vi �ven ut projektnamn i 
-***huvudf�rnstret.
-*/
-     if ( WPgrst("varkon.title.project",tmpbuf) &&
-          strcmp(tmpbuf,"True") == 0 )
-         {
-         strcat(title," - ");
-         strcat(title,pidnam);
-         }
      }
 /*
-***Alla f�nster kan ha jobnamn och/eller vynamn.
-*/  
+***All WPGWIN's can have job- and view name.
+*/
    if ( WPgrst("varkon.title.jobname",tmpbuf) &&
         strcmp(tmpbuf,"True") == 0 )
        {
@@ -464,7 +447,7 @@ static  WPBUTT *buttpt = 0;
          }
        }
 /*
-***Uppdatera f�nsterramen.
+***Update window border.
 */
    XStoreName(xdisp,grawin->id.x_id,title);
 

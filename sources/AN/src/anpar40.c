@@ -82,6 +82,7 @@ static void string_def(pm_ptr *type_pm, ANFSET *fsys);
  *      (C)microform ab 1985-11-05 Kenth Ericson
  *
  *      1999-04-23 Rewritten, R. Svedin
+ *      2007-11-20 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -95,7 +96,7 @@ static void string_def(pm_ptr *type_pm, ANFSET *fsys);
    pm_ptr   st_list;         /* Statement list                    */
    char     buf[V3STRLEN+1]; /* Temporär buffert för modulnamn    */
    bool     varning,hit;     /* Flaggor för felhant. av modulnamn */
-            
+
    anoffs = 0;               /* 861014JK */
 
    ancset(&decl_sys, NULL, 7, ANSYINT, ANSYFLT, ANSYSTR, ANSYVECT, 
@@ -113,7 +114,7 @@ static void string_def(pm_ptr *type_pm, ANFSET *fsys);
    V3MOME(&sydata, &(modulatt.system), sizeof(sydata));
 /*
 ***Attribut, 13/2/92 J. Kjellander.
-*/   
+*/
    if ( (sy.sytype == ANSYLOCL) || (sy.sytype == ANSYGLOB) || 
         (sy.sytype == ANSYBASI) || (sy.sytype == ANSYMAC) )
      {
@@ -128,14 +129,19 @@ static void string_def(pm_ptr *type_pm, ANFSET *fsys);
      }
    modatt = (short) modulatt.mattri;
 /*
-***Typ.
+***Type, always _3D. Issue warning if type keyword is used.
 */
-   if ( (sy.sytype == ANSYGEO) || (sy.sytype == ANSYDRAW) )
+   if ( sy.sytype == ANSYDRAW )
      {
-     if ( sy.sytype == ANSYDRAW )
-       modulatt.mtype = _2D;
+     anperr("AN9471", "", NULL, sy.sypos.srclin, sy.sypos.srccol);
      anascan(&sy);
      }
+   else if ( sy.sytype == ANSYGEO )
+     {
+     anperr("AN9481", "", NULL, sy.sypos.srclin, sy.sypos.srccol);
+     anascan(&sy);
+     }
+
    modtyp = (short) modulatt.mtype;
 
    if ( sy.sytype != ANSYMOD )

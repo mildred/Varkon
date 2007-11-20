@@ -95,14 +95,13 @@ typedef char pmopty;    /* Type for binary operator.                         */
 #define PM_DIV   12     /*   - " -       /       - " -                       */
 #define PM_MUL   13     /*   - " -       *       - " -                       */
 #define PM_EXP   14     /*   - " -       **      - " -                       */
-   
+
 /*---------------------------------------------------------------------------*/
-typedef char pmmoty;    /* type for Module type can have the value 2 (for 2D)*/
-                        /* and  3 (for 3D). IGUNDEF = 0 => Not defined       */
+typedef char pmmoty;    /* Module type, from 1.19B always _3D                */
 #define _2D   2         /* value for 2D to be used with pmmoty               */
 #define _3D   3         /* value for 3D        - " -                         */
 /*---------------------------------------------------------------------------*/
-typedef char pmmoat;    /* type for Module attribute IGUNDEF = Not defined   */
+typedef char pmmoat;    /* Module attribute, default = GLOBAL                */
                         /*                                                   */
 #define LOCAL  1        /* value for LOCAL to be used with pmmoat - type     */
 #define GLOBAL 2        /* value for GLOBAL      - " -                       */
@@ -449,8 +448,6 @@ short evion(void);
 short evsect(void);
 short evnsec(void);
 #endif
-short evvec(void);
-short evvecp(void);
 short evrefc(void);
 short evglor(void);
 short evvecl(void);
@@ -460,6 +457,12 @@ short evangl(void);
 short evions(void);
 short eveval(void);
 short evncui(void);
+
+/*
+***evvec.c
+*/
+short evvec(void);
+short evvecp(void);
 
 /*
 ***evgprocs.c

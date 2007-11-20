@@ -32,6 +32,14 @@
 #include "../include/WP.h"
 #include <math.h>
 
+/*
+***For some reason popen and pclose dont seem to be defined
+***in stdio.h as they should according to the C documentation.
+***To avoid compilation warnings we define them here.
+*/
+extern FILE *popen(const char *command, const char *type);
+extern int   pclose(FILE *stream);
+
 #define N_LINES              10    /* Number of lines in list area */
 #define MAX_COLS            500    /* Max number of columns */
 #define MAX_FILES          5000    /* Max number of files */
@@ -55,29 +63,32 @@ static WPSBAR *sbptr;
 static bool fssb_callback(WPIWIN *iwinpt);
 static void listarea_layout();
 static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
+static void path_up(char *oldpath,char *newpath);
+static void make_filelist(char *inpath, char *pattern, int maxfiles,
+                          int maxsize, char *fnptrs[], char *fnbuf, DBint *nf);
 
 /********************************************************/
 
      short WPfile_selector(
      char *title,
-     char *def_path,
+     char *outpath,
      bool  path_edit,
      char *def_file,
      char *def_filter,
      bool  filter_edit,
      char *outfile)
 
-/*   A file selector under development. Currently
- *   used as a replacement for WPilse() only.
+/*   A file selector under development.
  *
  *   In:   title       = Window title/prompt
- *         def_path    = Initial path
+ *         outpath     = Initial path
  *         path_edit   = True if path may be edited
  *         def_file    = Default filename or ""
  *         def_filter  = Initial filter
  *         filter_edit = True if filter may be edited
  *
- *   Out: *outfile = The file name chosen (or entered).
+ *   Out: *outfile = The file selected
+ *        *outpath = The path selected
  *
  *   Return:  0 = Ok.
  *       REJECT = Cancel.
@@ -89,8 +100,9 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
   {
    char     file[81],filett[81],filter[81],filtertt[81],
             okey[81],okeytt[81],reject[81],rejecttt[81],
-            help[81],helptt[81],pathtt[81];
-   char    *fnptrs[MAX_FILES],fnbuf[FNBUF_SIZE];
+            help[81],helptt[81],uptt[81];
+   char    *fnptrs[MAX_FILES],fnbuf[FNBUF_SIZE],
+            act_path[V3PTHLEN+1],new_path[V3PTHLEN+1];
    int      iwin_x,iwin_y,iwin_dx,iwin_dy,i,scr_width,
             scr_height,pmtlen,butlen,buth,edtlen,edth,
             alt_x,alt_y,x1,y1,x2,y2;
@@ -98,9 +110,10 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
    DBint    but_id,okey_id,help_id,reject_id,path_id,file_id,
             filter_id,pmt_id,sb_id,up_id;
    unsigned int dum1,dum2;
-   char    *type[20];
+   char    *type[20],iconam[V3PTHLEN+1];
    XrmValue value;
    WPIWIN  *iwinpt;
+   WPICON  *icoptr;
    WPBUTT  *butptr;
    WPEDIT  *edtptr;
 
@@ -109,22 +122,18 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
 */
    altlst = fnptrs;
 /*
-***Get initial file list from def_path.
-*/
-   EXdirl(def_path,def_filter,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
-/*
 ***Texts from the ini-file.
 */
-   if ( !WPgrst("varkon.input.path.tooltip",pathtt) )     strcpy(pathtt,"pathjk");
+   if ( !WPgrst("varkon.input.up.tooltip",uptt) )         strcpy(uptt,"");
    if ( !WPgrst("varkon.input.file",file) )               strcpy(file,"File:");
-   if ( !WPgrst("varkon.input.file.tooltip",filett) )     strcpy(filett,"filejk");
+   if ( !WPgrst("varkon.input.file.tooltip",filett) )     strcpy(filett,"file");
    if ( !WPgrst("varkon.input.filter",filter) )           strcpy(filter,"Filter:");
-   if ( !WPgrst("varkon.input.filter.tooltip",filtertt) ) strcpy(filtertt,"filterjk");
-   if ( !WPgrst("varkon.input.okey",okey) )               strcpy(okey,"Okej");
+   if ( !WPgrst("varkon.input.filter.tooltip",filtertt) ) strcpy(filtertt,"filter");
+   if ( !WPgrst("varkon.input.okey",okey) )               strcpy(okey,"Okey");
    if ( !WPgrst("varkon.input.okey.tooltip",okeytt) )     strcpy(okeytt,"");
-   if ( !WPgrst("varkon.input.reject",reject) )           strcpy(reject,"Avbryt");
+   if ( !WPgrst("varkon.input.reject",reject) )           strcpy(reject,"Reject");
    if ( !WPgrst("varkon.input.reject.tooltip",rejecttt) ) strcpy(rejecttt,"");
-   if ( !WPgrst("varkon.input.help",help) )               strcpy(help,"Hjälp");
+   if ( !WPgrst("varkon.input.help",help) )               strcpy(help,"Help");
    if ( !WPgrst("varkon.input.help.tooltip",helptt) )     strcpy(helptt,"");
 /*
 ***Window position.
@@ -147,6 +156,12 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
 */
    edtlen = 40*WPstrl("A");
    edth   = 1.6*WPstrh();
+/*
+***Get file list.
+*/
+   strcpy(act_path,outpath);
+start:
+   make_filelist(act_path,def_filter,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
 /*
 ***Calculate column positions in list area etc.
 */
@@ -199,7 +214,7 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
 ***we can calculate the height of the WPIWIN, iwin_dy.
 */
    iwin_dy = air1 +         /* Air */
-             edth +         /* Path edit */
+             32   +         /* Up icon */
              air2 +         /* Air */
              list_dy +      /* List alternatives */
              air2 +         /* Air */
@@ -218,26 +233,27 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
    WPwciw((short)iwin_x,(short)iwin_y,(short)iwin_dx,(short)iwin_dy,title,&iwin_id);
    iwinpt = (WPIWIN *)wpwtab[(wpw_id)iwin_id].ptr;
 /*
-***The up button.
+***The up icon.
 */
    alt_x  = air1;
    alt_y  = air1;
-   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(" Up "),buth,(short)2,
-                           "Up","Up","",WP_BGND2,WP_FGND,&up_id);
+
+   strcpy(iconam,IGgenv(VARKON_ICO));
+   strcat(iconam,"/Varkon_uparrow.xpm");
+   WPmcic(iwin_id,alt_x,alt_y,1,iconam,WP_BGND1,WP_BGND1,&up_id);
+   icoptr = (WPICON *)iwinpt->wintab[up_id].ptr;
+   strcpy(icoptr->tt_str,uptt);
 /*
-***The path edit.
+***The path label.
 */
-   alt_x  = air1 + pmtlen + air1;
-   alt_y  = air1;
-   WPmced((wpw_id)iwin_id,alt_x,alt_y,edtlen,edth,(short)1,
-                   def_path,V3PTHLEN,&path_id);
-   edtptr = (WPEDIT *)iwinpt->wintab[path_id].ptr;
-   strcpy(edtptr->tt_str,pathtt);
+   alt_x  = air1 + 32 + air1 + air1;
+   alt_y  = air1 + 16;
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&path_id);
 /*
 ***The list area outline.
 */
    list_x = alt_x = air1;
-   list_y = alt_y += edth + air2;
+   list_y = alt_y += 16 + air2;
 
    x1 = alt_x;
    y1 = alt_y;
@@ -256,6 +272,15 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
    x1 = alt_x + list_dx;
    x2 = x1;
    WPcreate_3Dline(iwin_id,x1,y1,x2,y2);
+/*
+***List area background = white.
+*/
+   x1 = list_x + 1;
+   y1 = list_y + 1;
+   x2 = list_dx - 1;
+   y2 = list_dy - 1;
+   if ( sbar ) y2 -= WPstrh();
+   WPcreate_fillrect(iwin_id,x1,y1,x2,y2,WPgcol(0));
 /*
 ***Optional list area slidebar.
 */
@@ -293,10 +318,18 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
    WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(filter),edth,filter,&pmt_id);
 
    alt_x  = air1 + pmtlen + air1;
-   WPmced((wpw_id)iwin_id,alt_x,alt_y,edtlen,edth,(short)1,
-                   def_filter,JNLGTH,&filter_id);
-   edtptr = (WPEDIT *)iwinpt->wintab[filter_id].ptr;
-   strcpy(edtptr->tt_str,filtertt);
+
+   if ( filter_edit )
+     {
+     WPmced((wpw_id)iwin_id,alt_x,alt_y,edtlen,edth,(short)1,
+                     def_filter,JNLGTH,&filter_id);
+     edtptr = (WPEDIT *)iwinpt->wintab[filter_id].ptr;
+     strcpy(edtptr->tt_str,filtertt);
+     }
+   else
+     {
+     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(def_filter),edth,def_filter,&pmt_id);
+     }
 /*
 ***A 3D line.
 */
@@ -329,60 +362,44 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
 */
    WPwshw(iwin_id);
 /*
+***WPwshw() gives focus to the first edit.
+***Make sure that focus is on the file edit.
+*/
+   edtptr = (WPEDIT *)iwinpt->wintab[file_id].ptr;
+   WPfoed(edtptr,TRUE);
+/*
 ***Wait for action.
 */
    status = 0;
 loop:
-   WPwwtw(iwin_id,SLEVEL_V3_INP,&but_id);
+   WPwwtw(iwin_id,SLEVEL_NONE,&but_id);
 /*
 ***Using the up button is only allowed if
 ***path_edit = TRUE.
 */
    if ( but_id == up_id )
      {
-     if ( path_edit )
-       {
-       goto loop;
-       }
-     else
-       {
-       WPbell();
-       goto loop;
-       }
-     }
-/*
-***Action in the path edit is only allowed if
-***path_edit = TRUE.
-*/
-   else if ( but_id == path_id )
-     {
-     if ( path_edit )
-       {
-       goto loop;
-       }
-     else
-       {
-       WPbell();
-       goto loop;
-       }
+     WPwdel(iwin_id);
+     path_up(act_path,new_path);
+     strcpy(act_path,new_path);
+     goto start;
      }
 /*
 ***Action in the file edit. We don't like an empty edit.
-*/
+*
    else if ( but_id == file_id )
      {
      WPgted(iwin_id,file_id,outfile);
      if ( outfile[0] == '\0' )
        {
-       XBell(xdisp,100);
        goto loop;
        }
      else goto exit;
      }
-/*
+*
 ***Action in the filter edit is only allowed if
 ***filter_edit = TRUE.
-*/
+*
    else if ( but_id == filter_id )
      {
      if ( filter_edit )
@@ -395,16 +412,8 @@ loop:
        goto loop;
        }
      }
-/*
-***ButtonRelease in a slidebar. All slidebar actions
-***are currently served by the callback.
-*/
-   else if ( sbar && (but_id == sb_id) )
-     {
-     goto loop;
-     }
-/*
-***Okey, return contents of file edit.
+*
+***Okey.
 */
    else if ( but_id == okey_id )
      {
@@ -443,6 +452,13 @@ loop:
          {
          butptr = (WPBUTT *)iwinpt->wintab[but_id].ptr;
          strcpy(outfile,butptr->stron);
+         if ( outfile[strlen(outfile)-1] == '/' )
+           {
+           strcat(act_path,outfile);
+           goto start;
+           }
+         strcpy(outpath,act_path);
+         status = 0;
          goto exit;
          }
        }
@@ -520,6 +536,8 @@ exit:
            {
            y = list_y + air3 + j*(alth + air3);
            WPcrtb((wpw_id)iwin_id,tmpx,y,tmpstr,&alt_id[nbuts]);
+           butptr = (WPBUTT *)iwinpt->wintab[alt_id[nbuts]].ptr;
+           butptr->color.bckgnd = WPgcol(0);
          ++nbuts;
            }
          }
@@ -692,4 +710,180 @@ static bool  clip_textbutton(
   }
 
 /**********************************************************/
+/**********************************************************/
 
+static void  path_up(
+       char *oldpath,
+       char *newpath)
+
+/*   Removes the last part of a path string so that
+ *   the path to the parent directory is left.
+ *
+ *   In:  oldpath = Original path
+ *
+ *   Out: *newpath = Path to parent directory
+ *
+ *   (C)2007-11-19 J.Kjellander
+ *
+ **********************************************************/
+
+  {
+   int i;
+
+/*
+***Copy the original string.
+*/
+   strcpy(newpath,oldpath);
+/*
+***Calculate the index to the last character.
+***If the string is empty something is probably wrong.
+*/
+   i = strlen(newpath);
+
+   if      ( i == 0 )                        return;
+   else if ( i == 1  &&  newpath[0] == '/' ) return;
+   else                                    --i;
+/*
+***If the string ends with a slash, remove it.
+*/
+   if ( newpath[i] == '/' ) newpath[i] = '\0';
+/*
+***Look up last /.
+*/
+   while ( i > 0  &&  newpath[i] != '/' ) i--;
+/*
+***Strip everything after the /.
+*/
+   newpath[i+1] = '\0';
+/*
+***The end.
+*/
+   return;
+  }
+
+/**********************************************************/
+/*!******************************************************/
+
+ static void   make_filelist(
+        char  *inpath,
+        char  *pattern,
+        int    maxfiles,
+        int    maxsize,
+        char  *fnptrs[],
+        char  *fnbuf,
+        DBint *nf)
+
+/*      Create the current filelist.
+ *
+ *      In:
+ *          inpath   = Directory path optionally with trailing /.
+ *          pattern  = Search pattern for regular files.
+ *          maxfiles = Max number of file names.
+ *          maxsize  = Max number of chars.
+ *          fnbuf    = Place to store file names.
+ *
+ *      Out:
+ *          fnptrs = Array with nf ptrs to file names.
+ *          nf     = Number of files.
+ *
+ *      (C)2007-11-19 J.Kjellander
+ *
+ ******************************************************!*/
+
+  {
+   char  lscmd[V3PTHLEN+1],path[V3PTHLEN+1],buf[V3PTHLEN+1];
+   char *actptr;
+   int   n,actsize,i;
+   FILE *fp;
+
+/*
+***Init.
+*/
+   actptr  = fnbuf;
+   actsize = 0;
+  *nf      = 0;
+   strcpy(path,inpath);
+/*
+***Strip trailing '/' or '.' but leave a single / for the root.
+*/
+   i = strlen(path);
+
+   if ( i > 1 )
+     {
+     i = strlen(path) - 1;
+     if ( path[i] == '/' ) path[i] = '\0';
+
+     i = strlen(path) - 1;
+     if ( path[i] == '.' ) path[i] = '\0';
+     }
+/*
+***Create pipe command. -F adds slashes to directories.
+*/
+   if ( strlen(path) > 0 )
+     {
+     strcpy(lscmd,"cd ");
+     strcat(lscmd,path);
+     strcat(lscmd,";ls -F");
+     }
+   else
+     {
+     strcpy(lscmd,"ls -F");
+     }
+/*
+***Execute the pipe and extract directories.
+*/
+   if ( (fp=popen(lscmd,"r")) == NULL ) return;
+/*
+***Read filenames.
+*/
+   while ( fgets(buf,V3PTHLEN,fp) != NULL  &&
+                     *nf < maxfiles  &&  actsize+JNLGTH+5 < maxsize )
+     {
+     if ( (n=strlen(buf)) > 0 ) buf[n-1] = '\0';
+/*
+***Is the file a directory ?
+*/
+     if ( buf[strlen(buf)-1] == '/' )
+       {
+       strcpy(actptr,buf);
+       fnptrs[*nf] = actptr;
+       actptr  += strlen(buf)+1;
+       actsize += strlen(buf)+1;
+      *nf += 1;
+       }
+     }
+   pclose(fp);
+/*
+***Execute the pipe again and extract ordinary files that match the filter pattern.
+*/
+   if ( (fp=popen(lscmd,"r")) == NULL ) return;
+/*
+***Read filenames.
+*/
+   while ( fgets(buf,V3PTHLEN,fp) != NULL  &&
+                     *nf < maxfiles  &&  actsize+JNLGTH+5 < maxsize )
+     {
+     if ( (n=strlen(buf)) > 0 ) buf[n-1] = '\0';
+/*
+***Is the file a regular file ?
+*/
+     if ( buf[strlen(buf)-1] != '/' )
+       {
+       if ( IGcmpw(pattern,buf) )
+         {
+         strcpy(actptr,buf);
+         fnptrs[*nf] = actptr;
+         actptr  += strlen(buf)+1;
+         actsize += strlen(buf)+1;
+        *nf += 1;
+         }
+       }
+     }
+   pclose(fp);
+/*
+***The end.
+*/
+   return;
+  }
+
+/********************************************************/

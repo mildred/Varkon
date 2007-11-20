@@ -38,7 +38,7 @@
 extern char    jobnam[];     /* Current jobname for menu window border */
 extern int     posmode;      /* Currently active positions method in IG */
 extern bool    relpos;       /* Relative positions flag On/Off */
-extern short   v3mode;       /* RIT_MOD/BAS_MOD... */
+extern short   sysmode;       /* EXPLICIT/GENERIC */
 extern char    actcnm[];     /* Name of currently active coordinate system */
 extern V2NAPA  defnap;       /* Currently active attributes */
 
@@ -523,7 +523,7 @@ static short csys_dialogue(int x,int y);
 /*
 ***MBS and Run. Gray texts in explicit mode.
 */
-   if ( v3mode == RIT_MOD ) text_color = WP_BGND3;
+   if ( sysmode == EXPLICIT ) text_color = WP_BGND3;
    else                     text_color = WP_FGND;
 
    buty += (butdy + lm);
@@ -742,15 +742,15 @@ static short csys_dialogue(int x,int y);
        }
      else if ( event->xany.window == mbsid )
        {
-       if ( v3mode == RIT_MOD ) WPbell();
+       if ( sysmode == EXPLICIT ) WPbell();
        else                     WPamod();
       *altptr = NULL;
        hit = TRUE;
        }
      else if ( event->xany.window == runid )
        {
-       if ( v3mode == RIT_MOD ) WPbell();
-       else                     IGramo();
+       if ( sysmode == EXPLICIT ) WPbell();
+       else                     IGrun_active();
       *altptr = NULL;
        hit = TRUE;
        }
@@ -762,7 +762,7 @@ static short csys_dialogue(int x,int y);
        }
      else if ( event->xany.window == delid )
        {
-       IGdlen();
+       IGdelete_entity();
       *altptr = NULL;
        hit = TRUE;
        }

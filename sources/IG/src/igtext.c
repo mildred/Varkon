@@ -35,7 +35,7 @@
 #include "../../WP/include/WP.h"
 #include "../../EX/include/EX.h"
 
-extern short   v3mode;
+extern short   sysmode;
 
 /*!******************************************************/
 
@@ -162,7 +162,7 @@ loop:
 /*
 ***Kolla att storheten inte ingår i en part.
 */
-    if ( v3mode & BAS_MOD  &&  idvek[0].p_nextre != NULL )
+    if ( sysmode & GENERIC  &&  idvek[0].p_nextre != NULL )
       {
       erpush("IG3502","");
       errmes();
@@ -250,7 +250,7 @@ loop:
 /*
 ***Kolla att storheten inte ingår i en part.
 */
-    if ( v3mode & BAS_MOD  &&  idvek[0].p_nextre != NULL )
+    if ( sysmode & GENERIC  &&  idvek[0].p_nextre != NULL )
       {
       erpush("IG3502","");
       errmes();
