@@ -382,23 +382,12 @@ extern bool  IGfacc();
    fflush(startup_logfile);
 /*
 ***job directory. If a job directory was not specified
-***on the command line, use VARKON_DJD.
+***on the command line use VARKON_ROOT.
 */
    if ( jobdir[0] == '\0' )
      {
-     if ( getenv("VARKON_DJD") == NULL )
-       {
-       fprintf(startup_logfile,"Job directory not specified on command line\n");
-       fprintf(startup_logfile,"and VARKON_DJD is not defined\n");
-       fflush(startup_logfile);
-       status = EREXIT;
-       goto end;
-       }
-     else
-       {
-       strcpy(jobdir,getenv("VARKON_DJD"));
-       strcat(jobdir,"/");
-       }
+     strcpy(jobdir,getenv("VARKON_ROOT"));
+     strcat(jobdir,"/");
      }
 
    fprintf(startup_logfile,"jobdir set to: %s\n",jobdir);
@@ -493,13 +482,12 @@ end:
      IGexit();
      }
 /*
-***Normal exit.
+***Normal exit, remove logfile.
 */
    else
      {
-     fprintf(startup_logfile,"Varkon normal close down\n");
      fclose(startup_logfile);
-
+     unlink(lfname);
      IGexit();
      }
 /*
