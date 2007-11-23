@@ -430,7 +430,7 @@ static  WPBUTT *buttpt = 0;
          strcat(title," - ");
          strcat(title,jobnam);
          }
-         else strcpy(title,jobnam);
+       else strcpy(title,jobnam);
        }
 
    if ( WPgrst("varkon.title.viewname",tmpbuf) &&

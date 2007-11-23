@@ -387,8 +387,9 @@ extern bool  IGfacc();
    if ( jobdir[0] == '\0' )
      {
      strcpy(jobdir,getenv("VARKON_ROOT"));
-     strcat(jobdir,"/");
      }
+
+   if ( jobdir[strlen(jobdir)-1] != '/' ) strcat(jobdir,"/");
 
    fprintf(startup_logfile,"jobdir set to: %s\n",jobdir);
    fflush(startup_logfile);
@@ -487,7 +488,7 @@ end:
    else
      {
      fclose(startup_logfile);
-     unlink(lfname);
+     IGfdel(lfname);
      IGexit();
      }
 /*

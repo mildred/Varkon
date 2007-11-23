@@ -1757,8 +1757,8 @@ l1:
 /*
 ***Filter.
 */
-   if ( sysmode & GENERIC ) strcpy(typ,MODEXT);
-   else                     strcpy(typ,RESEXT);
+   if ( sysmode == GENERIC ) strcpy(typ,MODEXT);
+   else                      strcpy(typ,RESEXT);
 /*
 ***Set active function.
 */
@@ -1766,16 +1766,21 @@ l1:
    actfun = 1001;
 /*
 ***Call the file selector. On return we have a filename with
-***extension, XXX.MBO or XXX-RES and jobdir may have changed.
+***or without extension, XXX.MBO or XXX-RES and possibly a
+***new jobdir.
 */
     strcpy(newdir,jobdir);
     strcpy(filter,"*");
     strcat(filter,typ);
-    status = WPfile_selector(IGgtts(210),newdir,FALSE,"",filter,FALSE,newjob);
+    status = WPfile_selector(IGgtts(210),newdir,"",filter,newjob);
     if ( status == 0 )
       {
-      i = strlen(newjob) - 4;
-      newjob[i] = '\0';
+      if ( (sysmode == GENERIC  && IGcmpw("*.MBO",newjob)) ||
+           (sysmode == EXPLICIT && IGcmpw("*.RES",newjob)) )
+        {
+        i = strlen(newjob) - 4;
+        newjob[i] = '\0';
+        }
       if ( igckjn(newjob) < 0 ) return(erpush("IG0342",newjob));
       strcpy(jobdir,newdir);
       }

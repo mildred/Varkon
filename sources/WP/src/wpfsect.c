@@ -8,7 +8,7 @@
 *
 *    This file includes:
 *
-*    WPfile_selector(); Get filename selector dialog
+*    WPfile_selector(); File and path selector dialog
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -46,7 +46,7 @@ extern int   pclose(FILE *stream);
 #define FNBUF_SIZE 20*MAX_FILES    /* Size of filenamebuffer */
 
 /*
-***Static variables (used by callback).
+***Static variables.
 */
 static char  **altlst;
 static int     ncols_tot,nbuts,list_x,list_y,
@@ -56,6 +56,8 @@ static int     ncols_tot,nbuts,list_x,list_y,
 static bool    sbar;
 static DBint   iwin_id,alt_id[WP_IWSMAX];
 static WPSBAR *sbptr;
+static char    okey[81],okeytt[81],reject[81],rejecttt[81],
+               help[81],helptt[81];
 
 /*
 ***Prototypes for internal functions.
@@ -67,25 +69,26 @@ static void path_up(char *oldpath,char *newpath);
 static void make_filelist(char *inpath, char *pattern, int maxfiles,
                           int maxsize, char *fnptrs[], char *fnbuf, DBint *nf);
 
+ static short create_directory(
+        int   main_x,
+        int   main_y,
+        char *parent);
+
 /********************************************************/
 
      short WPfile_selector(
      char *title,
      char *outpath,
-     bool  path_edit,
      char *def_file,
-     char *def_filter,
-     bool  filter_edit,
+     char *filter,
      char *outfile)
 
 /*   A file selector under development.
  *
- *   In:   title       = Window title/prompt
- *         outpath     = Initial path
- *         path_edit   = True if path may be edited
- *         def_file    = Default filename or ""
- *         def_filter  = Initial filter
- *         filter_edit = True if filter may be edited
+ *   In:   title    = Window title/prompt
+ *         outpath  = Initial path
+ *         def_file = Default filename or ""
+ *         filter   = Filter (any syntax accepted by ls)
  *
  *   Out: *outfile = The file selected
  *        *outpath = The path selected
@@ -98,17 +101,15 @@ static void make_filelist(char *inpath, char *pattern, int maxfiles,
  *******************************************************!*/
 
   {
-   char     file[81],filett[81],filter[81],filtertt[81],
-            okey[81],okeytt[81],reject[81],rejecttt[81],
-            help[81],helptt[81],uptt[81];
-   char    *fnptrs[MAX_FILES],fnbuf[FNBUF_SIZE],
+   char     file[81],filett[81],uptt[81],newtt[81],
+            butstr[JNLGTH],*fnptrs[MAX_FILES],fnbuf[FNBUF_SIZE],
             act_path[V3PTHLEN+1],new_path[V3PTHLEN+1];
    int      iwin_x,iwin_y,iwin_dx,iwin_dy,i,scr_width,
             scr_height,pmtlen,butlen,buth,edtlen,edth,
             alt_x,alt_y,x1,y1,x2,y2;
    short    status;
-   DBint    but_id,okey_id,help_id,reject_id,path_id,file_id,
-            filter_id,pmt_id,sb_id,up_id;
+   DBint    but_id,okey_id,help_id,reject_id,new_id,
+            file_id,pmt_id,sb_id,up_id;
    unsigned int dum1,dum2;
    char    *type[20],iconam[V3PTHLEN+1];
    XrmValue value;
@@ -124,11 +125,10 @@ static void make_filelist(char *inpath, char *pattern, int maxfiles,
 /*
 ***Texts from the ini-file.
 */
-   if ( !WPgrst("varkon.input.up.tooltip",uptt) )         strcpy(uptt,"");
+   if ( !WPgrst("varkon.input.up.tooltip",uptt) )         strcpy(uptt,"Up");
+   if ( !WPgrst("varkon.input.new.tooltip",newtt) )       strcpy(newtt,"New");
    if ( !WPgrst("varkon.input.file",file) )               strcpy(file,"File:");
    if ( !WPgrst("varkon.input.file.tooltip",filett) )     strcpy(filett,"file");
-   if ( !WPgrst("varkon.input.filter",filter) )           strcpy(filter,"Filter:");
-   if ( !WPgrst("varkon.input.filter.tooltip",filtertt) ) strcpy(filtertt,"filter");
    if ( !WPgrst("varkon.input.okey",okey) )               strcpy(okey,"Okey");
    if ( !WPgrst("varkon.input.okey.tooltip",okeytt) )     strcpy(okeytt,"");
    if ( !WPgrst("varkon.input.reject",reject) )           strcpy(reject,"Reject");
@@ -161,7 +161,7 @@ static void make_filelist(char *inpath, char *pattern, int maxfiles,
 */
    strcpy(act_path,outpath);
 start:
-   make_filelist(act_path,def_filter,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
+   make_filelist(act_path,filter,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
 /*
 ***Calculate column positions in list area etc.
 */
@@ -244,11 +244,19 @@ start:
    icoptr = (WPICON *)iwinpt->wintab[up_id].ptr;
    strcpy(icoptr->tt_str,uptt);
 /*
-***The path label.
+***The "create new directory" button.
 */
-   alt_x  = air1 + 32 + air1 + air1;
-   alt_y  = air1 + 16;
-   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&path_id);
+   alt_x += 32 + air1;
+   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,36,36,(short)1,
+                           "New","New","",WP_BGND2,WP_FGND,&new_id);
+   butptr = (WPBUTT *)iwinpt->wintab[new_id].ptr;
+   strcpy(butptr->tt_str,newtt);
+/*
+***The path.
+*/
+   alt_x += 32 + air1 + air1;
+   alt_y  = air1 + 12;
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&pmt_id);
 /*
 ***The list area outline.
 */
@@ -311,25 +319,14 @@ start:
    edtptr = (WPEDIT *)iwinpt->wintab[file_id].ptr;
    strcpy(edtptr->tt_str,filett);
 /*
-***The filter edit with prompt.
+***The filter with prompt.
 */
    alt_x  = air1;
    alt_y += edth + air2;
-   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(filter),edth,filter,&pmt_id);
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl("Filter:"),edth,"Filter:",&pmt_id);
 
    alt_x  = air1 + pmtlen + air1;
-
-   if ( filter_edit )
-     {
-     WPmced((wpw_id)iwin_id,alt_x,alt_y,edtlen,edth,(short)1,
-                     def_filter,JNLGTH,&filter_id);
-     edtptr = (WPEDIT *)iwinpt->wintab[filter_id].ptr;
-     strcpy(edtptr->tt_str,filtertt);
-     }
-   else
-     {
-     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(def_filter),edth,def_filter,&pmt_id);
-     }
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(filter),edth,filter,&pmt_id);
 /*
 ***A 3D line.
 */
@@ -379,43 +376,27 @@ loop:
 */
    if ( but_id == up_id )
      {
-     WPwdel(iwin_id);
      path_up(act_path,new_path);
      strcpy(act_path,new_path);
+     WPwdel(iwin_id);
      goto start;
      }
 /*
-***Action in the file edit. We don't like an empty edit.
-*
-   else if ( but_id == file_id )
+***Create new directory.
+*/
+   else if ( but_id == new_id )
      {
-     WPgted(iwin_id,file_id,outfile);
-     if ( outfile[0] == '\0' )
+     if ( create_directory(iwin_x + 50,iwin_y + 50,act_path) == 0 )
        {
-       goto loop;
+       WPwdel(iwin_id);
+       goto start;
        }
-     else goto exit;
+     else goto loop;
      }
-*
-***Action in the filter edit is only allowed if
-***filter_edit = TRUE.
-*
-   else if ( but_id == filter_id )
-     {
-     if ( filter_edit )
-       {
-       goto loop;
-       }
-     else
-       {
-       WPbell();
-       goto loop;
-       }
-     }
-*
+/*
 ***Okey.
 */
-   else if ( but_id == okey_id )
+   else if ( but_id == okey_id  ||  but_id == file_id )
      {
      WPgted(iwin_id,file_id,outfile);
      if ( outfile[0] == '\0' )
@@ -423,7 +404,12 @@ loop:
        XBell(xdisp,100);
        goto loop;
        }
-     else goto exit;
+     else
+       {
+       strcpy(outpath,act_path);
+       status = 0;
+       goto exit;
+       }
      }
 /*
 ***Reject.
@@ -451,15 +437,26 @@ loop:
        if ( but_id == alt_id[i] )
          {
          butptr = (WPBUTT *)iwinpt->wintab[but_id].ptr;
-         strcpy(outfile,butptr->stron);
-         if ( outfile[strlen(outfile)-1] == '/' )
+         strcpy(butstr,butptr->stron);
+/*
+***Enter a new directory.
+*/
+         if ( butstr[strlen(butstr)-1] == '/' )
            {
-           strcat(act_path,outfile);
+           strcat(act_path,butstr);
+           WPwdel(iwin_id);
            goto start;
            }
-         strcpy(outpath,act_path);
-         status = 0;
-         goto exit;
+/*
+***A file is selected.
+*/
+         else
+           {
+           strcpy(outfile,butstr);
+           strcpy(outpath,act_path);
+           status = 0;
+           goto exit;
+           }
          }
        }
      goto loop;
@@ -884,6 +881,157 @@ static void  path_up(
 ***The end.
 */
    return;
+  }
+
+/********************************************************/
+/*!******************************************************/
+
+ static short create_directory(
+        int   main_x,
+        int   main_y,
+        char *parent)
+
+/*      Dialog for "create new directory". Asks user for
+ *      the name of the new directory and creates it.
+ *
+ *      In: main_x = Requested window position
+ *          main_y =        =""=
+ *          parent = Parent directory
+ *
+ *      Return:  0 = OK, new directory created.
+ *          REJECT = Operation canceled.
+ *
+ *      (C)2007-11-21 J. Kjellander
+ *
+ ******************************************************!*/
+
+  {
+   char     newpath[V3PTHLEN],dirname[JNLGTH],title[V3STRLEN],
+            pmt[V3STRLEN];
+   int      altlen,alth,main_dx,main_dy,ly,alt_x,alt_y;
+   DBint    iwin_id,okey_id,reject_id,pmt_id,edit_id,but_id;
+   WPIWIN  *iwinpt;
+   WPBUTT  *butptr;
+
+/*
+***Texts from the ini-file.
+*/
+   if ( !WPgrst("varkon.input.new.title",title) ) strcpy(title,"New directory");
+   if ( !WPgrst("varkon.input.new.prompt",pmt) ) strcpy(pmt,"Current path");
+/*
+***Ok and Reject, which text is longest ?
+*/
+   altlen = 0;
+
+   if ( WPstrl(okey)   > altlen ) altlen = WPstrl(okey);
+   if ( WPstrl(reject) > altlen ) altlen = WPstrl(reject);
+
+   altlen *= 1.4;
+/*
+***Window geometry.
+*/
+   ly   = 1.0*WPstrh();
+   alth = 1.8*WPstrh();
+
+   main_dx = altlen + ly + altlen + ly + altlen;
+   main_dy = ly + alth + ly + alth + ly + alth + alth + ly + alth;
+
+   if ( WPstrl(pmt)    > main_dx ) main_dx = WPstrl(pmt);
+   if ( WPstrl(parent) > main_dx ) main_dx = WPstrl(parent);
+
+   main_dx += 2*ly;
+/*
+***Create the window as a WPIWIN.
+*/
+   WPwciw(main_x,main_y,main_dx,main_dy,title,&iwin_id);
+   iwinpt = (WPIWIN *)wpwtab[iwin_id].ptr;
+/*
+***Prompts.
+*/
+   alt_x  = ly;
+   alt_y  = ly;
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(pmt),alth,pmt,&pmt_id);
+
+   alt_y  += alth;
+   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(parent),alth,parent,&pmt_id);
+/*
+***Input edit.
+*/
+   alt_y  += alth + ly;
+   WPmced((wpw_id)iwin_id,alt_x,alt_y,main_dx-2*ly,alth,(short)1,
+                   "",JNLGTH,&edit_id);
+/*
+***A 3D line.
+*/
+   alt_x  = main_dx/8;
+   alt_y += 2*alth;
+   WPcreate_3Dline(iwin_id,alt_x,alt_y,7*main_dx/8,alt_y);
+/*
+***Ok and Reject.
+*/
+   alt_x  = ly;
+   alt_y += ly;
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,1,
+                          okey,okey,"",WP_BGND2,WP_FGND,&okey_id);
+   butptr = (WPBUTT *)iwinpt->wintab[okey_id].ptr;
+   strcpy(butptr->tt_str,okeytt);
+
+   alt_x  = ly + altlen + ly;
+   WPcrpb((wpw_id)iwin_id,alt_x,alt_y,altlen,alth,1,
+                          reject,reject,"",WP_BGND2,WP_FGND,&reject_id);
+   butptr = (WPBUTT *)iwinpt->wintab[reject_id].ptr;
+   strcpy(butptr->tt_str,rejecttt);
+/*
+***Show the dialogue.
+*/
+   WPwshw(iwin_id);
+   XRaiseWindow(xdisp,iwinpt->id.x_id);
+/*
+***Wait for action.
+*/
+loop:
+   WPwwtw(iwin_id,SLEVEL_V3_INP,&but_id);
+/*
+***Ok button or CR key.
+*/
+   if ( but_id == okey_id  ||  but_id == edit_id )
+     {
+     WPgted(iwin_id,edit_id,dirname);
+     if ( dirname[0] == '\0' )
+       {
+       WPbell();
+       goto loop;
+       }
+     else
+       {
+       strcpy(newpath,parent);
+       strcat(newpath,dirname);
+       if ( IGmkdr(newpath) == 0 )
+         {
+         WPwdel(iwin_id);
+         return(0);
+         }
+       else
+         {
+         strcpy(dirname,"");
+         WPuped(iwin_id,edit_id,dirname);
+         WPbell();
+         goto loop;
+         }
+       }
+     }
+/*
+***Reject.
+*/
+   else if ( but_id == reject_id )
+     {
+     WPwdel(iwin_id);
+     return(REJECT);
+     }
+/*
+***Unknown event.
+*/
+    else goto loop;
   }
 
 /********************************************************/

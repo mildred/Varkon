@@ -51,7 +51,7 @@ varkon.margin_up  :             32
 !*
 !***Contents of the graphical window titlebar.
 !*
-varkon.title:                   True
+!varkon.title:                   Custom title
 varkon.title.jobname:           True
 varkon.title.viewname:          True
 !*
@@ -257,10 +257,11 @@ varkon.input.save:              Save
 varkon.input.delete:            Delete
 varkon.input.apply:             Apply
 varkon.input.up.tooltip:        Display files in parent directory
+varkon.input.new.tooltip:       Create a new directory
+varkon.input.new.title:         Create directory
+varkon.input.new.prompt:        Create new directory in:
 varkon.input.file:              Filename:
 varkon.input.file.tooltip:      Enter filename and select OK
-varkon.input.filter:            Filter:
-varkon.input.filter.tooltip:    Filter is not yet implemented
 !*
 !***Resources for the alternative popup.
 !*

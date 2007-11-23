@@ -964,9 +964,9 @@ static short csys_dialogue(int x,int y);
 /*
 ***Which csy mode is active now ?
 */
-   if       ( strcmp(actcnm,"BASIC") == 0 )  csy_mode = 1;
+   if       ( strcmp(actcnm,"BASIC") == 0 ) csy_mode = 1;
    else if ( strcmp(actcnm,"GLOBAL") == 0 ) csy_mode = 2;
-   else                                      csy_mode = 3;
+   else                                     csy_mode = 3;
 /*
 ***LOCAL button.
 */

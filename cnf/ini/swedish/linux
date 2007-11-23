@@ -114,7 +114,7 @@ varkon.margin_up:               32
 !***dessutom aktuellt jobnamn till automatiskt. Om varkon.title.viewname
 !***är True skrivs även vynamnet ut i fönsterramen.
 !*
-varkon.title:                   True
+!varkon.title:                   Din egen titel
 varkon.title.jobname:           True
 varkon.title.viewname:          True
 !*
@@ -341,11 +341,11 @@ varkon.input.save:              Spara
 varkon.input.delete:            Ta bort
 varkon.input.apply:             Verkställ
 varkon.input.up.tooltip:        Gå en nivå uppåt i filstrukturen
-varkon.input.path.tooltip:      Filkatalog att visa
+varkon.input.new.tooltip:       Skapa en ny filkatalog
+varkon.input.new.title:         Skapa filkatalog
+varkon.input.new.prompt:        Skapa ny filkatalog i:
 varkon.input.file:              Filnamn:
 varkon.input.file.tooltip:      Ange ett filnamn och tryck på OK
-varkon.input.filter:            Filter:
-varkon.input.filter.tooltip:    Filer att visa (Unix shell syntax)
 !*
 !***Alternativfönstrets placering och titel.
 !*

@@ -653,6 +653,5 @@ short WPd3db(char *winptr, int wintyp);
 /*
 ***wpfsect.c
 */
-short WPfile_selector(char *title, char *def_path, bool path_edit,
-                      char *def_file, char *def_filter, bool filter_edit,
+short WPfile_selector(char *title, char *def_path,char *def_file, char *def_filter,
                       char *outfile);
