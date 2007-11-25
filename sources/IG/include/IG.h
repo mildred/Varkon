@@ -213,7 +213,7 @@ int     nalt;      /* Number of alternatives */
 /*
 ***varkon.c
 */
-short igckjn(char jobnam[]);
+short IGcheck_jobname(char jobnam[]);
 
 /*
 ***IGinit.c
@@ -491,9 +491,9 @@ short IGload();
 short IGldmo();
 short IGsjpg();
 short IGsaln();
-short IGspmn();
-short IGsgmn();
-short IGsjbn();
+short IGsave_MBO_as();
+short IGsave_RES_as();
+short IGsave_JOB_as();
 short IGcatt();
 short IGexit();
 short IGexit_sn();
@@ -503,7 +503,7 @@ short IGnjsd();
 short IGnjsa();
 short IGsave_all();
 short IGnjsn();
-short IGselj(char *newjob);
+short IGselect_job(char *newjob);
 short IGchjn(char *newnam);
 bool  IGgrst(char *resurs, char *pvalue);
 

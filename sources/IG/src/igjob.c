@@ -4,28 +4,28 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*  IGgeneric();  Starts Varkon in generic mode                     */
-/*  IGexplicit(); Starts Varkon in explicit mode                    */
-/*  IGdljb();     Deletes jobs                                      */
-/*  IGload();     Loads new job                                     */
-/*  IGldmo();     Loads module                                      */
-/*  IGsjpg();     Saves all                                         */
-/*  IGsaln();     Saves all with new name                           */
-/*  IGspmn();     Saves module with new name                        */
-/*  IGsgmn();     Saves result with new name                        */
-/*  IGsjbn();     Saves jobdata with new name                       */
-/*  IGcatt();     Change module attribute                           */
-/*  IGexit();     Exits                                             */
-/*  IGexit_sn();  Exit without saving                               */
-/*  IGexit_sa();  Exit with saving                                  */
-/*  IGexsd();     Exit with saving and decompiling                  */
-/*  IGnjsd();     Save, decompile and new job                       */
-/*  IGnjsa();     Save and new job                                  */
-/*  IGsave_all(); Save and continue                                 */
-/*  IGnjsn();     New job without saving                            */
-/*  IGselj();     Select job from list                              */
-/*  IGchjn();     Change name of current job                        */
-/*  IGgrst();     Returns resource value                            */
+/*  IGgeneric();     Starts Varkon in generic mode                  */
+/*  IGexplicit();    Starts Varkon in explicit mode                 */
+/*  IGdljb();        Deletes jobs                                   */
+/*  IGload();        Loads new job                                  */
+/*  IGldmo();        Loads module                                   */
+/*  IGsjpg();        Saves all                                      */
+/*  IGsaln();        Saves all with new name                        */
+/*  IGsave_MBO_as(); Saves active module with new name/directory    */
+/*  IGsave_RES_as(); Saves DB with new name/directory               */
+/*  IGsave_JOB_as(); Saves jobdata with new name                    */
+/*  IGcatt();        Change module attribute                        */
+/*  IGexit();        Exits                                          */
+/*  IGexit_sn();     Exit without saving                            */
+/*  IGexit_sa();     Exit with saving                               */
+/*  IGexsd();        Exit with saving and decompiling               */
+/*  IGnjsd();        Save, decompile and new job                    */
+/*  IGnjsa();        Save and new job                               */
+/*  IGsave_all();    Save and continue                              */
+/*  IGnjsn();        New job without saving                         */
+/*  IGselect_job();  Select job with file selector                  */
+/*  IGchjn();        Change name of current job                     */
+/*  IGgrst();        Returns resource value                         */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
 /*  URL:  http://varkon.sourceforge.net                             */
@@ -144,9 +144,7 @@ static short main_loop()
 
 /*     Varkon main loop.
 *
-*      (C) microform ab 2/3/88  J. Kjellander.
-*
-*      8/5/89 igckjn(), J. Kjellander
+*      (C)2007-11-25 J.Kjellander.
 *
 *******************************************************!*/
 
@@ -384,7 +382,7 @@ errend:
 /*
 ***Get job name.
 */
-    status = IGselj(job);
+    status = IGselect_job(job);
     if ( status < 0 ) return(status);
 /*
 ***Check that it is not active.
@@ -957,7 +955,7 @@ static short igsvgm()
 /*
 ***Is it valid ?
 */
-   if ( igckjn(newnam) < 0 )
+   if ( IGcheck_jobname(newnam) < 0 )
      {
      erpush("IG0342",newnam);
      errmes();
@@ -1055,128 +1053,84 @@ exit:
 /********************************************************/
 /********************************************************/
 
-        short IGspmn()
+        short IGsave_MBO_as()
 
-/*      Lagra modul med nytt namn.
- *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      FV: 0      = OK
- *          REJECT = avsluta
- *          GOMAIN = huvudmenyn
- *
- *      (C)microform ab 24/11/85 J. Kjellander
- *
- *      6/10/86  GOMAIN, B. Doverud
- *      10/10/86 default, J. Kjellander
- *
- ******************************************************!*/
-
-  {
-    short      status;
-    char       newnam[JNLGTH+1];
-    PMMODULE   modhed;
-
-/*
-***Läs in nytt filnamn.
-*/
-    if ( (status=IGssip(IGgtts(349),IGgtts(267),newnam,jobnam,JNLGTH)) < 0 )
-        goto exit;
-/*
-***Ändra namnet i modulhuvudet.
-*/
-    pmrmod(&modhed);
-    strcpy(modhed.mname,newnam);
-    pmumod(&modhed);
-/*
-***Lagra modul.
-*/
-    if ( igsvmo() < 0 ) errmes();
-/*
-***Ändra tillbaks namnet i modulhuvudet.
-*/
-    pmrmod(&modhed);
-    strcpy(modhed.mname,jobnam);
-    pmumod(&modhed);
-
-exit:
-    return(status);
-  }
-
-/********************************************************/
-/*!******************************************************/
-
-        short IGsgmn()
-
-/*      Save DB as.
+/*      Save active module as..
+ *      New name and/or new directory.
  *
  *      Return: 0  = OK
  *          REJECT = Cancel
  *          GOMAIN = Main menu
  *
- *      Error: IG0082 = New name = current
+ *      Error: IG0342 = Syntax error in file name
  *
- *      (C)microform ab 30/7/85 J. Kjellander
+ *      (C)2007-11-25 J.Kjellander
  *
- *      6/10/86  GOMAIN, B. Doverud
- *      2/2/93   copy på VAX, J. Kjellander
- *      2007-11-14 2.0, J.Kjellander
- *
- ******************************************************!*/
+ ********************************************************/
 
   {
-    short   status;
-    char    resfil[V3PTHLEN+1];
-    char    newfil[V3PTHLEN+1];
-    char    newnam[JNLGTH+1];
+    short      status;
+    int        i;
+    char       newname[JNLGTH+1],newpath[V3PTHLEN],mbofile[V3PTHLEN],
+               act_jobdir[V3PTHLEN],filter[6];
+    PMMODULE   modhed;
 
 /*
-***Läs in nytt filnamn.
+***Get the name and path to use for the new module.
+***Check the new name and report any errors.
 */
-loop:
-    status = IGssip(IGgtts(279),IGgtts(267),newnam,"",JNLGTH);
-    if ( status < 0 ) return(status);
+   strcpy(filter,"*");
+   strcat(filter,MODEXT);
+   strcpy(newpath,jobdir);
+start:
+   status = WPfile_selector(IGgtts(349),newpath,"",filter,newname);
+   if ( status == 0 )
+     {
+     if ( IGcmpw("*.MBO",newname) )
+       {
+       i = strlen(newname) - 4;
+       newname[i] = '\0';
+       }
+     if ( IGcheck_jobname(newname) < 0 )
+       {
+       erpush("IG0342",newname);
+       errmes();
+       goto start;
+       }
+     }
+   else return(status);
 /*
-***Check that new name <> current.
+***Does this file already exist ?
 */
-    if ( strcmp(newnam,jobnam) == 0 )
-      {
-      erpush("IG0082","");
-      errmes();
-      goto loop;
-      }
+   strcpy(mbofile,newpath);
+   strcat(mbofile,newname);
+   strcat(mbofile,MODEXT);
+   if ( IGftst(mbofile) && !IGialt(72,67,68,TRUE) ) goto start;
 /*
-***Save DB.
+***Temporarily change the name of the active module.
 */
-    if ( DBexit() < 0 ) return(erpush("IG0193",jobnam));
+    pmrmod(&modhed);
+    strcpy(modhed.mname,newname);
+    pmumod(&modhed);
 /*
-***Copy DB file to new name.
+***Temporarily change jobdir.
 */
-    else
-      {
-      strcpy(resfil,jobdir);
-      strcat(resfil,jobnam);
-      strcat(resfil,RESEXT);
-
-      strcpy(newfil,jobdir);
-      strcat(newfil,newnam);
-      strcat(newfil,RESEXT);
-
-      if ( (status=IGfcpy(resfil,newfil)) < 0 )
-        return(status);
-      else
-        {
-        if ( sysmode == EXPLICIT ) WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
-        else                       WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
-        }
-      }
+    strcpy(act_jobdir,jobdir);
+    strcpy(jobdir,newpath);
 /*
-***Load DB again.
+***Save the module.
 */
-    DBload(resfil,sysize.gm,
-           DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
+    if ( igsvmo() < 0 ) errmes();
+/*
+***Change the name of the active module back to the name of the current job.
+*/
+    pmrmod(&modhed);
+    strcpy(modhed.mname,jobnam);
+    pmumod(&modhed);
+/*
+***Change jobdir back to the current job directory.
+*/
+    strcpy(jobdir,act_jobdir);
 /*
 ***The end.
 */
@@ -1184,48 +1138,178 @@ loop:
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
-        short IGsjbn()
+        short IGsave_RES_as()
 
-/*      Lagra jobbfil med nytt namn.
+/*      Save DB as. New name and/or new directory.
  *
- *      In: Inget.
+ *      Return: 0  = OK
+ *          REJECT = Cancel
+ *          GOMAIN = Main menu
  *
- *      Ut: Inget.
+ *      Error: IG0082 = New name = current
+ *             IG0342 = Syntax error in file name
+ *             IG0193 = Can't save DB
  *
- *      FV: 0      = OK
- *          REJECT = avsluta
- *          GOMAIN = huvudmenyn
+ *      (C)2007-11-25 J.Kjellander
  *
- *      (C)microform ab 11/10/86 J. Kjellander
- *
- ******************************************************!*/
+ ********************************************************/
 
   {
-    short      status;
-    char       newnam[JNLGTH+1];
-    char       tmpnam[JNLGTH+1];
+   short status;
+   int   i;
+   char  resfile[V3PTHLEN+1],newfile[V3PTHLEN+1],newname[JNLGTH+1],
+         newpath[V3PTHLEN],filter[6];
 
 /*
-***Läs in nytt filnamn.
+***Get the name and path to use for the new RES-file.
+***Check the new name and report any errors.
 */
-    if ( (status=IGssip(IGgtts(357),IGgtts(267),newnam,jobnam,JNLGTH)) < 0 )
-        goto exit;
+   strcpy(filter,"*");
+   strcat(filter,RESEXT);
+   strcpy(newpath,jobdir);
+start:
+   status = WPfile_selector(IGgtts(279),newpath,"",filter,newname);
+   if ( status == 0 )
+     {
+     if ( IGcmpw("*.RES",newname) )
+       {
+       i = strlen(newname) - 4;
+       newname[i] = '\0';
+       }
+     if ( IGcheck_jobname(newname) < 0 )
+       {
+       erpush("IG0342",newname);
+       errmes();
+       goto start;
+       }
+     }
+   else return(status);
 /*
-***Lagra jobb.
+***The complete path to the new RES-file.
 */
-    strcpy(tmpnam,jobnam);
-    strcpy(jobnam,newnam);
-    if ( igsvjb() < 0 ) errmes();
-    strcpy(jobnam,tmpnam);
+   strcpy(newfile,newpath);
+   strcat(newfile,newname);
+   strcat(newfile,RESEXT);
+/*
+***If jobdir is used, check that the name is
+***not the current jobname.
+*/
+   if ( strcmp(newpath,jobdir) == 0 )
+     {
+     if ( strcmp(newname,jobnam) == 0 )
+       {
+       erpush("IG0082","");
+       errmes();
+       goto start;
+       }
+     }
 
-exit:
-    return(status);
+   if ( IGftst(newfile) && !IGialt(73,67,68,TRUE) ) goto start;
+/*
+***Save DB.
+*/
+    if ( DBexit() < 0 ) return(erpush("IG0193",jobnam));
+/*
+*** A closed RES-file jobname.RES is now available in jobdir.
+***Copy RES-file to new name and directory.
+*/
+   strcpy(resfile,jobdir);
+   strcat(resfile,jobnam);
+   strcat(resfile,RESEXT);
+
+   if ( (status=IGfcpy(resfile,newfile)) < 0 )
+     return(status);
+
+   WPaddmess_mcwin(IGgtts(217),WP_MESSAGE);
+/*
+***Load DB again.
+*/
+   DBload(resfile,sysize.gm,
+           DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
+/*
+***The end.
+*/
+   return(0);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
+
+        short IGsave_JOB_as()
+
+/*      Save current job data as..
+ *      New name and/or new directory.
+ *
+ *      Return: 0  = OK
+ *          REJECT = Cancel
+ *          GOMAIN = Main menu
+ *
+ *      Error: IG0342 = Syntax error in file name
+ *
+ *      (C)2007-11-25 J.Kjellander
+ *
+ ********************************************************/
+
+  {
+    short status;
+    int   i;
+    char  newname[JNLGTH+1],newpath[V3PTHLEN],jobfile[V3PTHLEN],
+          act_jobnam[JNLGTH],act_jobdir[V3PTHLEN],filter[6];
+
+/*
+***Get the name and path to use for the new JOB-file.
+***Check the new name and report any errors.
+*/
+   strcpy(filter,"*");
+   strcat(filter,JOBEXT);
+   strcpy(newpath,jobdir);
+start:
+   status = WPfile_selector(IGgtts(357),newpath,"",filter,newname);
+   if ( status == 0 )
+     {
+     if ( IGcmpw("*.JOB",newname) )
+       {
+       i = strlen(newname) - 4;
+       newname[i] = '\0';
+       }
+     if ( IGcheck_jobname(newname) < 0 )
+       {
+       erpush("IG0342",newname);
+       errmes();
+       goto start;
+       }
+     }
+   else return(status);
+/*
+***Does this file already exist ?
+*/
+   strcpy(jobfile,newpath);
+   strcat(jobfile,newname);
+   strcat(jobfile,JOBEXT);
+   if ( IGftst(jobfile) && !IGialt(74,67,68,TRUE) ) goto start;
+/*
+***Temporarily change jobnam and jobdir, then save the file
+***and finally reset jobnam and jobdir to the right values.
+*/
+    strcpy(act_jobnam,jobnam);
+    strcpy(act_jobdir,jobdir);
+
+    strcpy(jobnam,newname);
+    strcpy(jobdir,newpath);
+    if ( igsvjb() < 0 ) errmes();
+
+    strcpy(jobnam,act_jobnam);
+    strcpy(jobdir,act_jobdir);
+/*
+***The end.
+*/
+   return(0);
+  }
+
+/********************************************************/
+/********************************************************/
 
         short IGcatt()
 
@@ -1537,7 +1621,7 @@ l1:
 /*
 ***Get new job name.
 */
-   status = IGselj(newnam);
+   status = IGselect_job(newnam);
    if      ( status == REJECT ) return(REJECT);
    else if ( status <  0 )
      {
@@ -1683,7 +1767,7 @@ l1:
 /*
 ***Get new jobname.
 */
-   status = IGselj(newnam);
+   status = IGselect_job(newnam);
    if      ( status == REJECT ) return(REJECT);
    else if ( status <  0 )
      {
@@ -1734,9 +1818,9 @@ l1:
 /********************************************************/
 /*!******************************************************/
 
-        short IGselj(char *newjob)
+        short IGselect_job(char *newjob)
 
-/*      Select a new job (and jobdir).
+/*      Select a jobnam (and jobdir).
  *
  *      Out: *newjob = New job name.
  *
@@ -1781,7 +1865,7 @@ l1:
         i = strlen(newjob) - 4;
         newjob[i] = '\0';
         }
-      if ( igckjn(newjob) < 0 ) return(erpush("IG0342",newjob));
+      if ( IGcheck_jobname(newjob) < 0 ) return(erpush("IG0342",newjob));
       strcpy(jobdir,newdir);
       }
 /*
@@ -1818,7 +1902,7 @@ l1:
 /*
 ***Check that the new name is valid.
 */
-    if ( igckjn(newnam) < 0 ) return(erpush("IG0342",newnam));
+    if ( IGcheck_jobname(newnam) < 0 ) return(erpush("IG0342",newnam));
 /*
 ***Check that a job with this name does not exist.
 */

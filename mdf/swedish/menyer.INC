@@ -24,7 +24,6 @@ m5  = "ARKIV"
       "spara",f175
       "spara som",m45
       "exportera",m24
-      "ta bort jobb",f184
       "macro",f152
       "kom till OS",f125
       "sluta",f123

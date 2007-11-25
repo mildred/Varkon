@@ -68,11 +68,7 @@ static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
 static void path_up(char *oldpath,char *newpath);
 static void make_filelist(char *inpath, char *pattern, int maxfiles,
                           int maxsize, char *fnptrs[], char *fnbuf, DBint *nf);
-
- static short create_directory(
-        int   main_x,
-        int   main_y,
-        char *parent);
+static short create_directory(int   main_x,int   main_y,char *parent);
 
 /********************************************************/
 
@@ -369,7 +365,7 @@ start:
 */
    status = 0;
 loop:
-   WPwwtw(iwin_id,SLEVEL_NONE,&but_id);
+   WPwwtw(iwin_id,SLEVEL_V3_INP,&but_id);
 /*
 ***Using the up button is only allowed if
 ***path_edit = TRUE.
@@ -513,7 +509,10 @@ exit:
      }
    else scroll = 0;
 /*
-***Create new buttons.
+***Create new buttons. Texts are clipped to the borders
+***of the list area on a character basis and the clipped
+***text is used to create WPBUTTS of the right size. The
+***unclipped text is then stored in the button.
 */
    nbuts = 0;
 
@@ -535,6 +534,7 @@ exit:
            WPcrtb((wpw_id)iwin_id,tmpx,y,tmpstr,&alt_id[nbuts]);
            butptr = (WPBUTT *)iwinpt->wintab[alt_id[nbuts]].ptr;
            butptr->color.bckgnd = WPgcol(0);
+           strcpy(butptr->stron,altlst[alt]);
          ++nbuts;
            }
          }
@@ -770,7 +770,8 @@ static void  path_up(
         char  *fnbuf,
         DBint *nf)
 
-/*      Create the current filelist.
+/*      Create the current filelist. All directories are listed
+ *      first, then regular files that match the pattern.
  *
  *      In:
  *          inpath   = Directory path optionally with trailing /.

@@ -350,7 +350,7 @@ varkon.input.file.tooltip:      Ange ett filnamn och tryck på OK
 !***Alternativfönstrets placering och titel.
 !*
 varkon.alternative.title:      Alternativ 
-varkon.alternative.geometry:   +200+250 
+varkon.alternative.geometry:   +250+250 
 !*
 !***Vydialogen
 !*

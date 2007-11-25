@@ -54,7 +54,7 @@ V3MSIZ  sysize = {PMSIZE,0,0,RTSSIZE};
 
 char    jobnam[JNLGTH+1] = "Test"; 
 char    jobdir[V3PTHLEN+1] = "";       /* Current user job directory */
-char    amodir[10*V3PTHLEN+10] = "";   /* Alternate user module libs */
+char    libdir[10*V3PTHLEN+10] = "";   /* Alternate user module libs */
 
 /*
 ***Default system meta data.

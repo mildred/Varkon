@@ -4,9 +4,9 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*  main()     Main entrypoint for the interactive Varkon system    */
-/*  igckjn();  Check jobname for consitency                         */
-/*  igcenv();  Check/register WIN32 environment                     */
+/*  main()              Main entrypoint for interactive Varkon      */
+/*  IGcheck_jobname();  Check jobname for consitency                */
+/*  igcenv();           Check/register WIN32 environment            */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
 /*  URL:  http://varkon.sourceforge.net                             */
@@ -80,7 +80,7 @@ V3MSIZ  sysize;
 */
 char    jobnam[JNLGTH+1] = "";         /* Current job */
 char    jobdir[V3PTHLEN+1] = "";       /* Current user job directory */
-char    amodir[10*V3PTHLEN+10] = "";   /* Alternate user module libs */
+char    libdir[10*V3PTHLEN+10] = "";   /* Module library path(s) */
 char    hlpdir[V3PTHLEN+1] = "";       /* Current user doc-directory */
 char    mdffil[V3PTHLEN+1] = "";       /* Current menufile */
 char    inifil_1[V3PTHLEN+1] = "";     /* 1:st inifile */
@@ -396,9 +396,9 @@ extern bool  IGfacc();
 /*
 ***User library path.
 */
-   strcpy(amodir,getenv("VARKON_LIB"));
-   strcat(amodir,"/");
-   fprintf(startup_logfile,"amodir set to: %s\n",amodir);
+   strcpy(libdir,getenv("VARKON_LIB"));
+   strcat(libdir,"/");
+   fprintf(startup_logfile,"libdir set to: %s\n",libdir);
    fflush(startup_logfile);
 /*
 ***User help files.
@@ -423,7 +423,7 @@ extern bool  IGfacc();
 */
    if ( jobnam[0] == '\0' )
      {
-     status = IGselj(jobnam);
+     status = IGselect_job(jobnam);
 
      if ( status == 0 )
        {
@@ -559,7 +559,7 @@ end:
        {
        if ( jobnam[0] == '\0' )
          {
-         if ( igckjn(argv[i]) < 0 )
+         if ( IGcheck_jobname(argv[i]) < 0 )
            {
            fprintf(startup_logfile,"Invalid jobname: %s\n",argv[i]);
            fclose(startup_logfile);
@@ -709,28 +709,28 @@ usage:
 /********************************************************/
 /*!******************************************************/
 
-        short igckjn(char jobnam[])
+        short IGcheck_jobname(char jobnam[])
 
-/*      Kollar att ett jobnamn inte är för långt eller
- *      innehåller otillåtna tecken.
+/*      Check a job name for syntax errors.
  *
- *      In:  jobnam = Pekare till NULL-terminerad sträng.
+ *      In:  jobnam = Name to check.
  *
- *      FV:  0 om OK. Annars -1.
+ *      Return:  0 = OK
+ *              -1 = Syntax error
  *
- *     (C)microform ab Johan Kjellander  8/5/89
- *      
+ *     (C)2007-11-25 J.Kjellander
+ *
  ******************************************************!*/
 
 {
    int j,jnl;
 
 /*
-***Kolla antal tecken.
+***Check name length.
 */
     if ( (jnl=strlen(jobnam)) > JNLGTH ) return(-1);
 /*
-***Kolla otillåtna tecken.
+***Check for illegal characters.
 */
     else
       {
@@ -747,7 +747,7 @@ usage:
         }
       }
 /*
-***Slut.
+***The end.
 */
      return(0);
 }

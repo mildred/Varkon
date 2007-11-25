@@ -190,16 +190,16 @@ static FUATTR futab[] =
  {IGcufn,            FALSE, EXPLICIT+GENERIC}, /* f116 Create CUR_SPLINE Ferg no tan */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f117 - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f118 - */
- {IGsjbn,            FALSE, EXPLICIT+GENERIC}, /* f119 Save JOB-file as */
+ {IGsave_JOB_as,     FALSE, EXPLICIT+GENERIC}, /* f119 Save JOB-file as */
  {IGnjsn,            FALSE, EXPLICIT+GENERIC}, /* f120 New job, save nothing */
 
- {IGsgmn,            FALSE, EXPLICIT+GENERIC}, /* f121 Save RES-file as */
+ {IGsave_RES_as,     FALSE, EXPLICIT+GENERIC}, /* f121 Save RES-file as */
  {IGexit_sa,         FALSE, EXPLICIT+GENERIC}, /* f122 Exit and save all */
  {IGexit_sn,         FALSE, EXPLICIT+GENERIC}, /* f123 Exit and save nothing */
  {IGnjsa,            FALSE, EXPLICIT+GENERIC}, /* f124 New job, save all */
  {IGshell,           FALSE, EXPLICIT+GENERIC}, /* f125 Issue a shell command */
 
- {IGspmn,            FALSE, GENERIC},          /* f126 Save MBO-file as */
+ {IGsave_MBO_as,     FALSE, GENERIC},          /* f126 Save MBO-file as */
  {IGcatt,            FALSE, GENERIC},          /* f127 Edit module attribute */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f128 - */
  {IGcdnd,            FALSE, EXPLICIT+GENERIC}, /* f129 Edit DNDIG */

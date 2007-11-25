@@ -266,7 +266,7 @@ varkon.input.file.tooltip:      Enter filename and select OK
 !***Resources for the alternative popup.
 !*
 varkon.alternative.title:       Alternative
-varkon.alternative.geometry:    +50+50
+varkon.alternative.geometry:    +250+250
 !*
 !***Resources for the view dialogue
 !*

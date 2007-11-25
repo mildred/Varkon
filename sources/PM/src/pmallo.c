@@ -65,7 +65,7 @@
 #define NUPART    80                    /* Max Number of parted modules in PM */
 
 extern char jobdir[];
-extern char amodir[];
+extern char libdir[];
 extern V3MDAT sydata;
 extern V3MSIZ sysize;
 
@@ -969,10 +969,10 @@ static pm_ptr loadmo(char *moname);
 #endif
        {
 /*
-***File not found on jobdir/lib, try with amodir.
+***File not found on jobdir/lib, try with libdir.
 ***If not successful, return -1.
 */
-       if ( (fd=IGfopr(amodir,moname,MODEXT)) < 0 )
+       if ( (fd=IGfopr(libdir,moname,MODEXT)) < 0 )
          {
          return(-1);
          }

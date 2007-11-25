@@ -24,7 +24,6 @@ m5  = "FILE"
       "save",f175
       "save as",m45
       "export",m24
-      "delete job",f184
       "macro",f152
       "shell",f125
       "exit",f123

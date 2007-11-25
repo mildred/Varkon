@@ -68,7 +68,7 @@ V3MDAT sydata = {                  /* System constants */
                 };
 
 char jobdir[] = {"./"};            /* output file directory */
-char amodir[] = {"./"};            /* dummy, 4f */
+char libdir[] = {"./"};            /* dummy, 4f */
 static bool dbgflg = FALSE;        /* debug flag */
 short modtyp;                      /* module type 2 = _2D, 3 = _3D */
 short modatt;                      /* module attribute LOCAL, GLOBAL etc. */

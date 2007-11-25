@@ -14,15 +14,26 @@
 #
 #######################################################
 
-# Root directory for VARKON installation. You may change
-# this line to point to the right location.
-
+# Root directory for VARKON installation.
 # alternative 1, relative path
 VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`
 
 # alternative 2, explicit path
 # VARKON_ROOT=/home/username/varkon/varkon_2.Xx
 export VARKON_ROOT
+
+# Module library path (*.MBO)
+# Varkon first searches the active job directory, jobdir,
+# then jobdir/lib and finally the path defined in
+# VARKON_LIB. VARKON_LIB may specify up to 10 paths
+# separated by colon ":". It is advisable to let
+# VARKON_LIB end with the path to the system library.
+VARKON_LIB=$VARKON_ROOT/lib
+export VARKON_LIB
+
+# The following line is an example that includes
+# an additional directory in the path.
+# VARKON_LIB=/home/username/my_library:$VARKON_ROOT/lib
 
 # Menufile to load at startup.
 VARKON_MDF=$VARKON_ROOT/mdf/english/x11.MDF
@@ -35,10 +46,6 @@ export VARKON_ERM
 # The VARKON documentation (*.htm)
 VARKON_DOC=$VARKON_ROOT/man
 export VARKON_DOC
-
-# Module library path (*.MBS/*.MBO)
-VARKON_LIB=$VARKON_ROOT/lib
-export VARKON_LIB
 
 # Temporary files
 # This line may be changed to /tmp or wherever you

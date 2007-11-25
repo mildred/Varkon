@@ -1926,17 +1926,17 @@ static short get_partname(char *name)
 
   {
    short status;
-   char *nparr1[1000],*nparr2[1000],strarr1[20000],
-         strarr2[20000],libdir[V3PTHLEN];
+   char *nparr1[5000],*nparr2[5000],strarr1[100000],
+         strarr2[100000],libdir[V3PTHLEN];
    int   i,j,n_names1,n_names2;
 
 /*
 ***Get the two file lists.
 */
-   if ( (status=IGdir(jobdir,MODEXT,1000,20000,nparr1,strarr1,&n_names1)) < 0 ) return(status);
+   if ( (status=IGdir(jobdir,MODEXT,5000,100000,nparr1,strarr1,&n_names1)) < 0 ) return(status);
    strcpy(libdir,jobdir);
    strcat(libdir,"lib/");
-   if ( (status=IGdir(libdir,MODEXT,1000,20000,nparr2,strarr2,&n_names2)) < 0 ) return(status);
+   if ( (status=IGdir(libdir,MODEXT,5000,100000,nparr2,strarr2,&n_names2)) < 0 ) return(status);
 /*
 ***Remove the active job from the first list.
 */

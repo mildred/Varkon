@@ -267,7 +267,6 @@ loop:
 static char  envbuf[V3PTHLEN+1];
 static char *envtab[] = {"VARKON_ERM",
                          "VARKON_DOC",
-                         "VARKON_PID",
                          "VARKON_MDF",
                          "VARKON_LIB",
                          "VARKON_TMP",
@@ -275,7 +274,6 @@ static char *envtab[] = {"VARKON_ERM",
                          "VARKON_ICO",
                          "VARKON_PLT",
                          "VARKON_TOL",
-                         "VARKON_DJD",
                          "VARKON_SND"};
 
 /*
