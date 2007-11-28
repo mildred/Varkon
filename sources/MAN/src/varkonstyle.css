@@ -3,32 +3,38 @@ body
   padding-left: 3em;
   padding-right: 3em;
   padding-bottom: 1em;
-  font-family: "Times New Roman",Times,serif;
+  font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif; 
+/*  font-family: "Times New Roman",Times,serif; */
   color: #000000;
-  background-color: #99CCFF 
+  background-color: #99CCFF; 
+  line-height: 1.4em
   }
 
 p
   {
   margin-top: 0;
   margin-bottom: 1em;
-  line-height: 1.3em
+  line-height: 1.4em
   }
 
 h1 
   {
-  padding-top: 0.5em;
+  margin-top: 1.5em;
+  margin-bottom: 1.0em;
   font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif; 
-  font-size: 2em;
-  text-align: center
+/*  text-align: center; */
+  font-size: 2em
+
   }
 
 h2 
   {
-  padding-top: 1.3em;
+  margin-top: 2.0em;
+  margin-bottom: 0.8em;
   font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif; 
-  font-size: 1.5em;
-  text-align: center
+/*  text-align: center; */
+  font-size: 1.4em
+
   }
 
 img 

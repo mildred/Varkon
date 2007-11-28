@@ -1,6 +1,6 @@
 #include <svnversion.inc>
 
-<hr style="margin-top:3em; margin-bottom:4px"/>
+<hr style="margin-top:5em; margin-bottom:4px"/>
 
 <a href="http://sourceforge.net/"><img
 style="margin-top: 0em; float:right;"

@@ -11,7 +11,7 @@
 TARGETDIR = ../../../../man/m_man
 INCDIR    = ../../include
 
-PREPROCESS = cpp -P -nostdinc -I ../../include
+PREPROCESS = cpp -P -nostdinc -I $(INCDIR)
 
 INCLUDEFILES = ../../include/header.inc \
                ../../include/footer.inc \
