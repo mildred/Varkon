@@ -14,7 +14,7 @@
 # If SVN is not used the script does nothing. In that
 # case the existing svnversion.h will be used.
 #
-# Latest update: 2007-09-05 J.Kjellander
+# Latest update: 2007-11-28 S.Larsson
 #
 #####################################################
 #
@@ -23,6 +23,9 @@ if test -d ../.svn; then
     echo -en "#define SVNVERSION \0042" > ./IG/include/svnversion.h
     svnversion -n . >> ./IG/include/svnversion.h
     echo -e "\0042" >> ./IG/include/svnversion.h
+
+    echo -en "#define SVNVERSION " > ./MAN/include/svnversion.inc
+    svnversion -n . >> ./MAN/include/svnversion.inc
   fi
 fi
 #

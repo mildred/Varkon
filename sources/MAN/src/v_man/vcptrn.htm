@@ -36,8 +36,8 @@ different copying operations. Here's an example...<BR>
 <B>lin_free</B>(#1,vec(0,0,0),vec(100,0,0));<BR>
 <B>tform_move</B>(#2,vec(0,0,0),vec(0,100,0));<BR>
 <B>tcopy</B>(#3,#1,#2);<BR>
-<BR>
-#1 is a line from (0,0,0) to (100,0,0). #2 defines a translation by 100
+
+<BR>#1 is a line from (0,0,0) to (100,0,0). #2 defines a translation by 100
 units in the Y-direction with no scaling. The <B>tcopy</B>-procedure creates
 a new line #3 by copying #1 and translating the copy by #2. The new line
 will end up going from (0,100,0) to (100,100,0).<BR>

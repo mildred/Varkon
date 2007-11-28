@@ -3,7 +3,7 @@
 #   Makefile for Varkon version 1.19
 #   --------------------------------
 #
-#   2007-09-05 Johan Kjellander
+#   2007-11-28 S.Larsson 
 #
 ##########################################
 
@@ -62,8 +62,9 @@ distr debug:
 	mkdir -p ./PL/lib
 	mkdir -p ../bin
 	mkdir -p ../tmp
-	mkdir -p ../pid
-	mkdir -p ../app
+	#mkdir -p ../pid
+	#mkdir -p ../app
+	mkdir -p ../man
 
 # If SVN is used, update includefile with current SVNVERSION.
 	./update_versionfile
@@ -85,6 +86,9 @@ distr debug:
 
 # Make vlib
 	@make -C Vlib -f Makefile
+
+# Make man
+	@make -C MAN -C src -f Makefile
            
 clean:
 	@make -C IG -C src -f Makefile.$(PLATFORM) clean
