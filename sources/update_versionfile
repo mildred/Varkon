@@ -24,8 +24,18 @@ if test -d ../.svn; then
     svnversion -n . >> ./IG/include/svnversion.h
     echo -e "\0042" >> ./IG/include/svnversion.h
 
-    echo -en "#define SVNVERSION " > ./MAN/include/svnversion.inc
-    svnversion -n . >> ./MAN/include/svnversion.inc
+    #version number for use in man-files
+    #only replace iclude file if new version
+    echo -en "#define SVNVERSION " > ./MAN/include/svnversion.tmp
+    svnversion -n . >> ./MAN/include/svnversion.tmp
+    svnversion_tmp=`cat ./MAN/include/svnversion.tmp`
+    if test -r "./MAN/include/svnversion.inc" ; then
+      svnversion_inc=`cat ./MAN/include/svnversion.inc`
+    fi
+    if test  "$svnversion_tmp" != "$svnversion_inc" ; then
+      cp ./MAN/include/svnversion.tmp ./MAN/include/svnversion.inc
+    fi
+    rm ./MAN/include/svnversion.tmp
   fi
 fi
 #
