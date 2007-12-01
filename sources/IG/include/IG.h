@@ -422,8 +422,8 @@ short IGanrf();
 /*
 ***igplot.c
 */
-short IGcgkm();
-short IGcdxf();
+short IGexport_GKSM();
+short IGexport_DXF2D();
 short IGshell();
 short IGhid1();
 short IGhid2();
@@ -490,7 +490,8 @@ short IGdljb();
 short IGload();
 short IGldmo();
 short IGsjpg();
-short IGsaln();
+short IGsave_all_as();
+short IGsave_MBS_as();
 short IGsave_MBO_as();
 short IGsave_RES_as();
 short IGsave_JOB_as();

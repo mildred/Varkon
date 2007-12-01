@@ -66,7 +66,7 @@ static bool fssb_callback(WPIWIN *iwinpt);
 static void listarea_layout();
 static bool clip_textbutton(int *pos,int lim1,int lim2,char *text);
 static void path_up(char *oldpath,char *newpath);
-static void make_filelist(char *inpath, char *pattern, int maxfiles,
+static void make_filelist(char *inpath, char *pattern, bool setpath, int maxfiles,
                           int maxsize, char *fnptrs[], char *fnbuf, DBint *nf);
 static short create_directory(int   main_x,int   main_y,char *parent);
 
@@ -75,6 +75,7 @@ static short create_directory(int   main_x,int   main_y,char *parent);
      short WPfile_selector(
      char *title,
      char *outpath,
+     bool  setpath,
      char *def_file,
      char *filter,
      char *outfile)
@@ -82,7 +83,8 @@ static short create_directory(int   main_x,int   main_y,char *parent);
 /*   A file selector under development.
  *
  *   In:   title    = Window title/prompt
- *         outpath  = Initial path
+ *         outpath  = Initial path (and output)
+ *         setpath  = TRUE if path may be changed
  *         def_file = Default filename or ""
  *         filter   = Filter (any syntax accepted by ls)
  *
@@ -99,7 +101,7 @@ static short create_directory(int   main_x,int   main_y,char *parent);
   {
    char     file[81],filett[81],uptt[81],newtt[81],
             butstr[JNLGTH],*fnptrs[MAX_FILES],fnbuf[FNBUF_SIZE],
-            act_path[V3PTHLEN+1],new_path[V3PTHLEN+1];
+            act_path[V3PTHLEN+1],new_path[V3PTHLEN+1],tmp[2*V3PTHLEN];
    int      iwin_x,iwin_y,iwin_dx,iwin_dy,i,scr_width,
             scr_height,pmtlen,butlen,buth,edtlen,edth,
             alt_x,alt_y,x1,y1,x2,y2;
@@ -155,9 +157,10 @@ static short create_directory(int   main_x,int   main_y,char *parent);
 /*
 ***Get file list.
 */
+   strcpy(outfile,def_file);
    strcpy(act_path,outpath);
 start:
-   make_filelist(act_path,filter,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
+   make_filelist(act_path,filter,setpath,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
 /*
 ***Calculate column positions in list area etc.
 */
@@ -229,30 +232,42 @@ start:
    WPwciw((short)iwin_x,(short)iwin_y,(short)iwin_dx,(short)iwin_dy,title,&iwin_id);
    iwinpt = (WPIWIN *)wpwtab[(wpw_id)iwin_id].ptr;
 /*
-***The up icon.
+***If setpath == TRUE it is allowed to traverse directories.
+***In that case, create "up arrow" and "create directory" buttons
+***followed by the path string.
 */
    alt_x  = air1;
    alt_y  = air1;
 
-   strcpy(iconam,IGgenv(VARKON_ICO));
-   strcat(iconam,"/Varkon_uparrow.xpm");
-   WPmcic(iwin_id,alt_x,alt_y,1,iconam,WP_BGND1,WP_BGND1,&up_id);
-   icoptr = (WPICON *)iwinpt->wintab[up_id].ptr;
-   strcpy(icoptr->tt_str,uptt);
+   if ( setpath )
+     {
+     strcpy(iconam,IGgenv(VARKON_ICO));
+     strcat(iconam,"/Varkon_uparrow.xpm");
+     WPmcic(iwin_id,alt_x,alt_y,1,iconam,WP_BGND1,WP_BGND1,&up_id);
+     icoptr = (WPICON *)iwinpt->wintab[up_id].ptr;
+     strcpy(icoptr->tt_str,uptt);
+
+     alt_x += 32 + air1;
+     status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,36,36,(short)1,
+                             "New","New","",WP_BGND2,WP_FGND,&new_id);
+     butptr = (WPBUTT *)iwinpt->wintab[new_id].ptr;
+     strcpy(butptr->tt_str,newtt);
+
+     alt_x += 32 + air1 + air1;
+     alt_y  = air1 + 12;
+     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&pmt_id);
+     }
 /*
-***The "create new directory" button.
+***If setpath == FALSE, replace up/new buttons with "Path:".
 */
-   alt_x += 32 + air1;
-   status = WPcrpb((wpw_id)iwin_id,alt_x,alt_y,36,36,(short)1,
-                           "New","New","",WP_BGND2,WP_FGND,&new_id);
-   butptr = (WPBUTT *)iwinpt->wintab[new_id].ptr;
-   strcpy(butptr->tt_str,newtt);
-/*
-***The path.
-*/
-   alt_x += 32 + air1 + air1;
-   alt_y  = air1 + 12;
-   WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&pmt_id);
+   else
+     {
+     alt_x += air1;
+     alt_y  = air1 + 12;
+     strcpy(tmp,"Path: ");
+     strcat(tmp,act_path);
+     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(tmp),WPstrh(),tmp,&pmt_id);
+     }
 /*
 ***The list area outline.
 */
@@ -311,7 +326,7 @@ start:
 
    alt_x  = air1 + pmtlen + air1;
    WPmced((wpw_id)iwin_id,alt_x,alt_y,edtlen,edth,(short)1,
-                   def_file,JNLGTH,&file_id);
+                   outfile,JNLGTH,&file_id);
    edtptr = (WPEDIT *)iwinpt->wintab[file_id].ptr;
    strcpy(edtptr->tt_str,filett);
 /*
@@ -397,7 +412,7 @@ loop:
      WPgted(iwin_id,file_id,outfile);
      if ( outfile[0] == '\0' )
        {
-       XBell(xdisp,100);
+       WPbell();
        goto loop;
        }
      else
@@ -448,10 +463,8 @@ loop:
 */
          else
            {
-           strcpy(outfile,butstr);
-           strcpy(outpath,act_path);
-           status = 0;
-           goto exit;
+           WPuped(iwin_id,file_id,butstr);
+           goto loop;
            }
          }
        }
@@ -764,6 +777,7 @@ static void  path_up(
  static void   make_filelist(
         char  *inpath,
         char  *pattern,
+        bool   setpath,
         int    maxfiles,
         int    maxsize,
         char  *fnptrs[],
@@ -776,6 +790,7 @@ static void  path_up(
  *      In:
  *          inpath   = Directory path optionally with trailing /.
  *          pattern  = Search pattern for regular files.
+ *          setpath  = TRUE = directories are included
  *          maxfiles = Max number of file names.
  *          maxsize  = Max number of chars.
  *          fnbuf    = Place to store file names.
@@ -828,29 +843,33 @@ static void  path_up(
      strcpy(lscmd,"ls -F");
      }
 /*
-***Execute the pipe and extract directories.
+***If directories are requested to be included,
+***execute the pipe and extract directories.
 */
-   if ( (fp=popen(lscmd,"r")) == NULL ) return;
+   if ( setpath )
+     {
+     if ( (fp=popen(lscmd,"r")) == NULL ) return;
 /*
 ***Read filenames.
 */
-   while ( fgets(buf,V3PTHLEN,fp) != NULL  &&
+     while ( fgets(buf,V3PTHLEN,fp) != NULL  &&
                      *nf < maxfiles  &&  actsize+JNLGTH+5 < maxsize )
-     {
-     if ( (n=strlen(buf)) > 0 ) buf[n-1] = '\0';
+       {
+       if ( (n=strlen(buf)) > 0 ) buf[n-1] = '\0';
 /*
 ***Is the file a directory ?
 */
-     if ( buf[strlen(buf)-1] == '/' )
-       {
-       strcpy(actptr,buf);
-       fnptrs[*nf] = actptr;
-       actptr  += strlen(buf)+1;
-       actsize += strlen(buf)+1;
-      *nf += 1;
+       if ( buf[strlen(buf)-1] == '/' )
+         {
+         strcpy(actptr,buf);
+         fnptrs[*nf] = actptr;
+         actptr  += strlen(buf)+1;
+         actsize += strlen(buf)+1;
+        *nf += 1;
+         }
        }
+     pclose(fp);
      }
-   pclose(fp);
 /*
 ***Execute the pipe again and extract ordinary files that match the filter pattern.
 */

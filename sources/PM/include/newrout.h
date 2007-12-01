@@ -35,7 +35,7 @@
 #ifdef VARKON
 
 {"CRE_MATERIAL",      ST_PROC,     FALSE,  ST_ORD,    VCRMAT},
-{"LIGHT_VIEW",        ST_PROC,     FALSE,  ST_ORD,    VLTVIEW},
+{"CRE_LIGHT",         ST_PROC,     FALSE,  ST_ORD,    VLTVIEW},
 {"GET_COLOR",         ST_PROC,     FALSE,  ST_ORD,    VGTCOL},
 {"CRE_COLOR",         ST_PROC,     FALSE,  ST_ORD,    VCRCOL},
 {"LIGHT_ON",          ST_PROC,     FALSE,  ST_ORD,    VLTON},

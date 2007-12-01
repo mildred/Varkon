@@ -1,5 +1,4 @@
 VARKON Error messages for Interpreter routines
-(C) Microform AB 1998
 
 002  4  Illegal id class for id expression
 003  4  Array base not address
@@ -15,6 +14,7 @@ VARKON Error messages for Interpreter routines
 
 201  2  Too long reference
 202  2  No more activation frames
+203  2  Maximum depth (%s) of part call chain reached
 204  2  Named Parameter stack overflow
 205  2  Named Parameter stack underflow
 206  2  Using constant expression where VAR-parameter required

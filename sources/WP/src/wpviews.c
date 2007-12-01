@@ -1080,79 +1080,106 @@ exit:
         DBTmat *vymat,
         double *persp)
 
-/*      X-versionen av MBS-GET_VIEW.
+/*      Used by MBS procedure GET_VIEW().
  *
- *      In: win_id = ID för aktuellt fönster.
+ *      In: win_id = ID of requested window.
  *
- *      Ut: *vynamn = Vy:ns namn.
- *          *skala  = Aktuell skala.
- *          *xmin   = Aktuellt modellfönster.
- *          *ymin   =         -""-
- *          *xmax   =         -""-
- *          *ymax   =         -""-
- *          *vymat  = Aktuell 3D-transformation.
- *          *persp  = Perspektivavstånd.
+ *      Out: *vynamn = View name.
+ *           *skala  = Current scale.
+ *           *xmin   = Current model window.
+ *           *ymin   =         -""-
+ *           *xmax   =         -""-
+ *           *ymax   =         -""-
+ *           *vymat  = Current 3D-transformation.
+ *           *persp  = Perspective distance.
  *
- *      Felkod: WP1402 = Fönster med id %s finns ej
+ *      Error: WP1402 = Window %s does not exist.
+ *             WP1742 = Window %s is of illegal type.
  *
- *      (C)microform ab 16/1/95 J. Kjellander
+ *      (C)2007-11-30 J.Kjellander
  *
  ******************************************************!*/
 
   {
-   char    errbuf[81];
+   char    errbuf[V3STRLEN];
    WPWIN  *winptr;
    WPGWIN *gwinpt;
+   WPRWIN *rwinpt;
+   WPVIEW *viewpt;
+   WPWGEO *geopt;
 
 /*
-***Fixa C-pekare till WPGWIN-fönstret.
+***Get C ptrs to the window data.
 */
-   if ( (winptr=WPwgwp((wpw_id)win_id)) != NULL  &&
-         winptr->typ == TYP_GWIN )
+   if ( (winptr=WPwgwp((wpw_id)win_id)) != NULL )
      {
-     gwinpt = (WPGWIN *)winptr->ptr;
+     if ( winptr->typ == TYP_GWIN )
+       {
+       gwinpt = (WPGWIN *)winptr->ptr;
+       geopt  = &gwinpt->geo;
+       viewpt = &gwinpt->vy;
+       }
+     else if ( winptr->typ == TYP_RWIN )
+       {
+       rwinpt = (WPRWIN *)winptr->ptr;
+       geopt  = &rwinpt->geo;
+       viewpt = &rwinpt->vy;
+       }
+/*
+***Illegal window type.
+*/
+     else
+       {
+       sprintf(errbuf,"%d",win_id);
+       return(erpush("WP1742",errbuf));
+       }
      }
+/*
+***Window does not exist.
+*/
    else
      {
      sprintf(errbuf,"%d",win_id);
      return(erpush("WP1402",errbuf));
      }
 /*
-***Returnera vydata.
+***Return view data.
 */
-   strcpy(vynamn,gwinpt->vy.name);
+   strcpy(vynamn,viewpt->name);
 
-  *skala = gwinpt->geo.psiz_x*
-          (gwinpt->vy.scrwin.xmax - gwinpt->vy.scrwin.xmin) /
-          (gwinpt->vy.modwin.xmax - gwinpt->vy.modwin.xmin);
+  *skala = geopt->psiz_x*
+          (viewpt->scrwin.xmax - viewpt->scrwin.xmin) /
+          (viewpt->modwin.xmax - viewpt->modwin.xmin);
 
-  *xmin  = gwinpt->vy.modwin.xmin;
-  *ymin  = gwinpt->vy.modwin.ymin;
-  *xmax  = gwinpt->vy.modwin.xmax;
-  *ymax  = gwinpt->vy.modwin.ymax;
+  *xmin  = viewpt->modwin.xmin;
+  *ymin  = viewpt->modwin.ymin;
+  *xmax  = viewpt->modwin.xmax;
+  *ymax  = viewpt->modwin.ymax;
 
-   vymat->g11 = gwinpt->vy.matrix.k11;
-   vymat->g12 = gwinpt->vy.matrix.k12;
-   vymat->g13 = gwinpt->vy.matrix.k13;
+   vymat->g11 = viewpt->matrix.k11;
+   vymat->g12 = viewpt->matrix.k12;
+   vymat->g13 = viewpt->matrix.k13;
    vymat->g14 = 0.0;
 
-   vymat->g21 = gwinpt->vy.matrix.k21;
-   vymat->g22 = gwinpt->vy.matrix.k22;
-   vymat->g23 = gwinpt->vy.matrix.k23;
+   vymat->g21 = viewpt->matrix.k21;
+   vymat->g22 = viewpt->matrix.k22;
+   vymat->g23 = viewpt->matrix.k23;
    vymat->g24 = 0.0;
 
-   vymat->g31 = gwinpt->vy.matrix.k31;
-   vymat->g32 = gwinpt->vy.matrix.k32;
-   vymat->g33 = gwinpt->vy.matrix.k33;
+   vymat->g31 = viewpt->matrix.k31;
+   vymat->g32 = viewpt->matrix.k32;
+   vymat->g33 = viewpt->matrix.k33;
    vymat->g34 = 0.0;
 
    vymat->g41 = 0.0;
    vymat->g42 = 0.0;
    vymat->g43 = 0.0;
    vymat->g44 = 1.0;
-  
-  *persp = gwinpt->vy.pdist;
 
+  *persp = viewpt->pdist;
+/*
+***The end.
+*/
    return(0);
   }
 

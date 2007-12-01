@@ -10,10 +10,11 @@
 /*  IGload();        Loads new job                                  */
 /*  IGldmo();        Loads module                                   */
 /*  IGsjpg();        Saves all                                      */
-/*  IGsaln();        Saves all with new name                        */
-/*  IGsave_MBO_as(); Saves active module with new name/directory    */
-/*  IGsave_RES_as(); Saves DB with new name/directory               */
-/*  IGsave_JOB_as(); Saves jobdata with new name                    */
+/*  IGsave_all_as(); Save all files with new name/directory         */
+/*  IGsave_MBS_as(); Save module as MBS with new name/directory     */
+/*  IGsave_MBO_as(); Save module as MBO with new name/directory     */
+/*  IGsave_RES_as(); Save DB with new name/directory                */
+/*  IGsave_JOB_as(); Save jobdata with new name/directory           */
 /*  IGcatt();        Change module attribute                        */
 /*  IGexit();        Exits                                          */
 /*  IGexit_sn();     Exit without saving                            */
@@ -919,11 +920,11 @@ static short igsvgm()
 /********************************************************/
 /*!******************************************************/
 
-        short IGsaln()
+        short IGsave_all_as()
 
 /*      Save everything as.
  *
- *      return: 0  = OK
+ *      Return: 0  = OK
  *          REJECT = Cancel
  *          GOMAIN = Main menu
  *
@@ -1053,6 +1054,100 @@ exit:
 /********************************************************/
 /********************************************************/
 
+        short IGsave_MBS_as()
+
+/*      Save active module in MBS format as..
+ *      New name and/or new directory.
+ *
+ *      Return: 0  = OK
+ *          REJECT = Cancel
+ *          GOMAIN = Main menu
+ *
+ *      Error: IG0342 = Syntax error in file name
+ *
+ *      (C)2007-11-27 J.Kjellander
+ *
+ ********************************************************/
+
+  {
+    short    status;
+    int      i;
+    char     newname[JNLGTH+1],newpath[V3PTHLEN],mbsfile[V3PTHLEN],
+             buf[2*V3PTHLEN],filter[6];
+    FILE    *mbsfp;
+    PMMODULE modhed;
+
+/*
+***Get the name and path to use for the new MBS-file.
+***Check the new name and report any errors.
+*/
+   strcpy(filter,"*");
+   strcpy(newpath,jobdir);
+   strcpy(mbsfile,jobnam);
+   strcat(mbsfile,MBSEXT);
+
+start:
+   status = WPfile_selector(IGgtts(376),newpath,TRUE,mbsfile,filter,newname);
+   if ( status == 0 )
+     {
+     if ( IGcmpw("*.MBS",newname) )
+       {
+       i = strlen(newname) - 4;
+       newname[i] = '\0';
+       }
+     if ( IGcheck_jobname(newname) < 0 )
+       {
+       erpush("IG0342",newname);
+       errmes();
+       goto start;
+       }
+     }
+   else return(status);
+/*
+***Does this file already exist ?
+*/
+   strcpy(mbsfile,newpath);
+   strcat(mbsfile,newname);
+   strcat(mbsfile,MBSEXT);
+   if ( IGftst(mbsfile) && !IGialt(75,67,68,TRUE) ) goto start;
+/*
+***Open the MBS file.
+*/
+   if ( (mbsfp=fopen(mbsfile,"w")) == NULL )
+     {
+     erpush("IG0222",mbsfile);
+     errmes();
+     return(0);
+     }
+/*
+***Set the name of the active module to newname,
+***decompile to the mbsfile and reset the name again.
+*/
+    pmrmod(&modhed);
+    strcpy(modhed.mname,newname);
+    pmumod(&modhed);
+
+    pprmo(PPFILE,mbsfp);
+    fclose(mbsfp);
+
+    pmrmod(&modhed);
+    strcpy(modhed.mname,jobnam);
+    pmumod(&modhed);
+/*
+***Message.
+*/
+    strcpy(buf,mbsfile);
+    strcat(buf,IGgtts(374));
+    WPaddmess_mcwin(buf,WP_MESSAGE);
+/*
+***The end.
+*/
+   return(0);
+  }
+
+/********************************************************/
+/********************************************************/
+
         short IGsave_MBO_as()
 
 /*      Save active module as..
@@ -1072,7 +1167,7 @@ exit:
     short      status;
     int        i;
     char       newname[JNLGTH+1],newpath[V3PTHLEN],mbofile[V3PTHLEN],
-               act_jobdir[V3PTHLEN],filter[6];
+               act_jobdir[V3PTHLEN],filter[6],buf[2*V3PTHLEN];
     PMMODULE   modhed;
 
 /*
@@ -1080,10 +1175,12 @@ exit:
 ***Check the new name and report any errors.
 */
    strcpy(filter,"*");
-   strcat(filter,MODEXT);
    strcpy(newpath,jobdir);
+   strcpy(mbofile,jobnam);
+   strcat(mbofile,MODEXT);
+
 start:
-   status = WPfile_selector(IGgtts(349),newpath,"",filter,newname);
+   status = WPfile_selector(IGgtts(349),newpath,TRUE,mbofile,filter,newname);
    if ( status == 0 )
      {
      if ( IGcmpw("*.MBO",newname) )
@@ -1132,6 +1229,12 @@ start:
 */
     strcpy(jobdir,act_jobdir);
 /*
+***Message.
+*/
+    strcpy(buf,mbofile);
+    strcat(buf,IGgtts(374));
+    WPaddmess_mcwin(buf,WP_MESSAGE);
+/*
 ***The end.
 */
     return(0);
@@ -1160,17 +1263,20 @@ start:
    short status;
    int   i;
    char  resfile[V3PTHLEN+1],newfile[V3PTHLEN+1],newname[JNLGTH+1],
-         newpath[V3PTHLEN],filter[6];
+         newpath[V3PTHLEN],filter[6],buf[2*V3PTHLEN];
 
 /*
 ***Get the name and path to use for the new RES-file.
 ***Check the new name and report any errors.
 */
    strcpy(filter,"*");
-   strcat(filter,RESEXT);
    strcpy(newpath,jobdir);
+   strcpy(resfile,"Copy_of_");
+   strcat(resfile,jobnam);
+   strcat(resfile,RESEXT);
+
 start:
-   status = WPfile_selector(IGgtts(279),newpath,"",filter,newname);
+   status = WPfile_selector(IGgtts(279),newpath,TRUE,resfile,filter,newname);
    if ( status == 0 )
      {
      if ( IGcmpw("*.RES",newname) )
@@ -1229,6 +1335,12 @@ start:
    DBload(resfile,sysize.gm,
            DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
 /*
+***Message.
+*/
+    strcpy(buf,newfile);
+    strcat(buf,IGgtts(374));
+    WPaddmess_mcwin(buf,WP_MESSAGE);
+/*
 ***The end.
 */
    return(0);
@@ -1256,17 +1368,20 @@ start:
     short status;
     int   i;
     char  newname[JNLGTH+1],newpath[V3PTHLEN],jobfile[V3PTHLEN],
-          act_jobnam[JNLGTH],act_jobdir[V3PTHLEN],filter[6];
+          act_jobnam[JNLGTH],act_jobdir[V3PTHLEN],filter[6],
+          buf[2*V3PTHLEN];
 
 /*
 ***Get the name and path to use for the new JOB-file.
 ***Check the new name and report any errors.
 */
    strcpy(filter,"*");
-   strcat(filter,JOBEXT);
    strcpy(newpath,jobdir);
+   strcpy(jobfile,jobnam);
+   strcat(jobfile,JOBEXT);
+
 start:
-   status = WPfile_selector(IGgtts(357),newpath,"",filter,newname);
+   status = WPfile_selector(IGgtts(357),newpath,TRUE,jobfile,filter,newname);
    if ( status == 0 )
      {
      if ( IGcmpw("*.JOB",newname) )
@@ -1302,6 +1417,12 @@ start:
 
     strcpy(jobnam,act_jobnam);
     strcpy(jobdir,act_jobdir);
+/*
+***Message.
+*/
+    strcpy(buf,jobfile);
+    strcat(buf,IGgtts(374));
+    WPaddmess_mcwin(buf,WP_MESSAGE);
 /*
 ***The end.
 */
@@ -1856,7 +1977,7 @@ l1:
     strcpy(newdir,jobdir);
     strcpy(filter,"*");
     strcat(filter,typ);
-    status = WPfile_selector(IGgtts(210),newdir,"",filter,newjob);
+    status = WPfile_selector(IGgtts(210),newdir,TRUE,"",filter,newjob);
     if ( status == 0 )
       {
       if ( (sysmode == GENERIC  && IGcmpw("*.MBO",newjob)) ||

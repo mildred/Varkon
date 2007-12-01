@@ -8,7 +8,7 @@
 *
 *    This file includes:
 *
-*    WPltvi();    Servs LIGHT_VIEW()
+*    WPltvi();    Servs CRE_LIGHT()
 *    WPlton();    Servs LIGHT_ON/OFF()
 *    WPconl();    Sets light parameters
 *
@@ -35,16 +35,16 @@
 #include <math.h>
 
 /*
-***Ljuskällor, max 8 stycken.
+***Light sources, max 8.
 */
 typedef struct wplight
 {
-GLfloat pos[4];            /* Läge/riktning */
-GLfloat dir[3];            /* Spotriktning */
-GLfloat ang;               /* Spotvinkel */
+GLfloat pos[4];            /* Light direction or spot position */
+GLfloat dir[3];            /* Spot direction */
+GLfloat ang;               /* Spot angle */
 GLfloat focus;             /* Spotfocus (0-128) */
-GLfloat intensity;         /* Ljusstyrka (0-1) */
-bool    state;             /* På/av */
+GLfloat intensity;         /* Light intensity (0-1) */
+bool    state;             /* On/off */
 } WPLIGHT;
 
 static WPLIGHT lt_tab[8] = { {{0,0,1,0},{0,0,-1},180,0,1,TRUE},
@@ -56,40 +56,35 @@ static WPLIGHT lt_tab[8] = { {{0,0,1,0},{0,0,-1},180,0,1,TRUE},
                              {{0,0,1,0},{0,0,-1},180,0,1,FALSE},
                              {{0,0,1,0},{0,0,-1},180,0,1,FALSE} };
 
-/*!******************************************************/
+/********************************************************/
 
-        short  WPltvi(
+        short     WPltvi(
         DBint     ltnum,
         DBVector *pos1,
         DBVector *pos2,
         DBfloat   ang,
         DBfloat   focus)
 
-/*      Sätter ljuskällas geometry.
+/*      Create/set light source.
  *
- *      In: ltnum = Ljuskälla
- *          pos1  = Position/riktning
- *          pos2  = Spotposition
- *          ang   = Spotvinkel
- *          focus = Spotfokus
+ *      In: ltnum = Light source number
+ *          pos1  = Light direction or Spot position
+ *          pos2  = Spot direction
+ *          ang   = Spot angle
+ *          focus = Spot focus
  *
- *      Ut: Inget.
- *
- *      FV: 0.
- *
- *      (C)microform ab 1997-02-19 J. Kjellander
+ *      (C)2007-11-30 J.Kjellander
  *
  ******************************************************!*/
 
   {
 
 /*
-***Lite felkontroll.
+***Lights source number range check.
 */
    if ( ltnum < 0  ||  ltnum > 7 ) return(0);
 /*
-***Om ang = 180 är det en ingen spotlight utan
-***en vanlig lampa som lyser i alla riktningar.
+***If ang = 180 it's no spotlight.
 */
    if ( ang == 180.0 )
      {
@@ -104,8 +99,8 @@ static WPLIGHT lt_tab[8] = { {{0,0,1,0},{0,0,-1},180,0,1,TRUE},
      lt_tab[ltnum].ang    = 180.0;
      }
 /*
-***Om spotang <> 180 är det en spot. pos1 och pos2 får
-***då inte vara lika för då kan vi inte beräkna nån riktning.
+***If ang <> 180 it's a spot. pos1 and pos2 may then not be
+***equal.
 */
    else
      {
@@ -126,40 +121,38 @@ static WPLIGHT lt_tab[8] = { {{0,0,1,0},{0,0,-1},180,0,1,TRUE},
      lt_tab[ltnum].ang    = (GLfloat)ang;
      lt_tab[ltnum].focus  = (GLfloat)focus*1.28;
      }
-
+/*
+***The end.
+*/
    return(0);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
-        short WPlton(
-        int   ltnum,
+        short   WPlton(
+        int     ltnum,
         DBfloat intensity,
-        bool  state)
+        bool    state)
 
-/*      Slår på och av olika ljuskällor.
+/*      Turns on and off a lightsource.
  *
- *      In: ltnum = Ljuskälla
- *          state = På/Av.
+ *      In: ltnum = Lightsource number
+ *          state = On/off
  *
- *      Ut: Inget.
+ *      (C)2007-11-30 J.Kjellander
  *
- *      FV: 0.
- *
- *      (C)microform ab 1997-02-19 J. Kjellander
- *
- ******************************************************!*/
+ ********************************************************/
 
   {
 
 /*
-***Lite felkontroll.
+***Range check.
 */
    if ( ltnum < 0  ||  ltnum > 7 ) return(0);
    if ( intensity < 0.0  ||  intensity > 100.0 ) return(0);
 /*
-***Slå på/av.
+***Execute.
 */
    if ( state )
      {
@@ -167,12 +160,14 @@ static WPLIGHT lt_tab[8] = { {{0,0,1,0},{0,0,-1},180,0,1,TRUE},
      lt_tab[ltnum].intensity = (GLfloat)(intensity/100.0);
      }
    else lt_tab[ltnum].state = FALSE;
-
+/*
+***The end.
+*/
    return(0);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
        short WPconl(
        WPGWIN *gwinpt)

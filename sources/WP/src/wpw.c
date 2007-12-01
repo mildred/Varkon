@@ -52,16 +52,11 @@
 
 WPWIN wpwtab[WTABSIZ];
 
-/* wpwtab �r en tabell med typ och pekare till f�nster.
-   Typ �r en kod som anger vilken typ av f�nster det r�r
-   sig om tex. TYP_IWIN f�r ett input-f�nster fr�n MBS.
-   Pekaren �r en C-pekare som pekar p� en structure av
-   den aktuella typen tex. WPIWIN f�r ett input-f�nster.
-
-   Alla element i wpwtab initieras av WPwini() till NULL.
-   N�r ett nytt f�nster skapas f�r det som ID l�gsta lediga
-   plats i wpwtab och n�r det deletas nollst�lls platsen
-   igen.
+/* wpwtab[] is the global window table. All elements of wpwtab[]
+   are initialized to NULL by WPwini() at startup. When a window
+   is created, the lowest free entry is used for that window.
+   When a window is deleted, its entry in wpwtab[] is set to NULL
+   again.
 */
 
 /*!******************************************************/
@@ -905,28 +900,27 @@ evloop:
  }
 
 /*********************************************************/
-/*!******************************************************/
+/********************************************************/
 
-        short WPwdel(
-        DBint w_id)
+        short WPwdel(DBint w_id)
 
-/*      D�dar ett huvudf�nster med alla subf�nster.
+/*      Delete a window in wpwtab[] and it's children.
  *
- *      In: w_id   = Huvudf�nstrets entry i wpwtab.
+ *      In: w_id = Window ID.
  *
- *      Ut: Inget.   
- *
- *      Felkod: WP1222 = Huvudf�nstret finns ej.
+ *      Error: WP1222 = Window does not exist.
+ *             WP1733 = Illegal window type.
  *
  *      (C)microform ab 6/12/93 J. Kjellander
  *
  *      1998-01-04 WPRWIN, J.Kjellander
+ *      2007-11-28 2.0 J.Kjellander
  *
  ******************************************************!*/
 
   {
     char     errbuf[80];
-    Window   xwin_id=0;
+    Window   xwin_id;
     WPWIN   *winptr;
     WPIWIN  *iwinpt;
     WPLWIN  *lwinpt;
@@ -934,7 +928,8 @@ evloop:
     WPRWIN  *rwinpt;
 
 /*
-***Fixa en C-pekare till huvud-f�nstrets entry i wpwtab.
+***Get a C ptr to the window entry in the global
+***window table.
 */
     if ( (winptr=WPwgwp(w_id)) == NULL )
       {
@@ -942,7 +937,7 @@ evloop:
       return(erpush("WP1222",errbuf));
       }
 /*
-***Vilken typ av f�nster �r det ?
+***What kind of window ?
 */
     switch ( winptr->typ )
       {
@@ -969,13 +964,19 @@ evloop:
       xwin_id = rwinpt->id.x_id;
       WPdlrw(rwinpt);
       break;
+
+      default:
+      sprintf(errbuf,"%d",(int)w_id);
+      return(erpush("WP1733",errbuf));
       }
 /*
-***D�da f�nstret ur X.
+***Kill the X window and flush the display to ensure that the
+***window is removed immediately.
 */
     XDestroyWindow(xdisp,xwin_id);
+    XFlush(xdisp);
 /*
-***Stryk f�nstret ur f�nstertabellen.
+***Remove the WP window from global window table.
 */
     winptr->typ = TYP_UNDEF;
     winptr->ptr = NULL;

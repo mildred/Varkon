@@ -179,13 +179,13 @@
 #define VREPVI     124    /*evrpvi      REP_VIEW    */
 #define VCACVI     125    /*evcavi      CACC_VIEW   */
 /*
-***Ny rutin för version 1.3 3/11/86     
+***Ny rutin för version 1.3 3/11/86
 */
 
 #define VPLTVI     126    /*evplvi      PLOT_VIEW   Removed */
 
 /*
-***Nya rutiner för version 1.3 1/10/86    
+***Nya rutiner för version 1.3 1/10/86
 */
 #define VTIM       127    /*evtime      TIME        */
 #define VRSTR      128    /*evrstr      RSTR        */
@@ -196,7 +196,7 @@
 #define VLSLN      133    /*evlsln      LST_LIN     */
 
 /*
-***Nya rutiner för version 1.3 30/10/86    
+***Nya rutiner för version 1.3 30/10/86
 */
 #define VACBLK  134   /*evablk      ACT_BLANK   */
 #define VACVIN  135   /*evavin      ACT_VNAM    */
@@ -451,7 +451,7 @@
 #define VCLDLL     300  /*evcldl      CALL_DLL_FUNCTION */
 #define VULDLL     301  /*evuldl      UNLOAD_DLL        */
 #define VCRMAT     302  /*evcrmt      CRE_MATERIAL      */
-#define VLTVIEW    303  /*evltvi      LIGHT_VIEW        */
+#define VLTVIEW    303  /*evltvi      CRE_LIGHT         */
 #define VGTCOL     304  /*evgtco      GET_COLOR         */
 #define VCRCOL     305  /*evcrco      CRE_COLOR         */
 #define VLTON      306  /*evlton      LIGHT_ON          */

@@ -29,16 +29,10 @@ m5  = "ARKIV"
       "sluta",f123
       "spara/sluta",f122;
 
-m7  = "PROJEKT"
-      "byt projekt",f176
-      "inställningar",f178
-      "ta bort projekt",f179;
-
 m9  = "INSTÄLLNINGAR"
       "kurv-noggr",f98
       "attribut",f16
-      "modul",f127
-      "projekt",m7;
+      "modul",f127;
 
 m10 = "TCOPY"
       "translation",f239
@@ -166,11 +160,11 @@ m40 = "LINJE"
       "t  tan/tan",f29;
 
 m45 = "SPARA SOM"
-      "alla filer",f201
       "JOB-fil",f119
-      "MBO-fil",f126
       "MBS-fil",f144
-      "RES-fil",f121;
+      "MBO-fil",f126
+      "RES-fil",f121
+      "alla filer",f201;
 
 m47 = "ÖPPNA"
       "lagra först",f124
@@ -484,8 +478,8 @@ m127 = "SILHOUETTE"
        "surface",a1
        "direction",a2
        "type" ,a3
-       "branch" ,a4;       
-       
+       "branch" ,a4;
+
 m134= "GRUPP"
       "namn",a3
       "ta bort",a4
@@ -524,18 +518,6 @@ m145= "ATTRIBUT"
       "lokal",a1
       "global",a2
       "basic",a3;
-
-m146= "SKAPA PLOTFIL"
-      "hela modellen",a1
-      "allt på skärm",a2
-      "del av skärm",a3
-      "annan vy",a4;
-
-m147= "SKAPA DXF-FIL"
-      "hela modellen",a1
-      "allt på skärm",a2
-      "del av skärm",a3
-      "annan vy",a4;
 
 m150= "OFFSET"
       "yta",a1

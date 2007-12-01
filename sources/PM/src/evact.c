@@ -84,31 +84,27 @@ extern DBptr  lsysla;
 
 extern PMLITVA *func_vp;   /* Pekare till resultat. */
 
-/*!******************************************************/
+/********************************************************/
 
         short evalev()
 
-/*      Evaluerar funktionen ACT_LEV.
+/*      Evaluate MBS function ACT_LEV().
  *
- *      In: 
+ *      Out: Global *func_vp  =  Active level.
  *
- *      Ut: Global *func_vp  =  Activ level.
+ *      (C)2007-11-30 J.Kjellander
  *
- *      FV:
- *
- *      (C)microform ab 31/5/86 R. Svedin
- *
- *      31/10/86 Nytt namn och flyttad från eval3.c, R. Svedin
- *      2001-03-06 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
+ ********************************************************/
 
   {
-
+/*
+***Return currently active level.
+*/
     func_vp->lit.int_va = defnap.level;
-
+/*
+***The end.
+*/
     return(0);
-
   }
 
 /********************************************************/

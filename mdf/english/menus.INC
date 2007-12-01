@@ -29,16 +29,10 @@ m5  = "FILE"
       "exit",f123
       "save/exit",f122;
 
-m7  = "PROJECT"
-      "new project",f176
-      "project settings",f178
-      "delete project",f179;
-
 m9  = "SETTINGS"
       "curve accuracy",f98
       "attributes",f16
-      "module",f127
-      "project",m7;
+      "module",f127;
 
 m10 = "TCOPY"
       "translation",f239
@@ -166,11 +160,11 @@ m40 = "LINE"
       "t  tan/tan",f29;
 
 m45 = "SAVE AS"
-      "all files",f201
       "JOB-file",f119
-      "MBO-file",f126
       "MBS-file",f144
-      "RES-file",f121;
+      "MBO-file",f126
+      "RES-file",f121
+      "all files",f201;
 
 m47 = "NEW/OPEN"
       "save first",f124
@@ -524,18 +518,6 @@ m145 = "ATTRIBUTE"
        "local",a1
        "global",a2
        "basic",a3;
-
-m146 = "CREATE PLOT FILE"
-       "entire model",a1
-       "entire window",a2
-       "part of window",a3
-       "another view",a4;
-
-m147 = "CREATE DXF FILE"
-       "entire model",a1
-       "entire window",a2
-       "part of window",a3
-       "another view",a4;
 
 m150 = "OFFSET"
        "surface",a1

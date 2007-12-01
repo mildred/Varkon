@@ -566,10 +566,10 @@ exit:
 
 /*      Interactive input of 2 positions with XOR-outline.
  *
- *      In:  mode  = WP_RUB_RECT = Rectangle outline
- *                    WP_RUB_LINE = Line outline
+ *      In:  mode   = WP_RUB_RECT  = Rectangle outline
+ *                    WP_RUB_LINE  = Line outline
  *                    WP_RUB_ARROW = Arrow outline
- *                    WP_RUB_NONE = No outline outline
+ *                    WP_RUB_NONE  = No outline
  *           prompt = Autoprompt yes/no.
  *
  *      Out: *grw_id  = ID of WPGWIN or WPRWIN used
@@ -587,7 +587,7 @@ exit:
  *
  *      23/2/95 PointerMotionHintMask, J. Kjellander
  *      1/3/95  drwbox(), J. Kjellander
- *      1998-03-19 Returnera fï¿½nster, J.Kjellander
+ *      1998-03-19 Returnera fönster, J.Kjellander
  *      1998-03-24 mode, J.Kjellander
  *      2007-07-31 1.19, J.Kjellander
  *

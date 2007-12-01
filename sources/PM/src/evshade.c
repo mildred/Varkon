@@ -8,7 +8,7 @@
 *
 *    This file includes the following routines:
 *
-*    evltvi();     Evaluerar LIGHT_VIEW
+*    evltvi();     Evaluerar CRE_LIGHT
 *    evlton();     Evaluerar LIGHT_ON
 *    evltof();     Evaluerar LIGHT_OFF
 *    evcrco();     Evaluerar CRE_COLOR
@@ -29,41 +29,32 @@
 *    License along with this library; if not, write to the Free
 *    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
 *
-*    (C)Microform AB 1984-1999, Johan Kjellander, johan@microform.se
-*
 ***********************************************************************/
 
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
-#ifdef UNIX
 #include "../../WP/include/WP.h"
-#endif
 
-extern PMPARVA *proc_pv;  /* inproc.c *pv      Access structure for MBS routines */
-extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
+extern PMPARVA *proc_pv;  /* Access structure for MBS routines */
+extern short    proc_pc;  /* Number of actual parameters */
 
-/*!******************************************************/
+/********************************************************/
 
         short evltvi()
 
-/*      Evaluerar LIGHT_VIEW.
+/*      Evaluates MBS procedure CRE_LIGHT().
  *
- *      In: extern pv   => Pekare till array med parametervärden
- *          extern pc   => Antal parametrar.
+ *      (C)2007-11-30 J.Kjellander
  *
- *      Felkod: 
- *
- *      (C)microform ab 1997-02-18 J. Kjellander
- *
- *      2001-02-14 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
+ ********************************************************/
 
  {
    DBVector dir;
    DBfloat spotang,focus;
 
-
+/*
+***Only light number and light direction supplied.
+*/
    if ( proc_pc == 2 )
      {
      dir.x_gm = 0.0;
@@ -72,6 +63,9 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
      spotang  = 180.0;
      focus    = 0.0;
      }
+/*
+***Spot dir supplied. This means that par 2 is spot position.
+*/
    else if ( proc_pc == 3 )
      {
      dir.x_gm = proc_pv[3].par_va.lit.vec_va.x_val;
@@ -80,6 +74,9 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
      spotang  = 180.0;
      focus    = 0.0;
      }
+/*
+***Spot angle supplied.
+*/
    else if ( proc_pc == 4 )
      {
      dir.x_gm = proc_pv[3].par_va.lit.vec_va.x_val;
@@ -88,6 +85,9 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
      spotang  = proc_pv[4].par_va.lit.float_va;
      focus    = 0.0;
      }
+/*
+***Spot focus supplied.
+*/
    else
      {
      dir.x_gm = proc_pv[3].par_va.lit.vec_va.x_val;
@@ -96,26 +96,24 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
      spotang  = proc_pv[4].par_va.lit.float_va;
      focus    = proc_pv[5].par_va.lit.float_va;
      }
-
+/*
+***Execute.
+*/
    return(WPltvi(proc_pv[1].par_va.lit.int_va,
     (DBVector *)&proc_pv[2].par_va.lit.vec_va,
                 &dir,spotang,focus));
  }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short evlton()
 
-/*      Evaluerar LIGHT_ON.
+/*      Evaluates MBS procedure LIGHT_ON().
  *
- *      In: extern pv   => Pekare till array med parametervärden
+ *      (C)2007-11-30 J.Kjellander
  *
- *      (C)microform ab 1997-02-19 J. Kjellander
- *
- *      2001-02-14 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
+ ********************************************************/
 
  {
    return(WPlton(proc_pv[1].par_va.lit.int_va,
@@ -124,19 +122,15 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
  }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short evltof()
 
-/*      Evaluerar LIGHT_OFF.
+/*      Evaluates MBS procedure LIGHT_OFF().
  *
- *      In: extern pv   => Pekare till array med parametervärden
+ *      (C)2007-11-30 J.Kjellander
  *
- *      (C)microform ab 1997-02-19 J. Kjellander
- *
- *      2001-02-14 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
+ ********************************************************/
 
  {
    return(WPlton(proc_pv[1].par_va.lit.int_va,
@@ -145,17 +139,15 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
  }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short evgtco()
 
-/*      Evaluates GET_COLOR().
- *
- *      In: extern pv => Pekare till array med parametervärden
+/*      Evaluates MBS procedure GET_COLOR().
  *
  *      (C)2007-02-02 J. Kjellander
  *
- ******************************************************!*/
+ ********************************************************/
 
  {
     short   i,status;
@@ -188,21 +180,15 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
  }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short evcrmt()
 
-/*      Evaluerar MATERIAL_VIEW.
+/*      Evaluates MBS procedure CRE_MATERIAL().
  *
- *      In: extern pv   => Pekare till array med parametervärden
+ *      (C)2007-11-30 J.Kjellander
  *
- *      Felkod: 
- *
- *      (C)microform ab 1997-02-18 J. Kjellander
- *
- *      2001-02-14 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
+ ********************************************************/
 
  {
    return(WPcmat(proc_pv[1].par_va.lit.int_va,
@@ -222,40 +208,21 @@ extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
  }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short evcrco()
 
-/*      Evaluerar CRE_COLOR
+/*      Evaluates MBS procedure CRE_COLOR().
  *
- *      In: extern pv   => Pekare till array med parametervärden
+ *      (C)2007-11-30 J.Kjellander
  *
- *      Felkod: 
- *
- *      (C)microform ab 1997-02-18 J. Kjellander
- *
- *      2001-02-14 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
+ ********************************************************/
 
  {
-#ifdef UNIX
-
    return(WPccol(proc_pv[1].par_va.lit.int_va,
                  proc_pv[2].par_va.lit.int_va,
                  proc_pv[3].par_va.lit.int_va,
                  proc_pv[4].par_va.lit.int_va));
-#endif
-
-#ifdef WIN32
-extern int msccol();
-
-   return(msccol(proc_pv[1].par_va.lit.int_va,
-                 proc_pv[2].par_va.lit.int_va,
-                 proc_pv[3].par_va.lit.int_va,
-                 proc_pv[4].par_va.lit.int_va));
-#endif
-
  }
 
 /********************************************************/

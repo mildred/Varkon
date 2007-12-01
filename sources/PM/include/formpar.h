@@ -1281,11 +1281,11 @@
 */
      "-5:se",
 /*
-***VMTVIEW = 302, MATERIAL_VIEW(pen,ar,ag,ab,dr,dg,db,sr,sg,sb,er,eg,eb,s);
+***VMTVIEW = 302, CRE_MATERIAL(pen,ar,ag,ab,dr,dg,db,sr,sg,sb,er,eg,eb,s);
 */
      "-3:ie.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe",
 /*
-***VLTVIEW = 303, LIGHT_VIEW(num,pos[,ang,dir]);
+***VLTVIEW = 303, CRE_LIGHT(num,pos[spot_dir,spot_ang,spot_focus]);
 */
      "-3:ie.ve.1(ve.fe.fe)",
 /*

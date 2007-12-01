@@ -158,7 +158,7 @@ static FUATTR futab[] =
  {IGslvl,            FALSE, EXPLICIT+GENERIC}, /* f90  Set active level */
 
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f91  - */
- {IGcdxf,            FALSE, EXPLICIT+GENERIC}, /* f92  Export DXF */
+ {IGexport_DXF2D,    FALSE, EXPLICIT+GENERIC}, /* f92  Export DXF 2D */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f93  - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f94  - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f95  - */
@@ -220,7 +220,7 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f141 */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f142 */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f143 */
- {IGprtm,            FALSE, GENERIC},          /* f144 Save module in MBS format */
+ {IGsave_MBS_as,     FALSE, GENERIC},          /* f144 Save module in MBS format */
  {IGsymb,            FALSE, EXPLICIT+GENERIC}, /* f145 Import plotfile */
 
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f146 - */
@@ -229,7 +229,7 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f149 - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f150 - */
 
- {IGcgkm,            FALSE, EXPLICIT+GENERIC}, /* f151 Export PLT */
+ {IGexport_GKSM,     FALSE, EXPLICIT+GENERIC}, /* f151 Export GKS Metafile */
  {IGmacro,           FALSE, EXPLICIT+GENERIC}, /* f152 Execute a macro */
  {IGhelp,            TRUE,  EXPLICIT+GENERIC}, /* f153 Show help */
  {IGcdts,            FALSE, EXPLICIT+GENERIC}, /* f154 Edit DTSIZE */
@@ -289,7 +289,7 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f199 - */
  {IGcreate_rwin,     FALSE, EXPLICIT+GENERIC}, /* f200 Create new WPRWIN */
 
- {IGsaln,            FALSE, EXPLICIT+GENERIC}, /* f201 Save everything as */
+ {IGsave_all_as,     FALSE, EXPLICIT+GENERIC}, /* f201 Save everything as */
  {IGmv1,             FALSE, EXPLICIT},         /* f202 Drag entity */
  {IGrot1,            FALSE, EXPLICIT},         /* f203 Rotate entity */
  {IGcarr,            FALSE, EXPLICIT},         /* f204 Edit arc radius */

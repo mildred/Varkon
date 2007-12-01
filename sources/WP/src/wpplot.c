@@ -89,8 +89,8 @@ extern V3MDAT  sydata;
     if ( 3*tmpcn < 100 ) WPset_cacc(3*tmpcn);
     else                 WPset_cacc(100.0);
 /*
-***Current scale factor in this "window" cant be established
-***at this moment since there is no "window" and we don't know
+***Current scale factor in this "window" can't be established
+***in this situation since there is no "window" and we don't know
 ***what size the final output media will be. A good guess is that
 ***the "window" is a paper size A4 or A3, say 400 mm in X-dir.
 ***Point and Csys size is not scaled.

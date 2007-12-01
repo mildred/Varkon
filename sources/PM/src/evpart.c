@@ -301,7 +301,7 @@ extern short modtyp;
         goto error;
         }
 /*
-***Check lista.
+***Check list.
 */
       if ( actlist == (pm_ptr)NULL )
         {
@@ -505,7 +505,7 @@ error:
       case 2:
           /* Get frame header from RTS */
           status = ingfrh( curmna );
-          
+
       case 3:
            /* Set PM base */
            if ( actflg )

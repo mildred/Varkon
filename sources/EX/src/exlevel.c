@@ -259,7 +259,7 @@ static struct
 ***Level name.
 */
    if ( level_names[levnum].allocated )  strcpy(name,level_names[levnum].name);
-   else                                 *name = '\0';                       
+   else                                 *name = '\0';
 /*
 ***The end.
 */
