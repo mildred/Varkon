@@ -66,8 +66,8 @@ char   tmprit[V3PTHLEN+1];
 extern pm_ptr   actmod,pmstkp;
 extern bool     tmpref,rstron,igxflg,igbflg,relpos,startup_complete;
 extern char     jobnam[],jobdir[],mdffil[],actcnm[];
-extern short    modtyp,modatt,sysmode,actfun,igmatt,pant,mant;
-extern int      posmode;
+extern short    modtyp,modatt,sysmode,igmatt,pant,mant;
+extern int      posmode,actfunc;
 extern DBptr    msysla,lsysla;
 extern DBseqnum snrmax;
 extern V3MDAT   sydata;
@@ -172,7 +172,7 @@ static short main_loop()
 */
    for (;;)
      {
-     actfun = -1;
+     actfunc = -1;
      status = IGexfu(0,&alt);
 
      if ( status == GOMAIN )
@@ -1967,8 +1967,8 @@ l1:
 /*
 ***Set active function.
 */
-   oldafu = actfun;
-   actfun = 1001;
+   oldafu  = actfunc;
+   actfunc = 1001;
 /*
 ***Call the file selector. On return we have a filename with
 ***or without extension, XXX.MBO or XXX-RES and possibly a
@@ -1992,7 +1992,7 @@ l1:
 /*
 ***Reset active function.
 */
-   actfun = oldafu;
+   actfunc = oldafu;
 /*
 ***The end.
 */

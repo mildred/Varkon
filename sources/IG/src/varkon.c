@@ -80,8 +80,7 @@ V3MSIZ  sysize;
 */
 char    jobnam[JNLGTH+1] = "";         /* Current job */
 char    jobdir[V3PTHLEN+1] = "";       /* Current user job directory */
-char    libdir[10*V3PTHLEN+10] = "";   /* Module library path(s) */
-char    hlpdir[V3PTHLEN+1] = "";       /* Current user doc-directory */
+char    libdir[10*V3PTHLEN+10] = "";   /* Module library path(s) ($VARKON_LIB) */
 char    mdffil[V3PTHLEN+1] = "";       /* Current menufile */
 char    inifil_1[V3PTHLEN+1] = "";     /* 1:st inifile */
 char    inifil_2[V3PTHLEN+1] = "";     /* 2:nd inifile */
@@ -136,13 +135,14 @@ char actcnm[JNLGTH+1];
 /*
 ***Number of active function, name of active part
 ***and flag for <CTRL>c interrupt from keyboard.
-***actfun >  0 => Number of active function
-***       = -1 => Menu active
-***       = -2 => Part active
+***actfunc >  0 => Number of active function
+***        = -1 => Menu active
+***        = -2 => Part active
+***        =  1 => During startup
 */
-short actfun;
-char  actpnm[JNLGTH+1];
-bool  intrup = FALSE;
+int  actfunc = 1;
+char actpnm[JNLGTH+1];
+bool intrup = FALSE;
 
 /*
 ***C:s iobuffer for stdout.
@@ -352,11 +352,19 @@ extern bool  IGfacc();
 */
    if ( sysmode == TOP_MOD )
      {
-     if ( WPselect_sysmode(&sysmode) < 0 )
+     if ( (status=WPselect_sysmode(&sysmode)) < 0 )
        {
-       fprintf(startup_logfile,"WPselect_sysmode rejected\n");
+       if ( status == REJECT )
+         {
+         fprintf(startup_logfile,"WPselect_sysmode rejected\n");
+         status = V3EXOK;
+         }
+       else
+         {
+         fprintf(startup_logfile,"WPselect_sysmode help error\n");
+         status = EREXIT;
+         }
        fflush(startup_logfile);
-       status = V3EXOK;
        goto end;
        }
      }
@@ -401,11 +409,26 @@ extern bool  IGfacc();
    fprintf(startup_logfile,"libdir set to: %s\n",libdir);
    fflush(startup_logfile);
 /*
-***User help files.
+***VARKON_ROOT, VARKON_LIB and VARKON_MDF have now been processed.
+***Print remaining environment variable values to the logfile.
 */
-   strcpy(hlpdir,getenv("VARKON_DOC"));
-   strcat(hlpdir,"/");
-   fprintf(startup_logfile,"hlpdir set to: %s\n",hlpdir);
+   fprintf(startup_logfile,"$VARKON_DOC=%s/\n",getenv("VARKON_DOC"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_ERM=%s/\n",getenv("VARKON_ERM"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_TMP=%s/\n",getenv("VARKON_TMP"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_FNT=%s/\n",getenv("VARKON_FNT"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_PLT=%s/\n",getenv("VARKON_PLT"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_ICO=%s/\n",getenv("VARKON_ICO"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_TOL=%s/\n",getenv("VARKON_TOL"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_INI=%s/\n",getenv("VARKON_INI"));
+   fflush(startup_logfile);
+   fprintf(startup_logfile,"$VARKON_BIN=%s/\n",getenv("VARKON_BIN"));
    fflush(startup_logfile);
 /*
 ***Init surpac.
@@ -469,7 +492,7 @@ end:
 
    if ( status == EREXIT )
      {
-     WPinla("Startup trace !");
+     WPinla("Startup log !");
      fclose(startup_logfile);
      startup_logfile=fopen(lfname,"r");
      while ( fgets(line,V3STRLEN,startup_logfile) != NULL )
@@ -478,6 +501,14 @@ end:
        line[i] = '\0';
        WPalla(line,1);
        }
+     WPalla("",2);
+     WPalla("Something is wrong with your Varkon installation.",1);
+     WPalla("This startup log is stored as varkon.LOG on your Varkon",1);
+     WPalla("installation root directory and can be a good help to",1);
+     WPalla("understand what the problem is.",2);
+     WPalla("If you need help, you can contact the Varkon developers",1);
+     WPalla("through the development site:",2);
+     WPalla("http://sourceforge.net/projects/varkon",1);
      WPexla(TRUE);
      IGials("Varkon will now terminate !","Ok","Ok",TRUE);
      IGexit();

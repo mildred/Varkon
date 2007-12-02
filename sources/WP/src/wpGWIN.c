@@ -45,8 +45,7 @@
 #include <string.h>
 
 extern char    jobnam[];
-extern int     actpen;
-extern short   actfun,sysmode;
+extern int     actpen,actfunc,sysmode;
 extern bool    rstron;
 extern DBptr   lsysla;
 
@@ -657,8 +656,8 @@ static void cre_toolbar(WPGWIN *gwinpt);
 
           if ( acttyp == CFUNC )
             {
-            oldfun = actfun;
-            actfun = actnum;
+            oldfun  = actfunc;
+            actfunc = actnum;
 
             switch ( actnum )
               {
@@ -703,11 +702,11 @@ static void cre_toolbar(WPGWIN *gwinpt);
               break;
 
               default:
-              actfun = oldfun;
+              actfunc = oldfun;
               if ( IGdofu(acttyp,actnum) == EXIT ) IGexit(); 
               break;
               }
-            actfun = oldfun;
+            actfunc = oldfun;
             return(TRUE);
             }
           else

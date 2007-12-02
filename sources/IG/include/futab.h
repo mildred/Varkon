@@ -49,7 +49,7 @@ char    mode;          /* Valid in these modes */
 
 static FUATTR futab[] =
 {
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f1   - */
+ {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f1   WPselect_sysmode() */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f2   - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f3   - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f4   - */

@@ -47,17 +47,17 @@
         char *fil,
         char *ext)
 
-/*      Öppnar en fil för läsning. Path kan ges på formen
- *      path1;path2 osv. i max 10 nivåer om max V3PTHLEN
- *      tecken.
+/*      Open file in read mode. Path may be specified
+ *      using path1;path2 etc. Max 10 levels. Paths
+ *      are tested in the order they appear until a
+ *      file is found. path1, path2 etc. may include
+ *      $environment_variables.
  *
- *      In: path => Pekare till vägbeskrivning.
- *          fil  => Pekare till filnamn.
- *          ext  => Pekare till extension.
+ *      In: path => C ptr to the path, up to 10*V3PTHLEN.
+ *          fil  => Requested file name.
+ *          ext  => Requested extension.
  *
- *      Ut: Inget.
- *
- *      FV: Filedescriptor eller < 0 om öppning misslyckats.
+ *      Return: Filedescriptor or < 0 if no file is found
  *
  *      (C)microform ab 28/3/89 J. Kjellander
  *
@@ -75,13 +75,12 @@
     int    fd;
 
 /*
-***Lite initiering.
+***Init.
 */
     strcpy(buf,path);
     p1 = p2 = buf;
 /*
-***Sök upp 'Ö0' eller semikolon i vägbeskrivningen.
-***Gamla PID-filer kan innehålla : i UNIX.
+***Find a NULL or a colon.
 */
 loop:
 #ifdef UNIX
@@ -101,7 +100,8 @@ loop:
 #ifdef WIN32
         strcat(fnam,"\\"); 
 #endif
-        strcat(fnam,fil); strcat(fnam,ext);
+        strcat(fnam,fil);
+        strcat(fnam,ext);
         }
       else
         {
@@ -109,9 +109,9 @@ loop:
         strcat(fnam,ext);
         }
 #ifdef WIN32
-      if ( (fd=open(fnam,O_BINARY | O_RDONLY)) < 0 ) 
+      if ( (fd=open(fnam,O_BINARY | O_RDONLY)) < 0 )
 #else
-      if ( (fd=open(fnam,0)) < 0 ) 
+      if ( (fd=open(fnam,0)) < 0 )
 #endif
         {
         ++p2;
@@ -121,7 +121,7 @@ loop:
       else return(fd);
       }
 /*
-***Nu har vi kommit till sista alternativet.
+***Last alternative.
 */
     else if ( *p2 == '\0' )
       {
@@ -129,10 +129,10 @@ loop:
         {
         IGtrfp(p1,fnam);
 #ifdef UNIX
-        strcat(fnam,"/"); 
+        strcat(fnam,"/");
 #endif
 #ifdef WIN32
-        strcat(fnam,"\\"); 
+        strcat(fnam,"\\");
 #endif
         strcat(fnam,fil);
         strcat(fnam,ext);
@@ -149,7 +149,7 @@ loop:
 #endif
       }
 /*
-***Nästa tecken.
+***Next character.
 */
     else
       {

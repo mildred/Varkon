@@ -52,8 +52,7 @@ static WPLWIN  *actlwin = NULL;
 ***open but there may exist many closed WPLWIN.
 */
 
-
-static char title [81];        /* varkon.list.title  */
+static char title [V3STRLEN];   /* Current window border title  */
 
 /*
 ***Internal functions.
@@ -61,7 +60,7 @@ static char title [81];        /* varkon.list.title  */
 static short crlwin(int,int,int,int,char *wtitle);
 static short savelw(WPLWIN *lwinpt);
 
-/*!******************************************************/
+/********************************************************/
 
         short WPinla(char *hs)
 
@@ -168,7 +167,7 @@ static short savelw(WPLWIN *lwinpt);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short WPalla(
         char *s,
@@ -245,7 +244,7 @@ static short savelw(WPLWIN *lwinpt);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short WPexla(
         bool  show)
@@ -310,7 +309,7 @@ static short savelw(WPLWIN *lwinpt);
 ***WPLWIN width.
 */
     dx = 2*WPstrh() + actlwin->maxlen + WPstrh();
-    if ( dx > 0.3*DisplayWidth(xdisp,xscr) ) dx = 0.3*DisplayWidth(xdisp,xscr);
+    if ( dx > 0.8*DisplayWidth(xdisp,xscr) ) dx = 0.8*DisplayWidth(xdisp,xscr);
 /*
 ***WPLWIN position.
 */

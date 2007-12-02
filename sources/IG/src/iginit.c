@@ -70,7 +70,7 @@ extern bool   igbflg;
 extern char   speed[];
 extern char   pltyp[];
 extern char   port[];
-extern short  actfun;
+extern int    actfunc;
 extern bool   intrup;
 extern V3MDAT sydata;
 
@@ -624,7 +624,7 @@ loop:
       case PART:
       case RUN:
       case MFUNC:
-      if ( actfun  !=  -1 )
+      if ( actfunc  !=  -1 )
         {
         WPbell();
         return(0);
@@ -655,7 +655,7 @@ loop:
 ***If a function is already actice, check that this function
 ***can interrupt.
 */
-      if ( actfun != -1  &&  futab[anum-1].call == FALSE )
+      if ( actfunc != -1  &&  futab[anum-1].call == FALSE )
         {
         WPbell();
         return(0);
@@ -664,7 +664,7 @@ loop:
 ***If anum = actfun something must be wrong. There is no
 ***reason for a function to call itself.
 */
-      if ( anum == actfun )
+      if ( anum == actfunc )
         {
         WPbell();
         return(0);
@@ -673,8 +673,8 @@ loop:
 ***Save actfun. f153 (IGhelp()) should not display help
 ***about itself.
 */
-      oldfun = actfun;
-      if ( anum != 153 ) actfun = anum;
+      oldfun = actfunc;
+      if ( anum != 153 ) actfunc = anum;
 /*
 ***Call the function if it is allowed in this context.
 */
@@ -694,7 +694,7 @@ loop:
 /*
 ***Reset actfun.
 */
-      actfun = oldfun;
+      actfunc = oldfun;
       break;
       }
 /*
@@ -725,7 +725,7 @@ loop:
 {
    char buf[V3STRLEN+1];
 
-   sprintf(buf,"%d",actfun);
+   sprintf(buf,"%d",actfunc);
    erpush("IG2202",buf);
    errmes();
 
@@ -755,7 +755,7 @@ loop:
 {
    char buf[V3STRLEN+1];
 
-   sprintf(buf,"%d",actfun);
+   sprintf(buf,"%d",actfunc);
    erpush("IG2282",buf);
    errmes();
 

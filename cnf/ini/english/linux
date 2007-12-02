@@ -37,8 +37,8 @@ varkon.mbsedit.autoexec:        True
 !***varkon.html_viewer is used by the help-system to spawn a
 !***HTML-browser. If this resource is defined VARKON will send
 !***the required helpfile to the browser. If not defined
-!***VARKON will display text files in VARKON list windows
-!***but HTML files will not be supported.
+!***VARKON will display the file $VARKON_DOC/no_html_viewer.txt
+!***in a VARKON list window.
 !*
 varkon.html_viewer:              firefox
 !*

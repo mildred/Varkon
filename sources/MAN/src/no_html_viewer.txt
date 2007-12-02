@@ -1,0 +1,17 @@
+
+Hi,
+
+This is the default help text for Varkon. The Varkon help-
+system displays html pages from the Varkon documentation.
+To do that Varkon must know which html reader you prefer.
+
+If this text is displayed you have not yet configured your
+varkon system to use a html reader (web browser) or the
+configuration you have is not working properly.
+
+TODO:
+
+A good instruction on how to configure the ini-file.
+
+!varkon.html_viewer:             konqueror
+

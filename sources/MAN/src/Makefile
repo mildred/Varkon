@@ -32,21 +32,24 @@ PNGRESULT  = $(patsubst %.png, $(TARGETDIR)/%.png, $(PNGSOURCES))
 GIFSOURCES = $(wildcard *.gif)
 GIFRESULT  = $(patsubst %.gif, $(TARGETDIR)/%.gif, $(GIFSOURCES))
 
-all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT)
+TXTSOURCES = $(wildcard *.txt)
+TXTRESULT  = $(patsubst %.txt, $(TARGETDIR)/%.txt, $(TXTSOURCES))
+
+all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT) $(TXTRESULT)
 	@echo Creating subdirectories if needed
 	mkdir -p ../../../man/m_man
 	mkdir -p ../../../man/m_man/images
 	mkdir -p ../../../man/v_man
 	@echo make contents in subdirectories 
-	@make -C m_man 
+	@make -C m_man
 	@make -C m_man -C images
-	@make -C v_man 
+	@make -C v_man
 
 # preprocess htm-files, copy other files
 
 $(TARGETDIR)/%.htm : ./%.htm $(INCLUDEFILES)
 	$(PREPROCESS) $*.htm $(TARGETDIR)/$*.htm
-                
+
 $(TARGETDIR)/%.css : ./%.css
 	cp $*.css $(TARGETDIR)/$*.css
 
@@ -59,7 +62,5 @@ $(TARGETDIR)/%.png : ./%.png
 $(TARGETDIR)/%.gif : ./%.gif
 	cp $*.gif $(TARGETDIR)/$*.gif
 
-
-
-
-
+$(TARGETDIR)/%.txt : ./%.txt
+	cp $*.txt $(TARGETDIR)/$*.txt

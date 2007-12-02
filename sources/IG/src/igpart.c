@@ -45,8 +45,8 @@
 #include "../../WP/include/WP.h"
 
 extern pm_ptr  actmod;
-extern short   actfun,sysmode,modtyp;
-extern int     posmode;
+extern short   sysmode,modtyp;
+extern int     posmode,actfunc;
 extern char    jobdir[],jobnam[],actpnm[];
 extern bool    tmpref,iggflg;
 extern V2NAPA  defnap;
@@ -303,8 +303,8 @@ end:
 ***part name to filnam so the help system can list the
 ***right help file.
 */
-    oldafu = actfun;
-    actfun = -2;
+    oldafu = actfunc;
+    actfunc = -2;
     strcpy(actpnm,part_name);
 /*
 ***Remember current position on the PM stack.
@@ -642,7 +642,7 @@ retry:
 exit:
     tmpref     = oldtrf;
     defnap.hit = oldhit;
-    actfun     = oldafu;
+    actfunc    = oldafu;
     WPerhg();
 /*
 ***The end.
@@ -728,8 +728,8 @@ reject:
 ***part name to filnam so the help system can list the
 ***right help file.
 */
-    tmpafu = actfun;
-    actfun = -2;
+    tmpafu  = actfunc;
+    actfunc = -2;
     strcpy(actpnm,filnam);
 /*
 ***Remember current position on the PM stack.
@@ -984,8 +984,8 @@ exit:
 /*
 ***Reset active values for HIT and SAVE etc..
 */
-    tmpref = oldtrf;
-    actfun = tmpafu;
+    tmpref  = oldtrf;
+    actfunc = tmpafu;
     defnap.hit  = oldhit;
     defnap.save = oldsav;
 
@@ -1302,8 +1302,8 @@ error:
 /*
 ***Låt hjälpsystemet få veta vad vi gör.
 */
-    oldafn = actfun;
-    actfun = -2;
+    oldafn  = actfunc;
+    actfunc = -2;
     strcpy(actpnm,part.name_pt);
 /*
 ***Anropa WPmsip. t1599 = "Parametrar för parten : "
@@ -1317,7 +1317,7 @@ error:
     status = (short)msmsip(rubrik,pmparr,osparr,nsparr,maxtkn,typarr,pant);
 #endif
 
-    actfun = oldafn;
+    actfunc = oldafn;
 
     if ( status < 0 ) goto exit;
 /*

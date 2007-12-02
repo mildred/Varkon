@@ -793,6 +793,7 @@ exit:
  *
  *   Return: 0      = Ok.
  *           REJECT = Exit.
+ *          -2      = Error from the help system
  *
  *   (C)2007-10-14 J. Kjellander
  *
@@ -962,12 +963,14 @@ loop:
      goto exit;
      }
 /*
-***Learn more button.
+***Learn more button (help). Negative status from the help
+***system is a serious indication that something is mis-
+***configured.
 */
    else if ( but_id == learn_id )
      {
-     IGhelp();
-     goto loop;
+     if ( (status=IGhelp()) < 0 ) goto exit;
+     else                         goto loop;
      }
 /*
 ***Unknown event, should not happen.

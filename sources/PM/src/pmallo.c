@@ -86,6 +86,9 @@ static struct motabt
     pm_ptr size;                        /* Memory size for an module in PM */
     } motab[ NUPART ];
 
+/*
+***Internal function prototypes.
+*/
 static pm_ptr loadmo(char *moname);
 
 /********************************************************/
@@ -181,14 +184,15 @@ static pm_ptr loadmo(char *moname);
 /********************************************************/
 /*!******************************************************/
 
-        short pmgeba(
+        short   pmgeba(
         char   *moname,
         pm_ptr *retla)
 
 /*      Get base address for module.
  *      Checks if the module is in PM and returnes a base pointer to it if
- *      it is in PM. If it not is in PM the PM_heap will be erased and the
- *      required module is loaded into PM.                    
+ *      it is in PM. If it is not in PM it will be loaded to PM from file.
+ *      If there is no room in PM the PM_heap will be erased and the
+ *      required module is loaded into PM.
  *
  *      In:    moname  =>  Module name
  *
@@ -213,11 +217,11 @@ static pm_ptr loadmo(char *moname);
    while ( i < pa_count && strcmp(motab[i].modulena, moname) ) i++;
 
    if ( i < pa_count )
-      {  
+      {
       *retla = motab[i].basep;             /* Module is in PM */
       }
    else
-      {  
+      {
 /*
 ***Module is not in PM
 */
@@ -908,7 +912,7 @@ static pm_ptr loadmo(char *moname);
 
       static pm_ptr loadmo(char *moname)
 
-/*    Loads a module into PM.
+/*    Loads a module from disc into PM.
 *
 *     In: moname => Name of MBO file to be loaded.
 *
@@ -935,7 +939,7 @@ static pm_ptr loadmo(char *moname);
    int    fd;                 /* file descriptor */
    char   fname[V3PTHLEN];    /* for file name */
    char  *buffer;             /* buffer for file transfer */
-   pm_ptr newheapp;  
+   pm_ptr newheapp;
    PMMONO *np;                /* c-pointer to module header structure */
    int    readsize;
    pm_ptr currpmba;

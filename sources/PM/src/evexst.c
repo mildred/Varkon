@@ -54,9 +54,9 @@ extern PMLITVA *func_vp;    /* Pekare till resultat. */
  ******************************************************!*/
 
   {
-    extern short actfun;
+    extern short actfunc;
 
-    switch (actfun)
+    switch (actfunc)
       {
       case 5:
       func_vp->lit.int_va = 0;
