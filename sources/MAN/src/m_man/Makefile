@@ -9,9 +9,6 @@
 #####################################################################
 
 TARGETDIR = ../../../../man/m_man
-INCDIR    = ../../include
-
-PREPROCESS = cpp -P -nostdinc -I $(INCDIR)
 
 INCLUDEFILES = ../../include/header.inc \
                ../../include/footer.inc \
@@ -37,7 +34,7 @@ all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT)
 # preprocess htm-files, copy other files
 
 $(TARGETDIR)/%.htm : ./%.htm $(INCLUDEFILES)
-	$(PREPROCESS) $*.htm $(TARGETDIR)/$*.htm
+	m4 -P <$*.htm >$(TARGETDIR)/$*.htm
                 
 $(TARGETDIR)/%.css : ./%.css
 	cp $*.css $(TARGETDIR)/$*.css

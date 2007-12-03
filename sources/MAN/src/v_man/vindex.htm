@@ -1,7 +1,9 @@
-#define _TITLE_ Varkon manual index
-#define _STYLE_ "../varkonstyle.css"
+m4_changequote({,})
+m4_define({_TITLE_},{Varkon manual index})
+m4_define({_STYLE_},{../varkonstyle.css})
 
-#include <header.inc>
+m4_include(../../include/header.inc)
+
 
   <h1>Varkon Users Manual</h1>
 
@@ -51,4 +53,5 @@
   <a href="envindex.htm">Environment variables</a></blockquote>
   </p>
 
-#include <footer.inc>
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

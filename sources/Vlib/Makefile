@@ -19,3 +19,5 @@ distr :
 	@make -C macro   -f Makefile
 	@make -C stl   -f Makefile
 
+clean :
+	rm -f -r ../../lib

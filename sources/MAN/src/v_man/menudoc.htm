@@ -1,5 +1,9 @@
-#define _TITLE_ VARKON - Documentation
-#define _STYLE_ "../varkonstyle.css"
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
+
+m4_include(../../include/header.inc)
+
 
 #include <header.inc>
 
@@ -8,4 +12,5 @@
 an alternative by clicking the mouse or enter the first letter(s) from
 the keyboard. Try help again when the alternative is selected.</p>
 
-#include <footer.inc>
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

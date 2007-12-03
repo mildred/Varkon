@@ -1,7 +1,8 @@
-#define _TITLE_ What is Varkon?
-#define _STYLE_ "varkonstyle.css"
+m4_changequote({,})
+m4_define({_TITLE_},{What is Varkon?})
+m4_define({_STYLE_},{varkonstyle.css})
 
-#include <header.inc>
+m4_include(../include/header.inc)
 
 <h1>What is Varkon ?</h1>
 
@@ -111,6 +112,5 @@ manufacturing processes though it can surprisingly often be worth the effort
 to let VARKON applications generate numerical control data automatically
 even if this means extra programming in MBS initially.</p>
 
-#include <footer.inc>
-
-
+m4_include(../include/svnversion.inc)
+m4_include(../include/footer.inc)

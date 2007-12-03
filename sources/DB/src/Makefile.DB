@@ -57,7 +57,7 @@ debug : $(OBJECTS)
 $(OBJECTS) : $(INCFILES)
 
 clean:
-	rm ../lib/DBlib.a
+	rm -f ../lib/DBlib.a
 
 
 ################################################################

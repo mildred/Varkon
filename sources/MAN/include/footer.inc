@@ -1,5 +1,3 @@
-#include <svnversion.inc>
-
 <hr style="margin-top:5em; margin-bottom:4px"/>
 
 <a href="http://sourceforge.net/"><img
@@ -9,7 +7,8 @@ name="graphics1" alt="SourceForge.net Logo">
 </a>
 
 <p style="margin:0"> <a href=#top> Return to top of page </a> </p>
-<p style="margin:0">VARKON version 1.19B svn &#35;SVNVERSION</p>
+<p style="margin:0">VARKON version 1.19B svn &#35;
+_SVNVERSION_</p>
 
 </body>
 </html> 

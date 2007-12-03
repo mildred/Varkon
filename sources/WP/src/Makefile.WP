@@ -83,6 +83,6 @@ $(OBJECTS) : $(INCFILES)
 ../lib/WPlib.a(wp15.o): $(INCFILES) ../include/v3icon.h
 
 clean:
-	rm ../lib/WPlib.a
+	rm -f ../lib/WPlib.a
 
 ##########################################################

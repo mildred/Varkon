@@ -98,5 +98,8 @@ clean:
 	@make -C WP -C src -f Makefile.$(PLATFORM) clean
 	@make -C GE -C src -f Makefile.$(PLATFORM) clean
 	@make -C AN -C src -f Makefile.$(PLATFORM) clean
+	@make -C MAN -C src -f Makefile clean
+	@make -C Vlib -f Makefile clean
+	rm -f -r ../bin
 
 ##########################################################
