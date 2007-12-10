@@ -151,7 +151,7 @@ static short iglhlp(char *hlpnam)
 */
     if ( actfunc == 1 )
       {
-      sprintf(filnam,"%sman.htm",IGgenv(VARKON_DOC));
+      sprintf(filnam,"%sindex.htm",IGgenv(VARKON_DOC));
       if ( IGfacc(filnam,'R') ) goto show;
       else return(erpush("IG0202",filnam));
       }

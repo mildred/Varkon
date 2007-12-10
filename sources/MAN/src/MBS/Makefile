@@ -1,14 +1,13 @@
 #####################################################################
 #
-#  This makefile preprocesses all htm-files in current directory
-#  and move the resulting htm-files to corresponding directory 
-#  under VARKON_ROOT/man
+#  This makefile preprocesses all htm-files in the MBS directory
+#  and moves the resulting htm-files to VARKON_ROOT/man/MBS
 #
 #  (c) 2007 Sören Larsson, Örebro University
 #
 #####################################################################
 
-TARGETDIR = ../../../../man/m_man
+TARGETDIR = ../../../../man/MBS
 
 INCLUDEFILES = ../../include/header.inc \
                ../../include/footer.inc \
@@ -46,4 +45,4 @@ $(TARGETDIR)/%.png : ./%.png
 	cp $*.png $(TARGETDIR)/$*.png
 
 $(TARGETDIR)/%.gif : ./%.gif
-	cp $*.gif $(TARGETDIR)/$*.gif       
+	cp $*.gif $(TARGETDIR)/$*.gif

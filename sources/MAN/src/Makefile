@@ -34,13 +34,16 @@ TXTRESULT  = $(patsubst %.txt, $(TARGETDIR)/%.txt, $(TXTSOURCES))
 
 all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT) $(TXTRESULT)
 	@echo Creating subdirectories if needed
-	mkdir -p ../../../man/m_man
-	mkdir -p ../../../man/m_man/images
-	mkdir -p ../../../man/v_man
-	@echo make contents in subdirectories 
-	@make -C m_man
-	@make -C m_man -C images
-	@make -C v_man
+	mkdir -p ../../../man/tutorial
+	mkdir -p ../../../man/GUI
+	mkdir -p ../../../man/MBS
+	mkdir -p ../../../man/MBS/images
+	mkdir -p ../../../man/appdev
+	mkdir -p ../../../man/sysadm
+	@echo make contents in subdirectories
+	@make -C GUI
+	@make -C MBS
+	@make -C MBS -C images
 
 # preprocess htm-files, copy other files
 
