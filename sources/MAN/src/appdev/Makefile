@@ -1,11 +1,11 @@
 #####################################################################
 #
-#  This makefile preprocesses all htm-files in the GUI directory
-#  and moves the resulting htm-files to VARKON_ROOT/man/GUI
+#  This makefile preprocesses all htm-files in the appdev directory
+#  and moves the resulting htm-files to VARKON_ROOT/man/appdev
 #
 #####################################################################
 
-TARGETDIR = ../../../../man/GUI
+TARGETDIR = ../../../../man/appdev
 
 INCLUDEFILES = ../../include/header.inc \
                ../../include/footer.inc \

@@ -41,9 +41,12 @@ all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT) $(TXTRESU
 	mkdir -p ../../../man/appdev
 	mkdir -p ../../../man/sysadm
 	@echo make contents in subdirectories
+	@make -C tutorial
 	@make -C GUI
 	@make -C MBS
 	@make -C MBS -C images
+	@make -C appdev
+	@make -C sysadm
 
 # preprocess htm-files, copy other files
 

@@ -3,8 +3,6 @@
 #  This makefile preprocesses all htm-files in MAN/src/MBS/images
 #  and moves the resulting htm-files to VARKON_ROOT/man/MBS/images
 #
-#  (c) 2007 Sören Larsson, Örebro University
-#
 #####################################################################
 
 TARGETDIR = ../../../../../man/MBS/images
