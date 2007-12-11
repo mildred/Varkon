@@ -73,9 +73,10 @@ varkon.mbsedit.autoexec:        True
 !***varkon.html_viewer används av hjälpsystemet för att starta en
 !***HTML-browser. Om denna resurs är definierad skickar VARKON
 !***aktuell hjälpfil till den angivna browsern. Om den inte är
-!***definierad listar VARKON filen i ett listfönster.
+!***definierad listar VARKON ett felmeddelande i ett listfönster.
 !*
-!varkon.html_viewer:             konqueror
+varkon.html_viewer:             konqueror
+!varkon.html_viewer:             firefox
 !varkon.html_viewer:             netscape
 !*
 !***Texter för mode-dialogen.

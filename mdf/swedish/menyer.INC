@@ -113,7 +113,7 @@ m20 = "PUNKT"
 
 m22 = "HJÄLP"
       "om Varkon",M184
-      "hjälp",f153;
+      "om hjälp",f150;
 
 m23 = "TEXT"
       "vänster",f50

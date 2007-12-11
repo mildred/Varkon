@@ -86,7 +86,7 @@ short EXaios(DBId *rid, DBVector *punkt, DBint sort, DBint *nsol,
 /*
 ***exos.c
 */
-short EXos(char oscmd[], DBshort mode);
+int EXos(char oscmd[], DBshort mode);
 
 /*
 ***excsy.c

@@ -50,7 +50,7 @@ char    mode;          /* Valid in these modes */
 static FUATTR futab[] =
 {
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f1   WPselect_sysmode() */
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f2   - */
+ {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f2   IGselect_job() */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f3   - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f4   - */
  {IGrun_active,      FALSE, GENERIC},          /* f5   Run active module*/
@@ -227,11 +227,11 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f147 - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f148 - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f149 - */
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f150 - */
+ {IGabout_help,      TRUE,  EXPLICIT+GENERIC}, /* f150 Display help about help */
 
  {IGexport_GKSM,     FALSE, EXPLICIT+GENERIC}, /* f151 Export GKS Metafile */
  {IGmacro,           FALSE, EXPLICIT+GENERIC}, /* f152 Execute a macro */
- {IGhelp,            TRUE,  EXPLICIT+GENERIC}, /* f153 Show help */
+ {IGhelp,            TRUE,  EXPLICIT+GENERIC}, /* f153 Display help on current context */
  {IGcdts,            FALSE, EXPLICIT+GENERIC}, /* f154 Edit DTSIZE */
  {IGcdas,            FALSE, EXPLICIT+GENERIC}, /* f155 Edit DASIZE */
 

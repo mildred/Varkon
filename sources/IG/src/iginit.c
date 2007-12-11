@@ -670,8 +670,9 @@ loop:
         return(0);
         }
 /*
-***Save actfun. f153 (IGhelp()) should not display help
-***about itself.
+***Save current actfunc and set it to thenew value.
+***f153 is IGhelp() and should not display
+***help about itself.
 */
       oldfun = actfunc;
       if ( anum != 153 ) actfunc = anum;

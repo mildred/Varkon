@@ -442,6 +442,7 @@ short IGcpre(DBId *frompk, DBId *topk);
 ***ighelp.c
 */
 short IGhelp();
+short IGabout_help();
 
 /*
 ***igmodule.c

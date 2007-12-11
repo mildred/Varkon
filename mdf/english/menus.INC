@@ -113,7 +113,7 @@ m20 = "POINT"
 
 m22 = "HELP"
       "about Varkon",M184
-      "help",f153;
+      "about help",f150;
 
 m23 = "TEXT"
       "left",f50

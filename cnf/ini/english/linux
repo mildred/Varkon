@@ -40,7 +40,7 @@ varkon.mbsedit.autoexec:        True
 !***VARKON will display the file $VARKON_DOC/no_html_viewer.txt
 !***in a VARKON list window.
 !*
-varkon.html_viewer:              firefox
+varkon.html_viewer:             konqueror
 !*
 !***Default graphic window. You may use more if you want.
 !*

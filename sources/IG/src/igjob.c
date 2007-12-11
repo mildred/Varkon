@@ -1937,7 +1937,7 @@ l1:
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short IGselect_job(char *newjob)
 
@@ -1965,10 +1965,10 @@ l1:
    if ( sysmode == GENERIC ) strcpy(typ,MODEXT);
    else                      strcpy(typ,RESEXT);
 /*
-***Set active function.
+***Set active function == 2.
 */
    oldafu  = actfunc;
-   actfunc = 1001;
+   actfunc = 2;
 /*
 ***Call the file selector. On return we have a filename with
 ***or without extension, XXX.MBO or XXX-RES and possibly a
