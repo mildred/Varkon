@@ -866,7 +866,7 @@ exit:
 /*
 ***Create the dialogue window as a WPIWIN.
 */
-   WPwciw(iwin_x,iwin_y,main_dx,main_dy,"VARKON",&iwin_id);
+   WPwciw(iwin_x,iwin_y,main_dx,main_dy,"Select mode",&iwin_id);
 /*
 ***Get a C-ptr to the WPIWIN.
 */

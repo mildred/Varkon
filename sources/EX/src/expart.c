@@ -142,10 +142,10 @@ DBptr   msysla;      /* DB pointer to current module coordinate system */
     tmspek += sizeof(DBptr);
 /*
 ***Test av modtyp.
-*/
+*
     if ( modtyp == 3 && datpek->mtyp_pd == 2 )
         return(erpush("EX1572",prtpek->name_pt));
-/*
+*
 ***Om den anropade modulen har attributet "LOCAL",
 ***hämta det refererade koordinatsystemet från GM och
 ***lagra i modsys. Inget lokalt system aktivt när

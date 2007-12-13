@@ -1,0 +1,63 @@
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
+
+m4_include(../../include/header.inc)
+
+
+<h1>Playing with MBS</h1>
+
+<p>
+You have now created a <b>module</b>. A Varkon module is a
+special kind of computer program that can create drawings
+and other data. To see your module in text notation, press
+the <i>MBS</i> button in the menu window.
+</p>
+
+<p>
+Varkon will now translate your module to text format and call
+up a text editor to display (and let you edit) the text. This
+is what it should look like:
+</p>
+
+<p><tt>
+GLOBAL MODULE my_first_job();<br>
+<br>
+BEGINMODULE<br>
+<br>
+&nbsp; poi_free(#1,vec(96.735458419579, 380.28671945701, 0.0));<br>
+&nbsp; poi_free(#2,vec(283.24158285645, 416.90531674208, 0.0));<br>
+&nbsp; lin_free(#3,on(#1), on(#2):PEN=2,WIDTH=2);<br>
+<br>
+ENDMODULE
+</p></tt>
+
+<p>
+With your text editor, try to change the PEN=2 to PEN=3, then
+save the file and close the editor. Varkon now compiles the new 
+text into a new module, replaces the current module with the new
+module and runs it to create a new result. You will then see a
+green line instead of the red line in your graphics window.
+</p>
+
+<p>
+This is the generic mode of Varkon in a nutshell. What you do
+is actually a kind of high level geometric programming, interactively
+or with a text editor. Varkon executes what you program and creates
+a corresponding result automatically.
+</p>
+
+<p>
+In explicit mode you can not create or edit modules interactively,
+but you can edit what a module has created and you can also create
+result directly without creating a module.
+</p>
+
+<p>
+You can now <a href="section_6.htm">go to the last section</a>,
+you have 1 minute left !
+</p>
+
+
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)
