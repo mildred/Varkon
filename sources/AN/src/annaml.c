@@ -182,7 +182,7 @@ extern short modtyp;               /* geometry type, for annaml() */
          }
 /*
 ***Check parameter/geometry
-*/
+*
        if ( modtyp == 3 )
          {
          switch ( nampar )
@@ -218,7 +218,7 @@ extern short modtyp;               /* geometry type, for annaml() */
            break;
            }
          }
-/*
+*
 ***Check parameter/procedure
 */
        if ( (nampar != PMLEVEL) && (nampar != PMPEN) && 

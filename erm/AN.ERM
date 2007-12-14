@@ -82,8 +82,7 @@ VARKON Error messages for ANAPAC
     936 2 : Undefined label : %s.
     937 1 : Unreferenced label : %s.
     938 1 : Undefined reference : #%s.
-    939 2 : No order number allowed in reference definition .
-    940 2 : Not allowed in a GEOMETRY module : %s
+    939 2 : No order number allowed in reference definition.
     941 2 : Not allowed in this procedure : %s
     942 2 : Procedure/function not allowed in a %s module.
     943 2 : Procedure only allowed in a %s module.
@@ -94,4 +93,4 @@ VARKON Error messages for ANAPAC
     948 1 : GEOMETRY should not be used in MODLULE declaration
 
     998 2 : Too many errors in MBS-program.
-    999 0 : Resumed analyse at .. 
+    999 0 : Resumed analyse at ..
