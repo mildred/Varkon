@@ -73,9 +73,9 @@ m15 = "EDIT"
       "linewidth",f185
       "attribute",m16
       "entity ",M117
-      "MBS-statement",f168
-      "MBS edit part",f217
-      "compile all",f220
+      "statement",f168
+      "module",f217
+      "compile lib",f220
       "update part",f109
       "trim",f6;
 

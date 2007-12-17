@@ -73,9 +73,9 @@ m15 = "ÄNDRA"
       "linjebredd",f185
       "attribut",m16
       "storhet",M117
-      "MBS-sats",f168
-      "MBS-part",f217
-      "kompilera alla",f220
+      "sats",f168
+      "modul",f217
+      "kompilera lib",f220
       "uppdatera part",f109
       "trimma",f6;
 

@@ -1,5 +1,4 @@
-VARKON Error messages for ANAPAC
-(C) Microform AB 1996
+VARKON Error messages for the MBS compiler
 
     000 0 : Analysis complete. %s errors detected.
     100 2 : Illegal token. Ignored.
@@ -89,8 +88,8 @@ VARKON Error messages for ANAPAC
     944 1 : Module name can be interpreted as VAR, CONST or FUNC
     945 2 : Global reference not allowed in this context
     946 2 : #0 not allowed in this context
-    947 1 : DRAWING should not be used in MODLULE declaration
-    948 1 : GEOMETRY should not be used in MODLULE declaration
+    947 1 : DRAWING should not be used in MODULE declaration
+    948 1 : GEOMETRY should not be used in MODULE declaration
 
     998 2 : Too many errors in MBS-program.
     999 0 : Resumed analyse at ..
