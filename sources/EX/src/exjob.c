@@ -41,7 +41,7 @@
 extern V3MDAT  sydata;
 extern int     sysmode;
 extern int     posmode;
-extern bool    relpos;
+extern bool    relpos,igbflg;
 extern char    jobnam[],jobdir[],tmprit[],actcnm[],svnversion[];
 extern DBTmat *lsyspk;
 extern DBptr   lsysla;
@@ -49,8 +49,6 @@ extern DBTmat  lklsys;
 extern V2NAPA  defnap;
 extern WPVIEW  wpviewtab[];
 extern V3MSIZ  sysize;
-extern bool    tmpref;
-
 
 static short write_VYTRF(FILE *jf, VYTRF *matrix);
 static short read_VYTRF(FILE *jf,VYTRF *matrix);
@@ -312,14 +310,14 @@ werror:
 */
        else if ( strncmp(line,"#WPGWIN",7) == 0 )
          {
-         if ( WPload_WPGWIN(jf) < 0 ) return(erpush("EX1893",filename));
+         if ( !igbflg  &&  WPload_WPGWIN(jf) < 0 ) return(erpush("EX1893",filename));
          }
 /*
 ***#WPRWIN
 */
        else if ( strncmp(line,"#WPRWIN",7) == 0 )
          {
-         if ( WPload_WPRWIN(jf) < 0 ) return(erpush("EX1893",filename));
+         if ( !igbflg  &&  WPload_WPRWIN(jf) < 0 ) return(erpush("EX1893",filename));
          }
        }
      }

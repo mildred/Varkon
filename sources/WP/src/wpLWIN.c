@@ -39,10 +39,8 @@
 #include "../../IG/include/IG.h"
 #include "../../EX/include/EX.h"
 #include "../include/WP.h"
-#include <string.h>
 
 extern char  jobdir[],jobnam[];
-extern char *mktemp();
 
 static WPLWIN  *actlwin = NULL;
 
@@ -75,14 +73,14 @@ static short savelw(WPLWIN *lwinpt);
  *      1996-04-25 6 st. "X", J. Kjellander
  *      1997-01-15 IGgenv(), J.Kjellander
  *      2007-10-30 Slidebars, J.Kjellander
+ *      2007-12-14 mkstemp(), J.Kjellander
  *
  ******************************************************!*/
 
   {
-    char     templ[V3PTHLEN+1],tmpfil[V3PTHLEN+1],
-             tmpbuf[V3STRLEN+1];
+    char     tmpnam[V3PTHLEN+JNLGTH+1],tmpbuf[V3STRLEN+1];
     wpw_id   id;
-    int      dx;
+    int      tmp_fd,dx;
     WPLWIN  *lwinptr;
     FILE    *fp;
 
@@ -97,13 +95,12 @@ static short savelw(WPLWIN *lwinpt);
 /*
 ***Create a temporary file for list contents.
 */
-    strcpy(templ,IGgenv(VARKON_TMP));
-    strcat(templ,jobnam);
-    strcat(templ,".XXXXXX");
-    mktemp(templ);
-    strcpy(tmpfil,templ);
+    strncpy(tmpnam,IGgenv(VARKON_TMP),V3PTHLEN+1);
+    strncat(tmpnam,jobnam,JNLGTH+1);
+    strncat(tmpnam,".XXXXXX",8);
+    tmp_fd = mkstemp(tmpnam);
 
-    if ( (fp=fopen(tmpfil,"w+")) == NULL ) return(-2);
+    if ( (fp=fdopen(tmp_fd,"w+")) == NULL ) return(-2);
 /*
 ***Get text resources from the ini-file.
 */
@@ -135,7 +132,7 @@ static short savelw(WPLWIN *lwinpt);
     lwinptr->wintab[1].typ = TYP_UNDEF;
     lwinptr->wintab[1].ptr = NULL;
 
-    strcpy(lwinptr->filnam,tmpfil);
+    strcpy(lwinptr->filnam,tmpnam);
     lwinptr->filpek  = fp;
     strcpy(lwinptr->rubrik,hs);
 /*

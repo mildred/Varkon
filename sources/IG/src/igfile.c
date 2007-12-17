@@ -4,15 +4,15 @@
 /*                                                                  */
 /*  This file includes:                                             */
 /*                                                                  */
-/*  IGfmov();     Move/Rename file                                  */
-/*  IGfcpy();     Copy files                                        */
-/*  IGfapp();     Add two files                                     */
-/*  IGfdel();     Delete file                                       */
-/*  IGfacc();     Test file accessability                           */
-/*  IGftst();     Test file existance                               */
-/*  IGmkdr();     Create directory                                  */
-/*  IGcmpw();     Compare strings with wildcard                     */
-/*  IGcmos();     Interactive OS-command                            */
+/*  IGfmov();          Move/Rename file                             */
+/*  IGfcpy();          Copy files                                   */
+/*  IGfapp();          Add two files                                */
+/*  IGfdel();          Delete file                                  */
+/*  IGfacc();          Test file accessability                      */
+/*  IGftst();          Test file existance                          */
+/*  IGmkdr();          Create directory                             */
+/*  IGcmpw();          Compare strings with wildcard                */
+/*  IGcmos();          Interactive OS-command                       */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
 /*  URL:  http://varkon.sourceforge.net                             */

@@ -14,7 +14,6 @@
 /*  IGgtts();      Get C-ptr to t-string                            */
 /*  IGckhw();      Check HW                                         */
 /*                                                                  */
-/*  wpunik();      Dummy-routine                                    */
 /*  notimpl();     Dummy-routine                                    */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
@@ -66,7 +65,6 @@ MNUALT smbind[SMBMAX]; /* Shortcuts */
 extern short  sysmode;
 extern short  mant;
 extern pm_ptr pmstkp;
-extern bool   igbflg;
 extern char   speed[];
 extern char   pltyp[];
 extern char   port[];
@@ -728,36 +726,6 @@ loop:
 
    sprintf(buf,"%d",actfunc);
    erpush("IG2202",buf);
-   errmes();
-
-   return(0);
-}
-
-/********************************************************/
-/*!******************************************************/
-
-        short wpunik()
-
-/*      Dummyfunktion för de funktionsnummer i funktions-
- *      tabellen som  motsvarar Varkonfunktioner som bara
- *      får anropas från ett WPGWIN-fönster.
- *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      Felkoder : IG2282 => Funktionen %s skall anropas från
- *                           ett fönster.
- *
- *      (C)microform ab 12/1-95 J. Kjellander
- *
- ******************************************************!*/
-
-{
-   char buf[V3STRLEN+1];
-
-   sprintf(buf,"%d",actfunc);
-   erpush("IG2282",buf);
    errmes();
 
    return(0);

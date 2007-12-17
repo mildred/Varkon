@@ -230,7 +230,6 @@ char *IGgtts(int tnr);
 short IGckhw();
 
 short notimpl();
-short wpunik();
 
 /*
 ***igview.c

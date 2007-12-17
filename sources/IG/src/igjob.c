@@ -199,8 +199,6 @@ static short main_loop()
 
 /*      Loads a job from disc.
  *
- *      FV: Inget.
- *
  *      (C)microform ab 5/11/85 J. Kjellander
  *
  *      12/10/88 iginmo först om ftabnr=4, J. Kjellander
@@ -212,6 +210,7 @@ static short main_loop()
  *      1999-04-23 Cray, J.Kjellander
  *      1999-06-05 igbflg, J.Kjellander
  *      2006-12-31 Removed GP, J.Kjellander
+ *      2007-12-17 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -220,7 +219,7 @@ static short main_loop()
     bool   newjob;
 
 /*
-***Init pen number.
+***Init pen 1 fo new jobs.
 */
    WPspen(1);
 /*
@@ -238,13 +237,13 @@ static short main_loop()
       {
       if ( iginmo() < 0 ) goto errend;
       pmgstp(&pmstkp);
-/*return(erpush("EX1862",filnam));
-***Ladda jobbfil.
+/*
+***Load job data.
 */
       if ( (status=load_jobdata()) == -1 ) iginjb();
       else if ( status < 0 ) goto errend;
 /*
-***Ladda ritfil.
+***Load RES-file.
 */
       if ( (status=igldgm()) == -1 )
         {
@@ -256,7 +255,6 @@ static short main_loop()
       }
 /*
 ***GENERIC mode.
-***Om basmodulen aktiv, gör tvärtom.
 */
     else
       {
@@ -277,8 +275,8 @@ static short main_loop()
         newjob = FALSE;
         }
 /*
-***Ladda ev. resultatfil. Om resultatfil saknas men modulfil
-***fanns kanske vi ska börja med att köra modulen.
+***Load optional RES-file. If module exits but no RES-file
+***ask for reexecution.
 */
       if ( (status=igldgm()) == -1 )
         {
@@ -288,19 +286,19 @@ static short main_loop()
           if ( igxflg || IGialt(118,67,68,TRUE) )
             {
             IGrun_active();
-            if ( igbflg ) return(IGexit_sn());
+            if ( igbflg ) return(IGexit_sa());
             }
           }
         }
       else if ( status == 0  &&  igbflg )
         {
         IGrun_active();
-        return(IGexit_sn());
+        return(IGexit_sa());
         }
       else if ( status < 0 ) goto errend;
       }
 /*
-***Nu är det dags att köra ev. init_macro.
+***Run otional init_macro.
 */
    if ( init_macro() < 0 )
      {
@@ -308,8 +306,7 @@ static short main_loop()
      goto errend;
      }
 /*
-***Om det är ett helt nytt jobb ska vi kanske köra ett
-***newjob_macro.
+***Run optional newjob_macro.
 */
    if ( newjob )
      {
@@ -324,32 +321,21 @@ static short main_loop()
        }
      }
 /*
-***Rita om skärmen.
+***Update display.
 */
-#ifdef UNIX
-    WPreload_view(GWIN_ALL);
-    WPrepaint_GWIN(GWIN_ALL);
-    WPrepaint_RWIN(RWIN_ALL,TRUE);
-#endif
-
-#ifdef WIN32
-    msrepa(GWIN_ALL);
-    if ( rstron ) WPdrrs();
-    IGupcs(lsysla,V3_CS_ACTIVE);
-#endif
+    if ( !igbflg )
+      {
+      WPreload_view(GWIN_ALL);
+      WPrepaint_GWIN(GWIN_ALL);
+      WPrepaint_RWIN(RWIN_ALL,TRUE);
+      }
 /*
-***Kör vi WIN32 måste vi ansluta rätt huvudmeny innan
-***vi slutar.
+***The end.
 */
 end:
-
-#ifdef WIN32
-    mssmmu((int)IGgmmu());
-#endif
-
     return(0);
 /*
-***Felutgång.
+***Error exit.
 */
 errend:
     WPclrg();
@@ -357,7 +343,7 @@ errend:
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
        short  IGdljb()
 
@@ -442,7 +428,7 @@ errend:
    return(0);
  }
 
-/******************************************************!*/
+/********************************************************/
 /*!******************************************************/
 
 static short igsvjb()
@@ -882,17 +868,11 @@ static short igsvgm()
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short IGsjpg()
 
-/*      Lagra jobb, PM och GM.
- *
- *      In: Inget.
- *
- *      Ut: Inget.
- *
- *      FV: Inget.
+/*      Save job, module and DB.
  *
  *      (C)microform ab 20/10/85 J. Kjellander
  *
@@ -901,15 +881,15 @@ static short igsvgm()
   {
 
 /*
-***Lagra jobbet.
+***Save job data.
 */
     if ( igsvjb() < 0 ) errmes();
 /*
-***Lagra modul.
+***Save active module modul.
 */
     if ( sysmode & GENERIC  &&  igsvmo() < 0 ) errmes();
 /*
-***Lagra resultat.
+***Save result.
 */
     if ( igsvgm() < 0 ) errmes();
 
@@ -1601,7 +1581,7 @@ l1:
 */
    exit_macro();
 /*
-***Close DB and delete RES- or temp. RIT-file.
+***Close DB and delete RES- or temp. explicit RES-file.
 */
    gmclpf();
 
@@ -1653,7 +1633,7 @@ l1:
 /*
 ***Clear graphics.
 */
-   WPclrg();
+   if ( !igbflg) WPclrg();
 /*
 ***The end.
 */
@@ -2267,12 +2247,7 @@ static short iginjb()
 /*
 ***Create the default graphical window.
 */
-#ifdef UNIX
-     if ( (status=WPcgws()) < 0 ) return(status);
-#endif
-#ifdef WIN32
-     if ( (status=(short)mscdgw(TRUE)) < 0 ) return(status);
-#endif
+     if ( ! igbflg && (status=WPcgws()) < 0 ) return(status);
 /*
 ***Initiera diverse flaggor.
 */
@@ -2351,16 +2326,8 @@ static short load_jobdata()
 ***fönster i jobfilen. Då skapar vi default fönster enl.
 ***resursfil nu.
 */
-#ifdef UNIX
      if ( WPngws() == 0 )
-       if ( (status=WPcgws()) < 0 ) return(status);
-#endif
-#ifdef WIN32
-     if ( msngws() == 0 )
-       {
-       if ( (status=(short)mscdgw(FALSE)) < 0 ) return(status);
-       }
-#endif
+       if ( !igbflg  &&  (status=WPcgws()) < 0 ) return(status);
 /*
 ***Initiera koordinatsystem.
 */

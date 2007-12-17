@@ -1,0 +1,41 @@
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
+
+m4_include(../../include/header.inc)
+
+
+<h1>Ini-files</h1>
+
+<p>
+Ini-files are used by Varkon to initialize various system
+parameters and values during startup (in the X-windows
+community such things are called "resources"). The standard
+Varkon distribution includes a default ini-file but you can also
+create an application specific ini-file with settings that
+will override the default values. The way to do that is
+to edit the line that starts the Varkon executable in the
+Varkon start script located in $VARKON_ROOT/com/english (or
+$VARKON_ROOT/com/swedish). Read the comments in the startscript
+for details.
+</p>
+
+<p>
+If you use an application specific ini-file, be sure to
+keep it somwhere where it will not be affected if the
+Varkon system is updated to a new release. A natural
+place to keep an application specific ini-file is together
+with the application module library. This will make it
+easy to package the application and install it somewhere
+else.
+</p>
+
+<p>
+See the default ini-file in $VARKON_ROOT/cnf/ini/english
+(or $VARKON_ROOT/cnf/ini/swedish) for more information
+on available system parameters and values (resources).
+</p>
+
+
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

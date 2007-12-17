@@ -44,7 +44,7 @@
 #include "../include/params.h"
 #include <string.h>
 #include <time.h>
-#include <malloc.h>
+#include <stdlib.h>
 
 /*
 *******************************************************!*/

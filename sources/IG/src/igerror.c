@@ -56,7 +56,6 @@ ERRRPT  errstk[ESTKSZ];
 /*
 ***Global variables.
 */
-extern bool  igbflg;
 extern char  jobdir[],jobnam[];
 
 extern bool  startup_complete;

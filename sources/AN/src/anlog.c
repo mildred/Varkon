@@ -374,14 +374,14 @@ static void  act();
 */
    while( ( alfile[i] = logfnm[i] ) != '\0' ) 
      i++;
-      
+
    alfile[i-3] = '\0';
 /*
 ***XXX->XXXXXX for all platforms, 1999-01-24, J.Kjellander.
 */
    strcat( alfile,"XXXXXX" );
    alp = mktemp(alfile);
-       
+
 #ifdef WIN32
    if ( (allogf=fopen(alfile,"w+b")) == NULL )
 

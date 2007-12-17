@@ -1,56 +1,32 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>f5 Run active module</TITLE>
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (X11; I; Linux 2.0.29 i586) [Netscape]">
-</HEAD>
-<BODY BGCOLOR="#99CCFF">
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
 
-<CENTER><P><FONT SIZE=-1>VARKON Version 1.15 1997-10-16</FONT></P></CENTER>
+m4_include(../../include/header.inc)
 
-<P>
-<HR width="100%" align="center"></P>
+<h1>Run active module</h1>
 
-<UL>
-<H3>f5 Run active module</H3>
+<p>
+This function first clears the database (DB) to an empty state
+and then executes (runs) the currently active module. The effect
+is that a completely new result is created. Graphic window(s)
+are updated accordingly. Only available in generic mode.
+</p>
 
-<P><B>Description<BR>
-<BR>
-</B>Reexecutes the currently active module from start to end. f5 first
-erases all information in GM and resets GM to its initial state as if a
-completely new job was started.<BR>
-<BR>
-<B>Available in<BR>
-<BR>
-</B>2D and 3D generic mode.<BR>
-<BR>
-<B>MBS Correspondence<BR>
-<BR>
-</B>The macro statement run_mbs()<BR>
-<BR>
-<B>Comments<BR>
-<BR>
-</B>None.</P>
+<h2>Interactive function</h2>
 
-<P><B>See also</B></P>
+<p>f5</p>
 
-<P><A HREF="f109.htm">f109</A> , <A HREF="f170.htm">f170</A></P>
-</UL>
+<h2>MBS Correspondence</h2>
 
-<P>
-<HR width="100%" align="center"></P>
+<p>The macro statement run_mbs()</p>
 
+<h2>See also</h2>
 
+<p>
+<a href="f109.htm">Update part</a> and
+<a href="f170.htm">Edit part parameter</a>
+</p>
 
-</FONT></P></CENTER>
-
-<CENTER><TABLE CELLSPACING=10 CELLPADDING=0 >
-<TR>
-<TD><A HREF="../index.htm">VARKON Homepage</A></TD>
-
-<TD><A HREF="vbiindex.htm">Index</A></TD>
-</TR>
-</TABLE></CENTER>
-
-</BODY>
-</HTML>
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

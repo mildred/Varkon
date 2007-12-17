@@ -467,7 +467,7 @@ extern bool  IGfacc();
 /*
 ***Init WP's menuhandler.
 */
-    if ( (status=WPinit_menu()) < 0 )
+    if ( !igbflg  &&  (status=WPinit_menu()) < 0 )
       {
       status = EREXIT;
       goto end;
@@ -564,6 +564,7 @@ end:
    sysize.pm   = PMSIZE;
    sysize.gm   = 0;
    sysize.rts  = RTSSIZE;
+   igbflg      = FALSE;
    igxflg      = FALSE;
    iggflg      = FALSE;
    igmatt      = GLOBAL;
