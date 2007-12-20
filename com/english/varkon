@@ -15,10 +15,10 @@
 #######################################################
 
 # Root directory for VARKON installation.
-# alternative 1, relative path
+# Alternative 1, relative path.
 VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`
 
-# alternative 2, explicit path
+# Alternative 2, explicit path.
 # VARKON_ROOT=/home/username/varkon/varkon_2.Xx
 export VARKON_ROOT
 
