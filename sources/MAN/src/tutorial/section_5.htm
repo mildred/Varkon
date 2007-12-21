@@ -20,17 +20,17 @@ up a text editor to display (and let you edit) the text. This
 is what it should look like:
 </p>
 
-<p><tt>
-GLOBAL MODULE my_first_job();<br>
-<br>
-BEGINMODULE<br>
-<br>
-&nbsp; poi_free(#1,vec(96.735458419579, 380.28671945701, 0.0));<br>
-&nbsp; poi_free(#2,vec(283.24158285645, 416.90531674208, 0.0));<br>
-&nbsp; lin_free(#3,on(#1), on(#2):PEN=2,WIDTH=2);<br>
-<br>
+<pre class="box">
+GLOBAL MODULE my_first_job();
+
+BEGINMODULE
+
+  poi_free(#1,vec(96.735458419579, 380.28671945701, 0.0));
+  poi_free(#2,vec(283.24158285645, 416.90531674208, 0.0));
+  lin_free(#3,on(#1), on(#2):PEN=2,WIDTH=2);
+
 ENDMODULE
-</p></tt>
+</pre>
 
 <p>
 With your text editor, try to change the PEN=2 to PEN=3, then
