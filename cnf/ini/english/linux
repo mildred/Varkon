@@ -233,10 +233,6 @@ varkon.list.geometry:            +200+100
 varkon.list.title.jobnam:        True
 varkon.list.printer:             lpr
 !*
-!***Resources for the error message listwindow.
-!*
-varkon.error.title:             -----------------ERROR-MESSAGE--------------
-!*
 !***Resources for input dialogs.
 !*
 varkon.input.title:             Input

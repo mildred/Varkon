@@ -316,11 +316,6 @@ varkon.list.geometry:           +200+100
 varkon.list.title.jobnam:       True
 varkon.list.printer:            lpr
 !*
-!***Listfönster används också för felrapportering.
-!***Följande resurs styr fellistans rubrik.
-!*
-varkon.error.title:            -----------------FELRAPPORT-----------------
-!*
 !***Inmatningsfönstrets placering och storlek kan inte
 !***påverkas härifrån. Däremot följande texter.
 !*

@@ -31,6 +31,7 @@
 /********************************************************************/
 
 #include "../../DB/include/DB.h"
+#include "../../DB/include/DBintern.h"
 #include "../include/IG.h"
 #include "../include/debug.h"
 #include "../include/svnversion.h"
@@ -622,17 +623,6 @@ end:
          switch (argv[i][1])
            {
 /*
-***PM RAM size.
-*/
-           case 'p':
-           if ( argv[i][2] == 'm'  &&
-                sscanf(&argv[i][3],"%d",&ival) == 1  && ival > 0 )
-             {
-             sysize.pm = ival;
-             break;
-             }
-           else goto usage;
-/*
 ***Job directory.
 */
            case 'j':
@@ -643,24 +633,36 @@ end:
              }
            else goto usage;
 /*
+***PM RAM size.
+*/
+           case 'p':
+           if ( argv[i][2] == 'm'  &&
+                sscanf(&argv[i][3],"%d",&ival) == 1  && ival > 0 )
+             {
+             sysize.pm = ival*1024;
+             break;
+             }
+           else goto usage;
+/*
 ***RTS size.
 */
            case 'r':
            if ( argv[i][2] == 't'  &&  argv[i][3] == 's'  &&
                 sscanf(&argv[i][4],"%d",&ival) == 1  && ival > 0 )
              {
-             sysize.rts = ival;
+             sysize.rts = ival*1024;
              break;
              }
            else goto usage;
 /*
-***DB RAM buffer size.
+***DB RAM buffer size. Round to closest number of pages.
 */
-           case 'g':
-           if ( argv[i][2] == 'm'  &&
+           case 'd':
+           if ( argv[i][2] == 'b'  &&
                 sscanf(&argv[i][3],"%d",&ival) == 1  && ival > 0 )
              {
-             sysize.gm = ival;
+             sysize.gm = ival*1024;
+             sysize.gm = sysize.gm/PAGSIZ;
              break;
              }
 /*
@@ -694,7 +696,6 @@ end:
 ***Run in debug mode.
 */
            case 'D':
-           case 'd':
            if ( dbgon(&argv[i][2]) < 0 ) goto usage;
            break;
 /*
@@ -711,6 +712,7 @@ end:
 */
            case 'b':
            igxflg = igbflg = TRUE;
+           sysmode = GENERIC;
            break;
 /*
 ***Illegal option.
