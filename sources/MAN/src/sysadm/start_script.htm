@@ -11,7 +11,8 @@ m4_include(../../include/header.inc)
 Varkon can only be started by executing a start script
 that sets up an environment for Varkon to function properly.
 The default start scripts in the Varkon distribution are
-located in $VARKON_ROOT/com/english and $VARKON_ROOT/com/swedish.
+located in <code>$VARKON_ROOT/com/english</code> and
+<code>$VARKON_ROOT/com/swedish</code>.
 </p>
 
 <p>
@@ -34,7 +35,7 @@ if you move the start script to a new location. Here are some lines
 from a default start script:
 </p>
 
-<pre>
+<pre class=box>
 # Root directory for VARKON installation.
 # Alternative 1, relative path.
 VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`
@@ -52,7 +53,7 @@ away from the Varkon installation, you should use the second alternative.
 This is what it would look like if you do that:
 </p>
 
-<pre>
+<pre class=box>
 # Root directory for VARKON installation.
 # Alternative 1, relative path.
 #VARKON_ROOT=`(cd $(dirname $0); cd ..; cd ..; pwd)`

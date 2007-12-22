@@ -26,7 +26,7 @@ variable in the Varkon start script.
 <p>
 The startscript included in the Varkon distribution sets
 up the VARKON_LIB environment variable to point to
-VARKON_ROOT/lib. It is strongly recommended not to change
+<code>VARKON_ROOT/lib</code>. It is strongly recommended not to change
 or add anything in the standard library. Keep all your
 own modules somewhere else, outside the Varkon system file tree
 and point to your own module libraries by adding them to
@@ -34,9 +34,9 @@ the VARKON_LIB environment variable defined in the Varkon
 start script. Here is an example:
 </p>
 
-<p>
+<p><code>
 &nbsp;&nbsp;VARKON_LIB=the_path_to_my_own_library:$VARKON_ROOT/lib
-</p>
+</code></p>
 
 <p>
 With VARKON_LIB defined as above Varkon will
@@ -46,7 +46,7 @@ be defined like this and Varkon will search them in the order
 they appear. Note that there is only one single namespace for
 all modules including the Varkon standard modules.
 You must use unique names for all your modules. Names used
-by Varkon begin with l_, dxf_, ed_, fe_, igs_, ma_ or stl_.
+by Varkon begin with <code>l_, dxf_, ed_, fe_, igs_, ma_ or stl_</code>.
 If you don't actually mean to replace a Varkon standard module,
 it is best to avoid names beginning with these letter combinations
 for all types of modules, also macro modules.

@@ -12,13 +12,13 @@ A macro is a module of a special type. It is written in MBS
 and compiled by the MBS compiler. Here is an example:
 </p>
 
-<p><tt>
-MACRO MODULE start_editor(STRING file*132 >"Enter filename !");<br>
-<br>
-BEGINMODULE<br>
-&nbsp; os("some_text_editor "+file);<br>
+<p><pre class=box>
+MACRO MODULE start_editor(STRING file*132 >"Enter filename !");
+
+BEGINMODULE<
+&nbsp; os("some_text_editor "+file);
 ENDMODULE
-</p></tt>
+</pre></p>
 
 <p>
 This macro takes a filename as input, then calls the operating

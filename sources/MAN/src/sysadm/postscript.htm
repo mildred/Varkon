@@ -1,178 +1,137 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>hp7475</TITLE>
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (X11; I; Linux 2.0.31 i586) [Netscape]">
-</HEAD>
-<BODY BGCOLOR="#99CCFF">
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
 
-<CENTER><P><FONT SIZE=-1>VARKON Version 1.16 1998-11-12</FONT></P></CENTER>
+m4_include(../../include/header.inc)
 
-<P>
-<HR width="100%" align="center"></P>
 
-<UL>
-<H3><B>postscript</B></H3>
+<h1>The postscript driver</h1>
 
-<P>VARKON plotter driver<BR>
-<BR>
-<BR>
-<B>Description<BR>
-<BR>
-</B>postscript translates .PLT or .DXF format to the postscript printer
-format. postscript reads from standard input and writes to standard output.<BR>
-<BR>
-<B>Syntax<BR>
-<BR>
-</B>postscript -sS -wsL -xX -yY -vN -bw -kK<BR>
-<BR>
+
+<p>
+The postscript driver reads from standard input, translates .PLT or .DXF format
+to postscript format and writes to standard output.
+</p>
+
+<h2>Syntax</h2>
+
+<pre>$VARKON_BIN/postscript -sS -wsL -xX -yY -vN -bw -kK</pre>
+
+<p>
 Options preceded by a minus sign should be followed by their value without
-any separating blank spaces.<BR>
-<BR>
-<B>Options </B></P>
-</UL>
+any separating blank spaces.
+</p>
 
-<TABLE WIDTH="95%" >
-<CAPTION></CAPTION>
+<h2>Options </h2>
 
-<TR>
-<TD>
-<UL>
-<P>-sS</P>
-</UL>
-</TD>
+<table>
+<tr>
+<td>
+<p>-sS</p>
+</td>
 
-<TD>
-<UL>
-<P>- Set scale to S. Float value, default = 1.0</P>
-</UL>
-</TD>
-</TR>
+<td>
+<p>- Set scale to S. Float value, default = 1.0</p>
+</td>
+</tr>
 
-<TR>
-<TD>
-<UL>-wsL</UL>
-</TD>
+<tr>
+<td>
+<p>-wsL</p>
+</td>
 
-<TD>
-<UL>- Set linewidthscale to L. Float value, default = S</UL>
-</TD>
-</TR>
+<td>
+<p>- Scale linewidth with L. Float value, default = 1.0</p>
+</td>
+</tr>
 
-<TR>
-<TD>
-<UL>
-<P>-xX</P>
-</UL>
-</TD>
+<tr>
+<td>
+<p>-xX</p>
+</td>
 
-<TD>
-<UL>
-<P>- Set origin.x to X. Float value, default = 0.0</P>
-</UL>
-</TD>
-</TR>
+<td>
+<p>- Set origin.x to X. Float value, default = 0.0</p>
+</td>
+</tr>
 
-<TR>
-<TD>
-<UL>
-<P>-yY</P>
-</UL>
-</TD>
+<tr>
+<td>
+<p>-yY</p>
+</td>
 
-<TD>
-<UL>
-<P>- Set origin.y to Y. Float value, default = 0.0</P>
-</UL>
-</TD>
-</TR>
+<td>
+<p>- Set origin.y to Y. Float value, default = 0.0</p>
+</td>
+</tr>
 
-<TR>
-<TD>
-<UL>
-<P>-vN</P>
-</UL>
-</TD>
+<tr>
+<td>
+<p>-vN</p>
+</td>
 
-<TD>
-<UL>
-<P>- Rotate n degrees. Float value, default = 0.0</P>
-</UL>
-</TD>
-</TR>
+<td>
+<p>- Rotate n degrees. Float value, default = 0.0</p>
+</td>
+</tr>
 
-<TR>
-<TD>
-<UL>
-<P>-bw</P>
-</UL>
-</TD>
+<tr>
+<td>
+<p>-bw</p>
+</td>
 
-<TD>
-<UL>
-<P>- Dont try to use color, default = use color.</P>
-</UL>
-</TD>
-</TR>
+<td>
+<p>- Dont use color or grayscale, default = use color.</p>
+</td>
+</tr>
 
-<TR>
-<TD>
-<UL>
-<P>-kK</P>
-</UL>
-</TD>
+<tr>
+<td>
+<p>-kK</p>
+</td>
 
-<TD>
-<UL>
-<P>- Set curve accuracy to K. Float value, default = 1.0</P>
-</UL>
-</TD>
-</TR>
-</TABLE>
+<td>
+<p>- Set curve accuracy to K. Float value, default = 1.0</p>
+</td>
+</tr>
+</table>
 
-<UL>
-<P><B>Examples<BR>
-<BR>
-</B>postscript &lt;plofile.PLT &gt;plotfile.ps -s0.5<BR>
-<BR>
+<h2>Examples</h2>
+
+<pre>$VARKON_BIN/postscript &lt;plofile.PLT &gt;plotfile.ps -s0.5</pre>
+
+<p>
 Scales the image in plotfile.PLT to half size and writes the result to
-a new file named &quot;plotfile.ps&quot; using the postscript format.<BR>
-<BR>
-postscript &lt;plofile.PLT -s0.5 | lp<BR>
-<BR>
-Same as above but the result is sent to a spooled plotter.<BR>
-<BR>
-postscript &lt;plofile.PLT -bw | lp<BR>
-<BR>
+a new file named &quot;plotfile.ps&quot; using the postscript format.
+</p>
+
+<pre>$VARKON_BIN/postscript &lt;plofile.PLT -s0.5 | lp</pre>
+
+<p>
+Same as above but the result is sent to a spooled plotter.
+</p>
+
+<pre>$VARKON_BIN/postscript &lt;plofile.PLT -bw | lp</pre>
+
+<p>
 Same as above but pennumbers are not mapped to color or grayscale. The
-result is always truly black and white.<BR>
-<BR>
-<B>Comments<BR>
-<BR>
-</B>postscript automatically recognizes if the input is in .PLT or DXF
-format. The -k option only applies to DXF format.<BR>
-<BR>
-postscript supports the WIDTH attribute introduced in VARKON&nbsp;1.15C
-as well as the PEN attribute for color. Penfiles are still supported but
-may not be in future releases.</P>
+result is always truly black and white.
+</p>
 
-<P>The dotsize used by the postscript driver is always 72 dots per inch.</P>
-</UL>
+<h2>Comments<h2>
 
-<P>
-<HR width="100%" align="center"></P>
+<p>postscript automatically recognizes if the input is in .PLT or DXF
+format. The -k option only applies to DXF format.
+</p>
 
+<p>
+postscript supports the WIDTH attribute for linewidth
+as well as the PEN attribute for color.
+</P>
 
+<p>
+The dotsize used by the postscript driver is always 72 dots per inch.
+</p>
 
-</FONT></P></CENTER>
-
-<CENTER><TABLE CELLSPACING=10 CELLPADDING=0 >
-<TR>
-<TD><A HREF="../index.htm">VARKON Homepage</A></TD>
-
-<TD><A HREF="vindex.htm">Index</A></TD>
-</TR>
-</TABLE></CENTER>
-
-</BODY>
-</HTML>
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

@@ -38,7 +38,7 @@ of this manual.
 Modules (MBO-files) are essential to Varkon. Users create modules and
 many interactive functions are implemented using (macro) modules.
 When a module is called, Varkon searches the current job_directory,
-then  job_directory/lib and if not found, Varkon uses the value of
+then  <code>job_directory/lib</code> and if not found, Varkon uses the value of
 VARKON_LIB to search additional directories. VARKON_LIB may define
 up to 10 different directories separated by colon. Directories are
 searched in the order they appear until a module is found. In a
@@ -53,7 +53,7 @@ important not to remove the system library. Here is a section
 from a start script that shows how to use VARKON_LIB.
 </p>
 
-<pre>
+<pre class=box>
 VARKON_LIB=$VARKON_ROOT/lib
 export VARKON_LIB
 
@@ -114,10 +114,10 @@ For more information see:
 
 <p>
 Varkon uses the value of VARKON_TMP as the location for temporary
-files. By default, it points to VARKON_ROOT/tmp which is a directory
+files. By default, it points to <code>VARKON_ROOT/tmp</code> which is a directory
 included in the Varkon installation. You may want to change VARKON_TMP
-to point to a system wide directory like /tmp or C:/TEMP or you may want
-each user to have an individual temp directory.
+to point to a system wide directory like <code>/tmp</code> or <code>C:/TEMP</code>
+or you may want each user to have an individual temp directory.
 </p>
 
 <p>
@@ -140,7 +140,7 @@ This environment variable is used by Varkon to locate files with fonts for
 vector based graphical text. Varkon by default includes a number of fonts
 (see the TEXT statement in MBS). Font 0 is the default when a new job is
 started. This font is hardcoded and has no font file. The rest of the
-fonts are defined in *.FNT files in VARKON_FNT. These files are not
+fonts are defined in <code>*.FNT</code> files in VARKON_FNT. These files are not
 loaded until they are used for the first time but then stays loaded in
 memory until Varkon terminates.
 </p>
@@ -148,9 +148,9 @@ memory until Varkon terminates.
 <p>
 Fonts 0 to 9 are reserved by the system. The font editor included in the Varkon
 system can be used to defines custom fonts. Such fonts should have names beginning
-at 10.FNT and up until 20.FNT and also reside in the location pointed to by VARKON_FNT.
-It should not be nessecary under normal circumstances to use another value of
-VARKON_FNT than the default.
+at <code>10.FNT</code> and up until <code>20.FNT</code> and also reside in the
+location pointed to by VARKON_FNT. It should not be nessecary under normal
+circumstances to use another value of VARKON_FNT than the default.
 </p>
 
 <h2>VARKON_PLT</h2>
@@ -186,12 +186,12 @@ location this should normally not be nessecary.
 <h2>VARKON_TOL</h2>
 
 <p>
-VARKON_TOL is used by Varkon to locate the file surpac.tol. This
+VARKON_TOL is used by Varkon to locate the file <code>surpac.tol</code>. This
 file is loaded at startup and defines the tolerances used in many
 geometric calculations. If you need to change any of the
-values in surpac.tol, put the changed version of the file somewhere
+values in <code>surpac.tol</code>, put the changed version of the file somewhere
 outside the Varkon installation file tree and edit VARKON_TOL to
-point to the new location. This way your changes to surpac.tol will
+point to the new location. This way your changes to <code>surpac.tol</code> will
 persist when Varkon is updated to a new version.
 </p>
 
@@ -218,7 +218,7 @@ Ini-files</a> section of the Application developers manual.
 This is the place for the Varkon executables. It is used by
 the start scrip to start the main Varkon executable but also
 by Varkon to execute the Varkon compiler (mbsc) and
-the Varkon plotter driver specified in VARKON_PLT/plot.cnf.
+the Varkon plotter driver specified in <code>VARKON_PLT/plot.cnf</code>.
 </p>
 
 m4_include(../../include/svnversion.inc)
