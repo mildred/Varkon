@@ -78,11 +78,11 @@ static void init_sydata();
 
 /*!******************************************************/
 
-        int main(
-        int argc, 
+        int   main(
+        int   argc,
         char *argv[])
 
-/*      MBS analyser main function
+/*      MBS compiler main entry point.
  *      analyses the MBS source file specified by 1:st argument.
  *
  *      *.MBS --> ANALYZER -- > *.MBO, object file (if no severe errors)
@@ -96,6 +96,7 @@ static void init_sydata();
  *      (C)microform ab 1985-09-17 Mats Nelson
  *
  *      1999-04-27 Rewritten, R. Svedin
+ *      2007-12-23 2.0, J.Kjellander
  *
  ******************************************************!*/
 
@@ -280,7 +281,7 @@ static void init_sydata();
              printf("%s : illegal -pm value\n",argv[0]);
              exit(-1);
              }
-           else sysize.pm = ival;
+           else sysize.pm = ival*1024;
            }
            break;
 /*
@@ -288,8 +289,8 @@ static void init_sydata();
 */
            case 'V':
            case 'v':
-           printf("VARKON-3D/S %d.%d%c Serial number : %d\n",
-             sydata.vernr,sydata.revnr,sydata.level,sydata.sernr);
+           printf("VARKON %d.%d%c\n",
+             sydata.vernr,sydata.revnr,sydata.level);
            exit(V3EXOK);
            break;
 /*
