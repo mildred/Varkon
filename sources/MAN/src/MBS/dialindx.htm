@@ -1,250 +1,189 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<HTML>
-<HEAD>
-   <TITLE>Dialogue routines</TITLE>
-   <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (X11; I; Linux 2.0.31 i586) [Netscape]">
-</HEAD>
-<BODY BGCOLOR="#99CCFF">
-
-
-</P>
-
-<CENTER><P><FONT SIZE=-1>VARKON Version 1.16 1998-04-01</FONT></P></CENTER>
-
-<P>
-<HR width="100%" align="center"></P>
-
-<BLOCKQUOTE>
-<H1>Dialogue routines <BR>
-</H1>
-</BLOCKQUOTE>
-
-<BLOCKQUOTE>
-<TABLE WIDTH="686" >
-<CAPTION></CAPTION>
-
-<TR>
-<TD width="114"><A HREF="psh_pmt.htm">psh_pmt</A></TD>
-
-<TD width="564">Pushes a prompt</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="pop_pmt.htm">pop_pmt</A></TD>
-
-<TD width="564">Pops a prompt</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="inpmt.htm">inpmt</A></TD>
-
-<TD width="564">Input string dialogue</TD>
-</TR>
-
-<TR>
-<TD><A HREF="infnm.htm">infname</A></TD>
-
-<TD>Filename selection dialogue</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_men.htm">cre_men</A></TD>
-
-<TD width="564">Create menu</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="psh_men.htm">psh_men</A></TD>
-
-<TD width="564">Push menu</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="pop_men.htm">pop_men</A></TD>
-
-<TD width="564">Pop menu</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="get_men.htm">get_men</A></TD>
-
-<TD width="564">Get menu</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="get_alt.htm">get_alt</A></TD>
-
-<TD width="564">Get alternative</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="lst_ini.htm">lst_ini</A></TD>
-
-<TD width="564">Init list window</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="lst_lin.htm">lst_lin</A></TD>
-
-<TD width="564">Output lie to list window</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="lst_exi.htm">lst_exi</A></TD>
-
-<TD width="564">Close list window</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="ident.htm">ident</A></TD>
-
-<TD width="564">Interactive entity selection</TD>
-</TR>
-
-<TR>
-<TD><A HREF="ident2.htm">ident_2</A></TD>
-
-<TD>Interactive entity selection</TD>
-</TR>
-
-<TR>
-<TD><A HREF="highl.htm">highlight</A></TD>
-
-<TD>Turns entity highligt on/off</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="pos.htm">pos</A></TD>
-
-<TD width="564">Pointer position relative to model</TD>
-</TR>
-
-<TR>
-<TD><A HREF="pos2.htm">pos_2</A></TD>
-
-<TD>2 pointer positions relative to model</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="screen.htm">screen</A></TD>
-
-<TD width="564">Pointer position relative to window</TD>
-</TR>
-
-<TR>
-<TD><A HREF="screen2.htm">screen_2</A></TD>
-
-<TD>2 pointer positions relative to window</TD>
-</TR>
-
-<TR>
-<TD><A HREF="getptr.htm">get_pointer</A></TD>
-
-<TD>Pointer position relative to screen</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_win.htm">cre_win</A></TD>
-
-<TD width="564">Creates window</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="get_win.htm">get_win</A></TD>
-
-<TD width="564">Gets window data</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_but.htm">cre_button</A></TD>
-
-<TD width="564">Creates button</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="get_but.htm">get_button</A></TD>
-
-<TD width="564">Gets button status</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_fbut.htm">cre_fbutton</A></TD>
-
-<TD width="564">Creates fbutton</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_icon.htm">cre_icon</A></TD>
-
-<TD width="564">Creates icon</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_fico.htm">cre_ficon</A></TD>
-
-<TD width="564">Creates ficon</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="cre_edit.htm">cre_edit</A></TD>
-
-<TD width="564">Creates edit</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="get_edit.htm">get_edit</A></TD>
-
-<TD width="564">Gets edit string</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="show_win.htm">show_win</A></TD>
-
-<TD width="564">Displays window</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="wait_win.htm">wait_win</A></TD>
-
-<TD width="564">Waits for event</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="del_win.htm">del_win</A></TD>
-
-<TD width="564">Deletes window or subwindow</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="textl_w.htm">textl_win</A></TD>
-
-<TD width="564">Length of text in pixels</TD>
-</TR>
-
-<TR>
-<TD width="114"><A HREF="texth_w.htm">texth_win</A></TD>
-
-<TD width="564">Height of text in pixels</TD>
-</TR>
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
+
+m4_include(../../include/header.inc)
+
+
+<h1>User interface routines</h1>
+
+<table cellpadding="3">
+
+<tr>
+<th align="left" bgcolor="#c0c0c0">MBS name</th>
+<th align="left" bgcolor="#c0c0c0">Description</th>
+</tr>
+
+<tr>
+<td><a href="psh_pmt.htm">psh_pmt</a></td>
+<td>Pushes a prompt</td>
+</tr>
+
+<tr>
+<td><a href="pop_pmt.htm">pop_pmt</a></td>
+<td>Pops a prompt</td>
+</tr>
+
+<tr>
+<td><a href="inpmt.htm">inpmt</a></td>
+<td>Input string dialogue</td>
+</tr>
+
+<tr>
+<td><a href="infnm.htm">infname</a></td>
+<td>Filename selection dialogue</td>
+</tr>
+
+<tr>
+<td><a href="cre_men.htm">cre_men</a></td>
+<td>Create menu</td>
+</tr>
+
+<tr>
+<td><a href="psh_men.htm">psh_men</a></td>
+<td>Push menu</td>
+</tr>
+
+<tr>
+<td><a href="pop_men.htm">pop_men</a></td>
+<td>Pop menu</td>
+</tr>
+
+<tr>
+<td><a href="get_men.htm">get_men</a></td>
+<td>Get menu</td>
+</tr>
+
+<tr>
+<td><a href="get_alt.htm">get_alt</a></td>
+<td>Get alternative</td>
+</tr>
+
+<tr>
+<td><a href="lst_ini.htm">lst_ini</a></td>
+<td>Init list window</td>
+</tr>
+
+<tr>
+<td><a href="lst_lin.htm">lst_lin</a></td>
+<td>Output lie to list window</td>
+</tr>
+
+<tr>
+<td><a href="lst_exi.htm">lst_exi</a></td>
+<td>Close list window</td>
+</tr>
+
+<tr>
+<td><a href="ident.htm">ident</a></td>
+<td>Interactive entity selection</td>
+</tr>
+
+<tr>
+<td><a href="ident2.htm">ident_2</a></td>
+<td>Interactive entity selection</td>
+</tr>
+
+<tr>
+<td><a href="highl.htm">highlight</a></td>
+<td>Turns entity highligt on/off</td>
+</tr>
+
+<tr>
+<td><a href="pos.htm">pos</a></td>
+<td>Pointer position relative to model</td>
+</tr>
+
+<tr>
+<td><a href="pos2.htm">pos_2</a></td>
+<td>2 pointer positions relative to model</td>
+</tr>
+
+<tr>
+<td><a href="screen.htm">screen</a></td>
+<td>Pointer position relative to window</td>
+</tr>
+
+<tr>
+<td><a href="screen2.htm">screen_2</a></td>
+<td>2 pointer positions relative to window</td>
+</tr>
+
+<tr>
+<td><a href="getptr.htm">get_pointer</a></td>
+<td>Pointer position relative to screen</td>
+</tr>
+
+<tr>
+<td><a href="cre_win.htm">cre_win</a></td>
+<td>Creates window</td>
+</tr>
+
+<tr>
+<td><a href="get_win.htm">get_win</a></td>
+<td>Gets window data</td>
+</tr>
+
+<tr>
+<td><a href="cre_but.htm">cre_button</a></td>
+<td>Creates button</td>
+</tr>
+
+<tr>
+<td><a href="get_but.htm">get_button</a></td>
+<td>Gets button status</td>
+</tr>
+
+<tr>
+<td><a href="cre_fbut.htm">cre_fbutton</a></td>
+<td>Creates fbutton</td>
+</tr>
+
+<tr>
+<td><a href="cre_icon.htm">cre_icon</a></td>
+<td>Creates icon</td>
+</tr>
+
+<tr>
+<td><a href="cre_fico.htm">cre_ficon</a></td>
+<td>Creates ficon</td>
+</tr>
+
+<tr>
+<td><a href="cre_edit.htm">cre_edit</a></td>
+<td>Creates edit</td>
+</tr>
+
+<tr>
+<td><a href="get_edit.htm">get_edit</a></td>
+<td>Gets edit string</td>
+</tr>
+
+<tr>
+<td><a href="show_win.htm">show_win</a></td>
+<td>Displays window</td>
+</tr>
+
+<tr>
+<td><a href="wait_win.htm">wait_win</a></td>
+<td>Waits for event</td>
+</tr>
+
+<tr>
+<td><a href="del_win.htm">del_win</a></td>
+<td>Deletes window or subwindow</td>
+</tr>
+
+<tr>
+<td><a href="textl_w.htm">textl_win</a></td>
+<td>Length of text in pixels</td>
+</tr>
+
+<tr>
+<td><a href="texth_w.htm">texth_win</a></td>
+<td>Height of text in pixels</td>
+</tr>
 </TABLE>
-</BLOCKQUOTE>
 
-<P>&nbsp;</P>
-
-<P>
-<HR width="100%" align="center"></P>
-
-
-
-</FONT></P></CENTER>
-
-<CENTER><TABLE CELLSPACING=10 CELLPADDING=0 >
-<TR>
-<TD><A HREF="../index.htm">VARKON Homepage</A></TD>
-
-<TD><A HREF="mfupindx.htm">Index</A></TD>
-</TR>
-</TABLE></CENTER>
-
-</BODY>
-</HTML>
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

@@ -171,7 +171,7 @@ static  struct syspf                 /* System names                       */
 
 #ifdef VARKON
             systab[ ] =
-              { 
+              {
                {"POI_FREE",    ST_PROC,    FALSE,   ST_GEO,   VPOI},
                {"POI_PROJ",    ST_PROC,    FALSE,   ST_GEO,   VPOIP},
                {"LIN_FREE",    ST_PROC,    FALSE,   ST_GEO,   VLINF},
@@ -247,14 +247,14 @@ static  struct syspf                 /* System names                       */
               };
 
 static  struct syspf addtab1[ ] =       /* System names  - add on table 1 */
-              {  
+              {
                {"TANG",        ST_FUNC,    FALSE,   ST_GEO,   VTANG},
                {"CENTRE",      ST_FUNC,    FALSE,   ST_GEO,   VCENTRE},
                {"",            ST_UNDEF,   FALSE,   ST_ORD,   ST_UNDEF}
               };
 
 static  struct syspf addtab2[ ] =       /* System names  - add on table 2 */
-              {  
+              {
                {"GETID",             ST_FUNC,     FALSE,  ST_ORD,    VGTID},
                {"GETHDR",            ST_PROC,     FALSE,  ST_ORD,    VGTHDR},
                {"GETPOI",            ST_PROC,     FALSE,  ST_ORD,    VGTPOI},

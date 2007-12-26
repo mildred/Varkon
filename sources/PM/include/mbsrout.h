@@ -36,18 +36,18 @@
 #define VLINF     3    /*evlifr      LIN_FREE    */
 #define VLINP     4    /*evlipr      LIN_PROJ    */
 #define VLINA     5    /*evlian      LIN_ANG     */
-#define VLINO     6    /*evliof      LIN_OFS     */
+#define VLINO     6    /*evliof      LIN_OFFS    */
 #define VLINT1    7    /*evlit1      LIN_TAN1    */
 #define VLINT2    8    /*evlit2      LIN_TAN2    */
-#define VARCF     9    /*evarfr      ARC_FREE    */
+#define VARCF     9    /*evarfr      ARC_1POS    */
 #define VARC2P   10    /*evar2p      ARC_2POS    */
 #define VARC3P   11    /*evar3p      ARC_3POS    */
-#define VARCO    12    /*evarof      ARC_OFS     */
+#define VARCO    12    /*evarof      ARC_OFFS    */
 #define VARCFI   13    /*evarfl      ARC_FIL     */
 #define VCURF    14    /*evcufr      CUR_FREE   Utgått ! */
 #define VCURP    15    /*evcupr      CUR_PROJ   Utgått ! */
 #define VCURO    16    /*evcuro      CUR_OFFS    */
-#define VCOMP    17    /*evcomp      COMP        */
+#define VCOMP    17    /*evcomp      CUR_COMP    */
 #define VXHT     18    /*evxht       XHATCH      */
 #define VPART    19    /*evpart      PART        */
 #define VIONSUR  20    /*evions      INV_ON_SUR  */
@@ -59,7 +59,7 @@
 #define VCDIM    26    /*evcdim      CDIM        */
 #define VRDIM    27    /*evrdim      RDIM        */
 #define VADIM    28    /*evadim      ADIM        */
-#define VACOS    29    /*evacos      ARCSIN      */
+#define VACOS    29    /*evacos      ARCCOS      */
 #define VASIN    30    /*evasin      ARCSIN      */
 #define VATAN    31    /*evatan      ARCTAN      */
 #define VCOS     32    /*evcos       COS         */
@@ -117,7 +117,7 @@
 #define VASCII   70    /*evasci      ASCII       */
 #define VSTR     71    /*evstr       STR         */
 #define VCHR     72    /*evchr       CHR         */
-#define VVAL     73    /*evval       VAL         */
+#define VVAL     73    /*evval       VAL         To be removed ? */
 #define VLENGTH  74    /*evleng      LENGTH      */
 #define VSUBSTR  75    /*evsubs      SUBSTR      */
 #define VOPEN    76    /*evopen      OPEN        */
@@ -202,7 +202,7 @@
 #define VACVIN  135   /*evavin      ACT_VNAM    */
 #define VACPEN  136   /*evapen      ACT_PEN     */
 #define VACSCL  137   /*evascl      ACT_SCL     */
-#define VACDSCL 138   /*evadsc      ACT_DSCL    */
+#define VACDSCL 138   /*evadsc      ACT_DSCL    Removed ! */
 #define VACCAC  139   /*evacac      ACT_CACC    */
 #define VACGRX  140   /*evagrx      ACT_GRIDX   */
 #define VACGRY  141   /*evagry      ACT_GRIDY   */
@@ -210,7 +210,7 @@
 #define VACGRDY 143   /*evagdy      ACT_GRIDDY  */
 #define VACGRID 144   /*evagrd      ACT_GRID    */
 #define VACJOBN 145   /*evajbn      ACT_JOBNAM  */
-#define VACMTYP 146   /*evamtp      ACT_MTYPE   */
+#define VACMTYP 146   /*evamtp      ACT_MTYPE   Removed ! */
 #define VACMATR 147   /*evamat      ACT_MATTR   */
 #define VACJOBD 148   /*evajbd      ACT_JOBDIR  */
 #define VACLFNT 149   /*evalft      ACT_LFONT   */
@@ -248,7 +248,7 @@
 #define VLINPER 173   /*evlipe      LIN_PERP    */
 
 /*
-***Nya rutiner fï¿½ databaskommunikation Maj 87 
+***174 - 186 Not used.
 */
 #define VDBOP   174   /*evdbop      DB_OPEN     */
 #define VDBBG   175   /*evdbbg      DB_BEGIN    */
@@ -493,9 +493,9 @@
 #define VODBCGS    334  /*evodgs      ODBC_GETSTRING    */
 #define VODBCDC    335  /*evoddc      ODBC_DISCONNECT   */
 #define VODBCER    336  /*evoder      ODBC_ERROR        */
-#define VPUTDAT    337  /*evpdat      PUTDAT            */
-#define VGETDAT    338  /*evgdat      GETDAT            */
-#define VDELDAT    339  /*evddat      DELDAT            */
+#define VPUTDAT    337  /*evpdat      PUTDAT_GM         */
+#define VGETDAT    338  /*evgdat      GETDAT_GM         */
+#define VDELDAT    339  /*evddat      DELDAT_GM         */
 #define VCRAYNPES  340  /*evcrnp      CRAY_NUM_PES      */
 #define VCRAYMYPE  341  /*evcrmp      CRAY_MY_PE        */
 #define VSECGRAV   342  /*evsecg      SECTION_CGRAV     */

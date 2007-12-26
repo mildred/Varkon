@@ -8,7 +8,7 @@
 *
 *    This file includes the following routines:
 *
-*    evalev();     Evaluates ACT_LEV
+*    evalev();     Evaluates ACT_LEVEL
 *    evablk();     Evaluates ACT_BLANK
 *    evavin();     Evaluates ACT_VNAM
 *    evapen();     Evaluates ACT_PEN
@@ -88,7 +88,7 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
 
         short evalev()
 
-/*      Evaluate MBS function ACT_LEV().
+/*      Evaluate MBS function ACT_LEVEL().
  *
  *      Out: Global *func_vp  =  Active level.
  *

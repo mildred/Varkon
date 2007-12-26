@@ -1,175 +1,149 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
 
-<head>
-<title>Graphical routines</title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
-
-<body bgcolor="#99CCFF">
-
-<p><img src="../v3lg-s.jpg" hspace="30" border="2" height="33" width="36" align="LEFT"><br>
-</p>
-
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
-
-<hr width="100%" align="center">
-
-<blockquote>
-  <h1>Graphical routines<br>
-  </h1>
-</blockquote>
-
-<blockquote>
-  <table width="686" border="0">
-<!-- Table 11 Row 01 -->
-    <tr>
-      <td width="114"><a href="cre_view.htm">cre_view</a></td>
-      <td width="564">Creates view</td>
-    </tr>
-<!-- Table 11 Row 02 -->
-    <tr>
-      <td width="114"><a href="get_view.htm">get_view</a></td>
-      <td width="564">Returns view data</td>
-    </tr>
-<!-- Table 11 Row 03 -->
-    <tr>
-      <td width="114"><a href="act_view.htm">act_view</a></td>
-      <td width="564">Activates view</td>
-    </tr>
-<!-- Table 11 Row 04 -->
-    <tr>
-      <td width="114"><a href="scl_view.htm">scl_view</a></td>
-      <td width="564">Scales view</td>
-    </tr>
-<!-- Table 11 Row 05 -->
-    <tr>
-      <td width="114"><a href="cen_view.htm">cen_view</a></td>
-      <td width="564">Moves view</td>
-    </tr>
-<!-- Table 11 Row 06 -->
-    <tr>
-      <td width="114"><a href="cac_view.htm">cacc_view</a></td>
-      <td width="564">Sets curve accuracy</td>
-    </tr>
-<!-- Table 11 Row 07 -->
-    <tr>
-      <td width="114"><a href="hid_view.htm">hide_view</a></td>
-      <td width="564">Removes hidden lines</td>
-    </tr>
-<!-- Table 11 Row 08 -->
-    <tr>
-      <td width="114"><a href="shade_vi.htm">shade_view</a></td>
-      <td width="564">Creates shaded image</td>
-    </tr>
-<!-- Table 11 Row 09 -->
-    <tr>
-      <td width="114"><a href="light_vi.htm">light_view</a></td>
-      <td width="564">Configures light sources</td>
-    </tr>
-<!-- Table 11 Row 10 -->
-    <tr>
-      <td width="114"><a href="light_on.htm">light_on</a></td>
-      <td width="564">Turns light source on</td>
-    </tr>
-<!-- Table 11 Row 11 -->
-    <tr>
-      <td width="114"><a href="light_of.htm">light_off</a></td>
-      <td width="564">Turns light source off</td>
-    </tr>
-<!-- Table 11 Row 12 -->
-    <tr>
-      <td width="114"><a href="material.htm">material_view</a></td>
-      <td width="564">Configures materials</td>
-    </tr>
-<!-- Table 11 Row 13 -->
-    <tr>
-      <td width="114"><a href="cre_col.htm">cre_color</a></td>
-      <td width="564">Defines RGB-color</td>
-    </tr>
-<!-- Table 11 Row 14 -->
-    <tr>
-      <td width="114"><a href="per_view.htm">perp_view</a></td>
-      <td width="564">Sets perspective distance</td>
-    </tr>
-<!-- Table 11 Row 15 -->
-    <tr>
-      <td width="114"><a href="msz_view.htm">msize_view</a></td>
-      <td width="564">Returns size of model</td>
-    </tr>
-<!-- Table 11 Row 16 -->
-    <tr>
-      <td width="114"><a href="era_view.htm">erase_view</a></td>
-      <td width="564">Erases view</td>
-    </tr>
-<!-- Table 11 Row 17 -->
-    <tr>
-      <td width="114"><a href="rep_view.htm">rep_view</a></td>
-      <td width="564">Repaints view</td>
-    </tr>
-<!-- Table 11 Row 18 -->
-    <tr>
-      <td width="114"><a href="blan_lev.htm">blank_lev</a></td>
-      <td width="564">Blanks a level</td>
-    </tr>
-<!-- Table 11 Row 19 -->
-    <tr>
-      <td width="114"><a href="unbl_lev.htm">unblank_lev</a></td>
-      <td width="564">Unblanks a level</td>
-    </tr>
-<!-- Table 11 Row 20 -->
-    <tr>
-      <td width="114"><a href="get_lev.htm">get_lev</a></td>
-      <td width="564">Returns level data</td>
-    </tr>
-<!-- Table 11 Row 21 -->
-    <tr>
-      <td width="114"><a href="plot_win.htm">plot_win</a></td>
-      <td width="564">Plots to a file</td>
-    </tr>
-<!-- Table 11 Row 22 -->
-    <tr>
-      <td width="114"><a href="grid_v.htm">grid_view</a></td>
-      <td width="564">Turns grid on/off</td>
-    </tr>
-<!-- Table 11 Row 23 -->
-    <tr>
-      <td width="114"><a href="gridx_v.htm">gridx_view</a></td>
-      <td width="564">Sets grid position</td>
-    </tr>
-<!-- Table 11 Row 24 -->
-    <tr>
-      <td width="114"><a href="gridy_v.htm">gridy_view</a></td>
-      <td width="564">Sets grid position</td>
-    </tr>
-<!-- Table 11 Row 25 -->
-    <tr>
-      <td width="114"><a href="griddx_v.htm">griddx_view</a></td>
-      <td width="564">Sets grid size</td>
-    </tr>
-<!-- Table 11 Row 26 -->
-    <tr>
-      <td width="114"><a href="griddy_v.htm">griddy_view</a></td>
-      <td width="564">Sets grid size</td>
-    </tr>
-  </table>
-</blockquote>
-
-<p>&nbsp;</p>
-
-<hr width="100%" align="center">
+m4_include(../../include/header.inc)
 
 
+<h1>Viewing and graphics routines</h1>
 
-</small></p>
-<div align="center"><center>
+<table cellpadding="3">
 
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mfupindx.htm">Index</a></td>
-  </tr>
+<tr>
+<th align="left" bgcolor="#c0c0c0">MBS name</th>
+<th align="left" bgcolor="#c0c0c0">Description</th>
+</tr>
+
+<tr>
+<td><a href="cre_view.htm">cre_view</a></td>
+<td>Creates view</td>
+</tr>
+
+<tr>
+<td><a href="get_view.htm">get_view</a></td>
+<td>Returns view data</td>
+</tr>
+
+<tr>
+<td><a href="act_view.htm">act_view</a></td>
+<td>Activates view</td>
+</tr>
+
+<tr>
+<td><a href="scl_view.htm">scl_view</a></td>
+<td>Scales view</td>
+</tr>
+
+<tr>
+<td><a href="cen_view.htm">cen_view</a></td>
+<td>Moves view</td>
+</tr>
+
+<tr>
+<td><a href="cac_view.htm">cacc_view</a></td>
+<td>Sets curve accuracy</td>
+</tr>
+
+<tr>
+<td><a href="hid_view.htm">hide_view</a></td>
+<td>Removes hidden lines</td>
+</tr>
+
+<tr>
+<td><a href="shade_vi.htm">shade_view</a></td>
+<td>Creates shaded image</td>
+</tr>
+
+<tr>
+<td><a href="light_vi.htm">light_view</a></td>
+<td>Configures light sources</td>
+</tr>
+
+<tr>
+<td><a href="light_on.htm">light_on</a></td>
+<td>Turns light source on</td>
+</tr>
+
+<tr>
+<td><a href="light_of.htm">light_off</a></td>
+<td>Turns light source off</td>
+</tr>
+
+<tr>
+<td><a href="material.htm">material_view</a></td>
+<td>Configures materials</td>
+</tr>
+
+<tr>
+<td><a href="cre_col.htm">cre_color</a></td>
+<td>Defines RGB-color</td>
+</tr>
+
+<tr>
+<td><a href="per_view.htm">perp_view</a></td>
+<td>Sets perspective distance</td>
+</tr>
+
+<tr>
+<td><a href="msz_view.htm">msize_view</a></td>
+<td>Returns size of model</td>
+</tr>
+
+<tr>
+<td><a href="era_view.htm">erase_view</a></td>
+<td>Erases view</td>
+</tr>
+
+<tr>
+<td><a href="rep_view.htm">rep_view</a></td>
+<td>Repaints view</td>
+</tr>
+
+<tr>
+<td><a href="blan_lev.htm">blank_level</a></td>
+<td>Blanks a level</td>
+</tr>
+
+<tr>
+<td><a href="unbl_lev.htm">unblank_level</a></td>
+<td>Unblanks a level</td>
+</tr>
+
+<tr>
+<td><a href="get_lev.htm">get_level</a></td>
+<td>Returns level data</td>
+</tr>
+
+<tr>
+<td><a href="plot_win.htm">plot_win</a></td>
+<td>Plots to a file</td>
+</tr>
+
+<tr>
+<td><a href="grid_v.htm">grid_view</a></td>
+<td>Turns grid on/off</td>
+</tr>
+
+<tr>
+<td><a href="gridx_v.htm">gridx_view</a></td>
+<td>Sets grid position</td>
+</tr>
+
+<tr>
+<td><a href="gridy_v.htm">gridy_view</a></td>
+<td>Sets grid position</td>
+</tr>
+
+<tr>
+<td><a href="griddx_v.htm">griddx_view</a></td>
+<td>Sets grid size</td>
+</tr>
+
+<tr>
+<td><a href="griddy_v.htm">griddy_view</a></td>
+<td>Sets grid size</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)
