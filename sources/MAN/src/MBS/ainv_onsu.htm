@@ -5,26 +5,25 @@ m4_define({_STYLE_},{../varkonstyle.css})
 m4_include(../../include/header.inc)
 
 
-<h1>inv_on_sur - Function</h1>
+<h1>all_inv_on_sur - Procedure</h1>
 
 <h2>Description<h2>
 
 <p>
-Returns the parameter value (u,v) of the position on a surface which
-is closest to a given point in R3.
+Returns all the positions on a surface which are close to a given point in R3.
 </p>
 
 <h2>Syntax<h2>
 
 <pre>
-  uv_pos:=inv_on_sur(surface, pos, order, sno, start);
+  all_inv_on_sur(surface, pos, order, n_pos, uv, xyz);
 
   ref    surface;
   vector pos;
   int    order;
-  int    sno;
-  vector start;
-  vector uv_pos;
+  int    n_pos;
+  vector uv();
+  vector xyz();
 </pre>
 
 <h2>Principal parameters</h2>
@@ -57,8 +56,8 @@ is closest to a given point in R3.
 </tr>
 
 <tr>
-<td>sno</td>
-<td>- Requested solution number</td>
+<td>n_pos</td>
+<td>- Output number of solutions</td>
 </tr>
 
 </table>
@@ -68,34 +67,20 @@ is closest to a given point in R3.
 
 <table>
 <tr>
-<td>start</td>
-<td>- Start UV position for the calculation</td>
+<td>uv</td>
+<td>- (u,v) solution values</td>
+</tr>
+
+<tr>
+<td>xyz</td>
+<td>- (x,y,z) solution values</td>
 </tr>
 </table>
-
-
-<h2>Return value</h2>
-
-<p>
-uv_pos is the (u,v) parameter value for the closest point on the surface.
-The third component of uv_pos will be negative if there is no closest point.
-</p>
-
-<h2>Example</h2>
-
-<pre>
-  uv_pos:=inv_on_sur(#5, vec(100,100,100), 1, 1);
-</pre>
-
-<p>
-The parameter value on surface #5 for the point which is closest to the R*3
-point (X, Y, Z)=(100,100,100).
-</p>
 
 <h2>Comments</h2>
 
 <p>
-The input point does not need to be exactly on the referenced surface.
+See <a href="inv_onsu.htm">inv_on_sur</a> for related information.
 </p>
 
 m4_include(../../include/svnversion.inc)

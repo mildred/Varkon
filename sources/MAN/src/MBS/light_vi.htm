@@ -2,7 +2,7 @@
 <html>
 
 <head>
-<title>light_view </title>
+<title>cre_light</title>
 <meta name="GENERATOR" content="Microsoft FrontPage 3.0">
 </head>
 
@@ -13,7 +13,7 @@
 <hr width="100%" align="center">
 
 <blockquote>
-  <h2>light_view - <small><small>Procedure</small></small></h2>
+  <h2>cre_light - <small><small>Procedure</small></small></h2>
   <p>Configures a lightsource<br>
   <br>
   <br>
@@ -38,7 +38,7 @@
   <br>
   <b>Syntax<br>
   </b><br>
-  light_view(light, pos, spotpos, spotang, spotfocus)<br>
+  cre_light(light, pos, spotpos, spotang, spotfocus)<br>
   <br>
   </p>
   <table width="665" border="0">
@@ -111,16 +111,16 @@
   <br>
   <b>Examples<br>
   </b><br>
-  light_view(0, vec(1,1,1));<br>
+  cre_light(0, vec(1,1,1));<br>
   <br>
   Makes lightsource 0 a distant light shining in the direction from (1,1,1) to (0,0,0).<br>
   <br>
-  light_view(1, vec(100,50,0), vec(20,20,10), 25, 50);<br>
+  cre_light(1, vec(100,50,0), vec(20,20,10), 25, 50);<br>
   <br>
   Makes lightsource 1 a spotlight placed in (100,50,0) aimed at (20,20,10) with a spotangle
   of 25 degrees and 50% focus.<br>
   <br>
-  light_view(1, vec(100,50,0), vec(20,20,10), 180, 50);<br>
+  cre_light(1, vec(100,50,0), vec(20,20,10), 180, 50);<br>
   <br>
   Same as above but the light becomes distant because of spotang = 180. Parameters spotpos
   and spotfocus are left without notice.<br>

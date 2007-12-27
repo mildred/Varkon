@@ -5,18 +5,18 @@ m4_define({_STYLE_},{../varkonstyle.css})
 m4_include(../../include/header.inc)
 
 
-<h1>get_edit - Function</h1>
+<h1>upd_edit - Procedure</h1>
 
 <h2>Description</h2>
 
 <p>
-Gets the text currently displayed in an edit.
+Updates the text currently displayed in an edit.
 </p>
 
 <h2>Syntax</h2>
 
 <pre>
-  text:=get_edit(window, edit);
+  upd_edit(window, edit, text);
 
   int    window;
   int    edit;
@@ -35,6 +35,11 @@ Gets the text currently displayed in an edit.
 <td>edit</td>
 <td>- The id of the edit.</td>
 </tr>
+
+<tr>
+<td>text</td>
+<td>- The text to display.</td>
+</tr>
 </table>
 
 <h2>Optional parameters</h2>
@@ -45,12 +50,6 @@ Gets the text currently displayed in an edit.
 <td></td>
 </tr>
 </table>
-
-<h2>Return value</h2>
-
-<p>
-A string holding a copy of the text displayed in the edit.
-</p>
 
 m4_include(../../include/svnversion.inc)
 m4_include(../../include/footer.inc)
