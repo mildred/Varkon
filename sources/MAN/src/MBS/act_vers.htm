@@ -1,75 +1,48 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
 
-<head>
-<title>act_varkon_vers</title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
-
-<body bgcolor="#99CCFF">
-
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
-
-<hr width="100%" align="center">
-
-<blockquote>
-  <h2>act_varkon_vers - <small><small>Function</small></small></h2>
-  <p>Active version<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the version of the current VARKON software.<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  act_varkon_vers()<br>
-  <br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 03 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 04 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <b><u><br>
-  </u></b>A STRING containing the version. The format is as follows:<br>
-  <br>
-  major_version_number followed by a period followed by minor_version_number followed by
-  revision_letter<br>
-  <br>
-  Example: 1.14C</p>
-</blockquote>
-
-<hr width="100%" align="center">
+m4_include(../../include/header.inc)
 
 
+<h1>act_varkon_version - Function</h1>
 
-</small></p>
-<div align="center"><center>
+<h2>Description</h2>
 
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="statindx.htm">Index</a></td>
-  </tr>
-</table>
-</center></div>
-</body>
-</html>
+<p>
+Returns the current Varkon version formatted as major_number.minor_number.revision_letter.
+A new Varkon version is usually the same as a new packaged release. Note that between
+packaged releases (which only occur one or a few times per year) the latest development
+sources are available from the SVN repository. Each update to the SVN repository gets
+a new SVN version number.
+</p>
+
+<h2>Syntax</h2>
+
+<pre>
+  varkon_vers:=act_varkon_version();
+
+  string varkon_vers;
+</pre>
+
+<h2>Principal parameters</h2>
+
+<p>None.</p>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+
+<h2>Return value</h2>
+
+<p>A string value equal to the current Varkon version.</p>
+
+<h2>Comments</h2>
+
+<p>
+See also: <a href="act_svnv.htm">act_svn_version</a>
+</p>
+
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)

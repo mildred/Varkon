@@ -55,7 +55,7 @@ static short (*functab[])() =
      NULL,      NULL,    evvecp,      NULL,      NULL, /* 59 */
      NULL,      NULL,      NULL,      NULL,     evvec,
      NULL,      NULL,      NULL,      NULL,      NULL, /* 69 */
-   evasci,     evstr,     evchr,     evval,    evleng,
+   evasci,     evstr,     evchr,      NULL,    evleng,
    evsubs,
 /*
 ***When building xvarkon all routines are included.
@@ -63,25 +63,24 @@ static short (*functab[])() =
 #else
      NULL,    evpofr,    evpopr,    evlifr,    evlipr,  /* 04 */
    evlian,    evliof,    evlit1,    evlit2,    evarfr,  /* 09 */
-   evar2p,    evar3p,    evarof,    evarfl,    evcufr,  /* 14 */
-   evcupr,    evcuro,    evcomp,    evxht,     NULL,    /* 19 */
+   evar2p,    evar3p,    evarof,    evarfl,    inmiss,  /* 14 */
+   inmiss,    evcuro,    evcomp,    evxht,     NULL,    /* 19 */
    evions,    evtext,    evpinc,    evcs3p,    evgrp,   /* 24 */
    evldim,    evcdim,    evrdim,    evadim,    evacos,  /* 29 */
-   evasin,    evatan,
-   evcos,     evsin,     evtan,     evnlog,    evlogn,
-   evsqrt,    evabs,     evfrac,    evroud,    evtrnc,
-   evgref,    evldgm,    evsvgm,
+   evasin,    evatan,    evcos,     evsin,     evtan,   /* 34 */
+   evnlog,    evlogn,    evsqrt,    evabs,     evfrac,  /* 39 */
+   evroud,    evtrnc,    evgref,    evldgm,    evsvgm,
    inmiss,    inmiss,    inmiss,    inmiss,    evncui,  /* 49 */
    eveval,    evfins,    evarcl,    evtang,    evcen,
    evsect,    evon,      evvecp,    evidnt,    evpos,   /* 59 */
    evscr,     evbpln,    evmolo,    evmogl,    evvec,
    evset,     evos,      evvecl,    evvecn,    evangl,  /* 69 */
-   evasci,    evstr,     evchr,     evval,     evleng,
+   evasci,    evstr,     evchr,     inmiss,    evleng,
    evsubs,    evopen,    evseek,    evouti,    evoutf,  /* 79 */
    evouts,    evoutl,    evoutb,    evinii,    evinif,
    evinis,    evinl,     evinb,     evfpos,    evclos,  /* 89 */
-   eviost,    evgtid,    evghdr,    evgpoi,    evglin,
-   evgarc,    evgcur,    evgtrf,    evgtxt,    evgxht,  /* 99 */
+   eviost,    inmiss,    evghdr,    evgpoi,    evglin,
+   evgarc,    inmiss,    evgtrf,    evgtxt,    evgxht,  /* 99 */
    evgldm,    evgcdm,    evgrdm,    evgadm,    evggrp, 
    evgcsy,    NULL,      evgprt,    evgtyp,    evgint,  /* 109 */
    evgflt,    evgstr,    evgvec,    evsymb,    evtrim,
@@ -89,9 +88,9 @@ static short (*functab[])() =
    evacvi,    evscvi,    evcevi,    evervi,    evrpvi,
    evcavi,    inmiss,    evtime,    evrstr,    evrval,  /* 129 */
    evrefc,    evlsin,    evlsex,    evlsln,    evablk,
-   evavin,    evapen,    evascl,    evadsc,    evacac,  /* 139 */
+   evavin,    evapen,    evascl,    inmiss,    evacac,  /* 139 */
    evagrx,    evagry,    evagdx,    evagdy,    evagrd,
-   evajbn,    evamtp,    evamat,    evajbd,    evalft,  /* 149 */
+   evajbn,    inmiss,    evamat,    evajbd,    evalft,  /* 149 */
    evaaft,    evaxft,    evaldl,    evaadl,    evaxdl,
    evatsi,    evatwi,    evatsl,    evadts,    evadas,  /* 159 */
    evadnd,    evadau,    evglor,    evpspt,    evpopt,
@@ -115,7 +114,7 @@ static short (*functab[])() =
    evmoba,    evssar,    evscar,    evsapp,    evscom,
    evstrm,    evgtop,    evgcub,    evgrat,    evcusa,  /* 259 */
    evcuca,    evcfan,    evcged,    evcapp,    evrunm,
-   evapid,    evavvr,    evavsr,    evaost,    evahst,  /* 269 */
+   inmiss,    evavvr,    inmiss,    evaost,    evahst,  /* 269 */
    evufnm,    evrand,    evails,    evaios,    evappf,
    evdelf,    evmovf,    evcopf,    evtstf,    evgenv,  /* 279 */
    evgrid,    evgrix,    evgriy,    evgrdx,    evgrdy,

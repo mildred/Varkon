@@ -29,3 +29,4 @@ Conventions used in the Varkon documentation are:
 5. Use <img class="center" src="image_file"></img> for images.
 6. Use <pre class="box">Some text</pre> for MBS code examples etc.
 7. Use <code>alt1/alt2/alt3</code> to refer to menu selections.
+8. When refering to Varkon always use Uppercase "V" and lower case "arkon".

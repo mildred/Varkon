@@ -3,15 +3,14 @@
 *    exget1.c
 *    ========
 *
-*    EXgtid();      Interface routine for GETID   
-*    EXgthd();      Interface routine for GETHDR  
+*    EXgthd();      Interface routine for GETHDR
 *    EXgwdt();      Interface routine for GETWIDTH
-*    EXpdat();      Interface routine for PUTDAT 
-*    EXgdat();      Interface routine for GETDAT 
-*    EXddat();      Interface routine for DELDAT 
-*    EXgtpo();      Interface routine for GETPOI 
-*    EXgtli();      Interface routine for GETLIN 
-*    EXgtar();      Interface routine for GETARC 
+*    EXpdat();      Interface routine for PUTDAT
+*    EXgdat();      Interface routine for GETDAT
+*    EXddat();      Interface routine for DELDAT
+*    EXgtpo();      Interface routine for GETPOI
+*    EXgtli();      Interface routine for GETLIN
+*    EXgtar();      Interface routine for GETARC
 *    EXgtcu();      Interface routine for GETCURH
 *    EXgtop();      Interface routine for GETTOPP
 *    EXgcub();      Interface routine for GETCUBP
@@ -21,9 +20,9 @@
 *    EXgtld();      Interface routine for GETLDM
 *    EXgtcd();      Interface routine for GETCDM
 *    EXgtrd();      Interface routine for GETRDM
-*    EXgtad();      Interface routine for GETADM 
-*    EXgtgp();      Interface routine for GETGRP 
-*    EXgtcs();      Interface routine for GETCSY 
+*    EXgtad();      Interface routine for GETADM
+*    EXgtgp();      Interface routine for GETGRP
+*    EXgtcs();      Interface routine for GETCSY
 *    EXgttf();      Interface routine for GETTRF
 *    EXgtbp();      Interface routine for GETBPL
 *
@@ -53,65 +52,6 @@
 #include "../../IG/include/IG.h"
 #include "../include/EX.h"
 
-/*!******************************************************/
-
-        short EXgtid(
-        DBId    *id,
-        char    *code)
-
-/*      Interface-rutin för GETID. Hämtar identitet
- *      ur GM.
- *
- *      In: id     => Pekare till identitet.
- *          code   =>
- *
- *      Ut:
- *
- *      FV:       0 => Ok.
- *           EX1592 => Otillåten funktionskod.
- *           EX1603 => Fel från DBget_pointer().
- *
- *      (C)microform ab 29/3/86 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-    DBptr  la;
-    DBetype  typ;
-    short  status;
-
-/*
-***Hämta la, om "F"irst, ett extra anrop till DBget_pointer().
-*/
-    status = DBget_pointer(code[0],id,&la,&typ);
-
-    if ( code[0] == 'F' ) status = DBget_pointer('N',id,&la,&typ);
-/*
-***Översätt la till ID.
-*/
-    if ( status == 0 )
-      {
-      DBget_id(la,id);
-      return(0);
-      }
-    else if ( status == -4 )
-      {
-      return(erpush("EX1592",""));
-      }
-    else if ( status == -5 )
-      {
-      id[0].seq_val = 0;
-      id[0].ord_val = 1;
-      id[0].p_nextre = NULL;
-      return(0);
-      }
-    else
-      {
-      return(erpush("EX1603",""));
-      }
-  }
-
-/********************************************************/
 /*!******************************************************/
 
         short EXgthd(

@@ -231,7 +231,6 @@ short EXplwi(DBint w_id, DBVector *p1, DBVector *p2, char *filnam, DBVector *p0)
 /*
 ***exget1.c
 */
-short EXgtid(DBId *id, char *code);
 short EXgthd(DBId *id, DBHeader *header);
 short EXgwdt(DBId *id, DBfloat *width);
 short EXpdat(char *key, DBint typ, DBint size, DBint count, char *datpek);
@@ -458,8 +457,6 @@ void  EXmsini();
 */
 short EXecur(DBId *id, DBCurve *curpek, DBSeg *grsegp,
              DBSeg *gesegp, V2NAPA *pnp);
-short EXcufr(DBId *id, DBVector *pv, DBVector *tv, DBshort npoi, V2NAPA *pnp);
-short EXcupr(DBId *id, DBVector *pv, DBVector *tv, DBshort npoi, V2NAPA *pnp);
 short EXcurs(DBId *id, DBint type, DBVector *pv, DBVector *tv,
              DBint npoi, V2NAPA *pnp);
 short EXcunu(DBId *id, DBVector *cpts, DBfloat *w, DBint ncpts,

@@ -14,11 +14,10 @@
 *    evfval();   evaluate FVAL
 *    evfins();   evaluate FINDS
 *
-*    evchr()     evaluate CHR function 
-*    evasci()    evaluate ASCII function 
-*    evstr()     evaluate STR function 
-*    evval()     evaluate VAL function
-*    evleng()    evaluate LENGTH function 
+*    evchr()     evaluate CHR function
+*    evasci()    evaluate ASCII function
+*    evstr()     evaluate STR function
+*    evleng()    evaluate LENGTH function
 *    evsubs()    evaluate SUBSTR function
 * 
 *    evglor()    evaluate GLOBAL_REF function
@@ -406,41 +405,6 @@ extern pm_ptr  *func_ty;
    sprintf( func_vp->lit.str_va, formstr, func_pv[1].par_va.lit.float_va );
 
    return( 0 );
-  }
-
-/********************************************************/
-/*!******************************************************/
-
-        short evval()
-
-/*      Evaluate function VAL.
- *
- *      In: Global  func_pv  => Parameter value array
- *
- *      Ut: Global *func_vp  =  Pointer to result value.
- *
- *      FV: Return - error severity code 
- *
- *      (C)microform ab 1985-10-23 Per-Ove Agne'
- *
- *      1999-11-13 Rewritten, R. Svedin
- *      2001-03-06 In-Param changed to Global variables, R Svedin
- *
- ******************************************************!*/
-
-  {
-/*
-*** execute VAL , result type FLOAT 
-*/
-   if ( sscanf(func_pv[1].par_va.lit.str_va,"%lf",&func_vp->lit.float_va) == 1 )
-     {
-     return(0);
-     }
-   else
-     {
-     func_vp->lit.float_va = 0.0;
-     return(0);
-    }
   }
 
 /********************************************************/

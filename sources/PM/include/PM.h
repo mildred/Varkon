@@ -238,7 +238,6 @@ short evavin(void);
 short evapen(void);
 short evawdt(void);
 short evascl(void);
-short evadsc(void);
 short evacac(void);
 short evagrx(void);
 short evagry(void);
@@ -246,7 +245,6 @@ short evagdx(void);
 short evagdy(void);
 short evagrd(void);
 short evajbn(void);
-short evamtp(void);
 short evamat(void);
 short evajbd(void);
 short evalft(void);
@@ -267,10 +265,8 @@ short evadas(void);
 short evadnd(void);
 short evadau(void);
 short evacsy(void);
-short evapid(void);
 short evavvr(void);
 short evasvr(void);
-short evavsr(PMLITVA *valp);
 short evaost(void);
 short evahst(void);
 
@@ -321,8 +317,6 @@ short evsetb(void);
 /*
 ***evcur.c
 */
-short evcufr(void);
-short evcupr(void);
 short evcurs(void);
 short evcusa(void);
 short evcuna(void);
@@ -391,7 +385,6 @@ short evuldl(void);
 */
 short evsrgm(void);
 short evgngm(void);
-short evgtid(void);
 short evgtyp(void);
 short evgint(void);
 short evgflt(void);
@@ -404,7 +397,6 @@ short evgwdt(void);
 short evgpoi(void);
 short evglin(void);
 short evgarc(void);
-short evgcur(void);
 short evgcuh(void);
 short evgseg(void);
 short evgsuh(void);
@@ -582,7 +574,6 @@ short evpart(V2REFVA *ident, PMPAST *partp);
 /*
 ***evplot.c
 */
-short evplvi(void);
 short evplwi(void);
 
 /*
@@ -595,23 +586,6 @@ short evpopr(void);
 ***evpinc.c
 */
 short evpinc(void);
-
-/*
-***evrdb.c
-*/
-short evdbop(void);
-short evdbbg(void);
-short evdbsl(void);
-short evdbup(void);
-short evdbin(void);
-short evdbdl(void);
-short evdben(void);
-short evdbrl(void);
-short evdbcl(void);
-short evdbfi(void);
-short evdbff(void);
-short evdbfs(void);
-short evdbnx(void);
 
 /*
 ***evrap.c
@@ -672,7 +646,6 @@ short evfins(void);
 short evchr(void);
 short evasci(void);
 short evstr(void);
-short evval(void);
 short evleng(void);
 short evsubs(void);
 
