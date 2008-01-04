@@ -16,7 +16,7 @@
 # If SVN is not used the script does nothing. In that
 # case the existing svnversion.h will be used.
 #
-# Latest update: 2007-12-03 S.Larsson
+# Latest update: 2008-01-04 S.Larsson
 #
 #####################################################
 #
@@ -24,9 +24,9 @@ if test -d ../.svn; then
   if which svnversion; then
     #only replace include file if this is a new version
     #start by making svnversion.tmp, then compare to existing svnversion.inc
-    echo -en "m4_define(_SVNVERSION_," > ./MAN/include/svnversion.tmp
+    printf 'm4_define(_SVNVERSION_,' > ./MAN/include/svnversion.tmp
     svnversion -n . >> ./MAN/include/svnversion.tmp
-    echo -e ")" >> ./MAN/include/svnversion.tmp
+    printf ')\n' >> ./MAN/include/svnversion.tmp
     svnversion_tmp=`cat ./MAN/include/svnversion.tmp`
     if test -r "./MAN/include/svnversion.inc" ; then
       svnversion_inc=`cat ./MAN/include/svnversion.inc`
@@ -35,9 +35,9 @@ if test -d ../.svn; then
       #replace the old svnversion.inc with the new svnversion.tmp
       cp ./MAN/include/svnversion.tmp ./MAN/include/svnversion.inc
       #also make svnversion.h 
-      echo -en "#define SVNVERSION \0042" > ./IG/include/svnversion.h
+      printf '#define SVNVERSION \"' > ./IG/include/svnversion.h
       svnversion -n . >> ./IG/include/svnversion.h
-      echo -e "\0042" >> ./IG/include/svnversion.h
+      printf '\"\n' >> ./IG/include/svnversion.h
     fi
     rm ./MAN/include/svnversion.tmp
   fi
