@@ -363,13 +363,12 @@ exit:
     char    istr[V3STRLEN+1];
 
 /*
-***Skapa referens till storhet som skall trimmas.
+***ID of entity to be trimmed.
 */
 start:
-    IGptma(352,IG_MESS);
+    WPaddmess_mcwin(IGgtts(352),WP_MESSAGE);
     typ1 = LINTYP+ARCTYP;
     if ( (status=IGgsid(id,&typ1,&end,&right,(short)0)) < 0 ) goto exit;
-    IGrsma();
 
     litval.lit_type = C_REF_VA;
     litval.lit.ref_va[0].seq_val = id[0].seq_val;
@@ -377,7 +376,7 @@ start:
     litval.lit.ref_va[0].p_nextre = id[0].p_nextre;
     pmclie(&litval,&exnpt1);
 /*
-***�nde.
+***End.
 */
     litval.lit_type = C_INT_VA;
     if ( end ) litval.lit.int_va = 1;
@@ -388,7 +387,6 @@ start:
 */
     typ2 = LINTYP+ARCTYP+CURTYP;
     if ( (status=IGcref (353,&typ2,&exnpt3,&end,&right)) < 0 ) goto exit;
-    IGrsma();
 /*
 ***Om sk�rning linje/linje, alt = -1.
 */
@@ -443,7 +441,6 @@ start:
 ***Slut.
 */
 exit:
-    IGrsma();
     WPerhg();
     return(status);
 /*

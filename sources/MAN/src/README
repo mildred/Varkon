@@ -11,8 +11,11 @@ created from the sources with the Makfile included in the
 VARKON_ROOT/sources/MAN/src directory.
 
 All documentation (except this README) is in html format.
+
 Documentation source pages usually #include a header and a
-footer located in VARKON_ROOT/sources/MAN/include.
+footer located in VARKON_ROOT/sources/MAN/include. The footer
+depends the file svnversion.inc to include the current SVN version
+number on each page.
 
 Each page also depends on a stylesheet, see
 VARKON_ROOT/sources/MAN/src/varkonstyle.css
@@ -30,3 +33,4 @@ Conventions used in the Varkon documentation are:
 6. Use <pre class="box">Some text</pre> for MBS code examples etc.
 7. Use <code>alt1/alt2/alt3</code> to refer to menu selections.
 8. When refering to Varkon always use Uppercase "V" and lower case "arkon".
+9. Use menu/create/line/offset etc. when referring to menu selections

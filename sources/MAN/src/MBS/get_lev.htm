@@ -1,99 +1,64 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+m4_changequote({,})
+m4_define({_TITLE_},{VARKON - Documentation})
+m4_define({_STYLE_},{../varkonstyle.css})
 
-<head>
-<title>get_lev </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
-
-<body bgcolor="#99CCFF">
-
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
-
-<hr width="100%" align="center">
-
-<blockquote>
-  <h2>get_level - <small><small>Procedure</small></small></h2>
-  <p>Returns level data<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns information about a level in the main window (ID = 0).<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  get_level(level, state, name)<br>
-  <br>
-  </p>
-  <table width="653" border="0">
-<!-- Table 10 Row 01 -->
-    <tr>
-      <td width="72">INT</td>
-      <td width="573">level;</td>
-    </tr>
-<!-- Table 10 Row 02 -->
-    <tr>
-      <td width="72">INT</td>
-      <td width="573">state;</td>
-    </tr>
-<!-- Table 10 Row 03 -->
-    <tr>
-      <td width="72">STRING</td>
-      <td width="573">name*10;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="653" border="0">
-<!-- Table 11 Row 01 -->
-    <tr>
-      <td width="62">level</td>
-      <td width="583">- The level to return information about</td>
-    </tr>
-<!-- Table 11 Row 02 -->
-    <tr>
-      <td width="62">state</td>
-      <td width="583">- 0 = Unblanked (visible), 1 = Blanked (unvisible)</td>
-    </tr>
-<!-- Table 11 Row 03 -->
-    <tr>
-      <td width="62">name</td>
-      <td width="583">- Levelname or &quot;&quot; if the level has no name</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 12 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Comments<br>
-  </b><br>
-  get_level() can only return information about a level in the main window.</p>
-</blockquote>
-
-<hr width="100%" align="center">
+m4_include(../../include/header.inc)
 
 
+<h1>get_level - Procedure</h1>
 
-</small></p>
-<div align="center"><center>
 
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="grapindx.htm">Index</a></td>
-  </tr>
+<h2>Description</h2>
+
+<p>
+Returns information about a level.
+</p>
+
+<h2>Syntax</h2>
+
+<pre>
+  get_level(level, window, state, name);
+
+  int    level;
+  int    window;
+  int    state;
+  string name;
+</pre>
+
+<h2>Principal parameters</h2>
+
+<table>
+<tr>
+<td>level</td>
+<td>- The level. A number from 0 to 1999.</td>
+</tr>
+
+<tr>
+<td>window</td>
+<td>- The ID of the graphical window.</td>
+</tr>
+
+<tr>
+<td>state</td>
+<td>- An int variable to recieve the state of the level.<br>
+      &nbsp;&nbsp;0 = Unblanked (visible), 1 = Blanked (invisible)</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<table>
+<tr>
+<td>name</td>
+<td>- A string variable to recieve the level name.</td>
+</tr>
+</table>
+
+<h2>Comments</h2>
+
+<p>
+Each graphical viewing window has it's individual level state but all graphical viewing windows share the same name table. This means that a level can be blanked in one window and unblanked in another window but have the same name in both windows. Default graphic viewing window has ID = 0.
+</p>
+
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)
