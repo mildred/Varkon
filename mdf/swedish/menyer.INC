@@ -1,6 +1,6 @@
 ! Swedish menus for Varkon 2.0
 
-m1  = "VARKON-RITNING"
+m1  = "VARKON-EXPLICIT"
       "arkiv",m5
       "skapa",m11
       "redigera",m49
@@ -56,16 +56,12 @@ m11 = "SKAPA"
 
 m12 = "YTOR"
       "bplan",f26
-      "rotation",f158
-      "cylinder",f160
-      "svept",f181
       "regel",f182
-      "loftad",f238
+      "cylinder",f160
+      "rotation",f158
+      "svept",f181
       "offset",f159
-      "approx",f235
-      "trimmad",f234
-      "sammansatt",f236
-      "importera",f237;
+      "approx",f235;
 
 m15 = "ÄNDRA"
       "penna",f7
@@ -130,8 +126,8 @@ m24 = "EXPORTERA"
       "PLT",f151;
 
 m25 = "KOORDSYSTEM"
-      "3 pos",f105
-      "pos/vinkel",f9;
+      "pos/vinkel",f9
+      "3 pos",f105;
 
 m30 = "LÄNGDMÅTT"
       "horisontellt",f30
@@ -151,13 +147,13 @@ m39 = "IMPORTERA"
       "PLT",f145;
 
 m40 = "LINJE"
-      "2f två pos",f22
-      "2p projicerad",f41
-      "pl parallell",f23
-      "v  vinkelrät",f54
-      "pv pos/vinkel",f24
-      "pt pos/tan",f28
-      "t  tan/tan",f29;
+      "två pos",f22
+      "projicerad",f41
+      "parallell",f23
+      "pos/vinkel",f24
+      "vinkelrät",f54
+      "pos/tan",f28
+      "tan/tan",f29;
 
 m45 = "SPARA SOM"
       "JOB-fil",f119
@@ -201,7 +197,6 @@ m60 = "KURVOR"
       "trimmad",f232
       "isoparam",f230
       "skärning",f183
-      "siluett",f233
       "approx",f231;
 
 m62 = "DOLDA KONT"

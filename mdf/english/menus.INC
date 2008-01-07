@@ -1,6 +1,6 @@
 ! English menus for Varkon 2.0
 
-m1  = "VARKON-DRAFTING"
+m1  = "VARKON-EXPLICIT"
       "file",m5
       "create",m11
       "edit",m49
@@ -56,16 +56,12 @@ m11 = "CREATE"
 
 m12 = "SURFACE"
       "bplane",f26
-      "rotational",f158
-      "cylinder",f160
-      "sweep",f181
       "ruled",f182
-      "lofted",f238
+      "cylinder",f160
+      "rotational",f158
+      "sweep",f181
       "offset",f159
-      "approx",f235
-      "trimmed",f234
-      "composite",f236
-      "import",f237;
+      "approx",f235;
 
 m15 = "EDIT"
       "pen",f11
@@ -129,9 +125,9 @@ m24 = "EXPORT"
       "STL",M1625
       "PLT",f151;
 
-m25 = "COORDSYS"
-      "3 pos",f105
-      "pos/angles",f9;
+m25 = "COORD SYS"
+      "pos/angles",f9
+      "3 pos",f105;
 
 m30 = "LINEAR DIMENSION"
       "horizontal",f30
@@ -151,13 +147,13 @@ m39 = "IMPORT"
       "PLT",f145;
 
 m40 = "LINE"
-      "2f two pos",f22
-      "2p projected",f41
-      "pl parallell",f23
-      "pr perpendicular",f54
-      "pa pos/angle ",f24
-      "pt pos/tan",f28
-      "t  tan/tan",f29;
+      "two pos",f22
+      "projected",f41
+      "parallell",f23
+      "pos/angle ",f24
+      "perpendicular",f54
+      "pos/tan",f28
+      "tan/tan",f29;
 
 m45 = "SAVE AS"
       "JOB-file",f119
@@ -201,7 +197,6 @@ m60 = "CURVES"
       "trimmed",f232
       "isoparam",f230
       "intersect",f183
-      "silhouette",f233
       "approx",f231;
 
 m62 = "HIDE"
