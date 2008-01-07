@@ -140,9 +140,9 @@ m33 = "DIAMETER DIMENSION"
       "parallell",f35;
 
 m39 = "IMPORT"
-      "IGES",p1624
       "DXF-2D",p388
       "DXF-3D",p389
+      "IGES",p1624
       "STL",p1623
       "PLT",f145;
 

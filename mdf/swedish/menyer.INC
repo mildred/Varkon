@@ -140,9 +140,9 @@ m33 = "DIAMETERMÅTT"
       "parallellt",f35;
 
 m39 = "IMPORTERA"
-      "IGES",p1624
       "DXF-2D",p388
       "DXF-3D",p389
+      "IGES",p1624
       "STL",p1623
       "PLT",f145;
 
