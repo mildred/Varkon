@@ -35,9 +35,9 @@ if test -d ../.svn; then
       #replace the old svnversion.inc with the new svnversion.tmp
       cp ./MAN/include/svnversion.tmp ./MAN/include/svnversion.inc
       #also make svnversion.h 
-      printf '#define SVNVERSION \"' > ./IG/include/svnversion.h
+      printf '\x23define SVNVERSION \x22' > ./IG/include/svnversion.h
       svnversion -n . >> ./IG/include/svnversion.h
-      printf '\"\n' >> ./IG/include/svnversion.h
+      printf '\x22\n' >> ./IG/include/svnversion.h
     fi
     rm ./MAN/include/svnversion.tmp
   fi
