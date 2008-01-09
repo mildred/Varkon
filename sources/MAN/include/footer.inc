@@ -1,6 +1,6 @@
-<hr style="margin-top:4em; margin-bottom:4px"/>
+<hr style="margin-top:4em; margin-bottom:2px"/>
 
-<p style="margin:0">Varkon version 1.19B SVN&#35;
+<p style="margin:0;font-size:0.8em">Varkon version 1.19B svn&#35;
 _SVNVERSION_</p>
 
 </body>

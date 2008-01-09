@@ -31,7 +31,7 @@ h2
   margin-top: 2.0em;
   margin-bottom: 0.8em;
   font-family: Helvetica, Geneva, Arial, SunSans-Regular, sans-serif; 
-  font-size: 1.4em
+  font-size: 1.3em
   }
 
 
@@ -45,22 +45,26 @@ pre
 
 pre.box
   {
-  background-color: #CCE7FF;
-  padding: 1em 
+  background-color: #AFD5FF;
+  padding: 0.8em;
+  font-size: 0.9em
   }
 
 
 
 code
   {
-  font-family: Courier, "Courier New", monospace
+  font-family: Courier, "Courier New", monospace;
   }
 
 img 
   {
   margin-top: 1em;
   margin-bottom: 1em;
-  border: 0
+  border: 0;
+  display: block;
+  margin-left: auto;
+  margin-right: auto;
   }
 
 img.center {
@@ -68,6 +72,13 @@ img.center {
   margin-left: auto;
   margin-right: auto;
 }
+
+img.left {
+  display: block;
+  margin-left: 0;
+  margin-right: auto;
+}
+
 
 a:link 
   {
@@ -84,8 +95,62 @@ hr
   margin-top:1em;
   margin-bottom:1em;
   border:0;
-  color:#000080;
-  background-color: #0000a0;
+  color:#000000;
+  background-color: #000000;
   height: 1px
   }
+
+table
+  {
+  margin-top: 1em;
+  margin-bottom: 2em;
+  border: 0
+  }
+
+td
+  {
+  padding-right:1em;
+  padding-left:0.2em;
+  padding-top:0.3em;
+  padding-bottom:0.3em;
+  }
+
+th
+  {
+  padding-right:1em;
+  padding-left:0.2em;
+  padding-top:0.3em;
+  padding-bottom:0.3em;
+  background-color: #c0c0c0;
+  font-weight: bold;
+  text-align:left
+  }
+
+
+div#horisontal_list
+  {
+  }
+
+div#horisontal_list ul
+  {
+  margin-left: 0;
+  padding-left: 0;
+  }
+
+div#horisontal_list li
+  {
+  list-style-type: none;
+  display: inline;
+  padding-right:2em;
+  padding-left:0;
+  padding-top:0.3em;
+  padding-bottom:0.3em;
+  }
+
+
+
+
+
+
+
 
