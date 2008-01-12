@@ -8,7 +8,7 @@
 *
 *    This file includes:
 *
-*    WPview_dialogue();       The view dialogue
+*    WPview_dialog();         The view dialog
 *    WPinit_views();          Creates default views
 *    WPcreate_view();         Adds a view to wpviewtab[]
 *    WPdelete_view();         Deletes a view in wpviewtab[]
@@ -40,6 +40,8 @@
 #include <math.h>
 #include <string.h>
 
+extern int actfunc; /* For the help system */
+
 /*
 ***wpviewtab[] holds named WPVIEW's for graphical windows.
 */
@@ -51,7 +53,7 @@ static int  iwin_y;          /* even after a user move */
 
 /*!******************************************************/
 
-         short WPview_dialogue(DBint grw_id)
+         short WPview_dialog(DBint grw_id)
 
 /*      The view dialogue.
  *
@@ -75,7 +77,7 @@ static int  iwin_y;          /* even after a user move */
             helptt[81];
    char    *typ[20];
    int      n_views,actalt,i,rad,radant,wm_x1,wm_y1,wm_x2,wm_y2,
-            wintype;
+            wintype,actfunc_org;
    short    status,main_dx,main_dy,alt_x,alt_y,uph,lowh,uplen,
             lowlen1,lowlen2,dx_up,dx_low,ly,lm;
    DBint    iwin_id,alt_id[WP_IWSMAX],but_id,help_id,close_id,
@@ -398,6 +400,11 @@ start:
    XPutBackEvent(xdisp,&event);
    WPgtwp(iwinpt->id.x_id,&wm_x1,&wm_y1);
 /*
+***Set actfunc during user action, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 102;
+/*
 ***Wait for action.
 */
    status = 0;
@@ -601,9 +608,10 @@ update:
    WPwdel(iwin_id);
    goto start;
 /*
-***Time to exit.
+***Time to exit. Reset global actfunc and remeber window position.
 */
 exit:
+   actfunc = actfunc_org;
    WPgtwp(iwinpt->id.x_id,&wm_x2,&wm_y2);
    iwin_x = iwin_x + wm_x2 - wm_x1;
    iwin_y = iwin_y + wm_y2 - wm_y1;

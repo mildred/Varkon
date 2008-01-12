@@ -717,19 +717,19 @@ evloop:
 ***The view dialogue, f102.
 */
                case 102:
-               WPview_dialogue(rwinpt->id.w_id);
+               WPview_dialog(rwinpt->id.w_id);
                break;
 /*
 ***The grid dialogue, f103.
 */
                case 103:
-               WPgrid_dialogue(rwinpt->id.w_id);
+               WPgrid_dialog(rwinpt->id.w_id);
                break;
 /*
 ***The levels dialogue, f197.
 */
                case 197:
-               WPlevels_dialogue(rwinpt->id.w_id);
+               WPlevel_dialog(rwinpt->id.w_id);
                break;
 /*
 ***Some other function.

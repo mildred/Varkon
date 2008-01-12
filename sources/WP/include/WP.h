@@ -374,7 +374,7 @@ short WPdelete_slidebar(WPSBAR *sbptr);
 ***wpviews.c
 */
 short WPinit_views();
-short WPview_dialogue(DBint grw_id);
+short WPview_dialog(DBint grw_id);
 short WPcreate_view(WPVIEW *view, int status);
 short WPcampos_to_matrix(DBVector *campos, VYTRF *matrix);
 short WPreload_view(DBint win_id);
@@ -387,7 +387,7 @@ short WPgtvi(DBint win_id, char *vynamn, double *skala, double *xmin,
 /*
 ***wplevels.c
 */
-short WPlevels_dialogue(DBint grw_id);
+short WPlevel_dialog(DBint grw_id);
 short WPmtsl(DBint win_id, int first, int last, int mode);
 bool  WPnivt(unsigned char *lvltab, int level);
 
@@ -614,7 +614,7 @@ short WPdxf_out(WPGWIN *gwinpt, FILE *filpek, WPVIEW *plotvy, DBVector *origo);
 /*
 ***wpgrid.c
 */
-short WPgrid_dialogue(DBint grw_id);
+short WPgrid_dialog(DBint grw_id);
 short WPdraw_grid(wpw_id grw_id);
 short WPdelete_grid(wpw_id grw_id);
 short WPget_grid(double *ox,double *oy,double *dx, double *dy,bool *on);

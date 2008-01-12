@@ -22,9 +22,6 @@ OBJECTS = ../lib/PLlib.a(pl1.o)         \
           ../lib/PLlib.a(pl5.o)         \
           ../lib/PLlib.a(pl6.o)
 
-# PLlib.a depends on the objects. 
-PLLIB : $(OBJECTS)
-
 # Objects depend on sources implicitly and sources depend
 # on the following include-files.
 
@@ -47,6 +44,9 @@ HPCL5: hpcl5.c           $(OBJECTS) $(INCFILES)
 HPGL2 : hpgl2.c          $(OBJECTS) $(INCFILES)
 	$(COMPILE) hpgl2.c      ../lib/PLlib.a ../../IG/src/igenvpath.c  -lm -o ../../../bin/hpgl2
 	strip ../../../bin/hpgl2
+
+# PLlib.a depends on the objects. 
+PLLIB : $(OBJECTS)
 
 clean:
 	rm -f ../lib/PLlib.a

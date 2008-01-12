@@ -170,8 +170,8 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f100 - */
 
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f101 - */
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f102 - */
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f103 - */
+ {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f102 WPview_dialog() */
+ {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f103 WPgrid_dialog() */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f104 - */
  {IGcsy_3p,          FALSE, EXPLICIT+GENERIC}, /* f105 Create coordinate system with 3 pos */
 
@@ -284,7 +284,7 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f195 - */
 
  {IGcreate_gwin,     FALSE, EXPLICIT+GENERIC}, /* f196 Create new WPGWIN */
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f197 - */
+ {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f197 WPlevel_dialog() */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f198 - */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f199 - */
  {IGcreate_rwin,     FALSE, EXPLICIT+GENERIC}, /* f200 Create new WPRWIN */

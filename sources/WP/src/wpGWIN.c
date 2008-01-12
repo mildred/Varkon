@@ -662,11 +662,11 @@ static void cre_toolbar(WPGWIN *gwinpt);
             switch ( actnum )
               {
               case 102:
-              WPview_dialogue(gwinpt->id.w_id);
+              WPview_dialog(gwinpt->id.w_id);
               break;
 
               case 103:
-              WPgrid_dialogue(gwinpt->id.w_id);
+              WPgrid_dialog(gwinpt->id.w_id);
               break;
 
               case 150:
@@ -698,7 +698,7 @@ static void cre_toolbar(WPGWIN *gwinpt);
               break;
 
               case 197:
-              WPlevels_dialogue(gwinpt->id.w_id);
+              WPlevel_dialog(gwinpt->id.w_id);
               break;
 
               default:

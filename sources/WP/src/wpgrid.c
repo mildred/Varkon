@@ -6,7 +6,7 @@
 *    This file is part of the VARKON Graphics  Library.
 *    URL: http://www.varkon.com
 *
-*    WPgrid_dialogue();  The grid dialogue
+*    WPgrid_dialog();    The grid dialog
 *    WPdraw_grid();      Display grid
 *    WPdelete_grid();    Undisplay grid
 *    WPget_grid();       Get grid data
@@ -38,15 +38,16 @@
 
 #include <math.h>
 
-extern DBTmat   lklsyi,*lsyspk;
+extern DBTmat lklsyi,*lsyspk;
+extern int    actfunc;            /* For the help system */
 
 #ifdef UNIX
 extern Display *xdisp;
 #endif
 
-static bool   premiere = TRUE;               /* True only for the first invocation */
-static int    iwin_x;                        /* The current position of the window */
-static int    iwin_y;                        /* even after a user move */
+static bool   premiere = TRUE;    /* True only for the first invocation */
+static int    iwin_x;             /* The current position of the window */
+static int    iwin_y;             /* even after a user move */
 
 /*
 ***Prototypes for internal functions.
@@ -56,7 +57,7 @@ static short get_resolution(WPGWIN *gwinpt, double *pdx, double *pdy);
 
 /*!******************************************************/
 
-         short WPgrid_dialogue(DBint grw_id)
+         short WPgrid_dialog(DBint grw_id)
 
 /*      The grid dialogue.
  *
@@ -72,7 +73,7 @@ static short get_resolution(WPGWIN *gwinpt, double *pdx, double *pdy);
             edittt[81],showtt[81],hidett[81],bs1[81],bs2[81],
             closett[81],helptt[81];
    char    *typ[20];
-   int      bh,wm_x1,wm_y1,wm_x2,wm_y2,butlen,bl1,bl2;
+   int      bh,wm_x1,wm_y1,wm_x2,wm_y2,butlen,bl1,bl2,actfunc_org;
    short    status,main_dx,main_dy,alt_x,alt_y,butlen1,butlen2,ly,lm;
    DBint    iwin_id,move_id,edit_id,show_id,hide_id,close_id,
             help_id,but_id;
@@ -279,6 +280,11 @@ start:
    XPutBackEvent(xdisp,&event);
    WPgtwp(iwinpt->id.x_id,&wm_x1,&wm_y1);
 /*
+***Set actfunc during user action, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 103;
+/*
 ***Wait for action. SMBPOSM is not an issue in this situation.
 */
    status = 0;
@@ -372,9 +378,10 @@ update:
    WPwdel(iwin_id);
    goto start;
 /*
-***Time to exit. Remeber the current position.
+***Time to exit. Reset global actfunc. Remeber current position.
 */
 exit:
+   actfunc = actfunc_org;
    WPgtwp(iwinpt->id.x_id,&wm_x2,&wm_y2);
    iwin_x = iwin_x + wm_x2 - wm_x1;
    iwin_y = iwin_y + wm_y2 - wm_y1;

@@ -8,7 +8,7 @@
 *
 *    This file includes:
 *
-*    WPlevels_dialogue();   The levels dialogue
+*    WPlevel_dialog();      The level dialog
 *    WPmtsl();              Blank/unblank range of levels
 *    WPnivt();              Check if level is visible
 *
@@ -34,6 +34,8 @@
 #include "../include/WP.h"
 #include <math.h>
 #include <string.h>
+
+extern int    actfunc;           /* For the help system */
 
 #define LISTMAX 100              /* The maximum number of levels to list */
 
@@ -62,10 +64,10 @@ static void update_names();
 
 /*!******************************************************/
 
-        short WPlevels_dialogue(
+        short WPlevel_dialog(
         DBint grw_id)
 
-/*      The levels dialogue.
+/*      The levels dialog.
  *
  *      In:  grw_id = ID of WPGWIN/WPRWIN.
  *
@@ -77,7 +79,8 @@ static void update_names();
    short    status;
    int      i,ly,lm,level,numlen,namelen,statlen,uph,lowh,
             scrllen,wm_x1,wm_y1,main_dx,main_dy,nplus,nminus,
-            wm_x2,wm_y2,lowlen1,lowlen2,n1,n2,space,alt_x,alt_y;
+            wm_x2,wm_y2,lowlen1,lowlen2,n1,n2,space,alt_x,alt_y,
+            actfunc_org;
    unsigned int dum1,dum2; 
    bool     level_status;
    char     numstr[81],namstr[81],level_name[V3STRLEN+1],
@@ -366,6 +369,11 @@ start:
    edtptr = (WPEDIT *)iwinpt->wintab[range_id].ptr;
    WPfoed(edtptr,TRUE);
 /*
+***Set actfunc during user action, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 197;
+/*
 ***Force an expose on the dialogue to make sure that the new windows
 ***in the list are displayed immediately.
 */
@@ -529,9 +537,10 @@ loop:
      goto loop;
      }
 /*
-***Time to exit. Remember the window position.
+***Time to exit. Reset actfunc and remember the window position.
 */
 exit:
+   actfunc = actfunc_org;
    WPgtwp(iwinpt->id.x_id,&wm_x2,&wm_y2);
    iwin_x = iwin_x + wm_x2 - wm_x1;
    iwin_y = iwin_y + wm_y2 - wm_y1;
