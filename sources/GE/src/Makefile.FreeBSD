@@ -1,8 +1,8 @@
 ##########################################################
 #
-#   Makefile for GElib on freeBSD
+#   Makefile for GE on FreeBSD
 #
-#  (C)Microform AB 1999-03-30 J.Kjellander
+#  (C)2008-01-12 J.Kjellander
 #
 ##########################################################
 
@@ -11,19 +11,18 @@ RM = rm -f
 CC ?= gcc
 
 CFLAGS +=                    \
-            -ansi                       \
-            -pedantic                   \
-            -Wall                       \
-            -ffloat-store               \
-            -fsigned-char               \
-            -fwritable-strings          \
-            -O                          \
+            -ansi            \
+            -pedantic        \
+            -Wall            \
+            -ffloat-store    \
+            -fsigned-char    \
+            -O               \
             -DUNIX
 
 debug :     CFLAGS += -g
 
-gpl   :     CFLAGS +=                    \
-            -O                          \
+gpl   :     CFLAGS +=        \
+            -O               \
             -DUNIX
 
 COMPILE = $(CC) -c $(CFLAGS)

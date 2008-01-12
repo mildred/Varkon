@@ -1,8 +1,8 @@
 ##########################################################
 #
-#   Makefile for PMlib on FreeBSD
+#   Makefile for PM on FreeBSD
 #
-#  (C)Microform AB 1999-03-30 J.Kjellander
+#  (C)2008-01-12 J.Kjellander
 #
 ##########################################################
 
@@ -15,7 +15,8 @@ CFLAGS +=   -ansi                       \
             -Wall                       \
             -ffloat-store               \
             -fsigned-char               \
-            -O -I/usr/X11R6/include \
+            -O                          \
+            -I/usr/X11R6/include        \
             -DUNIX
 
 debug :      CFLAGS += -g -DDEBUG
@@ -23,6 +24,5 @@ debug :      CFLAGS += -g -DDEBUG
 COMPILE = $(CC) -c $(CFLAGS)
 
 include Makefile.PM
-
 
 ################################################################

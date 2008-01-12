@@ -1,6 +1,6 @@
 ##########################################################
 #
-#   Makefile for PM on GNU/Linux
+#   Makefile for PM on MacOSX
 #
 #  (C)2008-01-12 J.Kjellander
 #
@@ -18,7 +18,8 @@ distr :     CFLAGS =                    \
             -fsigned-char               \
             -O                          \
             -DUNIX                      \
-            -DVARKON
+            -DVARKON                    \
+            -I/usr/X11R6/include
 
 debug :      CFLAGS =                   \
             -ansi                       \
@@ -28,7 +29,8 @@ debug :      CFLAGS =                   \
             -g3                         \
             -DDEBUG                     \
             -DUNIX                      \
-            -DVARKON
+            -DVARKON                    \
+            -I/usr/X11R6/include
 
 COMPILE = $(CC) -c $(CFLAGS)
 

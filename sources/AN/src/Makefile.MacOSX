@@ -1,6 +1,6 @@
 ##########################################################
 #
-#   Makefile for mbsc on FreeBSD
+#   Makefile for mbsc on MacOSX
 #
 #  (C)2008-01-12 J.Kjellander
 #
@@ -8,9 +8,9 @@
 
 RM = rm -f
 
-CC ?= gcc
+CC = gcc
 
-CFLAGS += -ansi \
+CFLAGS = -ansi \
          -Wall \
          -ffloat-store \
          -fsigned-char \
@@ -18,9 +18,10 @@ CFLAGS += -ansi \
          -D_POSIX_SOURCE \
          -DUNIX \
          -DANALYZER \
+         -DVARKON \
          -I/usr/X11R6/include
 
-LDFLAGS = -L/usr/X11R6/lib
+LDFLAGS =
 
 COMPILE = $(CC) -c $(CFLAGS)
 

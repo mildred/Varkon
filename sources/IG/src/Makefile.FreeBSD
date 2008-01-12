@@ -1,8 +1,8 @@
 ##########################################################
 #
-#   Makefile for IGlib with gcc and FreeBSD
+#   Makefile for IGlib on FreeBSD
 #
-#  (C)Microform AB 1999-02-15 J.Kjellander
+#  (C)2008-01-12 J.Kjellander
 #
 ##########################################################
 

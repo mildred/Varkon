@@ -7,9 +7,9 @@
 *    to build and install Varkon 1.19B from the C-
 *    and MBS sources.
 *
-*    2007-08-04 J.Kjellander
+*    2008-01-12 J.Kjellander
 *
-*    http://www.tech.oru.se/cad/varkon 
+*    URL: http://varkon.sourceforge.net
 *
 ******************************************************************/
 
@@ -44,7 +44,7 @@
     sources directory. See the MBS manual pages for i"ODBC
     database routines" for instructions how to communicate
     with an external database.
- 
+
 7.  Run make by just typing 'make' in a terminal window
     while you are positioned in the sources directory.
     Make will then build and install the new binaries. You
@@ -59,6 +59,6 @@
 
     Good luck,
 
-    http://www.tech.oru.se/cad/varkon 
+    The Varkon development team
 
 /**********************************************************************/

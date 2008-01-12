@@ -30,18 +30,13 @@
 
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
-#ifdef UNIX
 #include "../../WP/include/WP.h"
-#endif
 #include "../include/EX.h"
 #include <string.h>
 
 #ifdef WIN32
 #include <io.h>
 #endif 
-
-
-extern short ialy,ialx;
 
 #ifdef WIN32
 extern int msilse();

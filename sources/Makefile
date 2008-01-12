@@ -3,7 +3,7 @@
 #   Makefile for Varkon version 1.19
 #   --------------------------------
 #
-#   2007-11-28 S.Larsson 
+#   2007-11-28 S.Larsson
 #
 ##########################################
 
@@ -21,6 +21,7 @@ PLATFORM=linux
 #PLATFORM=hpux
 #PLATFORM=sun
 #PLATFORM=FreeBSD
+#PLATFORM=MacOSX
 
 # Uncomment the line below to include routines for Robot
 # Application Protocol (RAP). Only on Linux platform.
@@ -33,8 +34,6 @@ PLATFORM=linux
 # Uncomment the line below to include routines specific
 # for Örebro University.
 # DV3ORU=TRUE
-
-
 
 #=========================================================
 # End build options
@@ -62,8 +61,6 @@ distr debug:
 	mkdir -p ./PL/lib
 	mkdir -p ../bin
 	mkdir -p ../tmp
-	#mkdir -p ../pid
-	#mkdir -p ../app
 	mkdir -p ../man
 
 # If SVN is used, update includefile with current SVNVERSION.
@@ -82,7 +79,11 @@ distr debug:
 	@make -C AN -C src -f Makefile.$(PLATFORM)
 
 # Make plotter programs
-	@make -C PL -C src -f Makefile.$(PLATFORM) all
+	@make -C PL -C src -f Makefile.$(PLATFORM) PLLIB
+	@make -C PL -C src -f Makefile.$(PLATFORM) POSTSCRIPT
+	@make -C PL -C src -f Makefile.$(PLATFORM) HPCL5
+	@make -C PL -C src -f Makefile.$(PLATFORM) HPGL2
+	@make -C PL -C src -f Makefile.$(PLATFORM) HP7475
 
 # Make vlib
 	@make -C Vlib -f Makefile
@@ -98,6 +99,7 @@ clean:
 	@make -C WP -C src -f Makefile.$(PLATFORM) clean
 	@make -C GE -C src -f Makefile.$(PLATFORM) clean
 	@make -C AN -C src -f Makefile.$(PLATFORM) clean
+	@make -C PL -C src -f Makefile.$(PLATFORM) clean
 	@make -C MAN -C src -f Makefile clean
 	@make -C Vlib -f Makefile clean
 	rm -f -r ../bin

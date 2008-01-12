@@ -1,9 +1,9 @@
 ##########################################################
 #
-#   Makefile.linux
-#   --------------
+#   Makefile.MacOSX
+#   ---------------
 #
-#   Top level makefile for Varkon with GNU/Linux
+#   Top level makefile for Varkon with MacOSX
 #
 #  (C)2008-01-12 J.Kjellander
 #
