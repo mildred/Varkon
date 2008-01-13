@@ -325,7 +325,7 @@ start:
 ***Border curves.
 */
    cur.fnt_cu = 0;
-   cur.lgt_cu = 0;    
+   cur.lgt_cu = 0;
 
    for ( bcount=0; bcount<surpek->ngrwborder_su; bcount++ ) 
      {
