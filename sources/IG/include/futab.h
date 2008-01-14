@@ -251,7 +251,7 @@ static FUATTR futab[] =
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f167 - */
  {IGedst,            FALSE, GENERIC},          /* f168 Edit MBS statement */
  {IGanrf,            FALSE, GENERIC},          /* f169 Analyze references */
- {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f170 - */
+ {IGcptw,            FALSE, EXPLICIT+GENERIC}, /* f170 Edit part parameters */
 
  {IGctfn,            FALSE, EXPLICIT+GENERIC}, /* f171 Edit TFONT */
  {notimpl,           FALSE, EXPLICIT+GENERIC}, /* f172 - */
