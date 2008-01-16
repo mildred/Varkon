@@ -13,7 +13,7 @@ m4_include(../../include/header.inc)
 Ini-files are used by Varkon to initialize GUI related parameters and
 values during startup (in the X-windows community such things are called
 "resources"). The standard Varkon distribution includes a default ini-file
-but you can also create an application specific ini-file with settings that
+but you can also create a personal ini-file with settings that
 will override the default values. With the ini-file you can control things
 like:
 </p>
@@ -34,6 +34,30 @@ like:
 See the comments in the ini-file for a complete description of
 the resources defined and how they influence the behavior
 of the user interface.
+</p>
+
+<h2>Personal ini files</h2>
+
+<p>
+Each time you start Varkon, Varkon will load the default ini-file.
+The default ini-file is specified in the Varkon start script. See
+<a href="start_script.htm">start script</a>. It is also possible
+to instruct Varkon to load a second ini-file. A setting in the
+second file will override the same setting in the first file.
+</p>
+
+<p>
+You can use this mechanism to create your own personal ini-file.
+To avoid that your personal ini-file will be lost if you update
+your Varkon system to a newer version you should keep your
+personal ini-file in a location on your hard disc outside
+the Varkon root directory.
+</p>
+
+<p>
+To configure Varkon to use your personal ini-file, edit the
+line that starts the Varkon executable according to the
+instructions given in the default start script.
 </p>
 
 m4_include(../../include/svnversion.inc)

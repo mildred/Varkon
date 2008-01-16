@@ -35,12 +35,23 @@ varkon.mbsedit.autocompile:     True
 varkon.mbsedit.autoexec:        True
 !*
 !***varkon.html_viewer is used by the help-system to spawn a
-!***HTML-browser. If this resource is defined VARKON will send
+!***HTML-browser. If this resource is defined Varkon will send
 !***the required helpfile to the browser. If not defined
-!***VARKON will display the file $VARKON_DOC/no_html_viewer.txt
-!***in a VARKON list window.
+!***Varkon will display the file $VARKON_DOC/no_html_viewer.txt
+!***in a list window.
 !*
-varkon.html_viewer:             konqueror
+!***Suse Linux with KDE can use Konqueror
+!varkon.html_viewer:             konqueror
+!
+!***Many Linux systems use firefox or seamonkey
+!varkon.html_viewer:             firefox
+!varkon.html_viewer:             seamonkey
+!
+!***Mozilla may also work
+!varkon.html_viewer:             mozilla
+!
+!***The following line will spawn the default browser on MacOSX systems
+!varkon.html_viewer:             open
 !*
 !***Default graphic window. You may use more if you want.
 !*
@@ -142,8 +153,8 @@ varkon.rwin.icon_6.tooltip:     Blank, unblank or list levels
 !***Resources for the system mode dialogue.
 !*
 varkon.mode.what:               What do you want to do now ?
-varkon.mode.explicit:            - Edit or create a drawing (RES-file)
-varkon.mode.generic:             - Edit or create a module (MBO-file)
+varkon.mode.explicit:            - Edit or create a RES-file
+varkon.mode.generic:             - Edit or create a module
 varkon.mode.learnmore:           - Learn more about VARKON
 varkon.mode.exit:                - Exit
 !*

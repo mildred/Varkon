@@ -2,7 +2,7 @@
 !*
 !*    Resursfil för VARKON 1.19 för Linux.
 !*
-!*    (C)2007 J.Kjellander
+!*    (C)2008 J.Kjellander
 !*
 !*
 !*    Vid uppstart laddar UNIX-versionen av VARKON resurser i
@@ -75,15 +75,24 @@ varkon.mbsedit.autoexec:        True
 !***aktuell hjälpfil till den angivna browsern. Om den inte är
 !***definierad listar VARKON ett felmeddelande i ett listfönster.
 !*
-varkon.html_viewer:             konqueror
+!***Suse Linux med KDE kan använda Konqueror
+!varkon.html_viewer:             konqueror
+!
+!***Många Linux system använder också firefox eller seamonkey
 !varkon.html_viewer:             firefox
-!varkon.html_viewer:             netscape
+!varkon.html_viewer:             seamonkey
+!
+!***Mozilla kan fungera
+!varkon.html_viewer:             mozilla
+!
+!***På MacOSX system kan man prova följande
+!varkon.html_viewer:             open
 !*
 !***Texter för mode-dialogen.
 !*
 varkon.mode.what:               Vad vill du göra nu ?
-varkon.mode.explicit:           - Ändra eller skapa en ritning (RES-fil)
-varkon.mode.generic:            - Ändra eller skapa en modul (MBO-fil)
+varkon.mode.explicit:           - Ändra eller skapa en RES-fil
+varkon.mode.generic:            - Ändra eller skapa en modul
 varkon.mode.learnmore:          - Veta mer om VARKON
 varkon.mode.exit:               - Avsluta
 !*
