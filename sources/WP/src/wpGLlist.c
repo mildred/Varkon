@@ -1070,9 +1070,8 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
 */
    glTranslated(-rwinpt->movx,-rwinpt->movy,-fd);
 /*
-***Justera rotationskoefficienterna i den aktuella
-***OpenGL-matrisen s� att de motsvarar modellens aktuella
-***rotationsl�ge.
+***Adjust the current rotation coefficients with values
+***from the window. The mouse may have been moved.
 */
    glGetFloatv(GL_MODELVIEW_MATRIX,gl_matrix); 
    gl_matrix[ 0] = (GLfloat)rwinpt->vy.matrix.k11;
@@ -1089,22 +1088,22 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
    gl_matrix[11] = 0.0;
    glLoadMatrixf(gl_matrix);
 /*
-***Rotera modellen runt aktuella axlar. Gunnars kod.
+***Rotate the model.
 */
    glRotated(rwinpt->rotx,gl_matrix[0],gl_matrix[4],gl_matrix[8] );
    glRotated(rwinpt->roty,gl_matrix[1],gl_matrix[5],gl_matrix[9] );
 /*
-***Nollst�ll rotationsvinklar igen.
+***Clear rotaion angles in window.
 */
    rwinpt->rotx = 0.0;
    rwinpt->roty = 0.0;
 /*
-***Rotation runt Z, tills vidare ej supportad.
+***Rotation around Z currently not used.
 *
    glRotated(rwinpt->rotz,gl_matrix[ 2],gl_matrix[ 6],gl_matrix[10] );
    rwinpt->rotz = 0.0;
 *
-***Spara nya vymatrisen.
+***Remember the new model rotation.
 */
    glGetFloatv(GL_MODELVIEW_MATRIX,gl_matrix);
    rwinpt->vy.matrix.k11 = (DBfloat)gl_matrix[ 0];
@@ -1117,8 +1116,8 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
    rwinpt->vy.matrix.k23 = (DBfloat)gl_matrix[ 9];
    rwinpt->vy.matrix.k33 = (DBfloat)gl_matrix[10];
 /*
-***H�r kommer 1:a transformationen. Modellen
-***translateras till origo.
+***Here is the 1:st transformation. Model
+***translated back to the origin.
 */
    glTranslated(-midx,-midy,-midz);
 /*

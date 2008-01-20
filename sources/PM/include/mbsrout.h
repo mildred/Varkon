@@ -423,6 +423,7 @@
 #define VACLEVEL   389  /* evalev      ACT_LEVEL         */
 #define VNMLEVEL   390  /* evnmlv      NAME_LEVEL        */
 #define VASVNVERS  391  /* evasvr      ACT_SVN_VERS      */
+#define VGETMAT    392  /* evgtmt      GET_MATERIAL      */
 /*
 ***If you are building your own application,
 ***include your own file here.

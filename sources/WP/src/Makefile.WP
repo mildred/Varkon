@@ -49,7 +49,8 @@ OBJECTS = ../lib/WPlib.a(wpinit.o)       \
           ../lib/WPlib.a(wppen.o)        \
           ../lib/WPlib.a(wpGLlist.o)     \
           ../lib/WPlib.a(wpplot.o)       \
-          ../lib/WPlib.a(wpprint.o)      \
+          ../lib/WPlib.a(wpprint_X11.o)  \
+          ../lib/WPlib.a(wpprint_GL.o)   \
           ../lib/WPlib.a(wphide.o)       \
           ../lib/WPlib.a(wpDXF.o)        \
           ../lib/WPlib.a(wpgrid.o)       \

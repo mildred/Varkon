@@ -1,9 +1,9 @@
 /**********************************************************************
 *
-*    WPprint.c
-*    =========
+*    WPprint_X11.c
+*    =============
 *
-*    This file is part of the VARKON Graphics  Library.
+*    This file is part of the VARKON WindowPac library.
 *    URL: http://www.varkon.com
 *
 *    WPprint_dialogue();  The grid dialogue

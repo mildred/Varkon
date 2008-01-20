@@ -562,11 +562,15 @@ short         WPcini();
 short         WPccol(int pen, int red, int green, int blue);
 unsigned long WPgcol(int colnum);
 short         WPspen(int pen);
-short         WPgpen(int pen, int *red, int *green, int *blue);
+short         WPgpen(int pen, bool *defined, int *red, int *green, int *blue);
 short         WPspenGL(WPRWIN *rwinpt, int pen);
-short         WPcmat(int mtnum, DBfloat ar, gmflt ag, gmflt ab, gmflt dr, gmflt dg,
-                     DBfloat db, gmflt sr, gmflt sg, gmflt sb, gmflt er, gmflt eg,
-                     DBfloat eb, gmflt sh);
+short         WPcmat(int pen, int ar, int ag, int ab, int dr, int dg,
+                     int db,  int sr, int sg, int sb, int er, int eg,
+                     int eb,  int s);
+short         WPgmat(int pen, bool *defined, int *ar, int *ag, int *ab,
+                                             int *dr, int *dg, int *db,
+                                             int *sr, int *sg, int *sb,
+                                             int *er, int *eg, int *eb,  int *s);
 /*
 ***wplight.c
 */
@@ -636,9 +640,13 @@ void WPexpose_tooltip();
 short WPatdi();
 
 /*
-***wpprint.c
+***wpprint_X11.c
 */
 short WPprint_dialogue(DBint grw_id);
+/*
+***wpprint_GL.c
+*/
+short WPprint_GL(WPRWIN *rwinpt);
 
 /*
 ***wpDECRN.c

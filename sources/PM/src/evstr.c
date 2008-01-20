@@ -114,8 +114,8 @@ extern pm_ptr  *func_ty;
  ******************************************************!*/
 
   {
-    return(EXrval(  func_pv[1].par_va.lit.str_va,
-		           &func_vp->lit.ref_va[0]));
+    return(EXrval( func_pv[1].par_va.lit.str_va,
+                  &func_vp->lit.ref_va[0]));
   }
 
 /********************************************************/

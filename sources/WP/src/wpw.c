@@ -183,7 +183,7 @@ WPWIN wpwtab[WTABSIZ];
         XButtonEvent  *butev,
         wpw_id        *serv_id)
 
-/*      Button-rutinen f�r wpw-f�nstren. Kollar
+/*      Button handler WP windows. Kollar
  *      vilken typ av f�nster det �r och anropar
  *      r�tt rutin f�r jobbet.
  *

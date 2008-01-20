@@ -1,29 +1,29 @@
 m4_changequote({,})
 m4_define({_TITLE_},{Varkon MBS Programmers manual})
-m4_define({_SUBTITLE_},{- get_color - Procedure})
+m4_define({_SUBTITLE_},{- get_color - Function})
 m4_define({_INDEXLINK_},{<a href="grapindx.htm">index</a>})
 m4_define({_STYLE_},{../varkonstyle.css})
-
 m4_include(../../include/header.inc)
 
 
-<h1>get_color - Procedure</h1>
+<h1>get_color - Function</h1>
 
 <h2>Description</h2>
 
 <p>
-Returns the RGB color value for a specific pen (0-255).
+Returns the RGB color value for a pen.
 </p>
 
 <h2>Syntax</h2>
 
 <pre>
-  get_color(pen, red, green, blue);
+  status:=get_color(pen, red, green, blue);
 
   int pen;
   int red;
   int green;
   int blue;
+  int status;
 </pre>
 
 <h2>Principal parameters</h2>
@@ -56,10 +56,22 @@ Returns the RGB color value for a specific pen (0-255).
 
 <p>None.</p>
 
+<h2>Return value</h2>
+
+<p>
+Returns 0 if the pen is defined and -1 if the pen is not defined.
+</p>
+
 <h2>Comments</h2>
 
 <p>
-See also <a href="cre_col.htm">cre_color</a>
+See also:
+</p>
+
+<p>
+<a href="cre_col.htm">cre_color()</a>,
+<a href="cre_mat.htm">cre_material()</a>,
+<a href="get_mat.htm">get_material()</a>
 </p>
 
 m4_include(../../include/svnversion.inc)

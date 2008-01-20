@@ -153,7 +153,7 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
    if ( *grupp == '*' &&  *(grupp+1) == '\0'  ) grupp = NULL;
 /*
 ***Hämta LA till nästa storhet från GM.
-*/   
+*/
    status = DBget_next_ptr(func_pv[1].par_va.lit.int_va,
                   (DBetype)func_pv[2].par_va.lit.int_va,
                    namn,

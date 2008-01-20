@@ -611,9 +611,10 @@ short evrpifa(void);
 short evltvi(void);
 short evlton(void);
 short evltof(void);
+short evcrco(void);
 short evgtco(void);
 short evcrmt(void);
-short evcrco(void);
+short evgtmt(void);
 
 /*
 ***evsur.c

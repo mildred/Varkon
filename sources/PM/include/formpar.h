@@ -1283,15 +1283,15 @@
 /*
 ***VMTVIEW = 302, CRE_MATERIAL(pen,ar,ag,ab,dr,dg,db,sr,sg,sb,er,eg,eb,s);
 */
-     "-3:ie.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe.fe",
+     "-5:ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie",
 /*
 ***VLTVIEW = 303, CRE_LIGHT(num,pos[spot_dir,spot_ang,spot_focus]);
 */
      "-3:ie.ve.1(ve.fe.fe)",
 /*
-***VGTCOL = 304, GET_COLOR(pen,red,green,blue);
+***VGTCOL = 304, GET_COLOR(pen,defined,red,green,blue);
 */
-     "-5:ie.iv.iv.iv",
+     "i5:ie.iv.iv.iv",
 /*
 ***VCRCOL = 305, CRE_COLOR(pen,red,green,blue);
 */
@@ -1643,8 +1643,11 @@
 /*
 ***VASVNVERS = 391, ACT_SVN_VERS()
 */
-     "s5:"
-
+     "s5:",
+/*
+***VGETMAT = 392, defined:=GET_MATERIAL(pen,ar,ag,ab,dr,dg,db,sr,sg,sb,er,eg,eb,s);
+*/
+     "i5:ie.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv"
 /*
 ***Remember, no comma after the last parameter list definition.
 */

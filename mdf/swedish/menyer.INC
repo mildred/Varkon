@@ -258,7 +258,7 @@ m80 = "TA BORT"
       "tänd alla",f214;
 
 m81 = "ÄNDRA"
-      "penna",f7
+      "penna",f11
       "nivå",f12
       "linjebredd",f185
       "attribut",m16

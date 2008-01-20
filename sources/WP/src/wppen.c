@@ -8,11 +8,12 @@
 *
 *    This file includes:
 *
-*    WPcini();   Init color handling 
+*    WPcini();   Init color handling
 *    WPccol();   Create color
-*    WPcmat();   Create material 
+*    WPcmat();   Create material
 *    WPgcol();   Map pen number -> pixel value
-*    WPgpen();   Returns pen RGB values
+*    WPgpen();   Returns RGB values
+*    WPgmat();   Returns OpenGL Material values
 *    WPspen();   Activate X11 pen
 *    WPspenGL(); Activates OpenGL pen
 *
@@ -63,14 +64,15 @@ int actpen_gl = -1;
 */
 typedef struct
 {
-XColor  rgb;               /* XColor value */
-GLfloat ambient[4];        /* Ambient RGB */
-GLfloat diffuse[4];        /* Diffuse RGB */
-GLfloat specular[4];       /* Specular RGB */
-GLfloat emission[4];       /* Emitted RGB */
-GLfloat shininess;         /* Shininess */
-bool    defined;           /* Defined TRUE/FALSE */
-bool    color;             /* Color or Material */
+int    red,green,blue;    /* Varkon/MBS color value */
+XColor xrgb;              /* XColor value */
+int    ambient[4];        /* Varkon/MBS Ambient RGB */
+int    diffuse[4];        /* Varkon/MBS Diffuse RGB */
+int    specular[4];       /* Varkon/MBS Specular RGB */
+int    emission[4];       /* Varkon/MBS Emitted RGB */
+int    shininess;         /* Varkon/MBS Shininess */
+bool   defined;           /* Defined TRUE/FALSE */
+bool   color;             /* Color or Material */
 } WPPEN;
 
 
@@ -84,7 +86,7 @@ static WPPEN pen_tab[WP_NPENS+WP_SPENS];
 /*
 ***Prototypes for internal functions.
 */
-static void get_rgb(int pennum,XColor *rgb);
+static void get_rgb(int pennum,XColor *xrgb);
 
 /*!******************************************************/
 
@@ -99,6 +101,7 @@ static void get_rgb(int pennum,XColor *rgb);
  *      1997-02-18 Omarbetad, J.Kjellander
  *      1999-03-24 Bug vid WPgrst, R. Svedin
  *      2007-03-08 1.19 J.Kjellander
+ *      2008-01-17 Pens to jobdata, J.Kjellander
  *
  ******************************************************!*/
 
@@ -106,8 +109,12 @@ static void get_rgb(int pennum,XColor *rgb);
     int       i;
     char      colnam[80],resurs[80];
     XColor    rgb,hardw;
-    Colormap  colmap; 
+    Colormap  colmap;
 
+/*
+***Start with an empty pentab[].
+*/
+   for ( i=0; i<WP_NPENS+WP_SPENS; ++i ) pen_tab[i].defined = FALSE;
 /*
 ***Fix default colormap.
 */
@@ -117,7 +124,10 @@ static void get_rgb(int pennum,XColor *rgb);
 */
     XLookupColor(xdisp,colmap,"White",&rgb,&hardw);
     XAllocColor(xdisp,colmap,&hardw);
-    V3MOME(&hardw,&pen_tab[0].rgb,sizeof(XColor));
+    V3MOME(&hardw,&pen_tab[0].xrgb,sizeof(XColor));
+    pen_tab[0].red     = (int)(255.0*(rgb.red/65535.0));
+    pen_tab[0].green   = (int)(255.0*(rgb.green/65535.0));
+    pen_tab[0].blue    = (int)(255.0*(rgb.blue/65535.0));
     pen_tab[0].defined = TRUE;
     pen_tab[0].color   = TRUE;
 /*
@@ -125,7 +135,10 @@ static void get_rgb(int pennum,XColor *rgb);
 */
     XLookupColor(xdisp,colmap,"Black",&rgb,&hardw);
     XAllocColor(xdisp,colmap,&hardw);
-    V3MOME(&hardw,&pen_tab[1].rgb,sizeof(XColor));
+    V3MOME(&hardw,&pen_tab[1].xrgb,sizeof(XColor));
+    pen_tab[1].red     = (int)(255.0*(rgb.red/65535.0));
+    pen_tab[1].green   = (int)(255.0*(rgb.green/65535.0));
+    pen_tab[1].blue    = (int)(255.0*(rgb.blue/65535.0));
     pen_tab[1].defined = TRUE;
     pen_tab[1].color   = TRUE;
 /*
@@ -137,7 +150,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_BGND1].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_BGND1].xrgb,sizeof(XColor));
+      pen_tab[WP_BGND1].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_BGND1].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_BGND1].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_BGND1].defined = TRUE;
       pen_tab[WP_BGND1].color   = TRUE;
       }
@@ -148,7 +164,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_BGND2].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_BGND2].xrgb,sizeof(XColor));
+      pen_tab[WP_BGND2].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_BGND2].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_BGND2].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_BGND2].defined = TRUE;
       pen_tab[WP_BGND2].color   = TRUE;
       }
@@ -159,7 +178,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_BGND3].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_BGND3].xrgb,sizeof(XColor));
+      pen_tab[WP_BGND3].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_BGND3].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_BGND3].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_BGND3].defined = TRUE;
       pen_tab[WP_BGND3].color   = TRUE;
       }
@@ -170,7 +192,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_FGND].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_FGND].xrgb,sizeof(XColor));
+      pen_tab[WP_FGND].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_FGND].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_FGND].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_FGND].defined = TRUE;
       pen_tab[WP_FGND].color   = TRUE;
       }
@@ -181,7 +206,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_TOPS].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_TOPS].xrgb,sizeof(XColor));
+      pen_tab[WP_TOPS].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_TOPS].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_TOPS].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_TOPS].defined = TRUE;
       pen_tab[WP_TOPS].color   = TRUE;
       }
@@ -192,7 +220,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_BOTS].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_BOTS].xrgb,sizeof(XColor));
+      pen_tab[WP_BOTS].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_BOTS].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_BOTS].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_BOTS].defined = TRUE;
       pen_tab[WP_BOTS].color   = TRUE;
       }
@@ -203,7 +234,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_NOTI].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_NOTI].xrgb,sizeof(XColor));
+      pen_tab[WP_NOTI].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_NOTI].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_NOTI].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_NOTI].defined = TRUE;
       pen_tab[WP_NOTI].color   = TRUE;
       }
@@ -214,7 +248,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_TTIP].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_TTIP].xrgb,sizeof(XColor));
+      pen_tab[WP_TTIP].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_TTIP].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_TTIP].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_TTIP].defined = TRUE;
       pen_tab[WP_TTIP].color   = TRUE;
       }
@@ -225,7 +262,10 @@ static void get_rgb(int pennum,XColor *rgb);
     XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
     if ( XAllocColor(xdisp,colmap,&hardw) )
       {
-      V3MOME(&hardw,&pen_tab[WP_ENTHG].rgb,sizeof(XColor));
+      V3MOME(&hardw,&pen_tab[WP_ENTHG].xrgb,sizeof(XColor));
+      pen_tab[WP_ENTHG].red     = (int)(255.0*(rgb.red/65535.0));
+      pen_tab[WP_ENTHG].green   = (int)(255.0*(rgb.green/65535.0));
+      pen_tab[WP_ENTHG].blue    = (int)(255.0*(rgb.blue/65535.0));
       pen_tab[WP_ENTHG].defined = TRUE;
       pen_tab[WP_ENTHG].color   = TRUE;
       }
@@ -240,7 +280,10 @@ static void get_rgb(int pennum,XColor *rgb);
         XLookupColor(xdisp,colmap,colnam,&rgb,&hardw);
         if ( XAllocColor(xdisp,colmap,&hardw) )
           {
-          V3MOME(&hardw,&pen_tab[i].rgb,sizeof(XColor));
+          V3MOME(&hardw,&pen_tab[i].xrgb,sizeof(XColor));
+          pen_tab[i].red     = (int)(255.0*(rgb.red/65535.0));
+          pen_tab[i].green   = (int)(255.0*(rgb.green/65535.0));
+          pen_tab[i].blue    = (int)(255.0*(rgb.blue/65535.0));
           pen_tab[i].defined = TRUE;
           pen_tab[i].color   = TRUE;
           }
@@ -262,11 +305,11 @@ static void get_rgb(int pennum,XColor *rgb);
         int blue)
 
 /*      Allocates an X color defined by the RGB value
- *      supplied. Used during startup and by CRE_COLOR
+ *      supplied. Used during startup and by CRE_COLOR()
  *      in MBS.
  *
  *      In: pen            = Pen number.
- *          red,green,blue = RGB-values 0 -> 255.
+ *          red,green,blue = MBS RGB-values 0 -> 255.
  *
  *      (C)microform ab 1997-02-18 J. Kjellander
  *
@@ -297,7 +340,8 @@ static void get_rgb(int pennum,XColor *rgb);
    if ( green > 255 ) green = 255;
    if ( blue  > 255 ) blue  = 255;
 /*
-***Init an XColor. RGB-values are scaled to 2**16.
+***Init an XColor. X RGB values are scaled to 2**16.
+***Varkon/MBS RGB values are scaled 2**8.
 */
    tmp = (double)red*65535.0/255.0;
    rgb.red   = (unsigned short)tmp;
@@ -309,10 +353,15 @@ static void get_rgb(int pennum,XColor *rgb);
    rgb.blue  = (unsigned short)tmp;
 /*
 ***Allocate the color with X and save in pen_tab.
+***Also save original MBS RGB values. The allocated
+***color may differ slightly depending on hardware.
 */
    if ( XAllocColor(xdisp,colmap,&rgb) )
      {
-     V3MOME(&rgb,&pen_tab[pen].rgb,sizeof(XColor));
+     V3MOME(&rgb,&pen_tab[pen].xrgb,sizeof(XColor));
+     pen_tab[pen].red     = red;
+     pen_tab[pen].green   = green;
+     pen_tab[pen].blue    = blue;
      pen_tab[pen].defined = TRUE;
      pen_tab[pen].color   = TRUE;
      }
@@ -325,21 +374,21 @@ static void get_rgb(int pennum,XColor *rgb);
 /********************************************************/
 /********************************************************/
 
-        short    WPcmat(
-        int      pen,
-        DBfloat  ar,
-        DBfloat  ag,
-        DBfloat  ab,
-        DBfloat  dr,
-        DBfloat  dg,
-        DBfloat  db,
-        DBfloat  sr,
-        DBfloat  sg,
-        DBfloat  sb,
-        DBfloat  er,
-        DBfloat  eg,
-        DBfloat  eb,
-        DBfloat  sh)
+        short WPcmat(
+        int   pen,
+        int   ar,
+        int   ag,
+        int   ab,
+        int   dr,
+        int   dg,
+        int   db,
+        int   sr,
+        int   sg,
+        int   sb,
+        int   er,
+        int   eg,
+        int   eb,
+        int   sh)
 
 /*      Create a GL material.
  *
@@ -363,35 +412,39 @@ static void get_rgb(int pennum,XColor *rgb);
 */
    if ( pen < 1  ||  pen > WP_NPENS-1 ) return(0);
 
-   if ( ar < 0.0  ||  ar > 255.0 ) return(0);
-   if ( ag < 0.0  ||  ag > 255.0 ) return(0);
-   if ( ab < 0.0  ||  ab > 255.0 ) return(0);
-   if ( dr < 0.0  ||  dr > 255.0 ) return(0);
-   if ( dg < 0.0  ||  dg > 255.0 ) return(0);
-   if ( db < 0.0  ||  db > 255.0 ) return(0);
-   if ( sr < 0.0  ||  sr > 255.0 ) return(0);
-   if ( sg < 0.0  ||  sg > 255.0 ) return(0);
-   if ( sb < 0.0  ||  sb > 255.0 ) return(0);
-   if ( er < 0.0  ||  er > 255.0 ) return(0);
-   if ( eg < 0.0  ||  eg > 255.0 ) return(0);
-   if ( eb < 0.0  ||  eb > 255.0 ) return(0);
-   if ( sh < 0.0  ||  sh > 255.0 ) return(0);
+   if ( ar < 0  ||  ar > 255 ) return(0);
+   if ( ag < 0  ||  ag > 255 ) return(0);
+   if ( ab < 0  ||  ab > 255 ) return(0);
+   if ( dr < 0  ||  dr > 255 ) return(0);
+   if ( dg < 0  ||  dg > 255 ) return(0);
+   if ( db < 0  ||  db > 255 ) return(0);
+   if ( sr < 0  ||  sr > 255 ) return(0);
+   if ( sg < 0  ||  sg > 255 ) return(0);
+   if ( sb < 0  ||  sb > 255 ) return(0);
+   if ( er < 0  ||  er > 255 ) return(0);
+   if ( eg < 0  ||  eg > 255 ) return(0);
+   if ( eb < 0  ||  eb > 255 ) return(0);
+   if ( sh < 0  ||  sh > 255 ) return(0);
 /*
 ***Save material specification in pen_tab[].
 */
-   pen_tab[pen].ambient[0]  = ar/255.0;
-   pen_tab[pen].ambient[1]  = ag/255.0;
-   pen_tab[pen].ambient[2]  = ab/255.0;
-   pen_tab[pen].diffuse[0]  = dr/255.0;
-   pen_tab[pen].diffuse[1]  = dg/255.0;
-   pen_tab[pen].diffuse[2]  = db/255.0;
-   pen_tab[pen].specular[0] = sr/255.0;
-   pen_tab[pen].specular[1] = sg/255.0;
-   pen_tab[pen].specular[2] = sb/255.0;
-   pen_tab[pen].emission[0] = er/255.0;
-   pen_tab[pen].emission[1] = eg/255.0;
-   pen_tab[pen].emission[2] = eb/255.0;
-   pen_tab[pen].shininess   = sh/2.0;
+   pen_tab[pen].ambient[0]  = ar;
+   pen_tab[pen].ambient[1]  = ag;
+   pen_tab[pen].ambient[2]  = ab;
+   pen_tab[pen].ambient[3]  = 255;
+   pen_tab[pen].diffuse[0]  = dr;
+   pen_tab[pen].diffuse[1]  = dg;
+   pen_tab[pen].diffuse[2]  = db;
+   pen_tab[pen].diffuse[3]  = 255;
+   pen_tab[pen].specular[0] = sr;
+   pen_tab[pen].specular[1] = sg;
+   pen_tab[pen].specular[2] = sb;
+   pen_tab[pen].specular[3] = 255;
+   pen_tab[pen].emission[0] = er;
+   pen_tab[pen].emission[1] = eg;
+   pen_tab[pen].emission[2] = eb;
+   pen_tab[pen].emission[3] = 255;
+   pen_tab[pen].shininess   = sh;
 /*
 ***Also save the ambient color as the overall color.
 ***This makes it possible to visualize in WPGWIN and
@@ -432,14 +485,15 @@ static void get_rgb(int pennum,XColor *rgb);
     if ( pennum < 0 ) pennum = 0;
     if ( pennum > WP_NPENS+WP_SPENS-1 ) pennum = WP_NPENS+WP_SPENS-1;
 
-    return(pen_tab[pennum].rgb.pixel);
+    return(pen_tab[pennum].xrgb.pixel);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short WPgpen(
         int   pen,
+        bool *defined,
         int  *red,
         int  *green,
         int  *blue)
@@ -447,35 +501,126 @@ static void get_rgb(int pennum,XColor *rgb);
 /*      Returns the RGB values of a pen in pen_tab[].
  *      Note that these values may differ from what was
  *      specified by the user when the color was created
- *      because X allocates the closest color.
- *      
+ *      because X allocates the closest color. Used by
+ *      GET_COLOR() in MBS.
+ *
  *      In: pen = Pen number.
  *
- *      Out: *red   = Red value 0-255
- *           *green = Green value 0-255
- *           *blue  = Blue value 0-255
+ *      Out: *defined = TRUE if defined, FALSE if not.
+ *           *red     = Red value 0-255
+ *           *green   = Green value 0-255
+ *           *blue    = Blue value 0-255
  *
  *      Return:     0 => Ok.
  *             WP1682 => Invalid pen number
  *
- *      (C)2007-02-02 J.Kjellander
+ *      (C)2008-01.19 J.Kjellander
  *
  ******************************************************!*/
 
   {
     char errbuf[V3STRLEN];
-
+/*
+***Check that the pen number is valid.
+*/
     if ( pen < 0  ||  pen > WP_NPENS+WP_SPENS-1 )
       {
       sprintf(errbuf,"%d",pen);
       return(erpush("WP1682",errbuf));
       }
-
-    *red   = (int)((double)pen_tab[pen].rgb.red*255.0/65535.0);
-    *green = (int)((double)pen_tab[pen].rgb.green*255.0/65535.0);
-    *blue  = (int)((double)pen_tab[pen].rgb.blue*255.0/65535.0);
-
+/*
+***Is this pen defined ?
+*/
+   if ( (*defined=pen_tab[pen].defined) )
+     {
+/*
+***Yes, map rgb values to MBS.
+*/
+     *red   = pen_tab[pen].red;
+     *green = pen_tab[pen].green;
+     *blue  = pen_tab[pen].blue;
+     }
+/*
+***The end.
+*/
     return(0);
+  }
+
+/********************************************************/
+/********************************************************/
+
+        short WPgmat(
+        int   pen,
+        bool *defined,
+        int  *ar,
+        int  *ag,
+        int  *ab,
+        int  *dr,
+        int  *dg,
+        int  *db,
+        int  *sr,
+        int  *sg,
+        int  *sb,
+        int  *er,
+        int  *eg,
+        int  *eb,
+        int  *s)
+
+/*      Returns the material values of a pen in pen_tab[].
+ *      GET_MATERIAL() in MBS.
+ *
+ *      In: pen = Pen number.
+ *
+ *      Out: *defined = TRUE if material is defined, FALSE if not.
+ *
+ *      Return:     0 => Ok.
+ *             WP1682 => Invalid pen number
+ *
+ *      (C)2008-01.19 J.Kjellander
+ *
+ ******************************************************!*/
+
+  {
+   char errbuf[V3STRLEN];
+/*
+***Check that the pen number is valid.
+*/
+   if ( pen < 0  ||  pen > WP_NPENS+WP_SPENS-1 )
+     {
+     sprintf(errbuf,"%d",pen);
+     return(erpush("WP1682",errbuf));
+     }
+/*
+***Is this pen defined as a material ?
+*/
+   if ( pen_tab[pen].defined && !pen_tab[pen].color )
+     {
+/*
+***Yes.
+*/
+     *defined = TRUE;
+     *ar = pen_tab[pen].ambient[0];
+     *ag = pen_tab[pen].ambient[1];
+     *ab = pen_tab[pen].ambient[2];
+     *dr = pen_tab[pen].diffuse[0];
+     *dg = pen_tab[pen].diffuse[1];
+     *db = pen_tab[pen].diffuse[2];
+     *sr = pen_tab[pen].specular[0];
+     *sg = pen_tab[pen].specular[1];
+     *sb = pen_tab[pen].specular[2];
+     *er = pen_tab[pen].emission[0];
+     *eg = pen_tab[pen].emission[1];
+     *eb = pen_tab[pen].emission[2];
+     *s  = pen_tab[pen].shininess;
+     }
+/*
+***No.
+*/
+   else *defined = FALSE;
+/*
+***The end.
+*/
+   return(0);
   }
 
 /********************************************************/
@@ -555,7 +700,6 @@ static void get_rgb(int pennum,XColor *rgb);
  ******************************************************!*/
 
   {
-#ifdef UNIX
    GLfloat mat[4];
    XColor  rgb;
    GLint   cind[3];
@@ -596,38 +740,34 @@ static void get_rgb(int pennum,XColor *rgb);
 */
      else
        {
-       glMaterialfv(GL_FRONT,GL_AMBIENT,pen_tab[pen].ambient);
-       glMaterialfv(GL_FRONT,GL_DIFFUSE,pen_tab[pen].diffuse);
-       glMaterialfv(GL_FRONT,GL_SPECULAR,pen_tab[pen].specular);
-       glMaterialfv(GL_FRONT,GL_EMISSION,pen_tab[pen].emission);
-       glMaterialf(GL_FRONT,GL_SHININESS,pen_tab[pen].shininess);
+       mat[0] = (GLfloat)(pen_tab[pen].ambient[0])/(GLfloat)255.0;
+       mat[1] = (GLfloat)(pen_tab[pen].ambient[1])/(GLfloat)255.0;
+       mat[2] = (GLfloat)(pen_tab[pen].ambient[2])/(GLfloat)255.0;
+       mat[3] = (GLfloat)(pen_tab[pen].ambient[3])/(GLfloat)255.0;
+       glMaterialfv(GL_FRONT,GL_AMBIENT,mat);
+
+       mat[0] = (GLfloat)(pen_tab[pen].diffuse[0])/(GLfloat)255.0;
+       mat[1] = (GLfloat)(pen_tab[pen].diffuse[1])/(GLfloat)255.0;
+       mat[2] = (GLfloat)(pen_tab[pen].diffuse[2])/(GLfloat)255.0;
+       mat[3] = (GLfloat)(pen_tab[pen].diffuse[3])/(GLfloat)255.0;
+       glMaterialfv(GL_FRONT,GL_DIFFUSE,mat);
+
+       mat[0] = (GLfloat)(pen_tab[pen].specular[0])/(GLfloat)255.0;
+       mat[1] = (GLfloat)(pen_tab[pen].specular[1])/(GLfloat)255.0;
+       mat[2] = (GLfloat)(pen_tab[pen].specular[2])/(GLfloat)255.0;
+       mat[3] = (GLfloat)(pen_tab[pen].specular[3])/(GLfloat)255.0;
+       glMaterialfv(GL_FRONT,GL_SPECULAR,mat);
+
+       mat[0] = (GLfloat)(pen_tab[pen].emission[0])/(GLfloat)255.0;
+       mat[1] = (GLfloat)(pen_tab[pen].emission[1])/(GLfloat)255.0;
+       mat[2] = (GLfloat)(pen_tab[pen].emission[2])/(GLfloat)255.0;
+       mat[3] = (GLfloat)(pen_tab[pen].emission[3])/(GLfloat)255.0;
+       glMaterialfv(GL_FRONT,GL_EMISSION,mat);
+
+       glMaterialf(GL_FRONT,GL_SHININESS,(GLfloat)pen_tab[pen].shininess/(GLfloat)2.0);
        }
      }
-#endif
 /*
-***WIN32 
-*
-#ifdef WIN32
-   GLfloat mat[4];
-   COLORREF col;
-
-   else
-     {
-     msgrgb(pen,&col);
-     mat[0] = GetRValue(col)/255.0;
-     mat[1] = GetGValue(col)/255.0;
-     mat[2] = GetBValue(col)/255.0;
-     mat[3] = 1.0;
-
-     glMaterialfv(GL_FRONT,GL_AMBIENT,mat);
-     glMaterialfv(GL_FRONT,GL_DIFFUSE,mat);
-     glMaterialfv(GL_FRONT,GL_SPECULAR,mat);
-     mat[0] = mat[1] = mat[2] = 0.0;
-     glMaterialfv(GL_FRONT,GL_EMISSION,mat);
-     glMaterialf(GL_FRONT,GL_SHININESS,(GLfloat)40.0);
-     }
-#endif
-*
 ***Update actpen_gl.
 */
    actpen_gl = pen;
@@ -642,7 +782,7 @@ static void get_rgb(int pennum,XColor *rgb);
 
  static void    get_rgb(
         int     pennum,
-        XColor *rgb)
+        XColor *xrgb)
 
 /*      Returns the X color structure of a specific
  *      pen in pen_tab[].
@@ -661,7 +801,7 @@ static void get_rgb(int pennum,XColor *rgb);
     if ( pennum < 0 ) pennum = 0;
     if ( pennum > WP_NPENS+WP_SPENS-1 ) pennum = WP_NPENS+WP_SPENS-1;
 
-    V3MOME(&pen_tab[pennum].rgb,rgb,sizeof(XColor));
+    V3MOME(&pen_tab[pennum].xrgb,xrgb,sizeof(XColor));
   }
 
 /********************************************************/

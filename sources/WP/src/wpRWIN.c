@@ -55,13 +55,6 @@ static short setup_ogl(WPRWIN *rwinpt);
 static short get_visinfo(WPRWIN *rwinpt);
 static void  init_colors(WPRWIN *rwinpt);
 static void  create_toolbar(WPRWIN *rwinpt);
-static void  scale_on(WPRWIN *rwinpt);
-static void  pan_on(WPRWIN *rwinpt);
-static void  rot_on(WPRWIN *rwinpt);
-static void  persp_on(WPRWIN *rwinpt);
-static void  light_on(WPRWIN *rwinpt);
-static void  clip_on(WPRWIN *rwinpt);
-static void  line_fill(WPRWIN *rwinpt);
 
 /*!******************************************************/
 
@@ -483,20 +476,20 @@ static void  line_fill(WPRWIN *rwinpt);
  *      1998-11-17 Musrotation, J.Kjellander
  *      1998-11-21 actview, G. Liden
  *      2007-07-09 1.19, J.Kjellander
+ *      2008-01-16 down_fuse, J.Kjellander
  *
  ******************************************************!*/
 
   {
     short         i,acttyp,actnum=0;
     int           butx,buty,ix1,iy1,ix2,iy2,xrk,yrk,xck,yck,mode;
-    bool          hit;
+    bool          hit,pressed;
     Window        root,child;
     unsigned int  xbuts;
     char         *subptr;
     WPBUTT       *butptr;
     WPICON       *icoptr;
     XEvent        event;
-
 
 /*
 ***It could also be a resize of the Message and Command window...
@@ -520,8 +513,16 @@ static void  line_fill(WPRWIN *rwinpt);
      glXMakeCurrent(xdisp,rwinpt->id.x_id,rwinpt->rc);
      ix1 = butev->x;
      iy1 = butev->y;
+     pressed = FALSE;
+/*
+***Copy the passed butev to the local event variable
+***so we can process it as the rest that will come.
+*/
+     V3MOME(butev,&event, sizeof(XEvent));
+/*
+***The event loop starts here.
+*/
 evloop:
-     XNextEvent(xdisp,&event);
      if ( event.xany.window == rwinpt->id.x_id )
        {
        switch ( event.type)
@@ -534,6 +535,7 @@ evloop:
          case ButtonPress:
          ix1 = event.xmotion.x;
          iy1 = event.xmotion.y;
+         pressed = TRUE;
          while ( XPending(xdisp) ) XNextEvent(xdisp,&event);
          XQueryPointer(xdisp,rwinpt->id.x_id,&root,&child,
                       &xrk,&yrk,&xck,&yck,&xbuts);
@@ -543,6 +545,7 @@ evloop:
 */
          case ButtonRelease:
          while ( XPending(xdisp) ) XNextEvent(xdisp,&event);
+         if ( !pressed ) goto evloop;
          XCopyArea(xdisp,rwinpt->id.x_id,rwinpt->savmap,rwinpt->win_gc,
                                      0,0,rwinpt->geo.dx,rwinpt->geo.dy,0,0);
          return(TRUE);
@@ -551,6 +554,7 @@ evloop:
 ***last motion event and do something.
 */
          case MotionNotify:
+         if ( !pressed ) goto evloop;
          ix2 = event.xmotion.x;
          iy2 = event.xmotion.y;
          while ( XPending(xdisp) )
@@ -568,7 +572,7 @@ evloop:
 ***<SHIFT> + mouse button 2 = PAN
 */
         if      ( event.xmotion.state & ControlMask ) mode = SCALE;
-        else if ( event.xmotion.state & ShiftMask )  mode = PAN;
+        else if ( event.xmotion.state & ShiftMask )   mode = PAN;
         else                                          mode = ROT;
 
          switch ( mode )
@@ -724,6 +728,12 @@ evloop:
 */
                case 103:
                WPgrid_dialog(rwinpt->id.w_id);
+               break;
+/*
+***Print.
+*/
+               case 150:
+               WPprint_GL(rwinpt);
                break;
 /*
 ***The levels dialogue, f197.
@@ -1316,217 +1326,6 @@ evloop:
 ***No hit.
 */
     return(NULL);
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    scale_on(
-        WPRWIN *rwinpt)
-
-/*      Turns "Scale" on for a WPRWIN, f7.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn of "Clip mode".
-*/
-   if ( rwinpt->zclip )
-     {
-     glDisable(GL_CLIP_PLANE0);
-     rwinpt->zclip = FALSE;
-     WPsodl_all(rwinpt);
-     }
-/*
-***Toggle "Scale" mode.
-*/
-   rwinpt->musmod = 0;
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    pan_on(
-        WPRWIN *rwinpt)
-
-/*      Turns "Pan" on for a WPRWIN, f91.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn of "Clip mode".
-*/
-   if ( rwinpt->zclip )
-     {
-     glDisable(GL_CLIP_PLANE0);
-     rwinpt->zclip = FALSE;
-     WPsodl_all(rwinpt);
-     }
-/*
-***Toggle "Pan" mode.
-*/
-   rwinpt->musmod = 1;
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    rot_on(
-        WPRWIN *rwinpt)
-
-/*      Turns "Rot" on for a WPRWIN, f93.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn of "Clip mode".
-*/
-   if ( rwinpt->zclip )
-     {
-     glDisable(GL_CLIP_PLANE0);
-     rwinpt->zclip = FALSE;
-     WPsodl_all(rwinpt);
-     }
-/*
-***Toggle "Rot" mode.
-*/
-   rwinpt->musmod = 2;
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    persp_on(
-        WPRWIN *rwinpt)
-
-/*      Turns "Persp" on for a WPRWIN, f94.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn of "Clip mode".
-*/
-   if ( rwinpt->zclip )
-     {
-     glDisable(GL_CLIP_PLANE0);
-     rwinpt->zclip = FALSE;
-     WPsodl_all(rwinpt);
-     }
-/*
-***Toggle "Persp" mode.
-*/
-   rwinpt->musmod = 3;
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    light_on(
-        WPRWIN *rwinpt)
-
-/*      Turns "Light" on for a WPRWIN, f95.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn of "Clip mode".
-*/
-   if ( rwinpt->zclip )
-     {
-     glDisable(GL_CLIP_PLANE0);
-     rwinpt->zclip = FALSE;
-     WPsodl_all(rwinpt);
-     }
-/*
-***Toggle "Light" mode.
-*/
-   rwinpt->musmod = 4;
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    clip_on(
-        WPRWIN *rwinpt)
-
-/*      Turns "Clip" on for a WPRWIN, f97.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn on "Clip mode".
-*/
-   glEnable(GL_CLIP_PLANE0);
-   rwinpt->zclip = TRUE;
-   rwinpt->zfactor = 50.0;
-   WPsodl_all(rwinpt);
-/*
-***Toggle "Clip" mode.
-*/
-   rwinpt->musmod = 5;
-  }
-
-/********************************************************/
-/*!******************************************************/
-
- static void    line_fill(
-        WPRWIN *rwinpt)
-
-/*      Toggles "Line/Fill" for a WPRWIN, f100.
- *
- *      In: rwinptr = C ptr to WPRWIN.
- *
- *      (C)2007-01-12 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-/*
-***Turn of "Clip mode".
-*/
-   if ( rwinpt->zclip )
-     {
-     glDisable(GL_CLIP_PLANE0);
-     rwinpt->zclip = FALSE;
-     WPsodl_all(rwinpt);
-     }
-/*
-***Toggle "Line/Fill" mode.
-*/
-   if ( rwinpt->fill ) rwinpt->fill = FALSE;
-   else                rwinpt->fill = TRUE;
-
-   WPrepaint_RWIN(rwinpt->id.w_id,FALSE);
   }
 
 /********************************************************/
