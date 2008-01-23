@@ -433,20 +433,8 @@ varkon.shade.doublebuffer:       True
 !varkon.shade.bluebits:          8
 !varkon.shade.zbits:             16
 !*
-!***Light sources ambient component.
+!***Default light intensity.
 !*
-varkon.shade.ambient.red:        40
-varkon.shade.ambient.blue:       40
-varkon.shade.ambient.green:      40
-!*
-!***Light sources diffuse component.
-!*
-varkon.shade.diffuse.red:        100
-varkon.shade.diffuse.blue:       100
-varkon.shade.diffuse.green:      100
-!*
-!***Light sources specular component.
-!*
-varkon.shade.specular.red:       100
-varkon.shade.specular.blue:      100
-varkon.shade.specular.green:     100
+varkon.light.intensity:          50
+!
+!***************************************************************

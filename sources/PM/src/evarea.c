@@ -192,7 +192,7 @@ extern PMLITVA *func_vp;   /* Pekare till resultat. */
    func_vp->lit.vec_va.x_val = cgrav.x_gm;
    func_vp->lit.vec_va.y_val = cgrav.y_gm;
    func_vp->lit.vec_va.z_val = cgrav.z_gm;
-   
+
    return(status);
  }
 

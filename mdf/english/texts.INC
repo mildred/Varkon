@@ -332,7 +332,7 @@ t342 = "Start angle      : "
 t343 = "End angle        : "
 t345 = "Enter tangent"
 t349 = "Save active module as.."
-! 350 RESERVED
+t350 = "ma_lights"
 ! 351 RESERVED 
 t352 = "Select end to be trimmed"
 t353 = "Select trimming entity "

@@ -214,6 +214,7 @@ m64 = "CHORD LENGTH"
 
 m67 = "VIEW"
       "colors",M1658
+      "lights",M350
       "all hitable",f215
       "X11 window",f196
       "OpenGL window",f200

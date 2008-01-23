@@ -342,6 +342,7 @@ t345 = "Ange tangent"
 !t346 RESERVERAD
 !t348 RESERVERAD
 t349 = "Spara aktiv modul som.."
+t350 = "ma_lights"
 t352 = "Ange ände som skall trimmas"
 t353 = "Ange storhet mot vilken trimmningen skall ske"
 t354 = "Storheten är refererad, vill du blanka istället ? (j/n)"

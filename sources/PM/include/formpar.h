@@ -1297,9 +1297,9 @@
 */
      "-5:ie.ie.ie.ie",
 /*
-***VLTON = 306, LIGHT_ON(light,intensity);
+***VLTON = 306, LIGHT_ON(light,intensity,tmode);
 */
-     "-3:ie.1(fd<100.0>)",
+     "-3:ie.1(fd<100.0>.1(id))",
 /*
 ***VLTOFF = 307, LIGHT_OFF(light);
 */
@@ -1647,7 +1647,11 @@
 /*
 ***VGETMAT = 392, defined:=GET_MATERIAL(pen,ar,ag,ab,dr,dg,db,sr,sg,sb,er,eg,eb,s);
 */
-     "i5:ie.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv"
+     "i5:ie.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv.iv",
+/*
+***VGETMAT = 393, defined:=GET_LIGHT(light,on,intensity,follow_model);
+*/
+     "i5:ie.iv.fv.iv"
 /*
 ***Remember, no comma after the last parameter list definition.
 */

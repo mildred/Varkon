@@ -424,6 +424,7 @@
 #define VNMLEVEL   390  /* evnmlv      NAME_LEVEL        */
 #define VASVNVERS  391  /* evasvr      ACT_SVN_VERS      */
 #define VGETMAT    392  /* evgtmt      GET_MATERIAL      */
+#define VGETLIGHT  393  /* evgtlt      GET_LIGHT         */
 /*
 ***If you are building your own application,
 ***include your own file here.

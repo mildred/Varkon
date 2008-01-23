@@ -422,11 +422,8 @@ DBint         musmod;             /* Aktuell musmode */
 double        rotx,roty,rotz;     /* Aktuell rotation */
 double        movx,movy;          /* Aktuell translation */
 double        scale;              /* Aktuell skalfaktor */
-double        light;              /* Aktuell ljusstyrka 0 -> 100 */
+double        light;              /* Current light intensity 0 -> 100 */
 double        pfactor;            /* Perspektivfaktor 0 -> 100 */
-double        ambient[3];         /* Ambient light */
-double        diffuse[3];         /* Diffuse light */
-double        specular[3];        /* Specualar light */
 bool          zclip;              /* Z-clip on/off */
 double        zfactor;            /* Current Z clip factor 0 -> 100 */
 bool          fill;               /* Fill mode TRUE/FALSE */

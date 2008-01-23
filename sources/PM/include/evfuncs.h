@@ -139,7 +139,7 @@ static short (*functab[])() =
    evgvrt,    evghdg,    evgface,   evsrms,    evgxflt, /* 379 */
    evtmult,   evtinv,    evccmparr, evstusr,   evapft,
    evapsi,    evbllv,    evublv,    evgtlv,    evalev,  /* 389 */
-   evnmlv,    evasvr,    evgtmt
+   evnmlv,    evasvr,    evgtmt,    evgtlt
 #endif
 };
 

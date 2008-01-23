@@ -124,6 +124,7 @@
 {"NAME_LEVEL",        ST_PROC,     FALSE,  ST_ORD,    VNMLEVEL},
 {"ACT_SVN_VERS",      ST_FUNC,     FALSE,  ST_ORD,    VASVNVERS},
 {"GET_MATERIAL",      ST_FUNC,     FALSE,  ST_ORD,    VGETMAT},
+{"GET_LIGHT",         ST_FUNC,     FALSE,  ST_ORD,    VGETLIGHT},
 /*
 ***The global symbol table ends here.
 */

@@ -167,7 +167,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
    XEvent               event;
    XWMHints             wmhint;
    Pixmap               IconPixmap,SavePixmap;
-   int                  i,width,height,margin;
+   int                  i,width,height,margin,ival;
    unsigned int         depth;
    XGCValues            values;
    GC                   Win_gc,Rub_gc;
@@ -175,6 +175,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
    WPRWIN              *rwinpt;
    WPGWIN              *mainpt;
    char                *type[20];
+   char                 buf[V3STRLEN];
    XrmValue             value;
 
 /*
@@ -396,17 +397,23 @@ static void  create_toolbar(WPRWIN *rwinpt);
 */
    rwinpt->vy.status = VIEW_3D_ONLY;
 /*
-***Default values.
+***Some default values.
 */
    rwinpt->musmod  = 2;
    rwinpt->movx    = rwinpt->movy = 0.0;
    rwinpt->rotx    = rwinpt->roty = rwinpt->rotz = 0.0;
    rwinpt->scale   = 1.0;
-   rwinpt->light   = 50.0;
    rwinpt->pfactor = 0.0;
    rwinpt->zclip   = FALSE;
    rwinpt->zfactor = 50.0;
    rwinpt->fill    = TRUE;
+/*
+***Default light intensity from ini-file.
+*/
+   if ( WPgrst("varkon.light.intensity",buf)  &&
+        sscanf(buf,"%d",&ival) == 1           &&
+        ival >=0  &&  ival <= 100 ) rwinpt->light = ival;
+   else rwinpt->light = 50;
 /*
 ***Init levels by copying GWIN_MAIN.
 */
@@ -1334,20 +1341,17 @@ evloop:
 static short setup_ogl(
        WPRWIN *rwinpt)
 
-/*      Set up OpenGL default parameters.
+/*      Set up some OpenGL default parameters for
+ *      a WPRWIN.
  *
  *      In: rwinpt = C ptr to WPRWIN.
  *
- *      (C)microform ab 1998-01-04 J. Kjellander
- *
- *      1998-12-10 F�rgresurser, J.Kjellander
+ *      (C)2008-01-21 J.Kjellander
  *
  ******************************************************!*/
 
   {
-   int     ival;
-   char    buf[V3STRLEN];
-   GLfloat ambient[4],diffuse[4],specular[4];
+   DBVector pos1,pos2;
 
 /*
 ***Activate the Rendering Contextet.
@@ -1376,106 +1380,23 @@ static short setup_ogl(
 */
    glFrontFace(GL_CCW);
 /*
-***Turn on light.
+***Turn on OpenGL light calculation.
 */
    glEnable(GL_LIGHTING);
 /*
-***Create a default lightsource, GL_LIGHT0.
-***Ambient.
+***Create a default lightsource (GL_LIGHT0) and turn it on.
 */
-   if ( WPgrst("varkon.shade.ambient.red",buf)  &&
-        sscanf(buf,"%d",&ival) == 1             &&
-        ival >=0  &&  ival <= 100 ) ambient[0] = ival/100.0;
-   else ambient[0] = 0.4;
-
-   if ( WPgrst("varkon.shade.ambient.green",buf)  &&
-        sscanf(buf,"%d",&ival) == 1  &&
-        ival >=0  &&  ival <= 100 ) ambient[1] = ival/100.0;
-   else ambient[1] = 0.4;
-
-   if ( WPgrst("varkon.shade.ambient.blue",buf)  &&
-        sscanf(buf,"%d",&ival) == 1  &&
-        ival >=0  &&  ival <= 100 ) ambient[2] = ival/100.0;
-   else ambient[2] = 0.4;
-
-   ambient[3] = 1.0;
-
-   rwinpt->ambient[0] = ambient[0];
-   rwinpt->ambient[1] = ambient[1];
-   rwinpt->ambient[2] = ambient[2];
-
-   ambient[0] *= rwinpt->light/100.0;
-   ambient[1] *= rwinpt->light/100.0;
-   ambient[2] *= rwinpt->light/100.0;
-   glLightfv(GL_LIGHT0,GL_AMBIENT,ambient);
+   pos1.x_gm = pos1.y_gm = 0.0; pos1.z_gm = 1.0;
+   pos2.x_gm = pos2.y_gm = 0.0; pos2.z_gm = 0.0;
+   WPcreate_light(0,&pos1,&pos2,180.0,0.0);
+   WPactivate_light(0,50.0,0,TRUE);
 /*
-***Diffuse
+***Set the color to be used to clear OpenGL windows to white.
 */
-   if ( WPgrst("varkon.shade.diffuse.red",buf)  &&
-        sscanf(buf,"%d",&ival) == 1             &&
-        ival >=0  &&  ival <= 100 ) diffuse[0] = ival/100.0;
-   else diffuse[0] = 1.0;
-
-   if ( WPgrst("varkon.shade.diffuse.green",buf)  &&
-        sscanf(buf,"%d",&ival) == 1  &&
-        ival >=0  &&  ival <= 100 ) diffuse[1] = ival/100.0;
-   else diffuse[1] = 1.0;
-
-   if ( WPgrst("varkon.shade.diffuse.blue",buf)  &&
-        sscanf(buf,"%d",&ival) == 1  &&
-        ival >=0  &&  ival <= 100 ) diffuse[2] = ival/100.0;
-   else diffuse[2] = 1.0;
-
-   diffuse[3] = 1.0;
-
-   rwinpt->diffuse[0] = diffuse[0];
-   rwinpt->diffuse[1] = diffuse[1];
-   rwinpt->diffuse[2] = diffuse[2];
-
-   diffuse[0] *= rwinpt->light/100.0;
-   diffuse[1] *= rwinpt->light/100.0;
-   diffuse[2] *= rwinpt->light/100.0;
-   glLightfv(GL_LIGHT0,GL_DIFFUSE,diffuse);
-
-/*
-***Specular
-*/
-   if ( WPgrst("varkon.shade.specular.red",buf)  &&
-        sscanf(buf,"%d",&ival) == 1             &&
-        ival >=0  &&  ival <= 100 ) specular[0] = ival/100.0;
-   else specular[0] = 0.8;
-
-   if ( WPgrst("varkon.shade.specular.green",buf)  &&
-        sscanf(buf,"%d",&ival) == 1  &&
-        ival >=0  &&  ival <= 100 ) specular[1] = ival/100.0;
-   else specular[1] = 0.8;
-
-   if ( WPgrst("varkon.shade.specular.blue",buf)  &&
-        sscanf(buf,"%d",&ival) == 1  &&
-        ival >=0  &&  ival <= 100 ) specular[2] = ival/100.0;
-   else specular[2] = 0.8;
-
-   specular[3] = 1.0;
-
-   rwinpt->specular[0] = specular[0];
-   rwinpt->specular[1] = specular[1];
-   rwinpt->specular[2] = specular[2];
-
-   specular[0] *= rwinpt->light/100.0;
-   specular[1] *= rwinpt->light/100.0;
-   specular[2] *= rwinpt->light/100.0;
-   glLightfv(GL_LIGHT0,GL_SPECULAR,specular);
-/*
-***Turn on the default lightsource.
-*/
-   ambient[0] = ambient[1] = ambient[2] = 1.0; ambient[3] = 1.0;
-   glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient);
-/*
-***Clear color and depth buffers.
-*/ 
    glClearColor((GLclampf)1.0,(GLclampf)1.0,(GLclampf)1.0,(GLclampf)1.0);
-   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-
+/*
+***The end.
+*/
    return(0);
   }
 

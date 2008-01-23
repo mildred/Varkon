@@ -518,20 +518,8 @@ varkon.shade.doublebuffer:     True
 !varkon.shade.bluebits:        8
 !varkon.shade.zbits:           16
 !*
-!***Ljuskällors bakgrundskomponent.
+!***Default ljusstyrka i OpenGL-fönster.
 !*
-varkon.shade.ambient.red:      40
-varkon.shade.ambient.blue:     40
-varkon.shade.ambient.green:    40
+varkon.light.intensity:        50
 !*
-!***Ljuskällors diffusa komponent.
-!*
-varkon.shade.diffuse.red:      100
-varkon.shade.diffuse.blue:     100
-varkon.shade.diffuse.green:    100
-!*
-!***Ljuskällors reflex komponent.
-!*
-varkon.shade.specular.red:     100
-varkon.shade.specular.blue:    100
-varkon.shade.specular.green:   100
+!**************************************************************

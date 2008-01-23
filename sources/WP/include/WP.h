@@ -574,10 +574,11 @@ short         WPgmat(int pen, bool *defined, int *ar, int *ag, int *ab,
 /*
 ***wplight.c
 */
-short WPltvi(DBint ltnum, DBVector *pos1, DBVector *pos2,
+short WPcreate_light(DBint ltnum, DBVector *pos1, DBVector *pos2,
              DBfloat ang, DBfloat focus);
-short WPlton(int ltnum, DBfloat intensity, bool state);
-short WPconl(WPGWIN *gwinpt);
+short WPactivate_light(int ltnum, DBfloat intensity, int tmode, bool state);
+short WPenable_lights(bool enable);
+short WPget_light(int ltnum, bool *defined, bool *on, DBfloat *intensity, bool *follow_model);
 #endif
 
 /*

@@ -547,8 +547,8 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
                      (rwinpt->zmax - rwinpt->zmin) * (rwinpt->zmax - rwinpt->zmin));
    nurbs_display_factor = cn / model_size;
 
-   gluNurbsProperty(gl_nobj,GLU_DISPLAY_MODE,GLU_FILL);  
-   gluNurbsProperty(gl_nobj,GLU_SAMPLING_METHOD,GLU_DOMAIN_DISTANCE); 
+   gluNurbsProperty(gl_nobj,GLU_DISPLAY_MODE,GLU_FILL);
+   gluNurbsProperty(gl_nobj,GLU_SAMPLING_METHOD,GLU_DOMAIN_DISTANCE);
 /*
 ***Traverse DB.
 */
@@ -961,6 +961,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
  *      1998-12-09 Perspektiv mm. J.Kjellander
  *      1999-01-04 Z-klipp, J.Kjellander
  *      2007-06-14 1.19, J.Kjellander
+ *      2008-01-23 Lights, J.Kjellander
  *
  ******************************************************!*/
 
@@ -968,6 +969,8 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
    int      i;
    double   mdx,mdy,mdz,midx,midy,midz,vxmax,vxmin,vymax,
             vymin,vzmax,vzmin,vdx,vdy,vdz05,fd;
+   bool     defined,on,follow_model;
+   DBfloat  intensity;
    GLfloat  gl_matrix[16];
 
 static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
@@ -1120,6 +1123,15 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
 ***translated back to the origin.
 */
    glTranslated(-midx,-midy,-midz);
+/*
+***Define light sources that should be transformed
+***with the MODELVIEW matrix here.
+*/
+   for ( i=0; i<7; ++i )
+     {
+     WPget_light(i,&defined,&on,&intensity,&follow_model);
+     if ( defined && on && follow_model ) WPactivate_light(i,intensity,1,1);
+     }
 /*
 ***Execute the main list.
 */
@@ -2660,14 +2672,14 @@ static void     pr_sur2(
      switch ( model )
        {
        case WIREFRAME_MODEL:
-       glDisable(GL_LIGHT0);
+       WPenable_lights(FALSE);
        glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient_wf);
        current_model = WIREFRAME_MODEL;
        break;
 
        case SURFACE_MODEL:
        glLightModelfv(GL_LIGHT_MODEL_AMBIENT,ambient_su);
-       glEnable(GL_LIGHT0);
+       WPenable_lights(TRUE);
        current_model = SURFACE_MODEL;
        break;
        }

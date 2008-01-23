@@ -213,7 +213,8 @@ m64 = "CHORD LENGTH"
       "utan tang.",f156;
 
 m67 = "VISA"
-      "skapa färg",M1658
+      "färger",M1658
+      "ljuskällor"M350
       "allt pekbart",f215
       "X11-fönster",f196
       "OpenGL-fönster",f200
