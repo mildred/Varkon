@@ -64,7 +64,7 @@ m12 = "YTOR"
       "approx",f235;
 
 m15 = "ÄNDRA"
-      "penna",f7
+      "penna",f11
       "nivå",f12
       "linjebredd",f185
       "attribut",m16

@@ -122,7 +122,7 @@ static WPLIGHT lt_tab[8] = {
      }
 /*
 ***If ang <> 180 it's a spot. pos1 and pos2 may then not be
-***equal.
+***equal. W component of pos = 1 activates attenuation.
 */
    else
      {
@@ -164,6 +164,7 @@ static WPLIGHT lt_tab[8] = {
         bool    on)
 
 /*      Turns on and off a defined lightsource.
+ *      LIGHT_ON() and LIGHT_OFF() in MBS.
  *
  *      In: ltnum     = Lightsource number
  *          intensity = 0-100%
@@ -175,7 +176,7 @@ static WPLIGHT lt_tab[8] = {
  ********************************************************/
 
   {
-   GLfloat ambient[4],diffuse[4],specular[4];
+   GLfloat gl_matrix[16],ambient[4],diffuse[4],specular[4];
 /*
 ***Range check. TODO add erpush()
 */
@@ -186,7 +187,7 @@ static WPLIGHT lt_tab[8] = {
 */
    if ( !lt_tab[ltnum].defined ) return(0);
 /*
-***Execute.
+***Turn on this light source.
 */
    if ( on )
      {
@@ -211,7 +212,31 @@ static WPLIGHT lt_tab[8] = {
      specular[3] = lt_tab[ltnum].specular[3];
      glLightfv(GL_LIGHT0+ltnum,GL_SPECULAR,specular);
 /*
-***Distant light or spot ?
+***Distant light or spot ? In any case, if follow_model is off,
+***the position is interpreted as BASIC coordinates.
+***Then set OpenGL's MODELVIEW rotation to zero before setting the light position.
+***If follow_model is on, don't tuch the MODELVIEW matrix.
+*/
+     if ( tmode == 0 )
+       {
+       glGetFloatv(GL_MODELVIEW_MATRIX,gl_matrix);
+       gl_matrix[ 0] = (GLfloat)1.0;
+       gl_matrix[ 1] = (GLfloat)0.0;
+       gl_matrix[ 2] = (GLfloat)0.0;
+       gl_matrix[ 3] = (GLfloat)0.0;
+       gl_matrix[ 4] = (GLfloat)0.0;
+       gl_matrix[ 5] = (GLfloat)1.0;
+       gl_matrix[ 6] = (GLfloat)0.0;
+       gl_matrix[ 7] = (GLfloat)0.0;
+       gl_matrix[ 8] = (GLfloat)0.0;
+       gl_matrix[ 9] = (GLfloat)0.0;
+       gl_matrix[10] = (GLfloat)1.0;
+       gl_matrix[11] = (GLfloat)0.0;
+       glMatrixMode(GL_MODELVIEW);
+       glLoadMatrixf(gl_matrix);
+       }
+/*
+***Now set the light position and enable it.
 */
      if ( lt_tab[ltnum].ang == 180.0 )
        {
@@ -223,14 +248,26 @@ static WPLIGHT lt_tab[8] = {
        glLightfv(GL_LIGHT0+ltnum,GL_SPOT_DIRECTION,lt_tab[ltnum].dir);
        glLightf(GL_LIGHT0+ltnum,GL_SPOT_CUTOFF,lt_tab[ltnum].ang);
        glLightf(GL_LIGHT0+ltnum,GL_SPOT_EXPONENT,lt_tab[ltnum].focus);
+       glLightf(GL_LIGHT0+ltnum,GL_CONSTANT_ATTENUATION,1.0);
+       glLightf(GL_LIGHT0+ltnum,GL_LINEAR_ATTENUATION,0.0);
+       glLightf(GL_LIGHT0+ltnum,GL_QUADRATIC_ATTENUATION,0.0);
        }
+
+     glEnable(GL_LIGHT0+ltnum);
 /*
 ***Transformation mode. No transformation (static) or follow the model.
 */
      if ( tmode == 0 ) lt_tab[ltnum].follow_model = FALSE;
      else              lt_tab[ltnum].follow_model = TRUE;
      }
-   else lt_tab[ltnum].on = FALSE;
+/*
+***Turn light off.
+*/
+   else
+     {
+     glDisable(GL_LIGHT0+ltnum);
+     lt_tab[ltnum].on = FALSE;
+     }
 /*
 ***The end.
 */

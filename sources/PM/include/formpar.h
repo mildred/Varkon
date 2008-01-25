@@ -1285,7 +1285,7 @@
 */
      "-5:ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie.ie",
 /*
-***VLTVIEW = 303, CRE_LIGHT(num,pos[spot_dir,spot_ang,spot_focus]);
+***VLTVIEW = 303, CRE_LIGHT(num,pos[,spot_dir,spot_ang,spot_focus]);
 */
      "-3:ie.ve.1(ve.fe.fe)",
 /*

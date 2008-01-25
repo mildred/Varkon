@@ -1076,7 +1076,7 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
 ***Adjust the current rotation coefficients with values
 ***from the window. The mouse may have been moved.
 */
-   glGetFloatv(GL_MODELVIEW_MATRIX,gl_matrix); 
+   glGetFloatv(GL_MODELVIEW_MATRIX,gl_matrix);
    gl_matrix[ 0] = (GLfloat)rwinpt->vy.matrix.k11;
    gl_matrix[ 1] = (GLfloat)rwinpt->vy.matrix.k21;
    gl_matrix[ 2] = (GLfloat)rwinpt->vy.matrix.k31;

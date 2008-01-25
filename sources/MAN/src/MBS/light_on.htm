@@ -1,82 +1,85 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
-
-<head>
-<title>light_on </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
-
-<body bgcolor="#99CCFF">
-
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
-
-<hr width="100%" align="center">
-
-<blockquote>
-  <h2>light_on - <small><small>Procedure</small></small></h2>
-  <p>Turns a lightsource on<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Activates a lightsource and sets its intensity. Up to 8 light sources may be active at the
-  same time. <br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  light_on(light, intensity)<br>
-  <br>
-  </p>
-  <table width="665" border="0">
-<!-- Table 25 Row 01 -->
-    <tr>
-      <td width="65">INT</td>
-      <td width="592">light;</td>
-    </tr>
-<!-- Table 25 Row 02 -->
-    <tr>
-      <td width="65">FLOAT</td>
-      <td width="592">intensity;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="665" border="0">
-<!-- Table 26 Row 01 -->
-    <tr>
-      <td width="56">light</td>
-      <td width="601">- Light source number (0-7)</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="665" border="0">
-<!-- Table 27 Row 01 -->
-    <tr>
-      <td width="56">intensity</td>
-      <td width="601">- Relative light intensity. 0 = No light, 100 = Full strength. Default =
-      100</td>
-    </tr>
-  </table>
-</blockquote>
-
-<hr width="100%" align="center">
+m4_changequote({,})
+m4_define({_TITLE_},{Varkon MBS Programmers manual})
+m4_define({_SUBTITLE_},{- light_on - Procedure})
+m4_define({_INDEXLINK_},{<a href="grapindx.htm">index</a>})
+m4_define({_STYLE_},{../varkonstyle.css})
+m4_include(../../include/header.inc)
 
 
+<h1>light_on - Procedure</h1>
 
-</small></p>
-<div align="center"><center>
+<h2>Description</h2>
 
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="grapindx.htm">Index</a></td>
-  </tr>
+<p>
+Activates a lightsource. Up to 8 light sources may be active at the
+same time. light_on() can also be used to set the intensity of a light
+source or to toggle between static mode or follow_model. In static mode
+the light does not move when the model is scaled, panned or rotated in the
+OpenGL window. In follow_model mode the lightsource follows the model.
+</p>
+
+<h2>Syntax</h2>
+
+<pre>
+  light_on(light, intensity, mode);
+
+  int   light;
+  float intensity;
+  int   mode;
+</pre>
+
+<h2>Principal parameters</h2>
+
+<table>
+<tr>
+<td>light</td>
+<td>- Light source number (0-7)</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<table>
+<tr>
+<td>intensity</td>
+<td>- Light intensity in procent. 0 = No light, 100 = Full strength. Default = 100</td>
+</tr>
+
+<tr>
+<td>mode</td>
+<td>- Static = 0, Light source follows model = 1. Default = 0</td>
+</tr>
+</table>
+
+<h2>Examples</h2>
+
+<pre>
+  light_on(1);
+</pre>
+
+<p>
+Turns on lightsource 1 with default values for strength and mode.
+</p>
+
+<pre>
+  light_on(0,50,1);
+</pre>
+
+<p>
+Turns on lightsource 0 with 50% intensity and sets the mode to follow_model.
+</p>
+
+<h2>Comments</h2>
+
+<p>
+See also:
+</p>
+
+<p>
+<a href="light_off.htm">light_off()</a>,
+<a href="cre_light.htm">cre_light()</a>
+</p>
+
+m4_include(../../include/svnversion.inc)
+m4_include(../../include/footer.inc)
+

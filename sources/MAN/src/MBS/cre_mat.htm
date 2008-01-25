@@ -21,8 +21,7 @@ Initially no pens are linked to materials and Varkon uses the standard colors
 of pens as set up in the ini-file or created interactively or with the cre_color()
 MBS routine. If a material is defined Varkon will use the characteristics of
 the material instead of the ordinary color when the specified pen is used.
-8 different materials may be defined. It is not reccommended to change the color
-of pen 0 and pen 1.
+It is not reccommended to change the color of pen 0 and pen 1.
 </p>
 
 <p>
@@ -43,7 +42,7 @@ luminous material. Shininess is used to make the material dull or shiny.
 
 <pre>
   cre_material(pen, ar, ag, ab, dr, dg, db,
-                    sr, sg, sb, er, eg, eb, sh)
+                    sr, sg, sb, er, eg, eb, sh);
 
   int pen;
   int ar,ag,ab;
@@ -58,7 +57,7 @@ luminous material. Shininess is used to make the material dull or shiny.
 <table>
 <tr>
 <td>pen</td>
-<td>- The pen number to link to the material. 1 - 8</td>
+<td>- The pen number to link to the material. 2 - 255</td>
 </tr>
 
 <tr>
@@ -183,6 +182,7 @@ See also:
 <p>
 <a href="get_mat.htm">get_material()</a>,
 <a href="cre_col.htm">cre_color()</a>,
+<a href="cre_light.htm">cre_light()</a>,
 <a href="get_col.htm">get_color()</a>
 </p>
 
