@@ -101,6 +101,11 @@ static int  iwin_y;          /* even after a user move */
    WPEDIT  *edtptr;
 
 /*
+***Set actfunc, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 102;
+/*
 ***Is this the first time this function is called ?
 ***Initial window position.
 */
@@ -399,11 +404,6 @@ start:
    XWindowEvent(xdisp,iwinpt->id.x_id,ExposureMask,&event);
    XPutBackEvent(xdisp,&event);
    WPgtwp(iwinpt->id.x_id,&wm_x1,&wm_y1);
-/*
-***Set actfunc during user action, see IG/include/futab.h.
-*/
-   actfunc_org = actfunc;
-   actfunc = 102;
 /*
 ***Wait for action.
 */

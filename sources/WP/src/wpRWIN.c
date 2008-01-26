@@ -532,12 +532,11 @@ static void  create_toolbar(WPRWIN *rwinpt);
 evloop:
      if ( event.xany.window == rwinpt->id.x_id )
        {
-       switch ( event.type)
+       switch ( event.type )
          {
 /*
 ***Mouse button pressed. Clear event stack from pending
-***events and order a new event. When a new event comes,
-***poll the mouse position.
+***and poll the mouse position.
 */
          case ButtonPress:
          ix1 = event.xmotion.x;
@@ -752,7 +751,7 @@ evloop:
 ***Some other function.
 */
                default:
-               if ( IGdofu(acttyp,actnum) == EXIT ) IGexit(); 
+               if ( IGdofu(acttyp,actnum) == EXIT ) IGexit();
                break;
                }
              }
@@ -761,7 +760,7 @@ evloop:
 */
            else
              {
-             if ( IGdofu(acttyp,actnum) == EXIT ) IGexit(); 
+             if ( IGdofu(acttyp,actnum) == EXIT ) IGexit();
              else return(TRUE);
              }
           return(TRUE);

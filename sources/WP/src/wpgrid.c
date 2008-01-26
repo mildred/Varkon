@@ -41,10 +41,6 @@
 extern DBTmat lklsyi,*lsyspk;
 extern int    actfunc;            /* For the help system */
 
-#ifdef UNIX
-extern Display *xdisp;
-#endif
-
 static bool   premiere = TRUE;    /* True only for the first invocation */
 static int    iwin_x;             /* The current position of the window */
 static int    iwin_y;             /* even after a user move */
@@ -86,6 +82,11 @@ static short get_resolution(WPGWIN *gwinpt, double *pdx, double *pdy);
    XEvent   event;
    XrmValue value;
 
+/*
+***Set actfunc during user action, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 103;
 /*
 ***Is this the first time this function is called ?
 ***Initial window position.
@@ -279,11 +280,6 @@ start:
    XWindowEvent(xdisp,iwinpt->id.x_id,ExposureMask,&event);
    XPutBackEvent(xdisp,&event);
    WPgtwp(iwinpt->id.x_id,&wm_x1,&wm_y1);
-/*
-***Set actfunc during user action, see IG/include/futab.h.
-*/
-   actfunc_org = actfunc;
-   actfunc = 103;
 /*
 ***Wait for action. SMBPOSM is not an issue in this situation.
 */

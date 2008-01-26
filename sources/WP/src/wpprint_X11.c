@@ -29,7 +29,8 @@
 #include "../../EX/include/EX.h"
 #include "../../WP/include/WP.h"
 
-extern char jobnam[];                      /* Current job name */
+extern char jobnam[];                        /* Current job name */
+extern int  actfunc;                         /* For the help system */
 
 #define PRINTMODE_AUTO   0                   /* Print with autozoom */
 #define PRINTMODE_SELECT 1                   /* Print rubberband window */
@@ -78,7 +79,7 @@ static short manual_config();
             conftt[81],helptt[81];
    char    *typ[20];
    int      l1,l2,ly,lm,bh,main_dx,main_dy,wm_x1,wm_y1,
-            wm_x2,wm_y2,alt_x,alt_y,butlen1,butlen2;;
+            wm_x2,wm_y2,alt_x,alt_y,butlen1,butlen2,actfunc_org;
    unsigned int dum1,dum2;
    DBint    iwin_id,auto_id,sel_id,man_id,reject_id,conf_id,help_id,
             but_id;
@@ -89,6 +90,11 @@ static short manual_config();
    XEvent   event;
    XrmValue value;
 
+/*
+***Set actfunc during user action, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 150;
 /*
 ***Is this the first time this function is called ?
 ***Establish initial window position and load printer
@@ -301,6 +307,7 @@ loop:
 ***Time to exit. Remeber the current position.
 */
 exit:
+   actfunc = actfunc_org;
    WPgtwp(iwinpt->id.x_id,&wm_x2,&wm_y2);
    iwin_x = iwin_x + wm_x2 - wm_x1;
    iwin_y = iwin_y + wm_y2 - wm_y1;

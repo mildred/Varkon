@@ -98,6 +98,11 @@ static void update_names();
    XrmValue value;
 
 /*
+***Set actfunc, see IG/include/futab.h.
+*/
+   actfunc_org = actfunc;
+   actfunc = 197;
+/*
 ***Calculate outside air (ly), up height (uph), low height (lowh)
 ***and air between (lm).
 */
@@ -368,11 +373,6 @@ start:
    WPfoed(edtptr,FALSE);
    edtptr = (WPEDIT *)iwinpt->wintab[range_id].ptr;
    WPfoed(edtptr,TRUE);
-/*
-***Set actfunc during user action, see IG/include/futab.h.
-*/
-   actfunc_org = actfunc;
-   actfunc = 197;
 /*
 ***Force an expose on the dialogue to make sure that the new windows
 ***in the list are displayed immediately.
