@@ -1008,7 +1008,7 @@ short pmprmo(pm_ptr mola);
 /*
 **pretty.c
 */
-short pprsts(pm_ptr statla, short geotyp, char *str, int ntkn);
+short pprsts(pm_ptr statla, char *str, int ntkn);
 short pprst(pm_ptr statla);
 short pprexs(pm_ptr exprla, short geotyp, char *str, int ntkn);
 short pprex(pm_ptr exprla, ppopri inpri);

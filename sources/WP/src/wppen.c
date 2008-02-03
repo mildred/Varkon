@@ -299,10 +299,10 @@ static void get_rgb(int pennum,XColor *xrgb);
 /********************************************************/
 
         short WPccol(
-        int pen,
-        int red,
-        int green,
-        int blue)
+        int   pen,
+        int   red,
+        int   green,
+        int   blue)
 
 /*      Allocates an X color defined by the RGB value
  *      supplied. Used during startup and by CRE_COLOR()

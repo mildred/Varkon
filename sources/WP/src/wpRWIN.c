@@ -739,7 +739,7 @@ evloop:
 ***Print.
 */
                case 150:
-               WPprint_GL(rwinpt);
+               if ( WPprint_GL(rwinpt) < 0 ) errmes();
                break;
 /*
 ***The levels dialogue, f197.

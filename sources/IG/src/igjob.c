@@ -221,6 +221,7 @@ static short main_loop()
 /*
 ***Init pen 1 fo new jobs.
 */
+   WPcini();
    WPspen(1);
 /*
 ***Clear level name table.

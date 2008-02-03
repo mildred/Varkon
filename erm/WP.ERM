@@ -75,4 +75,7 @@ VARKON Error messages for WINPAC
 171  2  XPM-error code = %s
 172  3  Can't find icon file %s
 173  3  Window %s is of illegal type
-174  2 GET_WIEW, Window with ID = %s is of illegal type.
+174  2  GET_WIEW, Window with ID = %s is of illegal type.
+175  2  Can't open TIFF file %s
+176  3  Cant allocate TIFF buffer, error code = %s
+177  3  Unknown error from TIFF driver, error code = %s

@@ -6,7 +6,7 @@
 *    This file is part of the VARKON WindowPac library.
 *    URL: http://www.varkon.com
 *
-*    WPprint_dialogue();  The grid dialogue
+*    WPprint_dialogue();  The print dialogue
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public

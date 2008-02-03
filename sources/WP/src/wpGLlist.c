@@ -1054,8 +1054,7 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
    glMatrixMode(GL_MODELVIEW);
    glLoadIdentity();
 /*
-***Om Z-klipp �r aktivt b�rjar vi med att l�gga
-***klipplanet p� r�tt Z.
+***Optional Z-clipping.
 */
    if ( rwinpt->zclip )
      {

@@ -1079,3 +1079,92 @@
   }
 
 /********************************************************/
+/********************************************************/
+
+        short  WPupbu(
+        DBint  iwin_id,
+        DBint  but_id,
+        char  *newstr)
+
+/*      Replaces the text in a WPBUTT. This function is
+ *      not available from MBS and the error processing
+ *      is not right (copied from WPuped()).
+ *
+ *      In: iwin_id = Parent (WPIWIN) window
+ *          but_id  = Child (WPBUTT) window
+ *          newstr  = New string
+ *
+ *      Return: WP1162 = Parent %s does not exist.
+ *              WP1172 = Parent %s is not a WPIWIN.
+ *              WP1182 = Edit %s does not exist.
+ *              WP1192 = %s is not an edit.
+ *
+ *      (C)2008-02-03 J.Kjellander
+ *
+ ******************************************************!*/
+
+  {
+   int     ntkn;
+   char    errbuf[80];
+   WPWIN  *winptr;
+   WPIWIN *iwinptr;
+   WPBUTT *butptr;
+
+/*
+***Get a C-ptr to the parent entry in wpwtab[].
+*/
+   if ( (winptr=WPwgwp((wpw_id)iwin_id)) == NULL )
+     {
+     sprintf(errbuf,"%d",(int)iwin_id);
+     return(erpush("WP1162",errbuf));
+     }
+/*
+***Is it a WPIWIN.
+*/
+   if ( winptr->typ != TYP_IWIN )
+     {
+     sprintf(errbuf,"%d",(int)iwin_id);
+     return(erpush("WP1172",errbuf));
+     }
+/*
+***Get a C-ptr to the WPIWIN.
+*/
+   iwinptr = (WPIWIN *)winptr->ptr;
+/*
+***Check for the existence of the WPBUTT.
+*/
+   if ( iwinptr->wintab[(wpw_id)but_id].ptr == NULL )
+     {
+     sprintf(errbuf,"%d",(int)but_id);
+     return(erpush("WP1182",errbuf));
+     }
+
+   if ( iwinptr->wintab[(wpw_id)but_id].typ != TYP_BUTTON )
+     {
+     sprintf(errbuf,"%d",(int)but_id);
+     return(erpush("WP1192",errbuf));
+     }
+/*
+***Get a C-ptr to the WPBUTT.
+*/
+   butptr = (WPBUTT *)iwinptr->wintab[(wpw_id)but_id].ptr;
+/*
+***Check string length.
+*/
+    ntkn = strlen(newstr);
+    if ( ntkn < 0 ) ntkn = 0;
+    if ( ntkn > V3STRLEN ) ntkn = V3STRLEN;
+    newstr[ntkn] = '\0';
+/*
+***Update the WPBUTT.
+*/
+    strcpy(butptr->stron,newstr);
+    XClearWindow(xdisp,butptr->id.x_id);
+    WPxpbu(butptr);
+/*
+***The end.
+*/
+    return(0);
+  }
+
+/********************************************************/

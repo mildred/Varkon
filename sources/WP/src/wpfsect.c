@@ -102,11 +102,11 @@ static short create_directory(int   main_x,int   main_y,char *parent);
    char     file[81],filett[81],uptt[81],newtt[81],
             butstr[JNLGTH],*fnptrs[MAX_FILES],fnbuf[FNBUF_SIZE],
             act_path[V3PTHLEN+1],new_path[V3PTHLEN+1],tmp[2*V3PTHLEN];
-   int      iwin_x,iwin_y,iwin_dx,iwin_dy,i,scr_width,
+   int      iwin_x,iwin_y,iwin_dx,iwin_dy,i,scr_width,sb_x,sb_y,
             scr_height,pmtlen,butlen,buth,edtlen,edth,
             alt_x,alt_y,x1,y1,x2,y2;
    short    status;
-   DBint    but_id,okey_id,help_id,reject_id,new_id,
+   DBint    but_id,okey_id,help_id,reject_id,new_id,path_id,
             file_id,pmt_id,sb_id,up_id;
    unsigned int dum1,dum2;
    char    *type[20],iconam[V3PTHLEN+1];
@@ -159,7 +159,7 @@ static short create_directory(int   main_x,int   main_y,char *parent);
 */
    strcpy(outfile,def_file);
    strcpy(act_path,outpath);
-start:
+
    make_filelist(act_path,filter,setpath,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
 /*
 ***Calculate column positions in list area etc.
@@ -171,7 +171,7 @@ start:
    alth    = WPstrh();
    list_dy = N_LINES*(alth + air3) + air3;
 /*
-***How long is the longest of the two propmts (File:/Filter:) ?
+***How long is the longest of the two prompts (File:/Filter:) ?
 */
    pmtlen = 0;
    if ( WPstrl(file)   > pmtlen ) pmtlen = WPstrl(file);
@@ -206,11 +206,12 @@ start:
 */
    if ( colw_tot > list_dx ) sbar = TRUE;
    else                      sbar = FALSE;
-
-   if ( sbar ) list_dy += WPstrh();
 /*
-***Now that we know if a slidebar is needed
-***we can calculate the height of the WPIWIN, iwin_dy.
+***Add space for an optional slidebar.
+*/
+   list_dy += WPstrh();
+/*
+***Now we can calculate the height of the WPIWIN, iwin_dy.
 */
    iwin_dy = air1 +         /* Air */
              32   +         /* Up icon */
@@ -255,7 +256,7 @@ start:
 
      alt_x += 32 + air1 + air1;
      alt_y  = air1 + 12;
-     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&pmt_id);
+     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(act_path),WPstrh(),act_path,&path_id);
      }
 /*
 ***If setpath == FALSE, replace up/new buttons with "Path:".
@@ -266,7 +267,7 @@ start:
      alt_y  = air1 + 12;
      strcpy(tmp,"Path: ");
      strcat(tmp,act_path);
-     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(tmp),WPstrh(),tmp,&pmt_id);
+     WPcrlb((wpw_id)iwin_id,alt_x,alt_y,WPstrl(tmp),WPstrh(),tmp,&path_id);
      }
 /*
 ***The list area outline.
@@ -298,7 +299,7 @@ start:
    y1 = list_y + 1;
    x2 = list_dx - 1;
    y2 = list_dy - 1;
-   if ( sbar ) y2 -= WPstrh();
+   /*if ( sbar ) y2 -= WPstrh(); */
    WPcreate_fillrect(iwin_id,x1,y1,x2,y2,WPgcol(0));
 /*
 ***Optional list area slidebar.
@@ -312,6 +313,11 @@ start:
      sb_id = sbptr->id.w_id;
      sbptr->cback = fssb_callback;
      }
+/*
+***Remember the position where the slidebar lives.
+*/
+   sb_x = alt_x;
+   sb_y = alt_y;
 /*
 ***List area contents.
 */
@@ -389,8 +395,7 @@ loop:
      {
      path_up(act_path,new_path);
      strcpy(act_path,new_path);
-     WPwdel(iwin_id);
-     goto start;
+     goto update;
      }
 /*
 ***Create new directory.
@@ -399,8 +404,7 @@ loop:
      {
      if ( create_directory(iwin_x + 50,iwin_y + 50,act_path) == 0 )
        {
-       WPwdel(iwin_id);
-       goto start;
+       goto update;
        }
      else goto loop;
      }
@@ -455,8 +459,7 @@ loop:
          if ( butstr[strlen(butstr)-1] == '/' )
            {
            strcat(act_path,butstr);
-           WPwdel(iwin_id);
-           goto start;
+           goto update;
            }
 /*
 ***A file is selected.
@@ -470,6 +473,37 @@ loop:
        }
      goto loop;
      }
+/*
+***Update the file list area after the path has changed or a new
+***directory has been created.
+*/
+update:
+   make_filelist(act_path,filter,setpath,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
+   listarea_layout();
+   WPupbu(iwin_id,path_id,act_path);
+/*
+***Do we need to create or remove a slidebar ?
+*/
+   if ( colw_tot > list_dx  &&  !sbar )
+     {
+     butsiz = ((double)(list_dx)/(double)(colw_tot)*list_dx);
+     WPcreate_slidebar(iwin_id,sb_x,sb_y+list_dy-WPstrh(),list_dx-2,WPstrh(),
+                       0,butsiz,WP_SBARH,&sbptr);
+     sb_id = sbptr->id.w_id;
+     sbptr->cback = fssb_callback;
+     sbar = TRUE;
+     }
+   else if ( colw_tot <= list_dx  &&  sbar )
+     {
+     WPwdls(iwin_id,sb_id);
+     sbar = FALSE;
+     }
+/*
+***Uptade the contents of the list window.
+*/
+   fssb_callback(iwinpt);
+   WPwshw(iwin_id);
+   goto loop;
 /*
 ***The end.
 */

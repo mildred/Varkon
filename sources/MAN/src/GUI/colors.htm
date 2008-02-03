@@ -7,7 +7,7 @@ m4_define({_STYLE_},{../varkonstyle.css})
 m4_include(../../include/header.inc)
 
 
-<h1>Colors and materials</h1>
+<h1>Colors, materials and light</h1>
 
 <p>
 When created, each single entity in Varkon gets an individual
@@ -136,6 +136,35 @@ MBS programmers manual.
 Materials can only be displayed in OpenGL windows. In X11 windows
 materials will be displayed using the ambient RGB color values of
 the material.
+</p>
+
+<h2>Light</h2>
+
+<p>
+Light in Varkon is equal to OpenGL light sources. When an OpenGL
+window is opened Varkon automatically creates a light source located
+at infinite distance along the positive Z-axis shining in the direction
+of the negative Z-axis (BASIC coordinate system). To create additional
+light sources (including spotlights) or to edit the default light, see the
+<a href="../MBS/cre_light.htm">cre_light()</a> procedure in the MBS
+programmers manual. You can create and turn on up to a maximum of 8
+light sources at the same time.
+</p>
+
+<p>
+Note that although OpenGL supports colored light, Varkon light sources
+are always white. Once defined, use <code>menu/view/lights</code>
+to set the intensity of a light source or to list basic light source data.
+You can also set the transformation behaviour of a light source. By default,
+light sources are static. If you switch to follow_model, the light source
+will follow the model if you pan, scale or rotate it interactively.
+</p>
+
+<p>
+Note also that Varkon does not save your light sources when
+you exit your job. When you load an old job Varkon creates
+the default light automatically but if you have created your
+own light sources in MBS, run your module to update their status.
 </p>
 
 m4_include(../../include/svnversion.inc)

@@ -5,7 +5,7 @@
 #
 #  Make rules for the WP module.
 #
-#  (C)2007 J.Kjellander
+#  (C)2008 J.Kjellander
 #
 ##########################################################
 
@@ -50,7 +50,6 @@ OBJECTS = ../lib/WPlib.a(wpinit.o)       \
           ../lib/WPlib.a(wpGLlist.o)     \
           ../lib/WPlib.a(wpplot.o)       \
           ../lib/WPlib.a(wpprint_X11.o)  \
-          ../lib/WPlib.a(wpprint_GL.o)   \
           ../lib/WPlib.a(wphide.o)       \
           ../lib/WPlib.a(wpDXF.o)        \
           ../lib/WPlib.a(wpgrid.o)       \
@@ -66,22 +65,30 @@ OBJECTS = ../lib/WPlib.a(wpinit.o)       \
           ../lib/WPlib.a(wpDECRN.o)      \
           ../lib/WPlib.a(wpfsect.o)
 
-# WPlib.a depends on the objects. 
+# WPlib.a depends on the objects above and Wpprint_GL.o
+# that has it's own rules, see below.
 
-distr : $(OBJECTS)
+distr : $(OBJECTS) ../lib/WPlib.a(wpprint_GL.o) ../lib/WPlib.a(gl_print.o)
 
-debug : $(OBJECTS)
+debug : $(OBJECTS) ../lib/WPlib.a(wpprint_GL.o) ../lib/WPlib.a(gl_print.o)
 
 # Objects depend on sources implicitly and sources depend
 # on the following include-files.
 
 $(OBJECTS) : $(INCFILES)
 
-# wp10,wp15 also depends on v3icon.h
+# wpprint_GL.o depends on ../GL_to_TIFF
 
-../lib/WPlib.a(wp10.o): $(INCFILES) ../include/v3icon.h
+../lib/WPlib.a(WPprint_GL.o): wpprint_GL.c $(INCFILES) ../lib/WPlib.a(gl_print.o) \
+                              ../GL_to_TIFF/gl_print.h ../GL_to_TIFF/camera.h
+	$(COMPILE) wpprint_GL.c
+	ar r ../lib/WPlib.a wpprint_GL.o
+	$(RM) wpprint_GL.o
 
-../lib/WPlib.a(wp15.o): $(INCFILES) ../include/v3icon.h
+../lib/WPlib.a(gl_print.o): ../GL_to_TIFF/gl_print.c
+	$(COMPILE) ../GL_to_TIFF/gl_print.c
+	ar r ../lib/WPlib.a gl_print.o
+	$(RM) gl_print.o
 
 clean:
 	rm -f ../lib/WPlib.a

@@ -993,20 +993,18 @@ evloop:
         DBint w_id,
         DBint sub_id)
 
-/*      Dï¿½dar ett subfï¿½nster. Klara fn. bara subfï¿½nster
- *      i huvudfï¿½nster av typen WPIWIN och WPGWIN.
+/*      Kills a sub (child) window in a WPIWIN or WPGWIN.
  *
- *      In: w_id   = Huvudfï¿½nstrets entry i wpwtab.
- *          sub_id = Subfï¿½nstrets id.
+ *      In: w_id   = Parent window ID.
+ *          sub_id = Sub window ID.
  *
- *      Ut: Inget.   
- *
- *      Felkod: WP1222 = Huvudfï¿½nstret finns ej.
- *              WP1232 = Subfï¿½nstret finns ej.
+ *      Felkod: WP1222 = Huvudfönstret finns ej.
+ *              WP1232 = Subfönstret finns ej.
  *
  *      (C)microform ab 17/1/94 J. Kjellander
  *
  *      1996-05-20 WPGWIN, J. Kjellander
+ *      2008-02-03 WPSBAR, J.Kjellander
  *
  ******************************************************!*/
 
@@ -1020,9 +1018,10 @@ evloop:
     WPBUTT  *butptr;
     WPEDIT  *edtptr;
     WPICON  *icoptr;
+    WPSBAR  *sbptr;
 
 /*
-***Fixa en C-pekare till huvud-fï¿½nstrets entry i wpwtab.
+***Get a C ptr to the parent window.
 */
     if ( (winptr=WPwgwp(w_id)) == NULL )
       {
@@ -1030,12 +1029,12 @@ evloop:
       return(erpush("WP1222",errbuf));
       }
 /*
-***Vilken typ av fï¿½nster ï¿½r det ?
+***What type is it ?
 */
     switch ( winptr->typ )
       {
 /*
-***WPIWIN, kolla att subfï¿½nstret finns.
+***WPIWIN, check that the child exists.
 */
       case TYP_IWIN:
       if ( sub_id < 0  ||  sub_id > WP_IWSMAX-1 )
@@ -1051,7 +1050,7 @@ evloop:
         return(erpush("WP1232",errbuf));
         }
 /*
-***Dï¿½da fï¿½nstret ur wpw och ta reda pï¿½ X-id.
+***Kill the child.
 */
       switch ( iwinpt->wintab[(wpw_id)sub_id].typ )
         {
@@ -1072,13 +1071,19 @@ evloop:
         xwin_id = icoptr->id.x_id;
         WPdlic(icoptr);
         break;
+
+        case TYP_SBAR:
+        sbptr = (WPSBAR *)subptr;
+        xwin_id = sbptr->id.x_id;
+        WPdelete_slidebar(sbptr);
+        break;
         }
 /*
-***Dï¿½da fï¿½nstret ur X.
+***Kill the child X window.
 */
       XDestroyWindow(xdisp,xwin_id);
 /*
-***Lï¿½nka bort subfï¿½nstret frï¿½n WPIWIN-fï¿½nstret.
+***Remove child from the WPIWIN.
 */
       iwinpt->wintab[(wpw_id)sub_id].ptr = NULL;
       iwinpt->wintab[(wpw_id)sub_id].typ = TYP_UNDEF;
@@ -1100,7 +1105,7 @@ evloop:
         return(erpush("WP1232",errbuf));
         }
 /*
-***Dï¿½da fï¿½nstret ur wpw och ta reda pï¿½ X-id.
+***Delete the child.
 */
       switch ( gwinpt->wintab[(wpw_id)sub_id].typ )
         {
@@ -1123,17 +1128,19 @@ evloop:
         break;
         }
 /*
-***Dï¿½da fï¿½nstret ur X.
+***Kill the child X window.
 */
       XDestroyWindow(xdisp,xwin_id);
 /*
-***Lï¿½nka bort subfï¿½nstret frï¿½n WPIWIN-fï¿½nstret.
+***Remove the child from the WPGWIN.
 */
       gwinpt->wintab[(wpw_id)sub_id].ptr = NULL;
       gwinpt->wintab[(wpw_id)sub_id].typ = TYP_UNDEF;
       break;
       }
-   
+/*
+***The end.
+*/
     return(0);
   }
 

@@ -73,14 +73,14 @@ static void  ppkeyw(char *keyw);
 static void  fixsli(char str[]);
 static void  fixflt(double f, char *str);
 
-static FILE *mbsfp = NULL;      /* MBS-file pointer */
-static int  ppmode = PPSTRING;  /* Output-mode for pretty */
-static short ppstat = 0;        /* Output-status for pretty */
-static short level = 0;         /* indentation level for output */
-static char pplin[ PPLINLEN ];  /* line buffer */
-static char *pplinp = pplin;    /* pointer to current position in pplin */
-static pmmoty modtyp = _3D;     /* for vec(x,y,ÄzÅ)  */
-static short ppindl = DEFINDL;
+static FILE  *mbsfp = NULL;       /* MBS-file pointer */
+static int    ppmode = PPSTRING;  /* Output-mode for pretty */
+static short  ppstat = 0;         /* Output-status for pretty */
+static short  level = 0;          /* indentation level for output */
+static char   pplin[ PPLINLEN ];  /* line buffer */
+static char  *pplinp = pplin;     /* pointer to current position in pplin */
+static pmmoty modtyp = _3D;       /* for vec(x,y,ÄzÅ)  */
+static short  ppindl = DEFINDL;
 
 /********************************************************/
 /*!******************************************************/
@@ -119,9 +119,8 @@ static short ppindl = DEFINDL;
 /********************************************************/
 /*!******************************************************/
 
-        short pprsts(
+        short  pprsts(
         pm_ptr statla,
-        short  geotyp,
         char  *str,
         int    ntkn)
 
@@ -143,11 +142,9 @@ static short ppindl = DEFINDL;
   {
    short status;
 /*
-***Initiera.
+***Init.
 */
    ppinit(PPSTRING,NULL);
-   if ( geotyp == 2 ) modtyp = _2D;
-   else               modtyp = _3D;
 /*
 ***Dekompilera. Negativ status från pprst() innebär att
 ***modulen är konstig på något sätt.
@@ -252,11 +249,9 @@ static short ppindl = DEFINDL;
            {
            indent( level );
            ppkeyw( "ELSE " );
-/**           pplisc( ifp->stat ); **/
            pprlin();
            pprsl(ifp->ifstat);           /* print statement list */
            }
- 
         indent( level );
         ppkeyw( "ENDIF" );
 
@@ -590,7 +585,7 @@ static short ppindl = DEFINDL;
       }
 
    if ( ( status = pmgexp( exprla, &np ) ) != 0 )
-      {  
+      {
       return( status );                         /* Error */
       }
 
