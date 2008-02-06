@@ -22,6 +22,7 @@
 *    WPgtbu();      Get routine for WPBUTT, GET_BUTTON in MBS
 *    WPdlbu();      Kills WPBUTT
 *    WPgcbu();      Returns button color
+*    WPupbu();      Replaces button text
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -1084,20 +1085,23 @@
         short  WPupbu(
         DBint  iwin_id,
         DBint  but_id,
-        char  *newstr)
+        char  *new_str,
+        short  new_dx)
 
-/*      Replaces the text in a WPBUTT. This function is
- *      not available from MBS and the error processing
- *      is not right (copied from WPuped()).
+/*      Replaces the text and changes the length of a WPBUTT.
+ *      This function is not yet available from MBS but
+ *      could easily be added since error processing etc.
+ *      is there.
  *
  *      In: iwin_id = Parent (WPIWIN) window
  *          but_id  = Child (WPBUTT) window
- *          newstr  = New string
+ *          new_str = New string
+ *          new_dx  = New length
  *
- *      Return: WP1162 = Parent %s does not exist.
- *              WP1172 = Parent %s is not a WPIWIN.
- *              WP1182 = Edit %s does not exist.
- *              WP1192 = %s is not an edit.
+ *      Return: WP1782 = Parent %s does not exist.
+ *              WP1792 = Parent %s is not a WPIWIN.
+ *              WP1802 = Button %s does not exist.
+ *              WP1812 = %s is not a button.
  *
  *      (C)2008-02-03 J.Kjellander
  *
@@ -1116,7 +1120,7 @@
    if ( (winptr=WPwgwp((wpw_id)iwin_id)) == NULL )
      {
      sprintf(errbuf,"%d",(int)iwin_id);
-     return(erpush("WP1162",errbuf));
+     return(erpush("WP1782",errbuf));
      }
 /*
 ***Is it a WPIWIN.
@@ -1124,7 +1128,7 @@
    if ( winptr->typ != TYP_IWIN )
      {
      sprintf(errbuf,"%d",(int)iwin_id);
-     return(erpush("WP1172",errbuf));
+     return(erpush("WP1792",errbuf));
      }
 /*
 ***Get a C-ptr to the WPIWIN.
@@ -1136,13 +1140,13 @@
    if ( iwinptr->wintab[(wpw_id)but_id].ptr == NULL )
      {
      sprintf(errbuf,"%d",(int)but_id);
-     return(erpush("WP1182",errbuf));
+     return(erpush("WP1802",errbuf));
      }
 
    if ( iwinptr->wintab[(wpw_id)but_id].typ != TYP_BUTTON )
      {
      sprintf(errbuf,"%d",(int)but_id);
-     return(erpush("WP1192",errbuf));
+     return(erpush("WP1812",errbuf));
      }
 /*
 ***Get a C-ptr to the WPBUTT.
@@ -1151,14 +1155,21 @@
 /*
 ***Check string length.
 */
-    ntkn = strlen(newstr);
+    ntkn = strlen(new_str);
     if ( ntkn < 0 ) ntkn = 0;
     if ( ntkn > V3STRLEN ) ntkn = V3STRLEN;
-    newstr[ntkn] = '\0';
+    new_str[ntkn] = '\0';
 /*
 ***Update the WPBUTT.
 */
-    strcpy(butptr->stron,newstr);
+    strncpy(butptr->stron,new_str,V3STRLEN);
+
+    if ( new_dx > 0 )
+      {
+      butptr->geo.dx = new_dx;
+      XResizeWindow(xdisp,butptr->id.x_id,butptr->geo.dx,butptr->geo.dy);
+      }
+
     XClearWindow(xdisp,butptr->id.x_id);
     WPxpbu(butptr);
 /*

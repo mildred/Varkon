@@ -268,7 +268,7 @@ bool  WPbtbu(WPBUTT *butptr);
 bool  WPcrbu(WPBUTT *butptr, bool enter);
 short WPgtbu(DBint iwin_id, DBint butt_id, DBint *status);
 short WPdlbu(WPBUTT *butptr);
-short WPupbu(DBint iwin_id, DBint but_id, char *newstr);
+short WPupbu(DBint iwin_id, DBint but_id, char *newstr, short new_dx);
 
 unsigned long WPgcbu(wpw_id p_id, int colnum);
 

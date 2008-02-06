@@ -522,7 +522,7 @@ static short savelw(WPLWIN *lwinpt);
  *
  *      Out: *serv_id = ID of window that served the event.
  *
- *      return: TRUE =  Event served.
+ *      Return: TRUE =  Event served.
  *              FALSE = This window (with subwindows) not involved.
  *
  *      (C)microform ab 6/12/93 J. Kjellander

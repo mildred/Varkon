@@ -480,7 +480,7 @@ loop:
 update:
    make_filelist(act_path,filter,setpath,MAX_FILES,FNBUF_SIZE,fnptrs,fnbuf,&n_alts);
    listarea_layout();
-   WPupbu(iwin_id,path_id,act_path);
+   WPupbu(iwin_id,path_id,act_path,WPstrl(act_path));
 /*
 ***Do we need to create or remove a slidebar ?
 */
@@ -499,7 +499,7 @@ update:
      sbar = FALSE;
      }
 /*
-***Uptade the contents of the list window.
+***Update the contents of the list window.
 */
    fssb_callback(iwinpt);
    WPwshw(iwin_id);

@@ -177,23 +177,22 @@ WPWIN wpwtab[WTABSIZ];
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         bool           WPwbut(
         XButtonEvent  *butev,
         wpw_id        *serv_id)
 
-/*      Button handler WP windows. Kollar
- *      vilken typ av f�nster det �r och anropar
- *      r�tt rutin f�r jobbet.
+/*      Button handler WPIWIN, WPLWIN, WPGWIN and
+ *      WPRWIN windows.
  *
- *      In: butev    = Pekare till Button-event.
- *          serv_id  = Pekare till utdata.
+ *      In: butev    = Ptr to Button event.
+ *          serv_id  = Ptr to output.
  *
- *      Ut: *serv_id = ID f�r subf�nster som servat eventet.
+ *      Out: *serv_id = ID of serving subwindow.
  *
- *      FV. TRUE  = Eventet har servats.
- *          FALSE = Eventet g�llde inga av dessa f�nster.
+ *      Return: TRUE  = Event served.
+ *              FALSE = Event not served.
  *
  *      (C)microform ab 6/12/93 J. Kjellander
  *
@@ -210,9 +209,9 @@ WPWIN wpwtab[WTABSIZ];
     WPRWIN *rwinpt;
 
 /*
-***S�k igenom wpwtab och anropa alla f�nstrens
-***respektive butt-hanterare. Den som vill k�nnas vid
-***eventet tar hand om det.
+***Search through wpwtab[] and call all windows
+***button handlers. The window that wants the
+***event will serve it.
 */
     for ( i=0; i<WTABSIZ; ++i )
       {
@@ -242,7 +241,9 @@ WPWIN wpwtab[WTABSIZ];
           }
         }
       }
-
+/*
+***No window wants to have this event.
+*/
     return(FALSE);
   }
 

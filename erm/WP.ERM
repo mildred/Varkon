@@ -79,3 +79,7 @@ VARKON Error messages for WINPAC
 175  2  Can't open TIFF file %s
 176  3  Cant allocate TIFF buffer, error code = %s
 177  3  Unknown error from TIFF driver, error code = %s
+178  2  WPupbu(), WPIWIN nr:%s does not exist
+179  2  WPupbu(), Window nr:%s is not a WPIWIN
+180  2  WPupbu(), WPBUTT nr:%s does not exist
+181  2  WPupbu(), Window nr:%s is not a WPBUTT
