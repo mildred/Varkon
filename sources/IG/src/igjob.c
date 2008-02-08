@@ -1717,11 +1717,16 @@ l1:
 
   {
     short  status;
-    char   newnam[JNLGTH+1];
-    char   oldnam[JNLGTH+1];
+    char   newnam[JNLGTH],newdir[V3PTHLEN];
+    char   oldnam[JNLGTH],olddir[V3PTHLEN];
 
 /*
-***Get new job name.
+***Save current jobnam and jobdir.
+*/
+   strncpy(oldnam,jobnam,JNLGTH);
+   strncpy(olddir,jobdir,V3PTHLEN);
+/*
+***Get new jobdir and jobnam.
 */
    status = IGselect_job(newnam);
    if      ( status == REJECT ) return(REJECT);
@@ -1730,22 +1735,25 @@ l1:
      errmes();
      return(0);
      }
+
+   strncpy(newdir,jobdir,V3PTHLEN);
 /*
 ***Run optional exit_macro.
 */
     exit_macro();
 /*
-***Save all.
+***Save everything in old directory.
 */
+    strncpy(jobdir,olddir,V3PTHLEN);
     IGsjpg();
 /*
-***Swap jobname.
+***Change to the new jobdir and jobnam.
 */
-    strcpy(oldnam,jobnam);
-    strcpy(jobnam,newnam);
+    strncpy(jobdir,newdir,V3PTHLEN);
+    strncpy(jobnam,newnam,JNLGTH);
 /*
 ***Try to load the new job. If not successful,
-***load old job again.
+***load the old job again.
 */
     WPclrg();
 
@@ -1754,7 +1762,8 @@ l1:
     if ( status < 0 )
       {
       if ( status != REJECT  &&  status != GOMAIN ) errmes();
-      strcpy(jobnam,oldnam);
+      strncpy(jobdir,olddir,V3PTHLEN);
+      strncpy(jobnam,oldnam,JNLGTH);
       WPclrg();
       if ( IGload() < 0 ) return(EREXIT);
       else return(status);
@@ -1923,6 +1932,7 @@ l1:
         short IGselect_job(char *newjob)
 
 /*      Select a jobnam (and jobdir).
+ *      NOTE: May change global variable jobdir.
  *
  *      Out: *newjob = New job name.
  *

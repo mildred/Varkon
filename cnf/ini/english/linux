@@ -149,6 +149,11 @@ varkon.rwin.icon_6.geometry:    +190+0
 varkon.rwin.icon_6.name:        Varkon_levels.xpm
 varkon.rwin.icon_6.action:      f197
 varkon.rwin.icon_6.tooltip:     Blank, unblank or list levels
+
+varkon.rwin.icon_7.geometry:    +228+0
+varkon.rwin.icon_7.name:        Varkon_printer.xpm
+varkon.rwin.icon_7.action:      f150
+varkon.rwin.icon_7.tooltip:     Create TIFF file (Beta test function)
 !*
 !***Resources for the system mode dialogue.
 !*

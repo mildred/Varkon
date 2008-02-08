@@ -75,6 +75,7 @@ t72  = "MBO-file already exists ! Replace (y/n) ?"
 t73  = "RES-file already exists ! Replace (y/n) ?"
 t74  = "JOB-file already exists ! Replace (y/n) ?"
 t75  = "MBS-file already exists ! Replace (y/n) ?"
+t76  = "TIFF-file already exists ! Replace (y/n) ?"
 
 t79  = "m" ! Mesh
 t80  = "p" ! Point

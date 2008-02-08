@@ -43,6 +43,15 @@ extern "C" {
 #define GLRASTER_PNG_FILE	6
 */
 
+/*
+***The following 2 #defines added by J.Kjellander 2008-02-08
+***Used by WPprint_GL() to set the size of the X11 window
+***used for OpenGL rendering.
+*/
+#define MAX_VIEW_WIDTH  1024
+#define MAX_VIEW_HEIGHT 1024
+
+
 int gl_plot(void (*draw)(void* hdl),		/* drawing callback */
 			void *drawHdl,					/* data handle for callback */
 			GLdouble mdvwMatrix[16],		/* model-view matrix for initialization */
@@ -53,6 +62,7 @@ int gl_plot(void (*draw)(void* hdl),		/* drawing callback */
 			double height, /*           "               */
 			double nearVal,    /* millimeters, front depth of frustum */
 			double farVal,     /* millimeters, back depth of frustum */
+                        char *tiffTag,
 			char *fileName);
 
 #ifdef __cplusplus

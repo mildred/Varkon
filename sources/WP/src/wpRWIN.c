@@ -138,7 +138,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
 /*      Create a WPRWIN.
  *
  *      In: x     = Position in X.
- *          y     = Position in Y.   
+ *          y     = Position in Y.
  *          dx    = Size in X-dir.
  *          dy    = Size in Y-dir.
  *          label = Window title.
@@ -224,7 +224,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
 /*
 ***Window attributes.
 */
-   xwina.colormap          = rwinpt->colmap; 
+   xwina.colormap          = rwinpt->colmap;
    xwina.background_pixel  = rwinpt->bgnd2;
    xwina.border_pixel      = 0;
    xwina.override_redirect = False;
@@ -1498,7 +1498,7 @@ static short setup_ogl(
 
 /*
 ***Testa att be om en overlay.
-*/
+*
    i = 0;
    visatt[i++] = GLX_BUFFER_SIZE;
    visatt[i++] = 4;
@@ -1507,7 +1507,7 @@ static short setup_ogl(
    visatt[i]   = None;
    pvisinfo    = glXChooseVisual(xdisp,xscr,visatt);
 
-/*
+*
 ***The end.
 */
    return(0);

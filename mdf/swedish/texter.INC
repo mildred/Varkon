@@ -79,6 +79,7 @@ t72  = "MBO-filen finns redan ! Skriva över (j/n) ?"
 t73  = "RES-filen finns redan ! Skriva över (j/n) ?"
 t74  = "JOB-filen finns redan ! Skriva över (j/n) ?"
 t75  = "MBS-filen finns redan ! Skriva över (j/n) ?"
+t76  = "TIFF-filen finns redan ! Skriva över (j/n) ?"
 
 !
 ! Pektecken

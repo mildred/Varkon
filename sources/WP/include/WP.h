@@ -591,7 +591,6 @@ short WPmodl_highlight(WPRWIN *rwinpt, int n_ents, DBptr * la_arr);
 void  WPdodl_highlight(WPRWIN *rwinpt);
 short WPsodl_all(WPRWIN *rwinpt);
 short WPeodls(WPRWIN *rwinpt, int ix, int iy, int dix, int diy);
-short WPnrrw(WPRWIN *rwinpt);
 
 /*
 ***wpplot.c

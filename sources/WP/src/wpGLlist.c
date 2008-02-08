@@ -14,7 +14,6 @@
 *    WPdodl_highlight(); Delete all highlight lists.
 *    WPsodl_all();       Show (execute) all displaylists in a window
 *    WPeodls();          Executes OpenGL DisplayList 1 for Selection
-*    WPnrrw();           Normalizes view box
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -87,16 +86,17 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
     short   WPmmod(
     WPRWIN *rwinpt)
 
-/*    Calculates the bounding box of the model.
+/*    Calculates the bounding box of the model and
+ *    creates a viewbox with same proportions in X and
+ *    Y as the window and big enough in Z to permit rotation
+ *    without clipping.
  *
  *    In: rwinpt = C-ptr to WPRWIN
- *
- *    Return: 0
  *
  *    (C)microform ab 1998-01-09 J. Kjellander
  *
  *    1998-10-27 Bugfix deallokering, J.Kjellander
- *    2004-07-10 Mesh J.Kjellander, ï¿½rebro university
+ *    2004-07-10 Mesh J.Kjellander, Örebro university
  *    2007-06-16 1.19, J.Kjellander
  *    2007-09-24 3D dims, J.Kjellander
  *
@@ -124,8 +124,9 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
    DBSeg   *graseg,seg[4];
    DBMesh   mesh;
    char     a[PLYMXV];
-   double   x[PLYMXV],y[PLYMXV],z[PLYMXV],crdvek[4*GMXMXL];
-   double   xmin,xmax,ymin,ymax,zmin,zmax;
+   double   x[PLYMXV],y[PLYMXV],z[PLYMXV],crdvek[4*GMXMXL],xmin,xmax,
+            ymin,ymax,zmin,zmax,mdx,mdy,mdz,centre_x,centre_y,centre_z,
+            biggest,gadx,gady,mprop,gprop;
 
 /*
 ***This might take time.
@@ -403,27 +404,86 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 /*
 ***Assure that the viewbox has positive volume.
 */
-
    if ( xmin > xmax ) xmin = xmax = 0.0;
    if ( ymin > ymax ) ymin = ymax = 0.0;
    if ( zmin > zmax ) zmin = zmax = 0.0;
 
-   if ( xmax - xmin < 1E3 )
+   if ( xmax - xmin < 1E-3 )
      {
      xmax += 0.01;
      xmin -= 0.01;
      }
 
-   if ( ymax - ymin < 1E3 )
+   if ( ymax - ymin < 1E-3 )
      {
      ymax += 0.01;
      ymin -= 0.01;
      }
 
-   if ( zmax - zmin < 1E3 )
+   if ( zmax - zmin < 1E-3 )
      {
      zmax += 0.01;
      zmin -= 0.01;
+     }
+/*
+***Where is the centre and which direction is biggest ?
+*/
+   centre_x = (xmin + xmax)/2.0;
+   centre_y = (ymin + ymax)/2.0;
+   centre_z = (zmin + zmax)/2.0;
+
+   mdx = xmax - xmin;
+   mdy = ymax - ymin;
+   mdz = zmax - zmin;
+
+   biggest = mdx;
+   if ( mdy > biggest ) biggest = mdy;
+   if ( mdz > biggest ) biggest = mdz;
+/*
+***Set the size of the viewbox in X and Y equal to 1.2*(the biggest)
+***of X, Y and Z. This is a compromise between the possibility
+***to rotate the object without getting it clipped to the window
+***limits and still getting a reasonable scale.
+*/
+   xmax = centre_x + 1.2*biggest/2.0;
+   xmin = centre_x - 1.2*biggest/2.0;
+   ymax = centre_y + 1.2*biggest/2.0;
+   ymin = centre_y - 1.2*biggest/2.0;
+/*
+***For Z we calculate the true space diagonal and make the viewbox
+***big enough to permit rotation without Z-clipping.
+*/
+   biggest = SQRT(3*biggest*biggest)/2.0;
+   zmax = centre_z + biggest;
+   zmin = centre_z - biggest;
+/*
+***Window size in millimeters.
+*/
+   gadx = rwinpt->geo.psiz_x *
+        (rwinpt->vy.scrwin.xmax - rwinpt->vy.scrwin.xmin);
+   gady = rwinpt->geo.psiz_y *
+        (rwinpt->vy.scrwin.ymax - rwinpt->vy.scrwin.ymin);
+/*
+***Viewbox size in millimeters.
+*/
+   mdx = xmax - xmin;
+   mdy = ymax - ymin;
+/*
+***Window proportions are gady/gadx. Adjust viewbox X and Y
+***to the same proportions.
+*/
+   gprop = gady/gadx;
+   mprop = mdy/mdx;
+
+   if ( mprop > gprop )
+     {
+     rwinpt->xmin -= (mdy/gprop - mdx)/2.0;
+     rwinpt->xmax += (mdy/gprop - mdx)/2.0;
+     }
+   else if ( mprop < gprop )
+     {
+     rwinpt->ymin -= (gprop*mdx - mdy)/2.0;
+     rwinpt->ymax += (gprop*mdx - mdy)/2.0;
      }
 /*
 ***Save viewbox in WPRWIN.
@@ -435,10 +495,6 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
    rwinpt->zmin = zmin;
    rwinpt->zmax = zmax;
 /*
-***Normalize viewbox.
-*/
-   WPnrrw(rwinpt);
-/*
 ***Turn off wait....
 */
 #ifdef UNIX
@@ -448,7 +504,7 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
    SetCursor(LoadCursor(NULL,IDC_ARROW));
 #endif
 /*
-***Slut.
+***The end.
 */
    return(0);
  }
@@ -987,7 +1043,7 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
 */
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 /*
-***The size of the model box.
+***The size of the view box.
 */
    mdx = rwinpt->xmax - rwinpt->xmin;
    mdy = rwinpt->ymax - rwinpt->ymin;
@@ -998,28 +1054,23 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
    glMatrixMode(GL_PROJECTION);
    glLoadIdentity();
 /*
-***Vyboxens storlek i Z-led ï¿½r konstant och
-***lika stor som modellboxen i Z-led.
-***vdz05 = halva vyboxens storlek.
+***vdz05 = half size in Z.
 */
    vdz05 = 0.5*mdz;
 /*
-***Fokalplanet och dï¿½rmed hela boxens lï¿½ge i Z-led beror
-***av aktuell perspektiv-faktor. Fï¿½r ej vara mindre
-***ï¿½n halva vyboxens dz och skall variera inom vettiga vï¿½rden
-***sï¿½ att lagom variation i perspektiv-effekt uppnï¿½s
-***nï¿½r rwinpt->pfactor musstyrs frï¿½n 0 -> 100. Default
-***pfaktor = 0%.
+***The position of the focal plane (and position of box in Z)
+***depends on the current perspective. Not to be smaller than
+***half box dz and vary within reasonable values so that
+***a good variation in perspective effect is achieved when
+***rwinpt->pfactor varies between 0 -> 100. Default
+***pfactor = 0%.
 */
    fd = mdz + 0.2*(100.0-rwinpt->pfactor)*mdz;
 /*
-***Vyboxens storlek i X- och Y-led beror av modellboxens
-***storlek och aktuell skala. Faktorn 1.1 ï¿½r godtycklig.
-***1.1 ï¿½r "lagom" fï¿½r att modellen skall bli lite mindre
-***ï¿½n fï¿½nstret.
+***Scale the viewbox according to current WPRWIN.
 */
-   vdx = 1.1*mdx*rwinpt->scale;
-   vdy = 1.1*mdy*rwinpt->scale;
+   vdx = mdx*rwinpt->scale;
+   vdy = mdy*rwinpt->scale;
 /*
 ***Vyboxens placering i X- och Y-led ï¿½r alltid
 ***symmetriskt runt (0,0). Storleken beror av
@@ -1095,7 +1146,7 @@ static GLdouble plane[4] = {0.0,0.0,-1.0,0.0};
    glRotated(rwinpt->rotx,gl_matrix[0],gl_matrix[4],gl_matrix[8] );
    glRotated(rwinpt->roty,gl_matrix[1],gl_matrix[5],gl_matrix[9] );
 /*
-***Clear rotaion angles in window.
+***Clear rotation angles in window.
 */
    rwinpt->rotx = 0.0;
    rwinpt->roty = 0.0;
@@ -2490,93 +2541,7 @@ static void     pr_sur2(
  }
 
 /********************************************************/
-/*!******************************************************/
-
-        short   WPnrrw(
-        WPRWIN *rwinpt)
-
-/*      Normaliserar proportionerna fï¿½r RWIN-fï¿½nstrets
- *      vy-box.
- *
- *      In: rwinpt => Pekare till fï¿½nster.
- *
- *      Ut: Inget.   
- *
- *      (C)microform ab 1998-01-08 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-   double mdx,mdy,mdz,gadx,gady,mprop,gprop;
-
-/*
-***Hur stor ï¿½r fï¿½nstrets grafiska area.
-*/
-   gadx = rwinpt->geo.psiz_x *
-        (rwinpt->vy.scrwin.xmax - rwinpt->vy.scrwin.xmin);
-   gady = rwinpt->geo.psiz_y *
-        (rwinpt->vy.scrwin.ymax - rwinpt->vy.scrwin.ymin);
-/*
-***Hur stort ï¿½r modellfï¿½nstret i millimeter.
-*/
-   mdx = rwinpt->xmax - rwinpt->xmin;
-   mdy = rwinpt->ymax - rwinpt->ymin;
-/*
-***Fï¿½rhï¿½llandet mellan grafiska areans hï¿½jd och bredd ï¿½r gady/gadx.
-***Se till att modellfï¿½nstret fï¿½r samma fï¿½rhï¿½llande sï¿½ att cirklar
-***blir "runda" tex.
-*/
-   gprop = gady/gadx;
-   mprop = mdy/mdx;
-
-   if ( mprop > gprop )
-     {
-     rwinpt->xmin -= (mdy/gprop - mdx)/2.0;
-     rwinpt->xmax += (mdy/gprop - mdx)/2.0;
-     }
-   else if ( mprop < gprop )
-     {
-     rwinpt->ymin -= (gprop*mdx - mdy)/2.0;
-     rwinpt->ymax += (gprop*mdx - mdy)/2.0;
-     }
-/*
-***Gï¿½r boxen lite stï¿½rre.
-*/
-   mdx = rwinpt->xmax - rwinpt->xmin;
-   mdy = rwinpt->ymax - rwinpt->ymin;
-   mdz = rwinpt->zmax - rwinpt->zmin;
-
-   rwinpt->xmin -= 0.2*mdx;
-   rwinpt->xmax += 0.2*mdx;
-
-   rwinpt->ymin -= 0.2*mdy;
-   rwinpt->ymax += 0.2*mdy;
-/*
-***Sï¿½tt boxens storlek i Z-led sï¿½ stor att den klarar
-***en full rotation utan att klippas.
-*/
-   if ( mdx > mdz )
-     {
-     rwinpt->zmin -= (mdx - mdz)/2.0;
-     rwinpt->zmax += (mdx - mdz)/2.0;
-     mdz = rwinpt->zmax - rwinpt->zmin;
-     }
-
-   if ( mdy > mdz )
-     {
-     rwinpt->zmin -= (mdy - mdz)/2.0;
-     rwinpt->zmax += (mdy - mdz)/2.0;
-     mdz = rwinpt->zmax - rwinpt->zmin;
-     }
-
-   rwinpt->zmin -= 0.6*mdz;
-   rwinpt->zmax += 0.6*mdz;
-
-   return(0);
-  }
-
 /********************************************************/
-/*!******************************************************/
 
   static void    set_linewidth(
          WPRWIN *rwinpt,
@@ -2651,7 +2616,7 @@ static void     pr_sur2(
 
 /*      Sets the current lightmodel. Wireframes are
  *      rendered in GL_LIGHT_MODEL_AMBIENT mode. Surfaces
- *      are rendered using the currentlu active light
+ *      are rendered using the currently active light
  *      sources.
  *
  *      In: rwinpt = C ptr to OpenGL window.

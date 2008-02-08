@@ -35,8 +35,8 @@
 #include "../GL_to_TIFF/camera.h"
 #include "../GL_to_TIFF/gl_print.h"
 
-
-extern char jobdir[];
+extern V3MDAT sydata;
+extern char   jobdir[],jobnam[],svnversion[];
 
 /*
 ***Prototypes for internal functions.
@@ -58,29 +58,60 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
  *
  *      In: rwinpt = C ptr to the WPRWIN to be printed
  *
- *      (C)2008-01-27 J.Kjellander
+ *      (C)2008-02-06 J.Kjellander
  *
  ********************************************************/
 
   {
    short       status;
-   int         plot_status;
+   int         i,plot_status,npix_x,npix_y;
    double      dpi,width,height,mdz,fd,nearVal,farVal;
    GLdouble    mdvwMatrix[16];
    CameraSet_t cs;
-   char        errbuf[V3STRLEN],file_name[V3PTHLEN],
-               mesbuf[V3PTHLEN];
+   char        errbuf[V3STRLEN],destination[V3PTHLEN],
+               mesbuf[V3PTHLEN],outpath[V3PTHLEN],
+               outfile[JNLGTH],tiff_tag[V3STRLEN];
+   Window      xwin_id;
 
 /*
-***Activate the OpenGL RC of this window.
+***Get the TIFF file destination. Default directory
+***is set to the current job directory and default
+***name to the current job basename.
 */
-   glXMakeCurrent(xdisp,rwinpt->id.x_id,rwinpt->rc);
+   strncpy(outpath,jobdir,V3PTHLEN);
+start:
+   status = WPfile_selector("TIFF file destination",
+                            outpath,
+                            TRUE,
+                            jobnam,
+                            "*.TIFF",
+                            outfile);
+
+   if ( status == REJECT ) return(REJECT);
 /*
-***Set up the input to Armin Faltl's TIFF creator.
+***Strip possible trailing ".TIFF".
+*/
+   if ( IGcmpw("*.TIFF",outfile) )
+     {
+     i = strlen(outfile) - 5;
+     outfile[i] = '\0';
+     }
+/*
+***Add path + file + ".TIFF" to a complete destination.
+*/
+   strncpy(destination,outpath,V3PTHLEN);
+   strncat(destination,outfile,JNLGTH);
+   strncat(destination,".TIFF",5);
+/*
+***Check if file already exists.
+*/
+   if ( IGftst(destination) && !IGialt(76,67,68,TRUE) ) goto start;
+/*
+***Set up an environment for Armin Faltl's TIFF creator.
 *
 ***1. Drawing callback. Use draw_callback().
 *
-***2. Data for callback. Currentlu NULL.
+***2. Data for callback. Use a ptr to the WPRWIN.
 *
 ***3. Get the mdvwMatrix[] from GL. This works as long as
 ***   we want to print what we see in the window.
@@ -107,15 +138,15 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
 *
 ***The bounding box of the model in this window is rwinpt->xmin,xmax etc.
 ***Set the camera at infinite Z, the center in the midle of the bounding
-***box, with Y as up_vector. Use half the size of the box in the X-direction
-***as radius.
+***box, with Y as up_vector. Use the size of the box in the Z-direction
+***to calculate a radius. A WPRWIN uses different sizes in X,Y and Z !
 */
    cs.camX = cs.camY = 0.0; cs.camZ = 1.0;
    cs.cenX = (rwinpt->xmin + rwinpt->xmax)*0.5;
    cs.cenY = (rwinpt->ymin + rwinpt->ymax)*0.5;
-   cs.cenX = (rwinpt->zmin + rwinpt->zmax)*0.5;
+   cs.cenZ = (rwinpt->zmin + rwinpt->zmax)*0.5;
    cs.altX = cs.altZ = 0.0; cs.altY = 1.0;
-   cs.orthoRadius = cs.camX - rwinpt->xmin;
+   cs.orthoRadius = rwinpt->scale*(rwinpt->zmax - rwinpt->zmin)/2.0;
    cs.mode = CAMMODE_PRJ_BIT;
 /*
 ***5. Device type. Use GLRASTER_TIFF_FILE_GREYSCALE to create TIFF file.
@@ -155,11 +186,18 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
 ***to the lower-right and the rectangle-center will normally not be a pixel
 ***center or -border. width has same properties as height.
 *
-***As I understand it, this is just the desired size of the image in
-**millimeters on paper ? Lets try with something reasonable and see...
+***This is the desired size of the image in millimeters on paper ?
+***Independant of size, it is reasonable to give the image the same
+***proportions as on the screen. Maybe even the same size ?
 */
-   width  = 160.0;
-   height = 160.0;
+   width  = rwinpt->geo.psiz_x *
+            (rwinpt->vy.scrwin.xmax - rwinpt->vy.scrwin.xmin);
+   height = rwinpt->geo.psiz_y *
+            (rwinpt->vy.scrwin.ymax - rwinpt->vy.scrwin.ymin);
+/*
+   width  = 150.0;
+   height = 150.0;
+*/
 /*
 ***8. nerarVal and farVal
 *
@@ -186,21 +224,53 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
    nearVal = fd - 0.5*mdz;
    farVal  = fd + 0.5*mdz;
 /*
-***9. Filename
-*
-***As a test, lets use the current job directory and a hard coded name.
+***9. Filename = destination from above.
 */
-   strncpy(file_name,jobdir,V3PTHLEN);
-   strncat(file_name,"glplot.TIFF",V3PTHLEN);
+
+/*
+***Since the plot resolution is usually higher than the display resolution
+***the WPRWIN might not have pixels enough for OpenGL to render so we
+***create a simplistic unmapped X window with enough pixels to render the
+***scene with the print resolution into it (+ 1 pix to be sure !)
+***Armins TIFF creator divides the image into sub images with a fixed
+***size and renders each sub image separately. The size of a sub image
+***is defined in gl_print.h
+*/
+   npix_x = MAX_VIEW_WIDTH;
+   npix_y = MAX_VIEW_HEIGHT;
+
+   xwin_id = XCreateWindow(xdisp,
+                           rwinpt->id.x_id,
+                           0,0,
+                           npix_x,npix_y,
+                           0,
+                           CopyFromParent,
+                           InputOutput,
+                           CopyFromParent,
+                           0,
+                           NULL);
+/*
+***Activate the OpenGL RC in this window.
+*/
+   glXMakeCurrent(xdisp,xwin_id,rwinpt->rc);
 /*
 ***Turn off Varkon scissor test during plot.
 */
    glDisable(GL_SCISSOR_TEST);
 /*
+***Tiff tag. A text that is stored in the TIFF file indicating
+***the software used to create the file.
+*/
+   sprintf(tiff_tag,"Varkon %d.%d%c svn#%s using gl_plot() by A.Faltl",
+                    sydata.vernr,
+                    sydata.revnr,
+                    sydata.level,
+                    svnversion);
+/*
 ***Call the TIFF creator.
 */
    plot_status = gl_plot(draw_callback,
-                         NULL,
+                         rwinpt,
                          mdvwMatrix,
                         &cs,
                          GLRASTER_TIFF_FILE_GREYSCALE,
@@ -209,9 +279,19 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
                          height,
                          nearVal,
                          farVal,
-                         file_name);
+                         tiff_tag,
+                         destination);
 /*
-***gl_plot() changes the Viewport so we must reset it for the WPRWIN.
+***Activate the WPRWIN in the GL Rendering Context again
+***so that the RC is valid after we delete the X window.
+*/
+   glXMakeCurrent(xdisp,rwinpt->id.x_id,rwinpt->rc);
+/*
+***The temporary X window is now not used anymore and can be deleted.
+*/
+   XDestroyWindow(xdisp,xwin_id);
+/*
+***gl_plot() changes the Viewport of the WPRWIN so we must reset it now.
 ***Also, clear the buffer (margins) and turn on scissor test again.
 */
    glViewport((GLint)rwinpt->vy.scrwin.xmin,(GLint)rwinpt->vy.scrwin.ymin,
@@ -220,18 +300,18 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
    glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glEnable(GL_SCISSOR_TEST);
 /*
-***Return status processing after gl_plot().
+***Status processing after gl_plot().
 */
    switch ( plot_status )
      {
      case 0:
      status = 0;
-     sprintf(mesbuf,"%s created !",file_name);
+     sprintf(mesbuf,"%s created !",destination);
      WPaddmess_mcwin(mesbuf,WP_MESSAGE);
      break;
 
      case 1:
-     status = erpush("WP1752",file_name);
+     status = erpush("WP1752",destination);
      break;
 
      case 2:
@@ -335,9 +415,9 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
 
  static void draw_callback(void *data)
 
-/*      The draw callback. Needs a handle to the right
- *      WPGWIN as input but current version of Armin's
- *      driver does not support that.
+/*      The draw callback.
+ *
+ *      In: data = C ptr to the WPRWIN.
  *
  *      (C)2008-01-27 J.Kjellander
  *
