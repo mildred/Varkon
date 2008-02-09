@@ -29,10 +29,8 @@
 #include "../../WP/include/WP.h"
 
 /*
-***camera.h defines the camera struct used by Armin's code.
 ***gl_print.h is the function prototype for gl_print();
 */
-#include "../GL_to_TIFF/camera.h"
 #include "../GL_to_TIFF/gl_print.h"
 
 extern V3MDAT sydata;
@@ -109,7 +107,7 @@ start:
 /*
 ***Set up an environment for Armin Faltl's TIFF creator.
 *
-***1. Drawing callback. Use draw_callback().
+***1. Drawing callback. Use draw_callback() and supply a ptr to the WPRWIN as input.
 *
 ***2. Data for callback. Use a ptr to the WPRWIN.
 *
@@ -236,8 +234,8 @@ start:
 ***size and renders each sub image separately. The size of a sub image
 ***is defined in gl_print.h
 */
-   npix_x = MAX_VIEW_WIDTH;
-   npix_y = MAX_VIEW_HEIGHT;
+   npix_x = GLRASTER_FRAME_WIDTH;
+   npix_y = GLRASTER_FRAME_HEIGHT;
 
    xwin_id = XCreateWindow(xdisp,
                            rwinpt->id.x_id,
@@ -279,8 +277,8 @@ start:
                          height,
                          nearVal,
                          farVal,
-                         tiff_tag,
-                         destination);
+                         destination,
+                         tiff_tag);
 /*
 ***Activate the WPRWIN in the GL Rendering Context again
 ***so that the RC is valid after we delete the X window.

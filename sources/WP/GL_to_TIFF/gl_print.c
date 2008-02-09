@@ -1,12 +1,4 @@
 /*
-From the GL docs.
-
-            Values for pixels that lie outside the window
-            connected to the current GL context are undefined.
-*/
-
-
-/*
  * This is a driver routine, that creates a printable raster image in
  * TIFF-format from a scene via OpenGL frame buffer rendering.
  * The output is a compressed halftone grey image with 8 bits per pixel,
@@ -50,14 +42,10 @@ From the GL docs.
 #include <stdlib.h>
 #include <string.h>
 
-#include "../../DB/include/DB.h"
-#include "../../IG/include/IG.h"
-#include "../../WP/include/WP.h"
-
-
 /*JK #define AJF_DEBUG */
 
 #define MAX_BUFFER	8388608	/* 2^23, 2^24 = 16777216 */
+
 
 int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 		    void *drawHdl,
@@ -69,12 +57,12 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 			double height,	/*           "               */
 			double nearVal,	/* millimeters, front depth of frustum */
 			double farVal,	/* millimeters, back depth of frustum */
-                        char *tiffTag,  /* The TIFF tag */
-			char *fileName)
+			char *fileName,
+			char *softwareName)
 	/*
 	 * Consider: the values defining the frustum must be in millimeters
 	 * and not in drawing units, as the raster output must fit on paper
-	 * with the specified resolution. 
+	 * with the specified resolution.
 	 *
 	 * If you want your near clipping plane at a distance, that doesn't
 	 * fit for your papersize you can achieve the desired result with
@@ -107,13 +95,13 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 #endif
 
 	/* set the view dimensions to reasonable, memory-limited defaults */
-	maxViewWdt = 1024;
+	maxViewWdt = GLRASTER_FRAME_WIDTH;
+	maxViewHgt = GLRASTER_FRAME_HEIGHT;
 	/*
 	maxViewWdt = 2048;
 	maxViewWdt = 2043; // use an odd number for debugging
 	maxViewWdt = 1465; // use an odd number for debugging, 3 h-frames
 	*/
-	maxViewHgt = 1024;
 
 	/* compute the image-, frame- and stripe dimensions */
 	hpix = ceil(dpi * width  / 25.4);
@@ -167,7 +155,8 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 	/* open the TIFF-image file and set its characteristics */
 	imgHdl = TIFFOpen(fileName, "w");
 	if (imgHdl == 0) return 1;
-	TIFFSetField(imgHdl, TIFFTAG_SOFTWARE, tiffTag);
+/*	TIFFSetField(imgHdl, TIFFTAG_SOFTWARE, "A. Faltl's CAD-demo");*/
+	TIFFSetField(imgHdl, TIFFTAG_SOFTWARE, softwareName);
 	TIFFSetField(imgHdl, TIFFTAG_BITSPERSAMPLE, 8);
 	TIFFSetField(imgHdl, TIFFTAG_SAMPLESPERPIXEL, 1);	/* monochrome, greyscale */
 	TIFFSetField(imgHdl, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
@@ -232,12 +221,10 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 	for (i = 0; i < verticalFrames; i++)
 		/* process a row of frames to (a) TIFF-stripe(s)*/
 	{
-
-		if (i < verticalFrames - 1 || vpix % maxViewHgt == 0) 
+		if (i < verticalFrames - 1 || vpix % maxViewHgt == 0)
 			viewHgt = maxViewHgt;
 		else
 			viewHgt = vpix % maxViewHgt;
-
 		bottom = top - pixSize * viewHgt;
 		if (cs->mode & CAMMODE_PRJ_BIT) {
 			left  = -cs->orthoRadius * width / height;
@@ -268,24 +255,12 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 			glLoadIdentity();
 			if (cs->mode & CAMMODE_PRJ_BIT) {
 				/* orthogonal projection */
-
-				glOrtho( left,
-						 right,
-						 bottom,
-						 top,
-						-farVal,	/* near (OpenGL reverses Z-distance...) */
-						 farVal);	/* far clipping plane */
-/*JK Lines below duplicate previous lines to try different use of nearVal/farVal. */
-/*JK Lines below work with Varkon */
-			glLoadIdentity();
-				glOrtho( left,
-						 right,
-						 bottom,
-						 top,
-						 nearVal,	/* near (OpenGL reverses Z-distance...) */
-						 farVal);	/* far clipping plane */
-/*JK end changes*/
-
+				glOrtho(left,
+						right,
+						bottom,
+						top,
+						nearVal,	/* near (OpenGL reverses Z-distance...) */
+						farVal);	/* far clipping plane */
 			} else {
 				/* perspective projection -
 				 * the first four coords and the near plane build
@@ -297,8 +272,10 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 						  nearVal,
 						  farVal);
 			}
+
 	        glMatrixMode(GL_MODELVIEW);
 			glLoadMatrixd(mdvwMatrix);
+
 			glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
 			draw(drawHdl);
 
@@ -310,15 +287,14 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 			/* read back from the frame buffer */
 			format = GL_LUMINANCE;	/* create a greyscale image */
 			type   = GL_UNSIGNED_BYTE;
-                        memset(pixBuffPtr, 0xbb, viewWdt*viewHgt);
 			glReadPixels(0, 0, viewWdt, viewHgt, format, type, pixBuffPtr);
+
 			pixBuffPtr += frameOffset;
 			left = right;
 		}
 
 		/* combine the rows of adjecent frames to image-scanlines and
 		 * write them to the TIFF-file */
-
 		for (k = viewHgt - 1; k >= 0; k--) /* GL-frames start at bottom */
 		{
 #ifdef AJF_DEBUG
@@ -332,7 +308,6 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 					viewWdt = maxViewWdt;
 				else
 					viewWdt = hpix % maxViewWdt;
-
 				pixBuffPtr = pixBuffer + j * frameOffset + k * viewWdt;
 				memcpy(scanBuffPtr,
 					   pixBuffer + j * frameOffset + k * viewWdt,
@@ -347,7 +322,6 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 
 				scanBuffPtr += viewWdt;
 			}
-
 			TIFFWriteScanline(imgHdl, scanBuffer, rowCnt++, 0);
 		}
 
