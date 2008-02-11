@@ -13,7 +13,6 @@
 *    WPlinc();   Catches alarm signal
 *    WPwait();   Handles Wait...
 *    WPwton();   Returns wait status On/Off
-*    WPupwb();   Updates WPGWIN title text
 *    WPposw();   Positions windows
 *
 *    This library is free software; you can redistribute it and/or
@@ -53,10 +52,7 @@ static WPGWIN *wt_win = NULL;
    wt_win �r en pekare till det f�nster d�r drwait()
    skall visa v�ntameddelandet. */
 
-
-extern char   jobnam[];
 extern MNUALT smbind[];
-extern V3MDAT sydata;
 
 /*!*******************************************************/
 
@@ -367,89 +363,6 @@ static  WPBUTT *buttpt = 0;
      WPdlbu(buttpt);
      buttpt = NULL;
      }
-
-   return(0);
- }
-
-/*********************************************************/
-/*!*******************************************************/
-
-       short WPupwb(
-       WPGWIN *gwinpt)
-
-/*     Uppdaterar texten i ett WPGWIN-f�nsters ram.
- *
- *     In: gwinpt => C-pekare till grafiskt f�nster
- *                   eller NULL f�r huvudf�nstret.
- *
- *     (C)microform ab 28/1/95 J. Kjellander
- *
- *     2/9/95  varkon.title.project, J. Kjellander
- *     28/9/95 NULL = GWIN_MAIN, J. Kjellander
- *
- *******************************************************!*/
-
- {
-   char      title[V3STRLEN+1],tmpbuf[V3STRLEN+1];
-   WPGWIN   *grawin;
-   WPWIN    *winptr;
-/*
-***Initiering.
-*/
-   title[0] = '\0';
-/*
-***Fixa fram f�nstrets C-pekare.
-*/
-   if ( gwinpt == NULL )
-     {
-     if ( (winptr=WPwgwp((wpw_id)GWIN_MAIN)) != NULL  &&
-         winptr->typ == TYP_GWIN ) grawin = (WPGWIN *)winptr->ptr;
-     else return(0);
-     }
-   else grawin = gwinpt;
-/*
-***The main WPGWIN can have a full title with Varkon
-***version etc.
-*/
-   if ( grawin->id.w_id == GWIN_MAIN )
-     {
-     if ( !WPgrst("varkon.title",title) )
-       {
-       sprintf(title,"VARKON %d.%d%c",sydata.vernr,sydata.revnr,
-                                      sydata.level);
-       }
-     }
-/*
-***All WPGWIN's can have job- and view name.
-*/
-   if ( WPgrst("varkon.title.jobname",tmpbuf) &&
-        strcmp(tmpbuf,"True") == 0 )
-       {
-       if ( grawin->id.w_id == GWIN_MAIN )
-         {
-         strcat(title," - ");
-         strcat(title,jobnam);
-         }
-       else strcpy(title,jobnam);
-       }
-
-   if ( WPgrst("varkon.title.viewname",tmpbuf) &&
-        strcmp(tmpbuf,"True") == 0 )
-       {
-       if ( grawin->vy.name[0] != '\0' )
-         {
-         if ( title[0] != '\0' )
-           {
-           strcat(title," - ");
-           strcat(title,grawin->vy.name);
-           }
-         else strcpy(title,grawin->vy.name);
-         }
-       }
-/*
-***Update window border.
-*/
-   XStoreName(xdisp,grawin->id.x_id,title);
 
    return(0);
  }

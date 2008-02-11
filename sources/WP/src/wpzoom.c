@@ -407,7 +407,7 @@ loop:
 /*
 ***Uppdatera fönsterramen.
 */
-     WPupwb(gwinpt);
+     WPtitle_GWIN(gwinpt);
 /*
 ***Uppdatera fönstret på skärmen.
 */

@@ -12,8 +12,9 @@
 *    WPwcrw();          Creates a WPRWIN
 *    WPbtrw();          Button routine for a WPRWIN
 *    WPxprw();          Expose routine for a WPRWIN
-*    WPcrrw();          Crossing routine for a WPRWIN 
-*    WPcorw();          Configure routine for a WPRWIN 
+*    WPtitle_RWIN();    Set the title for a WPRWIN
+*    WPcrrw();          Crossing routine for a WPRWIN
+*    WPcorw();          Configure routine for a WPRWIN
 *    WPcmrw();          Client message for a WPRWIN
 *    WPrepaint_RWIN();  Update the contents of a WPRWIN
 *    WPerrw();          Erase one or more WPRWIN
@@ -49,20 +50,19 @@
 #define SCALE       1         /* Dynamic scaling */
 #define PAN         2         /* Dynamic pan */
 
-extern char jobnam[];
+extern char   jobnam[],jobdir[];
+extern V3MDAT sydata;
 
 static short setup_ogl(WPRWIN *rwinpt);
 static short get_visinfo(WPRWIN *rwinpt);
 static void  init_colors(WPRWIN *rwinpt);
 static void  create_toolbar(WPRWIN *rwinpt);
 
-/*!******************************************************/
+/********************************************************/
 
         short WPrenw()
 
 /*      Creates a default size WPRWIN window.
- *
- *      Felkod:
  *
  *      (C)microform ab 1997-12-21 J. Kjellander
  *
@@ -82,7 +82,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
    XrmValue     value;
 
 /*
-***H�rdprogrammerad storlek och placering.
+***Default size and position.
 */
    width  = DisplayWidth(xdisp,xscr);
    height = DisplayHeight(xdisp,xscr);
@@ -92,8 +92,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
    dx = 0.6*width - 15;
    dy = 0.7*height;
 /*
-***V�rden fr�n resursdatabasen.
-***Kolla att resultatet hamnar p� sk�rmen.
+***Size and psition from ini-file ?
 */
    if ( XrmGetResource(xresDB,"varkon.rwin.geometry",
                               "Varkon.rwin.geometry",
@@ -108,11 +107,6 @@ static void  create_toolbar(WPRWIN *rwinpt);
 
    WPposw(x,y,dx+10,dy+25,&x,&y);
 /*
-***F�nstertitel.
-*/
-   if ( !WPgrst("varkon.rwin.title",title) )
-                  strcpy(title,"VARKON Dynamic Rendering");
-/*
 ***Create the window.
 */
    status = WPwcrw(x,y,dx,dy,title,&id);
@@ -120,7 +114,9 @@ static void  create_toolbar(WPRWIN *rwinpt);
 ***Update the contents from DB.
 */
    WPrepaint_RWIN(id,TRUE);
-
+/*
+***The end.
+*/
    return(status);
  }
 
@@ -453,6 +449,10 @@ static void  create_toolbar(WPRWIN *rwinpt);
 ***Activate view XY.
 */
    WPactivate_view("xy",NULL,rwinpt,TYP_RWIN);
+/*
+***Update the window border title.
+*/
+   WPtitle_RWIN(rwinpt);
 /*
 ***The end.
 */
@@ -834,6 +834,59 @@ evloop:
   }
 
 /********************************************************/
+/*********************************************************/
+
+       short   WPtitle_RWIN(
+       WPRWIN *rwinpt)
+
+/*     Update the title text of a WPRWIN window border.
+ *
+ *     In: rwinpt => C ptr to WPRWIN
+ *
+ *     (C)2008-02-10 J.Kjellander
+ *
+ *******************************************************!*/
+
+ {
+   char title[V3STRLEN+V3PTHLEN],tmpbuf[V3STRLEN];
+
+/*
+***Init.
+*/
+   title[0] = '\0';
+/*
+***All windows either have a custom title or the defult title.
+*/
+   if ( !WPgrst("varkon.title",title) )
+     {
+     sprintf(title,"VARKON %d.%d%c",sydata.vernr,sydata.revnr,
+                                    sydata.level);
+     }
+/*
+***They can also have have jobdir and/or jobname.
+*/
+   strcat(title," ");
+
+   if ( WPgrst("varkon.title.jobdir",tmpbuf) && strcmp(tmpbuf,"True") == 0 )
+     {
+     strcat(title,jobdir);
+     }
+
+   if ( WPgrst("varkon.title.jobname",tmpbuf) && strcmp(tmpbuf,"True") == 0 )
+     {
+     strcat(title,jobnam);
+     }
+/*
+***Update the window border of the WPRWIN.
+*/
+   XStoreName(xdisp,rwinpt->id.x_id,title);
+/*
+***The end.
+*/
+   return(0);
+ }
+
+/*********************************************************/
 /*!******************************************************/
 
         bool            WPcrrw(

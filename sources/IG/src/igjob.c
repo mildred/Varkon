@@ -59,10 +59,6 @@
 #include "../../EX/include/EX.h"
 #include <string.h>
 
-char   tmprit[V3PTHLEN+1];
-
-/* Namn på temporär .RIT-fil under körning. */
-
 extern pm_ptr   actmod,pmstkp;
 extern bool     tmpref,rstron,igxflg,igbflg,relpos,startup_complete;
 extern char     jobnam[],jobdir[],mdffil[],actcnm[];
@@ -78,6 +74,11 @@ extern V2NAPA   defnap;
 extern MNUDAT   mnutab[];
 
 extern char *mktemp();
+
+/*
+***In explicit mode, tmprit is the temp name of the RES-file.
+*/
+char tmprit[V3PTHLEN+1];
 
 /*
 ***Prototypes for internal functions.
@@ -139,7 +140,7 @@ static short main_loop();
  }
 
 /******************************************************!*/
-/*!******************************************************/
+/********************************************************/
 
 static short main_loop()
 
@@ -349,6 +350,10 @@ errend:
        short  IGdljb()
 
 /*     Delete job files.
+ *
+ *     NOTE: This function is currently not available
+ *           in futab[] because it does not work with
+ *           jobdir's instead of PID's. Needs more work.
  *
  *     Felkoder : IG0452 = Job %s is active.
  *
@@ -735,7 +740,7 @@ static short igingm()
                 DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL) < 0 )
                                       return(erpush("IG0183",filnam));
 /*
-***Resultatfil skapad.
+***RES-file created.
 */
     WPaddmess_mcwin(IGgtts(309),WP_MESSAGE);
 
@@ -903,7 +908,7 @@ static short igsvgm()
 
         short IGsave_all_as()
 
-/*      Save everything as.
+/*      Save a copy of everything as.
  *
  *      Return: 0  = OK
  *          REJECT = Cancel
@@ -2070,7 +2075,7 @@ l1:
 /*
 ***Update window border.
 */
-   WPupwb(NULL);
+   WPtitle_GWIN(NULL);
 /*
 ***The end.
 */

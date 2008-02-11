@@ -60,9 +60,10 @@ varkon.grawin_1.geometry:       700x500+200
 !varkon.grawin_3.geometry:       495x435+145+20
 varkon.margin_up  :             32
 !*
-!***Contents of the graphical window titlebar.
+!***What to show in graphical window titlebars.
 !*
 !varkon.title:                   Custom title
+varkon.title.jobdir:            True
 varkon.title.jobname:           True
 varkon.title.viewname:          True
 !*

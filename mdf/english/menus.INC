@@ -22,7 +22,7 @@ m2  = "VARKON-GENERIC"
 m5  = "FILE"
       "new/open",m47
       "save",f175
-      "save as",m45
+      "save copy as",m45
       "export",m24
       "macro",f152
       "shell",f125
@@ -155,7 +155,7 @@ m40 = "LINE"
       "pos/tan",f28
       "tan/tan",f29;
 
-m45 = "SAVE AS"
+m45 = "SAVE COPY AS"
       "JOB-file",f119
       "MBS-file",f144
       "MBO-file",f126

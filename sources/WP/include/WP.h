@@ -165,7 +165,6 @@ void  WPlinc();
 bool  WPwton();
 short WPwait(DBint win_id, bool wait);
 short drwait(bool draw);
-short WPupwb(WPGWIN *gwinpt);
 short WPposw(int  rx, int  ry, int  dx, int  dy, int *px, int *py);
 
 /*
@@ -319,6 +318,7 @@ bool    WPcogw(WPGWIN *gwinpt, XConfigureEvent *conev);
 bool    WPcmgw(WPGWIN *gwinpt, XClientMessageEvent *clmev);
 short   WPergw(DBint win_id);
 short   WPrepaint_GWIN(DBint win_id);
+short   WPtitle_GWIN(WPGWIN *gwinpt);
 short   WPdlgw(WPGWIN *gwinpt);
 WPGWIN *WPggwp(Window x_id);
 
@@ -329,6 +329,7 @@ short   WPrenw();
 short   WPwcrw(int x, int y, int dx, int dy, char *label, DBint *id);
 bool    WPbtrw(WPRWIN *rwinpt, XButtonEvent *butev, wpw_id *serv_id);
 bool    WPxprw(WPRWIN *rwinpt, XExposeEvent *expev);
+short   WPtitle_RWIN(WPRWIN *rwinpt);
 bool    WPcrrw(WPRWIN *rwinpt, XCrossingEvent *croev);
 bool    WPcorw(WPRWIN *rwinpt, XConfigureEvent *conev);
 bool    WPcmrw(WPRWIN *rwinpt, XClientMessageEvent *clmev);

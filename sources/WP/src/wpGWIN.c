@@ -10,7 +10,8 @@
 *
 *    WPwcgw();           Create WPGWIN
 *    WPnrgw();           Normalize modelwindow
-*    WPxpgw();           Expose routine for WPGWIN 
+*    WPxpgw();           Expose routine for WPGWIN
+*    WPtitle_GWIN();     Update WPGWIN window title
 *    WPcrgw();           Crossing routine for WPGWIN
 *    WPbtgw();           Button routine for WPGWIN
 *    WPrpgw();           Reparent routine for WPGWIN
@@ -44,10 +45,11 @@
 #include "../include/v3icon.h"
 #include <string.h>
 
-extern char    jobnam[];
-extern int     actpen,actfunc,sysmode;
-extern bool    rstron;
-extern DBptr   lsysla;
+extern char   jobnam[],jobdir[];
+extern int    actpen,actfunc,sysmode;
+extern bool   rstron;
+extern DBptr  lsysla;
+extern V3MDAT sydata;
 
 #define MCWIN_DY 45
 
@@ -364,9 +366,9 @@ static void cre_toolbar(WPGWIN *gwinpt);
 /*
 ***Update window border.
 */
-    WPupwb(gwinpt);
+    WPtitle_GWIN(gwinpt);
 /*
-***Slut.
+***The end.
 */
     return(0);
   }
@@ -497,6 +499,83 @@ static void cre_toolbar(WPGWIN *gwinpt);
   }
 
 /********************************************************/
+/*********************************************************/
+
+       short   WPtitle_GWIN(
+       WPGWIN *gwinpt)
+
+/*     Update the title text of a WPGWIN window border.
+ *
+ *     In: gwinpt => C ptr to WPGWIN
+ *                   or NULL for GWIN_MAIN.
+ *
+ *     (C)2008-02-10 J.Kjellander
+ *
+ *******************************************************!*/
+
+ {
+   char    title[V3STRLEN+1],tmpbuf[V3STRLEN+1];
+   WPGWIN *grawin;
+   WPWIN  *winptr;
+/*
+***Init.
+*/
+   title[0] = '\0';
+/*
+***If NULL was passed, get a C ptre to GWIN_MAIN.
+*/
+   if ( gwinpt == NULL )
+     {
+     if ( (winptr=WPwgwp((wpw_id)GWIN_MAIN)) != NULL  &&
+         winptr->typ == TYP_GWIN ) grawin = (WPGWIN *)winptr->ptr;
+     else return(0);
+     }
+   else grawin = gwinpt;
+/*
+***All windows either have a custom title or the defult title.
+*/
+   if ( !WPgrst("varkon.title",title) )
+     {
+     sprintf(title,"VARKON %d.%d%c",sydata.vernr,sydata.revnr,
+                                    sydata.level);
+     }
+/*
+***They can also have have jobdir and/or jobname.
+*/
+   strcat(title, " ");
+
+   if ( WPgrst("varkon.title.jobdir",tmpbuf) && strcmp(tmpbuf,"True") == 0 )
+     {
+     strcat(title,jobdir);
+     }
+
+   if ( WPgrst("varkon.title.jobname",tmpbuf) && strcmp(tmpbuf,"True") == 0 )
+     {
+     strcat(title,jobnam);
+     }
+/*
+***And finally also view name.
+*/
+   if ( WPgrst("varkon.title.viewname",tmpbuf) &&
+        strcmp(tmpbuf,"True") == 0 )
+       {
+       if ( grawin->vy.name[0] != '\0' )
+         {
+         strcat(title," - ");
+         strcat(title,grawin->vy.name);
+         }
+       }
+/*
+***Update the window border.
+*/
+   XStoreName(xdisp,grawin->id.x_id,title);
+/*
+***The end.
+*/
+   return(0);
+ }
+
+/*********************************************************/
 /*!******************************************************/
 
         bool            WPcrgw(

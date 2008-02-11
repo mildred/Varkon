@@ -22,7 +22,7 @@ m2  = "VARKON-GENERISK"
 m5  = "ARKIV"
       "öppna",m47
       "spara",f175
-      "spara som",m45
+      "spara kopia som",m45
       "exportera",m24
       "macro",f152
       "kom till OS",f125
@@ -155,7 +155,7 @@ m40 = "LINJE"
       "pos/tan",f28
       "tan/tan",f29;
 
-m45 = "SPARA SOM"
+m45 = "SPARA KOPIA SOM"
       "JOB-fil",f119
       "MBS-fil",f144
       "MBO-fil",f126

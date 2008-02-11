@@ -3,7 +3,7 @@
                            README
                            ======
 
-      Installation guide for Varkon 1.19. This README includes specific
+      Installation guide for Varkon 1.19C. This README includes specific
       information for Linux users but should also be used for other
       Unix systems including the MacOSX.
 
@@ -24,6 +24,12 @@
       To finish the installation and start Varkon follow the instructions
       in ./man/sysadm/index.htm
 
+      Varkon 1.19C includes many changes compared to 1.19B. For old users
+      of Varkon the new concept of a job directory instead of a project
+      with a PID file requires special attention. Please read the Release
+      notes for 1.19C before you start your new installation. You will find
+      a link to the releasenotes on the start page of the Varkon documentation.
+
       To get in contact with the developers or with other Varkon users,
       please post a message to the Varkon mailing list. Bug reports or
       feature requests are posted through the tracker on the Sourceforge
@@ -33,7 +39,7 @@
       Information for Linux users
       ---------------------------
 
-      Version 1.19B of VARKON for Linux is dynamically linked to the
+      Version 1.19C of VARKON for Linux is dynamically linked to the
       following Linux libary modules (printout from ldd):
 
         linux-gate.so.1 =>  (0xffffe000)
@@ -42,13 +48,16 @@
         libXpm.so.4 => /usr/X11R6/lib/libXpm.so.4 (0x40143000)
         libGL.so.1 => /usr/lib/libGL.so.1 (0x40159000)
         libGLU.so.1 => /usr/lib/libGLU.so.1 (0x401c0000)
-        libm.so.6 => /lib/tls/libm.so.6 (0x4023f000)
-        libc.so.6 => /lib/tls/libc.so.6 (0x40266000)
-        libdl.so.2 => /lib/libdl.so.2 (0x40385000)
-        libpthread.so.0 => /lib/tls/libpthread.so.0 (0x40389000)
-        libXxf86vm.so.1 => /usr/X11R6/lib/libXxf86vm.so.1 (0x4039b000)
-        libstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x403a0000)
-        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x4047c000)
+        libtiff.so.3 => /usr/lib/libtiff.so.3 (0x4023f000)
+        libm.so.6 => /lib/tls/libm.so.6 (0x40293000)
+        libc.so.6 => /lib/tls/libc.so.6 (0x402b9000)
+        libdl.so.2 => /lib/libdl.so.2 (0x403d8000)
+        libpthread.so.0 => /lib/tls/libpthread.so.0 (0x403dc000)
+        libXxf86vm.so.1 => /usr/X11R6/lib/libXxf86vm.so.1 (0x403ee000)
+        libstdc++.so.6 => /usr/lib/libstdc++.so.6 (0x403f3000)
+        libgcc_s.so.1 => /lib/libgcc_s.so.1 (0x404d0000)
+        libjpeg.so.62 => /usr/lib/libjpeg.so.62 (0x404db000)
+        libz.so.1 => /lib/libz.so.1 (0x404fb000)
         /lib/ld-linux.so.2 (0x40000000)
 
       These files are not included in the Varkon distribution.
@@ -58,7 +67,10 @@
       on libc.so.5 and might work better if you have an older
       version of Linux.
 
-      The binary version of Varkon 1.19 is comiled and linked on
+      OpenGL
+      ------
+
+      The binary version of Varkon 1.19C is comiled and linked on
       a Linux system with Suse Linux 10.0. This Linux distribution
       and many others of recent date include support for OpenGL so
       normally you should not need to do anything to get OpenGL

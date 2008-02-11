@@ -57,10 +57,7 @@ static int  iwin_y;          /* even after a user move */
 
 /*      The view dialogue.
  *
- *      In:  gwinpt  = C ptr to WPGWIN or NULL.
- *           rwinpt  = C ptr to WRGWIN or NULL.
- *           wintype = TYP_GWIN or TYP_RWIN.
- *           x,y     = Pos of activating button.
+ *      In:  grw_id = ID of graphical window.
  *
  *      (C)2007-02-05 J.Kjellander
  *
@@ -518,7 +515,7 @@ loop:
          strcpy(new_view.name,view_name);
          strcpy(gwinpt->vy.name,view_name);
          WPcreate_view(&new_view,VIEW_3D_AND_2D);
-         WPupwb(gwinpt);
+         WPtitle_GWIN(gwinpt);
          }
        else
          {
@@ -1066,7 +1063,7 @@ exit:
        V3MOME(&minwin,&gwinpt->vy.modwin,sizeof(VYWIN));
        }
      WPnrgw(gwinpt);
-     WPupwb(gwinpt);
+     WPtitle_GWIN(gwinpt);
      }
 /*
 ***The end.

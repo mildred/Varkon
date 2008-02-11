@@ -119,12 +119,14 @@ varkon.margin_up:               32
 !varkon.margin_left:             70
 !varkon.margin_right:            50
 !*
-!***Med varkon.title kan man ändra den text som skrivs ut i det grafiska
-!***huvud-fönstrets ram. Om varkon.title.jobnam är satt till True läggs
-!***dessutom aktuellt jobnamn till automatiskt. Om varkon.title.viewname
-!***är True skrivs även vynamnet ut i fönsterramen.
+!***Med varkon.title kan man ändra den text som skrivs ut i grafiska
+!***fönstrens ram. Om varkon.title.jobdir är satt till True skrivs
+!***vägbeskrivninget till aktuell jobkatalog ut. Om varkon.title.jobnam
+!***är satt till True läggs dessutom aktuellt jobnamn till automatiskt.
+!***Om varkon.title.viewname är True skrivs även vynamnet ut i fönsterramen.
 !*
 !varkon.title:                   Din egen titel
+varkon.title.jobdir:            True
 varkon.title.jobname:           True
 varkon.title.viewname:          True
 !*
