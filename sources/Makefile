@@ -1,9 +1,9 @@
 #########################################
 #
-#   Makefile for Varkon version 1.19
-#   --------------------------------
+#   Makefile for Varkon version 1.19C
+#   ---------------------------------
 #
-#   2007-11-28 S.Larsson
+#   2008-02-15 J.Kjellander
 #
 ##########################################
 
@@ -15,11 +15,6 @@
 
 #Uncomment the platform you are running on
 PLATFORM=linux
-#PLATFORM=crayT3E
-#PLATFORM=sgi
-#PLATFORM=aix
-#PLATFORM=hpux
-#PLATFORM=sun
 #PLATFORM=FreeBSD
 #PLATFORM=MacOSX
 
@@ -90,7 +85,7 @@ distr debug:
 
 # Make man
 	@make -C MAN -C src -f Makefile
-           
+
 clean:
 	@make -C IG -C src -f Makefile.$(PLATFORM) clean
 	@make -C PM -C src -f Makefile.$(PLATFORM) clean

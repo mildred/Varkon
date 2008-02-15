@@ -505,7 +505,6 @@ short IGnjsa();
 short IGsave_all();
 short IGnjsn();
 short IGselect_job(char *newjob);
-short IGchjn(char *newnam);
 bool  IGgrst(char *resurs, char *pvalue);
 
 /*

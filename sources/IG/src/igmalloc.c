@@ -194,7 +194,7 @@ static int     altsiz;
 /*
 ***Det gjorde det, notera även namn och storlek i alltab.
 */
-     strncpy(altptr->name,name,6);
+     strncpy(altptr->name,name,31);
      altptr->size = size;
 
    if ( dbglev(IGEPAC) == 361 )

@@ -15,7 +15,6 @@ CFLAGS = -ansi \
          -ffloat-store \
          -fsigned-char \
          -O \
-         -D_POSIX_SOURCE \
          -DUNIX \
          -DANALYZER \
          -DVARKON

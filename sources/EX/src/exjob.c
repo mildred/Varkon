@@ -42,7 +42,7 @@ extern V3MDAT  sydata;
 extern int     sysmode;
 extern int     posmode;
 extern bool    relpos,igbflg;
-extern char    jobnam[],jobdir[],tmprit[],actcnm[],svnversion[];
+extern char    jobnam[],jobdir[],tmpres[],actcnm[],svnversion[];
 extern DBTmat *lsyspk;
 extern DBptr   lsysla;
 extern DBTmat  lklsys;
@@ -485,7 +485,7 @@ werror:
 /*
 ***Om vi kör ritmodulen heter den något temporärt.
 */
-    else strcpy(resfil,tmprit);
+    else strcpy(resfil,tmpres);
 /*
 ***Kopiera den lagrade resultatfilen till en fil med det nya namnet.
 */ 

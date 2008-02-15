@@ -40,8 +40,25 @@
 #include "../../EX/include/EX.h"
 #include "../include/WP.h"
 
+/*
+***Since Varkon is compiled with -ansi and -Wall we will
+***get compiler warnings about the two following functions
+***if we don't declare them here. They are not ansi but POSIX
+***and seem to exist in all Unix implementations. The reason
+***for using them is that they are reccommended by the compiler
+***to be the most secure way to create a temporary file.
+*/
+extern int   mkstemp();
+extern FILE *fdopen();
+
+/*
+***External Varkon global variables.
+*/
 extern char  jobdir[],jobnam[];
 
+/*
+***Static variables.
+*/
 static WPLWIN  *actlwin = NULL;
 
 /*
@@ -93,7 +110,9 @@ static short savelw(WPLWIN *lwinpt);
       return(-2);
       }
 /*
-***Create a temporary file for list contents.
+***Create a temporary file for list contents. For security reasons,
+***use mkstemp() and fdopen() which are not ansi but POSIX and seem
+***to be available everywhere.
 */
     strncpy(tmpnam,IGgenv(VARKON_TMP),V3PTHLEN+1);
     strncat(tmpnam,jobnam,JNLGTH+1);

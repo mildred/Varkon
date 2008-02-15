@@ -25,7 +25,6 @@
 /*  IGsave_all();    Save and continue                              */
 /*  IGnjsn();        New job without saving                         */
 /*  IGselect_job();  Select job with file selector                  */
-/*  IGchjn();        Change name of current job                     */
 /*  IGgrst();        Returns resource value                         */
 /*                                                                  */
 /*  This file is part of the VARKON IG Library.                     */
@@ -73,12 +72,16 @@ extern DBTmat   lklsys,lklsyi,modsys;
 extern V2NAPA   defnap;
 extern MNUDAT   mnutab[];
 
-extern char *mktemp();
+/*
+***POSIX functions mkstemp and fdopen().
+*/
+extern int   mkstemp();
+extern FILE *fdopen();
 
 /*
-***In explicit mode, tmprit is the temp name of the RES-file.
+***In explicit mode, tmpres is the temp name of the RES-file.
 */
-char tmprit[V3PTHLEN+1];
+char tmpres[V3PTHLEN+1];
 
 /*
 ***Prototypes for internal functions.
@@ -88,9 +91,9 @@ static short load_jobdata();
 static short igsvjb();
 static short iginmo();
 static short igsvmo();
-static short igingm();
-static short igldgm();
-static short igsvgm();
+static short init_DB();
+static short load_DB();
+static short save_DB();
 static short init_macro();
 static short newjob_macro();
 static short exit_macro();
@@ -247,9 +250,9 @@ static short main_loop()
 /*
 ***Load RES-file.
 */
-      if ( (status=igldgm()) == -1 )
+      if ( (status=load_DB()) == -1 )
         {
-        if ( igingm() < 0 ) goto errend;
+        if ( init_DB() < 0 ) goto errend;
         newjob = TRUE;
         }
       else if ( status < 0 ) goto errend;
@@ -280,9 +283,9 @@ static short main_loop()
 ***Load optional RES-file. If module exits but no RES-file
 ***ask for reexecution.
 */
-      if ( (status=igldgm()) == -1 )
+      if ( (status=load_DB()) == -1 )
         {
-        if ( igingm() < 0 ) goto errend;
+        if ( init_DB() < 0 ) goto errend;
         if ( !newjob )
           {
           if ( igxflg || IGialt(118,67,68,TRUE) )
@@ -699,97 +702,108 @@ static short igsvmo()
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
-static short igingm()
+static short init_DB()
 
-/*      Skapar resultafil.
+/*      Init's DB. Creates a new (empty) jobname.RES file in
+ *      the current jobdir. In EXPLICIT mode a temporary name
+ *      is used.
  *
- *      In: Inget.
+ *      Error: IG0183 => Can', create RES-file
  *
- *      Ut: Inget.
- *
- *      Felkoder: IG0183 => Kan ej skapa resultatfil
- *
- *      (C)microform ab 20/10/85 J. Kjellander
- *
- *      29/11/88   Temporärfil, J. Kjellander
- *      1999-02-09 Ny gminit(), J.Kjellander
+ *      (C)2008-02-13 J.Kjellander
  *
  ******************************************************!*/
 
   {
-    char filnam[V3PTHLEN+1],templ[JNLGTH+10];
+   char  filnam[V3PTHLEN+JNLGTH+10];
+   int   fd;
+   FILE *fp;
 
-    strcpy(filnam,jobdir);
 
-    if ( sysmode == EXPLICIT )
-      {
-      strcpy(templ,jobnam);
-      strcat(templ,".XXXXXX");
-      strcat(filnam,mktemp(templ));
-      strcpy(tmprit,filnam);
-      }
-    else
-      {
-      strcat(filnam,jobnam);
-      strcat(filnam,RESEXT);
-      }
-
-    if ( DBinit(filnam,sysize.gm,
+/*
+***In EXPLICIT mode, create path/jobname + temporary extension using mkstemp().
+***Save temporary string in static tmpres[] so that we can rename the file on exit.
+*/
+   if ( sysmode == EXPLICIT )
+     {
+     strncpy(filnam,jobdir,V3PTHLEN);
+     strncat(filnam,jobnam,JNLGTH);
+     strncat(filnam,".XXXXXX",8);
+     fd = mkstemp(filnam);
+     fp = fdopen(fd,"w+");
+     fclose(fp);
+     strncpy(tmpres,filnam,V3PTHLEN+JNLGTH+10);
+     }
+/*
+***In GENERIC mode create, create path/jobname.RES.
+*/
+   else
+     {
+     strncpy(filnam,jobdir,V3PTHLEN);
+     strcat(filnam,jobnam);
+     strcat(filnam,RESEXT);
+     }
+/*
+***Init DB and create the new RES file.
+*/
+   if ( DBinit(filnam,sysize.gm,
                 DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL) < 0 )
                                       return(erpush("IG0183",filnam));
 /*
 ***RES-file created.
 */
     WPaddmess_mcwin(IGgtts(309),WP_MESSAGE);
-
+/*
+***The end.
+*/
     return(0);
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
-static short igldgm()
+static short load_DB()
 
 /*      Load a RES-file.
  *
  *      Error:  0 => Ok.
  *             -1 => Can't load RES-file.
  *
- *      (C)microform ab 20/10/85 J. Kjellander
- *
- *      14/11/85   Bug, J. Kjellander
- *      5/4/86     Ny felhantering, J. Kjellander
- *      29/11/88   Temporärfil, J. Kjellander
- *      1999-02-09 Ny felhantering, J.Kjellander
- *      2007-11-14 2.0, J.Kjellander
+ *      (C)2008-02-13 J.Kjellander
  *
  ******************************************************!*/
 
   {
-    char  filnam[V3PTHLEN+1],templ[JNLGTH+10];
+    char  resfile[V3PTHLEN+1];
     short status;
+    int   fd;
+    FILE *fp;
 
 /*
-***Create a filename with path but no extension.
+***The full path to the RES-file.
 */
-    strcpy(filnam,jobdir);
-    strcat(filnam,jobnam);
+    strncpy(resfile,jobdir,V3PTHLEN);
+    strncat(resfile,jobnam,JNLGTH);
+    strncat(resfile,RESEXT,4);
 /*
 ***In explicit mode load a temporary copy.
 */
     if ( sysmode == EXPLICIT )
       {
-      strcat(filnam,RESEXT);
-      if ( IGftst(filnam) )
+      if ( IGftst(resfile) )
         {
-        strcpy(tmprit,jobdir);
-        strcpy(templ,jobnam);
-        strcat(templ,".XXXXXX");
-        strcat(tmprit,mktemp(templ));
-        IGfcpy(filnam,tmprit);
-        status = DBload(tmprit,sysize.gm,
+        strncpy(tmpres,jobdir,V3PTHLEN);
+        strncat(tmpres,jobnam,JNLGTH);
+        strncat(tmpres,".XXXXXX",8);
+        fd = mkstemp(tmpres);
+        fp = fdopen(fd,"w+");
+        fclose(fp);
+
+        IGfcpy(resfile,tmpres);
+
+        status = DBload(tmpres,sysize.gm,
                     DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
         if ( status < 0 )
           {
@@ -812,8 +826,7 @@ static short igldgm()
 */
     else
       {
-      strcat(filnam,RESEXT);
-      status = DBload(filnam,sysize.gm,
+      status = DBload(resfile,sysize.gm,
                       DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL);
 
       if ( status == 0 )
@@ -831,9 +844,9 @@ static short igldgm()
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
-static short igsvgm()
+static short save_DB()
 
 /*      Save RES-file.
  *
@@ -860,11 +873,11 @@ static short igsvgm()
 */
     else
      {
-     strcpy(filnam,jobdir);
-     strcat(filnam,jobnam);
-     strcat(filnam,RESEXT);
-     IGfcpy(tmprit,filnam);
-     IGfdel(tmprit);
+     strncpy(filnam,jobdir,V3PTHLEN);
+     strncat(filnam,jobnam,JNLGTH);
+     strncat(filnam,RESEXT,4);
+     IGfcpy(tmpres,filnam);
+     IGfdel(tmpres);
      WPaddmess_mcwin(IGgtts(141),WP_MESSAGE);
      }
 /*
@@ -897,7 +910,7 @@ static short igsvgm()
 /*
 ***Save result.
 */
-    if ( igsvgm() < 0 ) errmes();
+    if ( save_DB() < 0 ) errmes();
 
     return(0);
 
@@ -1591,7 +1604,7 @@ l1:
 */
    gmclpf();
 
-   if ( sysmode == EXPLICIT ) IGfdel(tmprit);
+   if ( sysmode == EXPLICIT ) IGfdel(tmpres);
    else
      {
      strcpy(resfil,jobdir);
@@ -1836,7 +1849,7 @@ l1:
      strcat(resfil,jobnam);
      strcat(resfil,RESEXT);
 
-     if ( IGfcpy(tmprit,resfil) < 0 )
+     if ( IGfcpy(tmpres,resfil) < 0 )
        {
        errmes();
        return(0);
@@ -1844,7 +1857,7 @@ l1:
 /*
 ***Load DB again.
 */
-     if ( DBload(tmprit,sysize.gm,
+     if ( DBload(tmpres,sysize.gm,
           DB_LIBVERSION,DB_LIBREVISION,DB_LIBLEVEL) < 0 ) errmes();
      }
    WPaddmess_mcwin(IGgtts(196),WP_MESSAGE);
@@ -1868,7 +1881,7 @@ l1:
  *      (C)microform ab 6/10/86 J. Kjellander
  *
  *      8/5/87   Defaultsträng, J. Kjellander
- *      26/9/95  tmprit, J. Kjellander
+ *      26/9/95  tmpres, J. Kjellander
  *      26/9/95  IGselj(), J. Kjellander
  *      1998-03-12 exit_macro, J.Kjellander
  *      2007-11-18 2.0, J.Kjellander
@@ -1906,7 +1919,7 @@ l1:
      strcat(resfil,RESEXT);
      IGfdel(resfil);
      }
-   else IGfdel(tmprit);
+   else IGfdel(tmpres);
 /*
 ***Update jobnam.
 */
@@ -1993,93 +2006,6 @@ l1:
 ***The end.
 */
    return(status);
-  }
-
-/********************************************************/
-/*!******************************************************/
-
-        short IGchjn(char *newnam)
-
-/*      Change the name of the active job.
- *
- *      In: newnam = New jobname.
- *
- *      Error: IG0342 = Illegal jobname
- *             IG0422 = Job already exists
- *
- *      (C)microform ab 26/9/95 J. Kjellander
- *
- ******************************************************!*/
-
-  {
-    char       oldres[V3PTHLEN+1],newres[V3PTHLEN+1],
-               filnam[V3PTHLEN+1],templ[JNLGTH+10];
-    PMMODULE   modhed;
-
-/*
-***Check that the new name is valid.
-*/
-    if ( IGcheck_jobname(newnam) < 0 ) return(erpush("IG0342",newnam));
-/*
-***Check that a job with this name does not exist.
-*/
-    if ( sysmode & GENERIC )
-      {
-      strcpy(filnam,jobdir);
-      strcat(filnam,newnam);
-      strcat(filnam,MODEXT);
-      if ( IGftst(filnam) ) return(erpush("IG0422",newnam));
-      }
-    else
-      {
-      strcpy(filnam,jobdir);
-      strcat(filnam,newnam);
-      strcat(filnam,RESEXT);
-      if ( IGftst(filnam) ) return(erpush("IG0422",newnam));
-      }
-/*
-***Rename active module and RES-file.
-*/
-    if ( sysmode & GENERIC )
-      {
-      pmrmod(&modhed);
-      strcpy(modhed.mname,newnam);
-      pmumod(&modhed);
-
-      strcpy(oldres,jobdir);
-      strcat(oldres,jobnam);
-      strcat(oldres,RESEXT);
-      strcpy(newres,jobdir);
-      strcat(newres,newnam);
-      strcat(newres,RESEXT);
-      IGfmov(oldres,newres);
-      }
-/*
-***In explicit mode it's enough to rename the temp-file.
-*/
-    else
-      {
-      strcpy(templ,newnam);
-      strcat(templ,".XXXXXX");
-      mktemp(templ);
-
-      strcpy(newres,jobdir);
-      strcat(newres,templ);
-      IGfmov(tmprit,newres);
-      strcpy(tmprit,newres);
-      }
-/*
-***Save the new job name.
-*/
-   strcpy(jobnam,newnam);
-/*
-***Update window border.
-*/
-   WPtitle_GWIN(NULL);
-/*
-***The end.
-*/
-   return(0);
   }
 
 /********************************************************/

@@ -37,9 +37,6 @@
 *    short eviost()           IOSTAT function
 *    short evufnm()           UNIQUE_FILENAME function
 *
-*    Internal routines:
-*    short rfield()           read specified field from i/o
-*
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
 *    License as published by the Free Software Foundation; either
@@ -53,8 +50,6 @@
 *    You should have received a copy of the GNU Library General Public
 *    License along with this library; if not, write to the Free
 *    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*    (C)Microform AB 1984-1999, Johan Kjellander, johan@microform.se
 *
 ***********************************************************************/
 
@@ -71,13 +66,32 @@
 #include <io.h>
 #endif
 
-#ifdef DEBUG
-#include "../../IG/include/debug.h"
-#endif
+/*
+***POSIX functions.
+*/
+extern int   mkstemp();
+extern FILE *fdopen();
 
+/*
+***Non ANSI functions.
+*/
 extern FILE *popen();
 extern int   pclose();
+extern int   fileno();
 
+/*
+***Global variables.
+*/
+extern PMPARVA *proc_pv;  /* inproc.c *pv Access structure for MBS routines */
+extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
+
+extern PMPARVA *func_pv;  /* Access structure for MBS routines */
+extern short    func_pc;  /* Number of actual parameters */
+extern PMLITVA *func_vp;  /* Pekare till resultat. */
+
+/*
+***MBS table of open files.
+*/
 typedef struct open_file
 {
 char       name[V3STRLEN+1];
@@ -98,23 +112,13 @@ static OPEN_FILE filtab[MAXOFILES] =
       {"",NULL},{"",NULL},{"",NULL},{"",NULL},{"",NULL},
       {"",NULL},{"",NULL},{"",NULL},{"",NULL},{"",NULL}};
 
-/* filtab har plats för MAXOFILES samtidigt öppna filer. */
-
-static int fndfree();
-static int close_all();
-static int fndfil(char *name);
-static int fndptr(V2FILE *fptr);
-
-extern FILE *popen();
-extern int   pclose();
-
-extern PMPARVA *proc_pv;  /* inproc.c *pv Access structure for MBS routines */
-extern short    proc_pc;  /* inproc.c parcount Number of actual parameters */
-
-extern PMPARVA *func_pv;  /* Access structure for MBS routines */
-extern short    func_pc;  /* Number of actual parameters */
-extern PMLITVA *func_vp;  /* Pekare till resultat. */
-
+/*
+***Prototypes for internal functions.
+*/
+static int   fndfree();
+static int   close_all();
+static int   fndfil(char *name);
+static int   fndptr(V2FILE *fptr);
 static short rfield(V2FILE *f, int fieldlen, char *fieldstr);
 
 /*!******************************************************/
@@ -1304,17 +1308,6 @@ static short rfield(V2FILE *f, int fieldlen, char *fieldstr);
    V2FILE *f;                 /* parameter for INLIN */
 
 /*
-***Ev. DEBUG.
-*/
-#ifdef DEBUG
-   if ( dbglev(PMPAC) == 10 )
-     {
-     fprintf(dbgfil(PMPAC),"***Start-evinl***\n");
-     fflush(dbgfil(PMPAC));
-     }
-#endif
-
-/*
 ***FILE f 
 */
    f = func_pv[1].par_va.lit.fil_va;
@@ -1348,15 +1341,6 @@ static short rfield(V2FILE *f, int fieldlen, char *fieldstr);
 ***End of file or error
 */
        {
-#ifdef DEBUG
-    if ( dbglev(PMPAC) == 10 )
-      {
-      fprintf(dbgfil(PMPAC),"fgets() returnerar NULL !\n");
-      fprintf(dbgfil(PMPAC),"ferror()=%d\n",ferror(f->fp));
-      fprintf(dbgfil(PMPAC),"feof()=%d\n",feof(f->fp));
-      fflush(dbgfil(PMPAC));
-      }
-#endif
        f->iostat = -1;
        }
      else
@@ -1368,20 +1352,10 @@ static short rfield(V2FILE *f, int fieldlen, char *fieldstr);
        f->iostat = 0;
        }
      }
-/*
-***Ev. DEBUG.
-*/
-#ifdef DEBUG
-    if ( dbglev(PMPAC) == 10 )
-      {
-      fprintf(dbgfil(PMPAC),"***Slut-evinl***\n\n");
-      fflush(dbgfil(PMPAC));
-      }
-#endif
 
    return( 0 );
 
-  }      
+  }
 
 /********************************************************/
 /*!******************************************************/
@@ -1657,43 +1631,56 @@ else
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         short evufnm()
 
-/*      Evaluate function UNIQUE_FILENAME.
+/*      Evaluate function UNIQUE_FILENAME(). This
+ *      implementation is a quick fix that will work
+ *      in most cases but there is no clue to what 
+ *      directory is used.
  *
- *      In:   
+ *      Out: Global *func_vp  =  Pointer to result value.
  *
- *      Ut: Global *func_vp  =  Pointer to result value.
+ *      Return: Error severity code.
  *
- *      FV: Return - error severity code 
- *
- *      (C)microform ab 199?-??-?? J, Kjellander
- *
- *      1999-11-13 Rewritten, R. Svedin
- *      2001-03-06 In-Param changed to Global variables, R Svedin
+ *      (C)2008-02-15 J.Kjellander
  *
  ******************************************************!*/
 
   {
-    char  template[7];
+   char  template[7];
+   int   fd;
+   FILE *fp;
 
-    strcpy(template,"XXXXXX");       /* Bugfix, 1999-03-01 JK */
-
-    mktemp(template);
-
-    strcpy(func_vp->lit.str_va,template);
-
+/*
+***Call mkstemp() and close the file immediately.
+*/
+   strncpy(template,"XXXXXX",7);
+   fd = mkstemp(template);
+   fp = fdopen(fd,"w+");
+   fclose(fp);
+/*
+***A closed empty file now exists somewhere.
+***Clean up.
+*/
+   if ( IGftst(template) ) IGfdel(template);
+/*
+***Return filenamen.
+*/
+   strcpy(func_vp->lit.str_va,template);
+/*
+***The end.
+*/
     return(0);
-  } 
+  }
 
 /********************************************************/
 /*!******************************************************/
 
-        static short rfield(
-        V2FILE *f,         
-        int     fieldlen,  
+ static short   rfield(
+        V2FILE *f,
+        int     fieldlen,
         char   *fieldstr)
 
 /*      Read field from i/o.
