@@ -558,7 +558,7 @@ short WPomod();
 short WPcoal();
 
 /*
-***wppen.c
+***wpcolor.c
 */
 short         WPcini();
 short         WPccol(int pen, int red, int green, int blue);

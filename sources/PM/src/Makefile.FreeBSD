@@ -16,8 +16,9 @@ CFLAGS +=   -ansi                       \
             -ffloat-store               \
             -fsigned-char               \
             -O                          \
-            -I/usr/X11R6/include        \
-            -DUNIX
+            -DUNIX			\
+	    -DVARKON			\
+	    -I/usr/local/include
 
 debug :      CFLAGS += -g -DDEBUG
 

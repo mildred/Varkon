@@ -17,9 +17,10 @@ CFLAGS += -ansi \
          -O \
          -DUNIX \
          -DANALYZER \
-         -I/usr/X11R6/include
+         -DVARKON	\
+	 -I/usr/local/include
 
-LDFLAGS = -L/usr/X11R6/lib
+LDFLAGS =
 
 COMPILE = $(CC) -c $(CFLAGS)
 

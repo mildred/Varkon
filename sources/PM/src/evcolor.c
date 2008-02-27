@@ -1,6 +1,6 @@
 /**********************************************************************
 *
-*    evshade.c
+*    evcolor.c
 *    =========
 *
 *    This file is part of the VARKON Program Module Library.
@@ -8,16 +8,18 @@
 *
 *    This file includes the following routines:
 *
-*    evltvi();     Evaluerar CRE_LIGHT()
-*    evlton();     Evaluerar LIGHT_ON()
-*    evltof();     Evaluerar LIGHT_OFF()
-*    evgtlt();     Evaluerar GET_LIGHT()
+*    evltvi();     Evaluates CRE_LIGHT()
+*    evlton();     Evaluates LIGHT_ON()
+*    evltof();     Evaluates LIGHT_OFF()
+*    evgtlt();     Evaluates GET_LIGHT()
 *
-*    evcrco();     Evaluerar CRE_COLOR()
-*    evgtco();     Evaluerar GET_COLOR()
+*    evcrco();     Evaluates CRE_COLOR()
+*    evgtco();     Evaluates GET_COLOR()
+*    evrgbhsv();   Evaluates RGB_TO_HSV()
+*    evhsvrgb();   Evaluates HSV_TO_RGB()
 *
-*    evcrmt();     Evaluerar CRE_MATERIAL()
-*    evgtmt();     Evaluerar GET_MATERIAL()
+*    evcrmt();     Evaluates CRE_MATERIAL()
+*    evgtmt();     Evaluates GET_MATERIAL()
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -38,6 +40,7 @@
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
 #include "../../WP/include/WP.h"
+#include <X11/Xcms.h>
 
 extern PMPARVA *proc_pv;  /* Access structure for MBS procedures */
 extern short    proc_pc;  /* Number of actual procedure parameters */
@@ -227,10 +230,19 @@ extern PMLITVA *func_vp;  /* Ptr to function return value */
  ********************************************************/
 
  {
-   return(WPccol(proc_pv[1].par_va.lit.int_va,
-                 proc_pv[2].par_va.lit.int_va,
-                 proc_pv[3].par_va.lit.int_va,
-                 proc_pv[4].par_va.lit.int_va));
+   int pen,val1,val2,val3;
+
+/*
+***Pen number and RGB values.
+*/
+   pen  = proc_pv[1].par_va.lit.int_va;
+   val1 = proc_pv[2].par_va.lit.int_va;
+   val2 = proc_pv[3].par_va.lit.int_va;
+   val3 = proc_pv[4].par_va.lit.int_va;
+/*
+***Create the color.
+*/
+   return(WPccol(pen,val1,val2,val3));
  }
 
 /********************************************************/
@@ -281,6 +293,175 @@ extern PMLITVA *func_vp;  /* Ptr to function return value */
 **This pen is not defined.
 */
    else func_vp->lit.int_va = -1;
+/*
+***The end.
+*/
+   return(0);
+ }
+
+/********************************************************/
+/********************************************************/
+
+        short evrgbhsv()
+
+/*      Evaluates MBS procedure RGB_TO_HSV().
+ *
+ *      Error: IN5842 = Red value out of range
+ *             IN5852 = Green value out of range
+ *             IN5862 = Blue value out of range
+ *             IN5872 = R=G=B=0
+ *
+ *      (C)2008-02-22 J.Kjellander
+ *
+ ********************************************************/
+
+ {
+   double  hue,sat,val,red,green,blue,max,min,diff;
+   int     i;
+   PMLITVA litval[3];
+
+/*
+***Red, green and blue.
+*/
+   red   = proc_pv[1].par_va.lit.int_va/255.0;
+   green = proc_pv[2].par_va.lit.int_va/255.0;
+   blue  = proc_pv[3].par_va.lit.int_va/255.0;
+/*
+***Range check.
+*/
+   if ( red   < 0.0 || red   > 1.0 ) return(erpush("IN5842",""));
+   if ( green < 0.0 || green > 1.0 ) return(erpush("IN5852",""));
+   if ( blue  < 0.0 || blue  > 1.0 ) return(erpush("IN5862",""));
+/*
+***Home made RGB_to_HSV algorithm.
+*/
+   if ( red >= green  &&  red >= blue )
+     {
+     max = red;
+     if ( green < blue ) min = green;
+     else                min = blue;
+     }
+   else if ( green >= red  &&  green >= blue )
+     {
+     max = green;
+     if ( red < blue ) min = red;
+     else              min = blue;
+     }
+   else
+     {
+     max = blue;
+     if ( red < green ) min = red;
+     else               min = green;
+     }
+
+   val = max;
+
+   diff = max - min;
+
+   if ( max > 0.0 ) sat = diff/max;
+   else return(erpush("IN5872",""));
+
+   if      ( max == red )   hue = 60.0*((green - blue)/diff);
+   else if ( max == green ) hue = 60.0*(2.0 + (blue - red)/diff);
+   else                     hue = 60.0*(4.0 + (red - green)/diff);
+
+   if ( hue < 0.0 ) hue += 360.0;
+/*
+***Copy HSV values to PMLITVA.
+*/
+   litval[0].lit.int_va = hue;
+   litval[1].lit.int_va = sat*100.0;
+   litval[2].lit.int_va = val*100.0;
+/*
+***Write to MBS variables.
+*/
+   for ( i=0; i<3; ++i )
+     {
+     inwvar(proc_pv[i+4].par_ty,proc_pv[i+4].par_va.lit.adr_va,
+            0, NULL, &litval[i]);
+     }
+/*
+***The end.
+*/
+   return(0);
+ }
+
+/********************************************************/
+/********************************************************/
+
+        short evhsvrgb()
+
+/*      Evaluates MBS procedure HSV_TO_RGB().
+ *
+ *      Error: IN5812 = Hue out of range
+ *             IN5822 = Saturation out of range
+ *             IN5832 = Value out of range
+ *
+ *      (C)2008-02-22 J.Kjellander
+ *
+ ********************************************************/
+
+ {
+   double  hue,sat,val,red,green,blue,k1,k2,k3,k4;
+   int     i,sextant;
+   PMLITVA litval[3];
+
+/*
+***Hue, saturation and value.
+*/
+   hue = proc_pv[1].par_va.lit.int_va;
+   sat = proc_pv[2].par_va.lit.int_va/100.0;
+   val = proc_pv[3].par_va.lit.int_va/100.0;
+/*
+***Range check.
+*/
+   if ( hue < 0.0 || hue > 360.0 ) return(erpush("IN5812",""));
+   if ( sat < 0.0 || sat >   1.0 ) return(erpush("IN5822",""));
+   if ( val < 0.0 || val >   1.0 ) return(erpush("IN5832",""));
+/*
+***Homemade HSV_to_RGB algorithm.
+*/
+   if ( sat == 0.0 )
+     {
+     red   = val;
+     green = val;
+     blue  = val;
+     }
+   else
+     {
+     if ( hue > 359.999999 ) hue = 359.999999;
+
+     hue = hue/60.0;
+     sextant = (int)hue;
+     k1 = hue - sextant;
+     k2 = val*(1.0 - sat);
+     k3 = val*(1.0 - sat*k1);
+     k4 = val*(1.0 - sat + sat*k1);
+
+     switch ( sextant )
+       {
+       case 0: red = val; green = k4;  blue = k2;  break;
+       case 1: red = k3;  green = val; blue = k2;  break;
+       case 2: red = k2;  green = val; blue = k4;  break;
+       case 3: red = k2;  green = k3;  blue = val; break;
+       case 4: red = k4;  green = k2;  blue = val; break;
+       case 5: red = val; green = k2;  blue = k3;  break;
+       }
+     }
+/*
+***Copy RGB values to PMLITVA.
+*/
+   litval[0].lit.int_va = red*255.0;
+   litval[1].lit.int_va = green*255.0;
+   litval[2].lit.int_va = blue*255.0;
+/*
+***Write to MBS variables.
+*/
+   for ( i=0; i<3; ++i )
+     {
+     inwvar(proc_pv[i+4].par_ty,proc_pv[i+4].par_va.lit.adr_va,
+            0, NULL, &litval[i]);
+     }
 /*
 ***The end.
 */

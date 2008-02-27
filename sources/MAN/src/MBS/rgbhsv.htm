@@ -1,40 +1,35 @@
 changequote({,})
 define({_TITLE_},{Varkon MBS Programmers manual})
-define({_SUBTITLE_},{- get_color - Function})
+define({_SUBTITLE_},{- rgb_to_hsv - Procedure})
 define({_INDEXLINK_},{<a href="grapindx.htm">index</a>})
 define({_STYLE_},{../varkonstyle.css})
 include(../../include/header.inc)
 
 
-<h1>get_color - Function</h1>
+<h1>rgb_to_hsv - Procedure</h1>
 
 <h2>Description</h2>
 
 <p>
-Returns the RGB color value for a pen.
+Converts color values from the RGB system to HSV.
 </p>
 
 <h2>Syntax</h2>
 
 <pre>
-  status:=get_color(pen, red, green, blue);
+  rgb_to_hsv(red, green, blue, hue, saturation, value);
 
-  int pen;
   int red;
   int green;
   int blue;
-  int status;
+  int hue;
+  int saturation;
+  int value;
 </pre>
 
 <h2>Principal parameters</h2>
 
 <table>
-
-<tr>
-<td>pen</td>
-<td>- Pen number. 0 - 255</td>
-</tr>
-
 <tr>
 <td>red</td>
 <td>- Red intensity, 0 - 255</td>
@@ -50,17 +45,26 @@ Returns the RGB color value for a pen.
 <td>- Blue intensity, 0 - 255</td>
 </tr>
 
+<tr>
+<td>hue</td>
+<td>- Hue, 0 - 360</td>
+</tr>
+
+<tr>
+<td>saturation</td>
+<td>- Saturation, 0 - 100</td>
+</tr>
+
+<tr>
+<td>value</td>
+<td>- Value, 0 - 100</td>
+</tr>
+
 </table>
 
 <h2>Optional parameters</h2>
 
 <p>None.</p>
-
-<h2>Return value</h2>
-
-<p>
-Returns 0 if the pen is defined and -1 if the pen is not defined.
-</p>
 
 <h2>Comments</h2>
 
@@ -69,9 +73,8 @@ See also:
 </p>
 
 <p>
-<a href="cre_col.htm">cre_color()</a>,
-<a href="cre_mat.htm">cre_material()</a>,
-<a href="get_mat.htm">get_material()</a>
+<a href="hsvrgb.htm">hsv_to_rgb()</a>
+<a href="cre_col.htm">cre_color()</a>
 </p>
 
 include(../../include/svnversion.inc)

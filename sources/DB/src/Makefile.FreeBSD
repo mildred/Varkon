@@ -8,10 +8,10 @@
 
 RM = rm -f
 
-CC = gcc
+CC ?= cc
 
 CFLAGS +=   -ansi -pedantic -Wall -ffloat-store -fsigned-char \
-            -O -DUNIX -I/usr/X11R6/include
+            -O -DUNIX -I/usr/local/include
 
 debug :      CFLAGS += \
             -g \

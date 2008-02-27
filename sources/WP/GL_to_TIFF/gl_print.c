@@ -42,7 +42,7 @@
 #include <stdlib.h>
 #include <string.h>
 
-/*JK #define AJF_DEBUG */
+/*#define AJF_DEBUG*/
 
 #define MAX_BUFFER	8388608	/* 2^23, 2^24 = 16777216 */
 
@@ -51,7 +51,7 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 		    void *drawHdl,
 			GLdouble mdvwMatrix[16],
 			CameraSet_t *cs,
-			int deviceType,
+			int deviceType,	/* type of output device */
 			double dpi, 	/* resolution, dpi */
 			double width,	/* at the front, millimeters */
 			double height,	/*           "               */
@@ -81,7 +81,7 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 {
 	GLint maxView[2], maxViewWdt, maxViewHgt;
 	GLsizei viewWdt, viewHgt;
-	int i, j, k, hpix, vpix,
+	int i, j, k, hpix, vpix, pixMemSize,
 		horizontalFrames, verticalFrames, frameOffset;
 	double pixSize, x, y, z, distance;
 	unsigned int rowCnt;
@@ -133,20 +133,26 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 	if (hpix % maxViewWdt) horizontalFrames++;
 	verticalFrames   = vpix / maxViewHgt;
 	if (vpix % maxViewHgt) verticalFrames++;
-	frameOffset = maxViewWdt * maxViewHgt * 1;
-			/* 1 because a pixel happens to use one byte */
+	switch (deviceType) {
+	case GLRASTER_TIFF_FILE_GREYSCALE:
+		pixMemSize = 1; /* a pixel happens to use one byte */
+		break;
+	case GLRASTER_TIFF_FILE_COLOR:
+		pixMemSize = 3;
+		break;
+	}
+	frameOffset = pixMemSize * maxViewWdt * maxViewHgt;
 #ifdef AJF_DEBUG
 	printf("horizontalFrames = %d, verticalFrames = %d, frameOffset = %d\n",
 			horizontalFrames, verticalFrames, frameOffset);
 #endif
 
-
-
 	/* allocate the client-frame buffer */
 	pixBuffer = malloc(frameOffset * horizontalFrames + 4096);
 				/* extra page for debugging? */
 	if (pixBuffer == NULL) return 2;
-	scanBuffer = malloc(hpix + 4096);
+
+	scanBuffer = malloc(pixMemSize * hpix + 4096);
 	if (scanBuffer == NULL) {
 		free(pixBuffer);
 		return 3;
@@ -155,12 +161,19 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 	/* open the TIFF-image file and set its characteristics */
 	imgHdl = TIFFOpen(fileName, "w");
 	if (imgHdl == 0) return 1;
-/*	TIFFSetField(imgHdl, TIFFTAG_SOFTWARE, "A. Faltl's CAD-demo");*/
 	TIFFSetField(imgHdl, TIFFTAG_SOFTWARE, softwareName);
 	TIFFSetField(imgHdl, TIFFTAG_BITSPERSAMPLE, 8);
-	TIFFSetField(imgHdl, TIFFTAG_SAMPLESPERPIXEL, 1);	/* monochrome, greyscale */
+	switch (deviceType) {
+	case GLRASTER_TIFF_FILE_GREYSCALE:
+		TIFFSetField(imgHdl, TIFFTAG_SAMPLESPERPIXEL, 1);
+		TIFFSetField(imgHdl, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
+		break;
+	case GLRASTER_TIFF_FILE_COLOR:
+		TIFFSetField(imgHdl, TIFFTAG_SAMPLESPERPIXEL, 3);
+		TIFFSetField(imgHdl, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_RGB);
+		break;
+	}
 	TIFFSetField(imgHdl, TIFFTAG_PLANARCONFIG, PLANARCONFIG_CONTIG);
-	TIFFSetField(imgHdl, TIFFTAG_PHOTOMETRIC, PHOTOMETRIC_MINISBLACK);
 	TIFFSetField(imgHdl, TIFFTAG_ORIENTATION, ORIENTATION_TOPLEFT);
 	TIFFSetField(imgHdl, TIFFTAG_RESOLUTIONUNIT, RESUNIT_INCH);
 	TIFFSetField(imgHdl, TIFFTAG_XRESOLUTION, (float)dpi);
@@ -178,17 +191,30 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 	/*
 	 * setup the GL drawing context
 	 */
+	glClearColor(1.0, 1.0, 1.0, 1.0);	/* set the background to white */
 	glDrawBuffer(GL_BACK);		/* select the buffer to draw to,
 								 * ev. use GL_AUX0 or GL_BACK_LEFT */
-	glClearColor(1.0, 1.0, 1.0, 1.0);	/* set the background to white */
 
 	glReadBuffer(GL_BACK);		/* select the buffer to read from,
 								 * ev. use GL_AUX0 */
-	glPixelTransferf(GL_RED_SCALE, 0.299);		/* values recommended by NTSC */
-	glPixelTransferf(GL_GREEN_SCALE, 0.587);	/*         -"-                */
-	glPixelTransferf(GL_BLUE_SCALE, 0.114);		/*         -"-                */
-	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);		/* avoid 4-byte alignment (to FB) */
-	glPixelStorei(GL_PACK_ALIGNMENT, 1);		/*         -"-          (from FB) */
+	switch (deviceType) {
+	case GLRASTER_TIFF_FILE_GREYSCALE:
+		format = GL_LUMINANCE;	/* create a greyscale image */
+		type   = GL_UNSIGNED_BYTE;
+		glPixelTransferf(GL_RED_SCALE, 0.299);		/* values recommended by NTSC */
+		glPixelTransferf(GL_GREEN_SCALE, 0.587);	/*         -"-                */
+		glPixelTransferf(GL_BLUE_SCALE, 0.114);		/*         -"-                */
+		break;
+	case GLRASTER_TIFF_FILE_COLOR:
+		format = GL_RGB;		/* create a color image */
+		type   = GL_UNSIGNED_BYTE;
+		glPixelTransferf(GL_RED_SCALE, 1.0);		/* identity factor */
+		glPixelTransferf(GL_GREEN_SCALE, 1.0);		/*      -"-        */
+		glPixelTransferf(GL_BLUE_SCALE, 1.0);		/*      -"-        */
+		break;
+	}
+	glPixelStorei(GL_UNPACK_ALIGNMENT, 1);		/* avoid 4-byte alignment (Client to FB) */
+	glPixelStorei(GL_PACK_ALIGNMENT, 1);		/*         -"-            (FB to Client) */
 
 	glEnable(GL_DEPTH_TEST);
 
@@ -285,9 +311,21 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 #endif
 
 			/* read back from the frame buffer */
-			format = GL_LUMINANCE;	/* create a greyscale image */
-			type   = GL_UNSIGNED_BYTE;
 			glReadPixels(0, 0, viewWdt, viewHgt, format, type, pixBuffPtr);
+			
+#ifdef AJF_DEBUG
+			// assuming it's color
+			{
+				char *ptr;
+				int  cnt = 0;
+				ptr = pixBuffPtr + pixMemSize * viewWdt * viewHgt - 1;
+				while (ptr >= pixBuffPtr && *ptr == 0x44) {
+					cnt++;
+					ptr--;
+				}
+				printf("count of 0x44-bytes is %d\n", cnt);
+			}
+#endif
 
 			pixBuffPtr += frameOffset;
 			left = right;
@@ -308,19 +346,16 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 					viewWdt = maxViewWdt;
 				else
 					viewWdt = hpix % maxViewWdt;
-				pixBuffPtr = pixBuffer + j * frameOffset + k * viewWdt;
 				memcpy(scanBuffPtr,
-					   pixBuffer + j * frameOffset + k * viewWdt,
-					   viewWdt);
-
+					   pixBuffer + j * frameOffset + k * pixMemSize * viewWdt,
+					   pixMemSize * viewWdt);
 #ifdef AJF_DEBUG
 				/* for debugging reasons, outline the frame borders in grey */
 				*scanBuffPtr = 0x88;
-				if (k == 0) memset(scanBuffPtr, 0x88, viewWdt);
+				if (k == 0) memset(scanBuffPtr, 0x88, pixMemSize * viewWdt);
 				/* end debug-borderlines */
 #endif
-
-				scanBuffPtr += viewWdt;
+				scanBuffPtr += pixMemSize * viewWdt;
 			}
 			TIFFWriteScanline(imgHdl, scanBuffer, rowCnt++, 0);
 		}

@@ -425,6 +425,8 @@
 #define VASVNVERS  391  /* evasvr      ACT_SVN_VERS      */
 #define VGETMAT    392  /* evgtmt      GET_MATERIAL      */
 #define VGETLIGHT  393  /* evgtlt      GET_LIGHT         */
+#define VRGBHSV    394  /* evrgbhsv    RGB_TO_HSV        */
+#define VHSVRGB    395  /* evhsvrgb    HSV_TO_RGB        */
 /*
 ***If you are building your own application,
 ***include your own file here.

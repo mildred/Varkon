@@ -11,7 +11,7 @@ RM = rm -f
 CC ?= gcc
 
 CFLAGS +=   -ansi -ffloat-store -fsigned-char \
-            -DUNIX -I/usr/X11R6/include
+            -DUNIX -I/usr/local/include
 
 debug :     CFLAGS += -g -DDEBUG
 

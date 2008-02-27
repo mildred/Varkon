@@ -6,36 +6,32 @@
 *    This file is part of the VARKON Program Module Library.
 *    URL: http://varkon.sourceforge.net
 *
-*    evopen();     Evaluerar OPEN
-*    evclos();     Evaluerar CLOSE
-*    evoutl();     Evaluerar OUTLIN
-*    v3isop();     Är fil öppen ?
+*    evopen();     Evaluates OPEN
+*    evclos();     Evaluates CLOSE
+*    v3isop();     Is this file open ?
 *
-*    evappf();     Evaluerar APPEND_FILE
-*    evdelf();     Evaluerar DELETE_FILE
-*    evmovf();     Evaluerar MOVE_FILE
-*    evcopf();     Evaluerar COPY_FILE
-*    evtstf();     Evaluerar TEST_FILE
+*    evappf();     Evaluates APPEND_FILE
+*    evdelf();     Evaluates DELETE_FILE
+*    evmovf();     Evaluates MOVE_FILE
+*    evcopf();     Evaluates COPY_FILE
+*    evtstf();     Evaluates TEST_FILE
 *
-*    evseek()           SEEK   - " -
-*    evouti()           OUTINT - " -
-*    evoutf()           OUTFLT - " -
-*    evouts()           OUTSTR - " -
-*    evoutb()           OUTBIN - " -
+*    evouti()      Evaluates OUTINT
+*    evoutf()      Evaluates OUTFLT
+*    evouts()      Evaluates OUTSTR
+*    evoutl();     Evaluates OUTLIN
+*    evoutb()      Evaluates OUTBIN
 *
-*    evinii()           ININT function
-*    evinif()           INFLT function
-*    evinis()           INSTR function
+*    evinii()      Evaluates ININT
+*    evinif()      Evaluates INFLT
+*    evinis()      Evaluates INSTR
+*    evinl()       Evaluates INLIN
+*    evinb()       Evaluates INBIN
 *
-*    evinio()           ININT function
-*                             INFLT  - " -
-*                             INSTR  - " -
-*
-*    short evinl()            INLIN  - " -
-*    short evinb()            INBIN procedure
-*    short evfpos()           FPOS function
-*    short eviost()           IOSTAT function
-*    short evufnm()           UNIQUE_FILENAME function
+*    evseek()      Evaluates SEEK
+*    evfpos()      Evaluates FPOS
+*    eviost()      Evaluates IOSTAT
+*    evufnm()      Evaluates UNIQUE_FILENAME
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -120,6 +116,7 @@ static int   close_all();
 static int   fndfil(char *name);
 static int   fndptr(V2FILE *fptr);
 static short rfield(V2FILE *f, int fieldlen, char *fieldstr);
+static short evinio(pmvaty iotyp, PMPARVA pv[], PMLITVA *valp);
 
 /*!******************************************************/
 
@@ -1128,7 +1125,7 @@ static short rfield(V2FILE *f, int fieldlen, char *fieldstr);
 /********************************************************/
 /*!******************************************************/
 
-        short evinio(
+ static short evinio(
         pmvaty iotyp,
         PMPARVA pv[],
         PMLITVA *valp)

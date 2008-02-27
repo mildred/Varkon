@@ -1,7 +1,7 @@
 /**********************************************************************
 *
-*    wppen.c
-*    =======
+*    wpcolor.c
+*    =========
 *
 *    This file is part of the VARKON WindowPac Library.
 *    URL: http://varkon.sourceforge.net
@@ -365,6 +365,12 @@ static void get_rgb(int pennum,XColor *xrgb);
      pen_tab[pen].defined = TRUE;
      pen_tab[pen].color   = TRUE;
      }
+/*
+***If this pen is the current pen, it needs to be reloaded
+***so that subsequent draws will reflect the change in color.
+*/
+   if ( pen == actpen ) actpen = -1;
+   if ( pen == actpen_gl ) actpen_gl = -1;
 /*
 ***The end.
 */

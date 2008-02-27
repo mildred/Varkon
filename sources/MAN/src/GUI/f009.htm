@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <HTML>
 <HEAD>
-   <TITLE>f9 2D coordinate system</TITLE>
+   <TITLE>f14 3D coordinate system</TITLE>
    <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (X11; I; Linux 2.0.29 i586) [Netscape]">
 </HEAD>
 <BODY BGCOLOR="#99CCFF">
@@ -12,24 +12,33 @@
 <HR width="100%" align="center"></P>
 
 <UL>
-<H3>f9 Create 2D coordinate system</H3>
+<H3>f14 Create 3D coordinate system</H3>
 
-<P><B>Description<BR>
+<P><BR>
+3D coordinate system<BR>
+<BR>
+<BR>
+<B>Description<BR>
 <BR>
 </B>Creates a coordinate system with name, position and rotation around
-the Z-axis.<BR>
+the X-, Y- and Z-axis.<BR>
 <BR>
 <B>Available in<BR>
 <BR>
-</B>2D.<BR>
+</B>3D.<BR>
 <BR>
 <B>MBS Correspondence<BR>
 <BR>
-</B>csys_1p(id, name, pos, 0, 0, rot_z);<BR>
+</B>csys_1p(id, name, pos, rot_x, rot_y, rot_z);<BR>
 <BR>
 <B>Comments<BR>
 <BR>
-</B>See also f106 and f107 for activation and deactivation of coordinate
+</B>The orientation of the coordinate system is computed by first translating
+it to pos and then rotating it around its own X, Y and Z. X first and then
+Y and finally Z.<BR>
+<BR>
+See also <A HREF="f106.htm">f106</A> , <A HREF="f107.htm">f107</A> and
+<A HREF="f177.htm">f177</A> for activation and deactivation of coordinate
 systems.<BR>
 </P>
 </UL>

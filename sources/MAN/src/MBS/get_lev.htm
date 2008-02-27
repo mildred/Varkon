@@ -1,10 +1,10 @@
-m4_changequote({,})
-m4_define({_TITLE_},{Varkon MBS Programmers manual})
-m4_define({_SUBTITLE_},{- get_level - Procedure})
-m4_define({_INDEXLINK_},{<a href="grapindx.htm">index</a>})
-m4_define({_STYLE_},{../varkonstyle.css})
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- get_level - Procedure})
+define({_INDEXLINK_},{<a href="grapindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
 
-m4_include(../../include/header.inc)
+include(../../include/header.inc)
 
 
 <h1>get_level - Procedure</h1>
@@ -62,5 +62,5 @@ Returns information about a level.
 Each graphical viewing window has it's individual level state but all graphical viewing windows share the same name table. This means that a level can be blanked in one window and unblanked in another window but have the same name in both windows. Default graphic viewing window has ID = 0.
 </p>
 
-m4_include(../../include/svnversion.inc)
-m4_include(../../include/footer.inc)
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

@@ -1,4 +1,4 @@
-/*!******************************************************************/
+/********************************************************************/
 /*  File: newrout.h                                                 */
 /*  ===============                                                 */
 /*                                                                  */
@@ -125,6 +125,8 @@
 {"ACT_SVN_VERS",      ST_FUNC,     FALSE,  ST_ORD,    VASVNVERS},
 {"GET_MATERIAL",      ST_FUNC,     FALSE,  ST_ORD,    VGETMAT},
 {"GET_LIGHT",         ST_FUNC,     FALSE,  ST_ORD,    VGETLIGHT},
+{"RGB_TO_HSV",        ST_PROC,     FALSE,  ST_ORD,    VRGBHSV},
+{"HSV_TO_RGB",        ST_PROC,     FALSE,  ST_ORD,    VHSVRGB},
 /*
 ***The global symbol table ends here.
 */

@@ -42,18 +42,18 @@ all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT) $(TXTRESU
 	mkdir -p ../../../man/sysadm
 	mkdir -p ../../../man/relnotes
 	@echo make contents in subdirectories
-	@make -C tutorial
-	@make -C GUI
-	@make -C MBS
-	@make -C MBS -C images
-	@make -C appdev
-	@make -C sysadm
-	@make -C relnotes
+	$(MAKE) -C tutorial
+	$(MAKE) -C GUI
+	$(MAKE) -C MBS
+	$(MAKE) -C MBS -C images
+	$(MAKE) -C appdev
+	$(MAKE) -C sysadm
+	$(MAKE) -C relnotes
 
 # preprocess htm-files, copy other files
 
 $(TARGETDIR)/%.htm : ./%.htm $(INCLUDEFILES)
-	m4 -P <$*.htm >$(TARGETDIR)/$*.htm
+	m4 <$*.htm >$(TARGETDIR)/$*.htm
 
 $(TARGETDIR)/%.css : ./%.css
 	cp $*.css $(TARGETDIR)/$*.css

@@ -161,3 +161,10 @@ VARKON Error messages for Interpreter routines
 578  2  Can't malloc for %s trim-curves, SUR_TRIM_USRDEF
 579  2  Error executing procedure %s
 580  2  This module needs to be compiled with a newer MBS compiler
+581  2  HSV_TO_RGB, Hue out of range
+582  2  HSV_TO_RGB, Saturation out of range
+583  2  HSV_TO_RGB, Value out of range
+584  2  RGB_TO_HSV, Red value out of range
+585  2  RGB_TO_HSV, Green value out of range
+586  2  RGB_TO_HSV, Blue value out of range
+587  2  RGB_TO_HSV, R=G=B=0

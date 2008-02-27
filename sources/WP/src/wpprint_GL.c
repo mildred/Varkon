@@ -271,7 +271,7 @@ start:
                          rwinpt,
                          mdvwMatrix,
                         &cs,
-                         GLRASTER_TIFF_FILE_GREYSCALE,
+                         GLRASTER_TIFF_FILE_COLOR,
                          dpi,
                          width,
                          height,

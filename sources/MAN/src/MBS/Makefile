@@ -31,7 +31,7 @@ all : $(HTMRESULT) $(CSSRESULT) $(JPGRESULT) $(PNGRESULT) $(GIFRESULT)
 # preprocess htm-files, copy other files
 
 $(TARGETDIR)/%.htm : ./%.htm $(INCLUDEFILES)
-	m4 -P <$*.htm >$(TARGETDIR)/$*.htm
+	m4 <$*.htm >$(TARGETDIR)/$*.htm
                 
 $(TARGETDIR)/%.css : ./%.css
 	cp $*.css $(TARGETDIR)/$*.css

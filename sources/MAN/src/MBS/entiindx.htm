@@ -1,10 +1,10 @@
-m4_changequote({,})
-m4_define({_TITLE_},{Varkon MBS Programmers manual})
-m4_define({_SUBTITLE_},{- Entity creation routines})
-m4_define({_INDEXLINK_},{<a href="catindex.htm">index</a>})
-m4_define({_STYLE_},{../varkonstyle.css})
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- Entity creation routines})
+define({_INDEXLINK_},{<a href="catindex.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
 
-m4_include(../../include/header.inc)
+include(../../include/header.inc)
 
 
 <h1>Entity creation routines</h1>
@@ -14,6 +14,16 @@ m4_include(../../include/header.inc)
 <tr>
 <th>MBS name</th>
 <th>Description</th>
+</tr>
+
+<tr>
+<td><a href="csys_1p.htm">csys_1p</a></td>
+<td>Coordinate system with one position</td>
+</tr>
+
+<tr>
+<td><a href="csys_3p.htm">csys_3p</a></td>
+<td>Coordinate system with 2 or 3 positions</td>
 </tr>
 
 <tr>
@@ -43,7 +53,7 @@ m4_include(../../include/header.inc)
 
 <tr>
 <td><a href="lin_ang.htm">lin_ang</a></td>
-<td>Line with angle</td>
+<td>Line with angle and length</td>
 </tr>
 
 <tr>
@@ -157,6 +167,11 @@ m4_include(../../include/header.inc)
 </tr>
 
 <tr>
+<td><a href="b_plane.htm">b_plane</a></td>
+<td>Bounded plane</td>
+</tr>
+
+<tr>
 <td><a href="sur_appr.htm">sur_approx</a></td>
 <td>Surface approximate</td>
 </tr>
@@ -267,21 +282,6 @@ m4_include(../../include/header.inc)
 </tr>
 
 <tr>
-<td><a href="csys_1p.htm">csys_1p</a></td>
-<td>Coordinate system wit one position</td>
-</tr>
-
-<tr>
-<td><a href="csys_3p.htm">csys_3p</a></td>
-<td>Coordinate system with 2 or 3 positions</td>
-</tr>
-
-<tr>
-<td><a href="b_plane.htm">b_plane</a></td>
-<td>Bounded plane</td>
-</tr>
-
-<tr>
 <td><a href="mesh_arr.htm">mesh_arr</a></td>
 <td>Mesh</td>
 </tr>
@@ -332,5 +332,5 @@ m4_include(../../include/header.inc)
 </tr>
 </table>
 
-m4_include(../../include/svnversion.inc)
-m4_include(../../include/footer.inc)
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

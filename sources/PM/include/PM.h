@@ -366,7 +366,6 @@ short evoutb(void);
 short evinii(void); 
 short evinif(void);
 short evinis(void);
-short evinio(pmvaty iotyp, PMPARVA pv[], PMLITVA *valp); 
 short evinl(void);
 short evinb(void);
 short evfpos(void);
@@ -606,7 +605,7 @@ short evrpofa(void);
 short evrpifa(void);
 
 /*
-***evshade.c
+***evcolor.c
 */
 short evltvi(void);
 short evlton(void);
@@ -614,6 +613,8 @@ short evltof(void);
 short evgtlt(void);
 short evcrco(void);
 short evgtco(void);
+short evrgbhsv(void);
+short evhsvrgb(void);
 short evcrmt(void);
 short evgtmt(void);
 

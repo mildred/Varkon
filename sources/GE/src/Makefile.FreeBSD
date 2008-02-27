@@ -8,7 +8,7 @@
 
 RM = rm -f
 
-CC ?= gcc
+CC ?= cc
 
 CFLAGS +=                    \
             -ansi            \
@@ -17,15 +17,11 @@ CFLAGS +=                    \
             -ffloat-store    \
             -fsigned-char    \
             -O               \
-            -DUNIX
+            -DUNIX -I/usr/local/include
 
 debug :     CFLAGS += -g
 
-gpl   :     CFLAGS +=        \
-            -O               \
-            -DUNIX
-
-COMPILE = $(CC) -c $(CFLAGS)
+COMPILE = $(CC) -c $(CFLAGS) $(XINC) 
 
 include Makefile.GE
 

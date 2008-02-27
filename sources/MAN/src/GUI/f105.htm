@@ -1,7 +1,7 @@
 <!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
 <HTML>
 <HEAD>
-   <TITLE>f105 2D coordinate system</TITLE>
+   <TITLE>f104 3D coordinate system</TITLE>
    <META NAME="GENERATOR" CONTENT="Mozilla/3.01Gold (X11; I; Linux 2.0.29 i586) [Netscape]">
 </HEAD>
 <BODY BGCOLOR="#99CCFF">
@@ -12,22 +12,23 @@
 <HR width="100%" align="center"></P>
 
 <UL>
-<H3>f105 Create 2D coordinate system</H3>
+<H3>f104 Create 3D coordinate system</H3>
 
 <P><B>Description<BR>
 <BR>
-</B>Creates a coordinate system with name and two positions. The first
-position is the origin. Second position controls the direction of the X-axis.
-The resulting coordinate system will be placed in pos1 with its positive
-X-axis running through pos2.<BR>
+</B>Creates a coordinate system with name and three positions. The first
+position is the origin. Second position controls the direction of the X-axis
+and third position controls the orientation of the XY-plane. The resulting
+coordinate system will be placed in pos1 with its positive X-axis running
+through pos2 and with pos3 contained in its XY-plane.<BR>
 <BR>
 <B>Available in<BR>
 <BR>
-</B>2D.<BR>
+</B>3D.<BR>
 <BR>
 <B>MBS Correspondence<BR>
 <BR>
-</B>csys_3p(id, name, pos1, pos2);<BR>
+</B>csys_3p(id, name, pos1, pos2, pos3);<BR>
 <BR>
 <B>Comments<BR>
 <BR>

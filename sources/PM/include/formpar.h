@@ -1,4 +1,4 @@
-/*!******************************************************************
+/********************************************************************
 *  File: formpar.h
 *  ===============
 *
@@ -1651,7 +1651,15 @@
 /*
 ***VGETMAT = 393, defined:=GET_LIGHT(light,on,intensity,follow_model);
 */
-     "i5:ie.iv.fv.iv"
+     "i5:ie.iv.fv.iv",
+/*
+***VRGBHSV = 394, RGB_TO_HSV(r,g,b,h,s,v);
+*/
+     "-5:ie.ie.ie.iv.iv.iv",
+/*
+***VHSVRGB = 395, HSV_TO_RGB(h,s,v,r,g,b);
+*/
+     "-5:ie.ie.ie.iv.iv.iv"
 /*
 ***Remember, no comma after the last parameter list definition.
 */

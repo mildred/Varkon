@@ -3,7 +3,7 @@
 #   Makefile for Varkon version 1.19C
 #   ---------------------------------
 #
-#   2008-02-15 J.Kjellander
+#   2008-02-20 J.Kjellander
 #
 ##########################################
 
@@ -62,41 +62,41 @@ distr debug:
 	./update_versionfile
 
 # Make xvarkon
-	@make -C IG -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
-	@make -C PM -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
-	@make -C EX -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
-	@make -C DB -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
-	@make -C WP -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
-	@make -C GE -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
-	@make -f Makefile.$(PLATFORM)
+	$(MAKE) -C IG -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
+	$(MAKE) -C PM -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
+	$(MAKE) -C EX -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
+	$(MAKE) -C DB -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
+	$(MAKE) -C WP -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
+	$(MAKE) -C GE -C src -f Makefile.$(PLATFORM) $(BUILDTARGET)
+	$(MAKE) -f Makefile.$(PLATFORM)
 
 # Make mbsc
-	@make -C AN -C src -f Makefile.$(PLATFORM)
+	$(MAKE) -C AN -C src -f Makefile.$(PLATFORM)
 
 # Make plotter programs
-	@make -C PL -C src -f Makefile.$(PLATFORM) PLLIB
-	@make -C PL -C src -f Makefile.$(PLATFORM) POSTSCRIPT
-	@make -C PL -C src -f Makefile.$(PLATFORM) HPCL5
-	@make -C PL -C src -f Makefile.$(PLATFORM) HPGL2
-	@make -C PL -C src -f Makefile.$(PLATFORM) HP7475
+	$(MAKE) -C PL -C src -f Makefile.$(PLATFORM) PLLIB
+	$(MAKE) -C PL -C src -f Makefile.$(PLATFORM) POSTSCRIPT
+	$(MAKE) -C PL -C src -f Makefile.$(PLATFORM) HPCL5
+	$(MAKE) -C PL -C src -f Makefile.$(PLATFORM) HPGL2
+	$(MAKE) -C PL -C src -f Makefile.$(PLATFORM) HP7475
 
 # Make vlib
-	@make -C Vlib -f Makefile
+	$(MAKE) -C Vlib -f Makefile
 
 # Make man
-	@make -C MAN -C src -f Makefile
+	$(MAKE) -C MAN -C src -f Makefile
 
 clean:
-	@make -C IG -C src -f Makefile.$(PLATFORM) clean
-	@make -C PM -C src -f Makefile.$(PLATFORM) clean
-	@make -C EX -C src -f Makefile.$(PLATFORM) clean
-	@make -C DB -C src -f Makefile.$(PLATFORM) clean
-	@make -C WP -C src -f Makefile.$(PLATFORM) clean
-	@make -C GE -C src -f Makefile.$(PLATFORM) clean
-	@make -C AN -C src -f Makefile.$(PLATFORM) clean
-	@make -C PL -C src -f Makefile.$(PLATFORM) clean
-	@make -C MAN -C src -f Makefile clean
-	@make -C Vlib -f Makefile clean
+	$(MAKE) -C IG -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C PM -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C EX -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C DB -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C WP -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C GE -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C AN -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C PL -C src -f Makefile.$(PLATFORM) clean
+	$(MAKE) -C MAN -C src -f Makefile clean
+	$(MAKE) -C Vlib -f Makefile clean
 	rm -f -r ../bin
 
 ##########################################################

@@ -793,7 +793,7 @@ exit:
    dy_y = gridmat.g22*gwinpt->grid_dy;
 /*
 ***If the distance between gridpoints as seen on the screen is
-***less than a few pixels (8), there is no meaning to display the grid.
+***less than a few pixels (5), there is no meaning to display the grid.
 */
    ix1 = gwinpt->vy.k1x + gwinpt->vy.k2x*xs;
    iy1 = gwinpt->vy.k1y + gwinpt->vy.k2y*ys;
@@ -802,7 +802,7 @@ exit:
    idx = ix2 - ix1;
    idy = iy2 - iy1;
 
-   if ( (pix_dx=SQRT(idx*idx + idy*idy)) < 8.0 )
+   if ( (pix_dx=SQRT(idx*idx + idy*idy)) < 5.0 )
      {
      WPaddmess_mcwin("Grid dx too small !",WP_MESSAGE);
      return;
@@ -813,7 +813,7 @@ exit:
    idx = ix2 - ix1;
    idy = iy2 - iy1;
 
-   if ( SQRT(idx*idx + idy*idy) < 8.0 )
+   if ( SQRT(idx*idx + idy*idy) < 5.0 )
      {
      WPaddmess_mcwin("Grid dy too small !",WP_MESSAGE);
      return;
