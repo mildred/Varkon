@@ -56,6 +56,7 @@
 
 #ifdef UNIX
 #include <unistd.h>
+#include <stdio.h>
 #endif
 
 #ifdef WIN32
