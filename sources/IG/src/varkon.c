@@ -54,7 +54,7 @@ V3MDAT  sydata =
            { 1000,       /* Serial number, default = 1000 */
              1,          /* Version number*/
              19,         /* Revision */
-            'B',         /* 2007-08-11 */
+            'C',         /* 2008-02-28 */
              0,0,0,0,0,  /* Dummy times */
              0,0,0,0,0,
              " ",        /* OS name */

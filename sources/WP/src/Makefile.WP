@@ -50,6 +50,7 @@ OBJECTS = ../lib/WPlib.a(wpinit.o)       \
           ../lib/WPlib.a(wpGLlist.o)     \
           ../lib/WPlib.a(wpplot.o)       \
           ../lib/WPlib.a(wpprint_X11.o)  \
+          ../lib/WPlib.a(wpprint_GL.o)   \
           ../lib/WPlib.a(wphide.o)       \
           ../lib/WPlib.a(wpDXF.o)        \
           ../lib/WPlib.a(wpgrid.o)       \
@@ -68,9 +69,14 @@ OBJECTS = ../lib/WPlib.a(wpinit.o)       \
 # WPlib.a depends on the objects above and Wpprint_GL.o
 # that has it's own rules, see below.
 
-distr : $(OBJECTS) ../lib/WPlib.a(wpprint_GL.o) ../lib/WPlib.a(gl_print.o)
+ifeq ($(DV3TIFF),TRUE)
+OBJECTS += ../lib/WPlib.a(gl_print.o)
+COMPILE += -DV3USETIFF
+endif
 
-debug : $(OBJECTS) ../lib/WPlib.a(wpprint_GL.o) ../lib/WPlib.a(gl_print.o)
+distr : $(OBJECTS)
+
+debug : $(OBJECTS)
 
 # Objects depend on sources implicitly and sources depend
 # on the following include-files.
@@ -79,7 +85,7 @@ $(OBJECTS) : $(INCFILES)
 
 # wpprint_GL.o depends on ../GL_to_TIFF
 
-../lib/WPlib.a(WPprint_GL.o): wpprint_GL.c $(INCFILES) ../lib/WPlib.a(gl_print.o) \
+../lib/WPlib.a(wpprint_GL.o): wpprint_GL.c $(INCFILES) ../lib/WPlib.a(gl_print.o) \
                               ../GL_to_TIFF/gl_print.h ../GL_to_TIFF/camera.h
 	$(COMPILE) wpprint_GL.c
 	ar r ../lib/WPlib.a wpprint_GL.o

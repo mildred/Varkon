@@ -83,3 +83,4 @@ VARKON Error messages for WINPAC
 179  2  WPupbu(), Window nr:%s is not a WPIWIN
 180  2  WPupbu(), WPBUTT nr:%s does not exist
 181  2  WPupbu(), Window nr:%s is not a WPBUTT
+182  3  Your Varkon is built without TIFF support

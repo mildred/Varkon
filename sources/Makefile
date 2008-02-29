@@ -7,8 +7,6 @@
 #
 ##########################################
 
-
-
 #=========================================================
 # Build options:
 #=========================================================
@@ -18,25 +16,29 @@ PLATFORM=linux
 #PLATFORM=FreeBSD
 #PLATFORM=MacOSX
 
-# Uncomment the line below to include routines for Robot
-# Application Protocol (RAP). Only on Linux platform.
-# DV3RAP=TRUE
+# Comment the line below to exclude support for TIFF
+# output.
+DV3TIFF=TRUE
+export DV3TIFF
 
 # Uncomment the line below to include ODBC support
 # see also README_ODBC
 # DV3ODBC=TRUE
+export DV3ODBC
+
+# Uncomment the line below to include routines for Robot
+# Application Protocol (RAP). Only on Linux platform.
+# DV3RAP=TRUE
+export DV3RAP
 
 # Uncomment the line below to include routines specific
 # for Örebro University.
 # DV3ORU=TRUE
+export DV3ORU
 
 #=========================================================
 # End build options
 #=========================================================
-
-export DV3RAP
-export DV3ODBC
-export DV3ORU
 
 .PHONY: distr debug
 

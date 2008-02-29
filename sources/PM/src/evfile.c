@@ -74,7 +74,15 @@ extern FILE *fdopen();
 */
 extern FILE *popen();
 extern int   pclose();
-extern int   fileno();
+
+/*
+***fileno() is also non ANSI but trying to declare it here
+***kills the build process on FreeBSD. Untill this problem
+***is resolved we will not try to declare fileno(). This
+***will however create the following compiler warning:
+***warning: implicit declaration of function 'fileno'
+*/
+/* extern int   fileno(); */
 
 /*
 ***Global variables.

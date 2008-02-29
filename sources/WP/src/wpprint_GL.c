@@ -24,6 +24,10 @@
 *
 **********************************************************************/
 
+#ifdef V3USETIFF
+/*
+***Build the system with TIFF support.
+*/
 #include "../../DB/include/DB.h"
 #include "../../IG/include/IG.h"
 #include "../../WP/include/WP.h"
@@ -435,3 +439,11 @@ start:
   }
 
 /********************************************************/
+
+/*
+***If TIFF is not enabled in the makefiles we supply
+***this dummy instead.
+*/
+#else
+   short WPprint_GL(char *rwinpt) {return(erpush("WP1823",""));}
+#endif
