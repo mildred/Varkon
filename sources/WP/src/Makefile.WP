@@ -85,6 +85,7 @@ $(OBJECTS) : $(INCFILES)
 
 # wpprint_GL.o depends on ../GL_to_TIFF
 
+ifeq ($(DV3TIFF),TRUE)
 ../lib/WPlib.a(wpprint_GL.o): wpprint_GL.c $(INCFILES) ../lib/WPlib.a(gl_print.o) \
                               ../GL_to_TIFF/gl_print.h ../GL_to_TIFF/camera.h
 	$(COMPILE) wpprint_GL.c
@@ -95,6 +96,7 @@ $(OBJECTS) : $(INCFILES)
 	$(COMPILE) ../GL_to_TIFF/gl_print.c
 	ar r ../lib/WPlib.a gl_print.o
 	$(RM) gl_print.o
+endif
 
 clean:
 	rm -f ../lib/WPlib.a
