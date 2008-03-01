@@ -5,24 +5,30 @@
 
       Installation guide for Varkon 1.19C. This README includes specific
       information for Linux users but should also be used for other
-      Unix systems including the MacOSX.
+      Unix systems like FreeBSD and MacOSX.
 
       When you read this file you have either downloaded and installed
       (unpacked) a prebuilt binary version of Varkon or you have downloaded
-      and installed the sources.
+      and installed the sources. The top directory of the Varkon installation
+      is referred to as VARKON_ROOT.
 
       If you are building Varkon from the sources, follow the instructions
-      in the file ./sources/README before you continue. This will build the
-      executable binaries and the HTML documentation.
+      in the file VARKON_ROOT/sources/README before you continue. This will
+      build the executable binaries and the HTML documentation.
 
       The prebuilt binary version of Varkon includes the full HTML documentation.
       If you build Varkon from the sources the documentation is automatically
       created during the build process.
 
-      The start page of the Varkon documentation is ./man/index.htm
+      The start page of the Varkon documentation is:
+      VARKON_ROOT/man/index.htm
 
-      To finish the installation and start Varkon follow the instructions
-      in ./man/sysadm/index.htm
+      The full documentation is also available online at:
+      http://varkon.sourceforge.net/man_1.19C/index.htm
+
+      To finish the installation and start Varkon, follow the instructions
+      in the System administrators manual at:
+      VARKON_ROOT/man/sysadm/index.htm
 
       Varkon 1.19C includes many changes compared to 1.19B. For old users
       of Varkon the new concept of a job directory instead of a project
@@ -79,12 +85,19 @@
       If your system does not include support for OpenGL you must
       install OpenGL on your system.
 
+      TIFF
+      ----
+
+      Varkon by default supports the output of TIFF images from
+      OpenGL windows. You can turn off TIFF support in the top
+      level makefile. See VARKON_ROOT/sources/README.
+
       ODBC
       ----
 
       The binary version of Varkon for Linux does not include support
       for ODBC. If you need ODBC support you must build Varkon from
-      the sources. See README_ODBC in the sources directory.
+      the sources. See VARKON_ROOT/sources/README_ODBC.
 
 
       Good Luck
