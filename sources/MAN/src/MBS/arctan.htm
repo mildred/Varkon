@@ -1,79 +1,43 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- arctan - Function})
+define({_INDEXLINK_},{<a href="mathindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-<head>
-<title>arctan </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
+<h1>arctan - Function</h1>
 
-<body bgcolor="#99CCFF">
+<h2>Description</h2>
 
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
+<p>
+Returns the arc tangent of an argument as an angle in degrees.
+</p>
 
-<hr width="100%" align="center">
+<h2>Syntax</h2>
 
-<blockquote>
-  <h2>arctan - <small><small>Function</small></small></h2>
-  <p>Trigonometric function<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the arc tangent of an argument as an angle measured in degrees.<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  arctan(x)<br>
-  <br>
-  </p>
-  <table width="728" border="0">
-<!-- Table 14 Row 01 -->
-    <tr>
-      <td width="66">FLOAT</td>
-      <td width="654">x;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="728" border="0">
-<!-- Table 15 Row 01 -->
-    <tr>
-      <td width="42">x</td>
-      <td width="678">-&nbsp; Any value</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="728" border="0">
-<!-- Table 16 Row 01 -->
-    <tr>
-      <td width="54">None.</td>
-      <td width="666"></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <br>
-  A FLOAT value in the range of -90 to +90 degrees.</p>
-</blockquote>
+<pre>
+  angle:=arctan(x);
 
-<hr width="100%" align="center">
+  float angle;
+  float x;
+</pre>
 
+<h2>Principal parameters</h2>
 
-
-</small></p>
-<div align="center"><center>
-
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mathindx.htm">Index</a></td>
-  </tr>
+<table>
+<tr>
+<td>x</td>
+<td>- A value.</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Return value</h2>
+
+<p>A FLOAT value in the range of -90.0 to +90.0 degrees.</p>
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

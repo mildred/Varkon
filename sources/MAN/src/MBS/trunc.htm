@@ -1,87 +1,55 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- trunc - Function})
+define({_INDEXLINK_},{<a href="mathindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-<head>
-<title>trunc </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
+<h1>trunc - Function</h1>
 
-<body bgcolor="#99CCFF">
+<h2>Description</h2>
 
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
+<p>
+Returns the integer part of an argument (truncates).
+</p>
 
-<hr width="100%" align="center">
+<h2>Syntax</h2>
 
-<blockquote>
-  <h2>trunc - <small><small>Function</small></small></h2>
-  <p>Mathematical function<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the integer part of an argument (truncates).<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  trunc(x)<br>
-  <br>
-  </p>
-  <table width="570" border="0">
-<!-- Table 25 Row 01 -->
-    <tr>
-      <td width="64">FLOAT</td>
-      <td width="498">x;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="570" border="0">
-<!-- Table 26 Row 01 -->
-    <tr>
-      <td width="55">x</td>
-      <td width="507">- Any value</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 27 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <br>
-  An INT value equal to the (truncated) integer part of x.<br>
-  <br>
-  <b>Examples<br>
-  <u><br>
-  </b></u>TRUNC(10.25) = 10<br>
-  TRUNC(10.75) = 10<br>
-  TRUNC(0) = 0<br>
-  TRUNC(-10.25) = -10<br>
-  TRUNC(-10.75) = -10</p>
-</blockquote>
+<pre>
+  i:=trunc(x);
 
-<hr width="100%" align="center">
+  int   i;
+  float x;
+</pre>
 
+<h2>Principal parameters</h2>
 
-
-</small></p>
-<div align="center"><center>
-
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mathindx.htm">Index</a></td>
-  </tr>
+<table>
+<tr>
+<td>x</td>
+<td>- A value.</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Return value</h2>
+
+<p>
+An INT value equal to the (truncated) integer part of x.
+</p>
+
+<h2>Example</h2>
+
+<pre>
+   i:=trunc(10.75);   ! Returns  10
+   i:=trunc(10.25);   ! Returns  10
+   i:=trunc(0.0);     ! Returns   0
+   i:=trunc(-10.25);  ! Returns -10
+   i:=trunc(-10.75);  ! Returns -10
+</pre>
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

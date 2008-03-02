@@ -1,79 +1,43 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- sin - Function})
+define({_INDEXLINK_},{<a href="mathindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-<head>
-<title>sin </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
+<h1>sin - Function</h1>
 
-<body bgcolor="#99CCFF">
+<h2>Description</h2>
 
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
+<p>
+Returns the sine of an argument given in degrees.
+</p>
 
-<hr width="100%" align="center">
+<h2>Syntax</h2>
 
-<blockquote>
-  <h2>sin - <small><small>Function</small></small></h2>
-  <p>Trigonometric function<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the sine of an argument given in degrees.<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  sin(angle)<br>
-  <br>
-  </p>
-  <table width="494" border="0">
-<!-- Table 01 Row 01 -->
-    <tr>
-      <td width="66">FLOAT</td>
-      <td width="420">angle;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="494" border="0">
-<!-- Table 02 Row 01 -->
-    <tr>
-      <td width="56">angle</td>
-      <td width="430">- Angle in the range from -360 to +360 degrees</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="494" border="0">
-<!-- Table 03 Row 01 -->
-    <tr>
-      <td width="56">None.</td>
-      <td width="430"></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <br>
-  A FLOAT value in the range from -1.0 to 1.0</p>
-</blockquote>
+<pre>
+  x:=sin(angle);
 
-<hr width="100%" align="center">
+  float x;
+  float angle;
+</pre>
 
+<h2>Principal parameters</h2>
 
-
-</small></p>
-<div align="center"><center>
-
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mathindx.htm">Index</a></td>
-  </tr>
+<table>
+<tr>
+<td>angle</td>
+<td>- Angle in the range from -360 to +360 degree</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Return value</h2>
+
+<p>A FLOAT value in the range from -1.0 to +1.0</p>
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

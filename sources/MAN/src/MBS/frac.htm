@@ -1,80 +1,53 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- frac - Function})
+define({_INDEXLINK_},{<a href="mathindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-<head>
-<title>frac </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
+<h1>frac - Function</h1>
 
-<body bgcolor="#99CCFF">
+<h2>Description</h2>
 
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
+<p>
+Returns the fractional part (decimals) of a FLOAT argument.
+</p>
 
-<hr width="100%" align="center">
+<h2>Syntax</h2>
 
-<blockquote>
-  <h2>frac - <small><small>Function</small></small></h2>
-  <p>Mathematical function<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the fractional part of an argument.<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  frac(x)<br>
-  <br>
-  </p>
-  <table width="570" border="0">
-<!-- Table 19 Row 01 -->
-    <tr>
-      <td width="66">FLOAT</td>
-      <td width="496">x;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="570" border="0">
-<!-- Table 20 Row 01 -->
-    <tr>
-      <td width="56">x</td>
-      <td width="506">- Any value</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 21 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <br>
-  A FLOAT value equal to the decimal fraction of x. If x is positive frac(x) is also
-  positive and if x is negative frac(x) is negative.</p>
-</blockquote>
+<pre>
+  dec:=frac(x);
 
-<hr width="100%" align="center">
+  float dec;
+  float x;
+</pre>
 
+<h2>Principal parameters</h2>
 
-
-</small></p>
-<div align="center"><center>
-
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mathindx.htm">Index</a></td>
-  </tr>
+<table>
+<tr>
+<td>x</td>
+<td>- A value.</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Return value</h2>
+
+<p>
+A FLOAT value equal to the decimal fraction of x. If x is positive, frac(x) is also
+positive and if x is negative, frac(x) is negative.
+</p>
+
+<h2>Example</h2>
+
+<pre>
+   dec:=frac(25.35);   ! Returns 0.35
+   dec:=frac(-0.99);   ! Returns -0.99
+</pre>
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

@@ -1,79 +1,43 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- ln - Function})
+define({_INDEXLINK_},{<a href="mathindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-<head>
-<title>ln </title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
+<h1>ln - Function</h1>
 
-<body bgcolor="#99CCFF">
+<h2>Description</h2>
 
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
+<p>
+Returns the natural logarithm of an argument.
+</p>
 
-<hr width="100%" align="center">
+<h2>Syntax</h2>
 
-<blockquote>
-  <h2>ln - <small><small>Function</small></small></h2>
-  <p>Logarithmic function<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the natural logarithm of an argument.<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  ln(x)<br>
-  <br>
-  </p>
-  <table width="570" border="0">
-<!-- Table 10 Row 01 -->
-    <tr>
-      <td width="65">FLOAT</td>
-      <td width="497">x;</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="570" border="0">
-<!-- Table 11 Row 01 -->
-    <tr>
-      <td width="56">x</td>
-      <td width="506">- A value &gt;0.</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 12 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <br>
-  A FLOAT value equal to the natural logarithm of x.</p>
-</blockquote>
+<pre>
+  y:=ln(x);
 
-<hr width="100%" align="center">
+  float y;
+  float x;
+</pre>
 
+<h2>Principal parameters</h2>
 
-
-</small></p>
-<div align="center"><center>
-
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mathindx.htm">Index</a></td>
-  </tr>
+<table>
+<tr>
+<td>x</td>
+<td>- A value &gt; 0.0</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Return value</h2>
+
+<p>A FLOAT value equal to the natural logarithm of x.</p>
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

@@ -1,84 +1,55 @@
-<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 3.2//EN">
-<html>
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- abs - Function})
+define({_INDEXLINK_},{<a href="mathindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-<head>
-<title>abs</title>
-<meta name="GENERATOR" content="Microsoft FrontPage 3.0">
-</head>
+<h1>abs - Function</h1>
 
-<body bgcolor="#99CCFF">
+<h2>Description</h2>
 
-<p align="center"><small>VARKON Version 1.15 1997-10-24</small></p>
+<p>
+Returns the absolute (positive) value of an argument as an INT or FLOAT
+value depending on the type of the argument.
+</p>
 
-<hr width="100%" align="center">
+<h2>Syntax</h2>
 
-<blockquote>
-  <h2>abs - <small><small>Function</small></small></h2>
-  <p>Mathematical function<br>
-  <br>
-  <br>
-  <b>Description<br>
-  </b><br>
-  Returns the absolute (positive) value of an argument.<br>
-  <br>
-  <b>Syntax<br>
-  </b><br>
-  abs(x)<br>
-  <br>
-  INT or FLOAT x;<br>
-  <b><u><br>
-  </u>Principal parameters<br>
-  </b><br>
-  </p>
-  <table width="652" border="0">
-<!-- Table 01 Row 01 -->
-    <tr>
-      <td width="23">x</td>
-      <td width="621">-&nbsp; Any value, INT or FLOAT</td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Optional parameters<br>
-  </b><br>
-  </p>
-  <table width="95%" border="0">
-<!-- Table 02 Row 01 -->
-    <tr>
-      <td>None.</td>
-      <td></td>
-    </tr>
-  </table>
-  <p><br>
-  <b>Return value</b><br>
-  <br>
-  If x is an INT-value abs returns its absolute value as an INT. If x is a FLOAT value abs
-  returns its absolute value as a FLOAT.<br>
-  <br>
-  <b>Examples<br>
-  </b><br>
-  abs(-100) returns the integer value 100<br>
-  <br>
-  abs(-100.0) returns the float value 100.0<br>
-  <br>
-  <b>Comments</b><br>
-  <br>
-  The abs function is different from other functions by its dual nature of being both an INT
-  and a FLOAT function. Normal functions have only one type.</p>
-</blockquote>
+<pre>
+  y:=abs(x);
 
-<hr width="100%" align="center">
+  int/float y;
+  int/float x;
+</pre>
 
+<h2>Principal parameters</h2>
 
-
-</small></p>
-<div align="center"><center>
-
-<table align="ABSCENTER" cellspacing="10" cellpadding="0">
-  <tr>
-    <td><a href="../index.htm">VARKON Homepage</a></td>
-    <td><a href="mathindx.htm">Index</a></td>
-  </tr>
+<table>
+<tr>
+<td>x</td>
+<td>- An INT or FLOAT value.</td>
+</tr>
 </table>
-</center></div>
-</body>
-</html>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Return value</h2>
+
+<p>
+If x is an INT value, abs() returns an INT. If x is a FLOAT value, abs()
+returns a FLOAT.
+</p>
+
+<h2>Comments</h2>
+
+<p>
+The abs() function is different from other functions by its dual nature of being both an INT
+and a FLOAT function. This means that if <code>i</code> is an INT, the MBS compiler will accept
+<code>i:=abs(55);</code> but not <code>i:=abs(55.7);</code>
+</p>
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)
