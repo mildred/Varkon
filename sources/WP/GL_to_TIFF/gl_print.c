@@ -30,7 +30,7 @@
  * USA.
  *
  * Please report all bugs and problems to the following address:
- *
+ * 
  *     armin@faltl.com
  */
 
@@ -44,7 +44,7 @@
 
 /*#define AJF_DEBUG*/
 
-#define MAX_BUFFER	8388608	/* 2^23, 2^24 = 16777216 */
+/*#define MAX_BUFFER	8388608	/* 2^23, 2^24 = 16777216 */
 
 
 int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
@@ -312,9 +312,11 @@ int gl_plot(void (*draw)(void *hdl),	/* drawing callback */
 
 			/* read back from the frame buffer */
 			glReadPixels(0, 0, viewWdt, viewHgt, format, type, pixBuffPtr);
+
+                    
 			
 #ifdef AJF_DEBUG
-			// assuming it's color
+			/*JK assuming it's color*/
 			{
 				char *ptr;
 				int  cnt = 0;

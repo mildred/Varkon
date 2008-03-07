@@ -54,7 +54,7 @@ extern char   jobnam[],jobdir[];
 extern V3MDAT sydata;
 
 static short setup_ogl(WPRWIN *rwinpt);
-static short get_visinfo(WPRWIN *rwinpt);
+static short get_visual(WPRWIN *rwinpt);
 static void  init_colors(WPRWIN *rwinpt);
 static void  create_toolbar(WPRWIN *rwinpt);
 
@@ -106,6 +106,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
      }
 
    WPposw(x,y,dx+10,dy+25,&x,&y);
+
 /*
 ***Create the window.
 */
@@ -182,7 +183,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
 /*
 ***Select a visual.
 */
-   if ( (status=get_visinfo(rwinpt)) < 0 )
+   if ( (status=get_visual(rwinpt)) < 0 )
      {
      v3free((char *)rwinpt,"WPwcrw");
      return(erpush("WP1612",""));
@@ -190,7 +191,7 @@ static void  create_toolbar(WPRWIN *rwinpt);
 /*
 ***Create rendering context.
 */
-   if ( (rwinpt->rc=glXCreateContext(xdisp,rwinpt->pvinfo,NULL,TRUE)) == NULL )
+   if ( (rwinpt->rc=glXCreateContext(xdisp,rwinpt->pvinfo,NULL,True)) == NULL )
      {
      v3free((char *)rwinpt,"WPwcrw");
      erpush("WP1643","");
@@ -1453,38 +1454,38 @@ static short setup_ogl(
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
- static short get_visinfo(
-        WPRWIN *rwinpt)
+ static short get_visual(WPRWIN *rwinpt)
 
-/*      V�ljer X-visual.
+/*      Selects a visual suitable for OpenGL and saves
+ *      a pointer to the visualinfo in the WPRWIN.
  *
- *      In:  rwinpt    = Pekare till blivande WPRWIN.
+ *      In:  rwinpt = C pter to WPRWIN.
  *
- *      Ut: *rwinpt = Fyller i vald visinfo.
+ *      Out: *rwinpt = Updated WPRWIN.
  *
- *      Felkoder: WP1623 = GLX-saknas.
- *                WP1633 = Ingen visual
+ *      Error: WP1623 = GLX not supported.
+ *             WP1633 = No suitable visual found.
  *
- *      (C)microform ab 1998-03-23 J. Kjellander
+ *      (C)2008-03-05 J.Kjellander
  *
  ******************************************************!*/
 
   {
    char   tmpbuf[V3STRLEN];
-   int    i,dummy,redbits,greenbits,bluebits,zbits;
-   int    visatt[50];
+   int    i,dummy,redbits,greenbits,bluebits,zbits,
+          attval,visatt[50];
 
-   static XVisualInfo *pvisinfo; /* Beh�ver kanske inte vara static */
+   static XVisualInfo *pvisinfo;
 
 /*
-***Kolla att OpenGL supportas av X-servern.
+***Check that OpenGL is supported by the X-server.
 */
    if ( !glXQueryExtension(xdisp,&dummy,&dummy) )
      return(erpush("WP1623",""));
 /*
-***Vilka egenskaper skall visualen ha ?
+***Set up the required visual attributes.
 */
    i = 0;
 
@@ -1516,7 +1517,7 @@ static short setup_ogl(
        sscanf(tmpbuf,"%d",&zbits) == 1) ) zbits = 16;
    visatt[i++] = zbits;
 /*
-***Enkel eller dubbelbuffrat ?
+***Single or double buffered ?
 */
    if ( WPgrst("varkon.shade.doublebuffer",tmpbuf)  &&
         strcmp(tmpbuf,"True") == 0 )
@@ -1526,18 +1527,12 @@ static short setup_ogl(
      }
      else rwinpt->double_buffer = FALSE;
 /*
-***Level 0 is the normal frame buffer used for geometric primitives.
-*/
-     visatt[i++] = GLX_LEVEL;
-     visatt[i++] = 0;
-/*
 ***Request a matching visual.
 */
-   visatt[i]   = None;
-
-   pvisinfo = glXChooseVisual(xdisp,xscr,visatt);
+   visatt[i] = None;
+   pvisinfo  = glXChooseVisual(xdisp,xscr,visatt);
 /*
-***Hur gick det ?
+***Did we get one ?
 */
    if ( !pvisinfo )
      {
@@ -1545,22 +1540,19 @@ static short setup_ogl(
      else                    return(erpush("WP1633","Color Index Mode"));
      }
 /*
-***Bra !
+***Yes !
 */
    rwinpt->pvinfo = pvisinfo;
-
 /*
-***Testa att be om en overlay.
-*
-   i = 0;
-   visatt[i++] = GLX_BUFFER_SIZE;
-   visatt[i++] = 4;
-   visatt[i++] = GLX_LEVEL;
-   visatt[i++] = 1;
-   visatt[i]   = None;
-   pvisinfo    = glXChooseVisual(xdisp,xscr,visatt);
-
-*
+***What attributes did we get ?
+*/
+   glXGetConfig(xdisp,pvisinfo,GLX_RGBA,&attval);
+   glXGetConfig(xdisp,pvisinfo,GLX_RED_SIZE,&attval);
+   glXGetConfig(xdisp,pvisinfo,GLX_GREEN_SIZE,&attval);
+   glXGetConfig(xdisp,pvisinfo,GLX_BLUE_SIZE,&attval);
+   glXGetConfig(xdisp,pvisinfo,GLX_DEPTH_SIZE,&attval);
+   glXGetConfig(xdisp,pvisinfo,GLX_DOUBLEBUFFER,&attval);
+/*
 ***The end.
 */
    return(0);

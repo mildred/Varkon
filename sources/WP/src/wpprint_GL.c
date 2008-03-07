@@ -73,7 +73,10 @@ static void get_modelview(WPRWIN *rwinpt,GLdouble matrix[]);
    char        errbuf[V3STRLEN],destination[V3PTHLEN],
                mesbuf[V3PTHLEN],outpath[V3PTHLEN],
                outfile[JNLGTH],tiff_tag[V3STRLEN];
-   Window      xwin_id;
+
+   Window               xwin_id;
+   XSetWindowAttributes xwina;
+   unsigned long        xwinm;
 
 /*
 ***Get the TIFF file destination. Default directory
@@ -197,10 +200,6 @@ start:
    height = rwinpt->geo.psiz_y *
             (rwinpt->vy.scrwin.ymax - rwinpt->vy.scrwin.ymin);
 /*
-   width  = 150.0;
-   height = 150.0;
-*/
-/*
 ***8. nerarVal and farVal
 *
 ***These are near and far limit in model units, because this influences
@@ -240,17 +239,23 @@ start:
 */
    npix_x = GLRASTER_FRAME_WIDTH;
    npix_y = GLRASTER_FRAME_HEIGHT;
+/*
+***Create an unmapped window with the same colormap and visual as the
+***WPRWIN so that it can be used in the same OpenGL rendering context.
+*/
+   xwina.colormap = rwinpt->colmap;
+   xwinm =          CWColormap;
 
    xwin_id = XCreateWindow(xdisp,
                            rwinpt->id.x_id,
                            0,0,
                            npix_x,npix_y,
-                           0,
-                           CopyFromParent,
+                           1,
+                           rwinpt->pvinfo->depth,
                            InputOutput,
-                           CopyFromParent,
-                           0,
-                           NULL);
+                           rwinpt->pvinfo->visual,
+                           xwinm,
+                          &xwina);
 /*
 ***Activate the OpenGL RC in this window.
 */
@@ -430,6 +435,7 @@ start:
 /*
 ***Execute the main list.
 */
+   glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
    glCallList((GLuint)1);
    glFlush();
 /*

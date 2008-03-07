@@ -70,8 +70,8 @@ int gl_plot(void (*draw)(void* hdl),		/* drawing callback */
  * To get correct results, you should use the values for the size of
  * an unmapped (background-) rendering window for your graphics context.
  */
-#define GLRASTER_FRAME_WIDTH	1024
-#define GLRASTER_FRAME_HEIGHT	1024
+#define GLRASTER_FRAME_WIDTH	256
+#define GLRASTER_FRAME_HEIGHT	256
 
 #ifdef __cplusplus
 }

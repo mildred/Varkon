@@ -434,9 +434,9 @@ varkon.shade.doublebuffer:       True
 !***and other workstations may require
 !***proper settings here.
 !*
-!varkon.shade.redbits:           8
-!varkon.shade.greenbits:         8
-!varkon.shade.bluebits:          8
+!varkon.shade.redbits:           5
+!varkon.shade.greenbits:         6
+!varkon.shade.bluebits:          5
 !varkon.shade.zbits:             16
 !*
 !***Default light intensity.
