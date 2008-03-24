@@ -171,7 +171,7 @@ loop:
    strcpy(filter,"*");
    strcat(filter,MBSEXT);
 
-   status = WPfile_selector(IGgtts(464),libdir,TRUE,"",filter,mbsfile);
+   status = WPfile_selector(IGgtts(464),libdir,TRUE,mbsfile,filter,mbsfile);
    if ( status == 0 )
      {
      if ( IGcmpw("*.MBS",mbsfile) )

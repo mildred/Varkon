@@ -1200,40 +1200,39 @@ static void cre_toolbar(WPGWIN *gwinpt);
         short WPrepaint_GWIN(
         DBint win_id)
 
-/*      Riatr om ett grafiskt f�nster med tillh�rande
- *      pixmap f�r save_under.
+/*      Repaint one or all WPGWIN's.
  *
- *      In: win_id = ID f�r ett WPGWIN.
+ *      In: win_id = WPGWIN ID or GWIN_ALL
  *
- *      Ut: Inget.   
- *
- *      Felkoder: WP1362 = F�nstret %s finns ej.
- *
- *      (C)microform ab 1996-02-13 J. Kjellander
- *
- *      1997-03-11 igupcs(), J.Kjellander
+ *      (C)2008-03-15 J. Kjellander
  *
  ******************************************************!*/
 
   {
+   DBCsys csy;
+
 /*
 ***Erase.
 */
-    WPergw(win_id);
+   WPergw(win_id);
 /*
 ***Display grid if on. Do this before displaying
 ***the model so that the model surley becomes visible
 ***and not overwritten by the grid.
 */
-    WPdraw_grid(win_id);
+   WPdraw_grid(win_id);
 /*
-***Update WPGWIN's.
+***Display model.
 */
-    EXdral(win_id);
+   EXdral(win_id);
 /*
-***Active coordinate tsystem.
+***Display possible active coordinate system.
 */
-    IGupcs(lsysla,V3_CS_ACTIVE);
+   if ( lsysla != DBNULL )
+     {
+     DBread_csys(&csy,NULL,lsysla);
+     WPupcs(&csy,lsysla,V3_CS_ACTIVE,GWIN_ALL);
+     }
 /*
 ***The end.
 */
