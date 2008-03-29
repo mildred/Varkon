@@ -82,7 +82,7 @@ static bool  comp(char *dir, char *namn, char *utdir);
      return(0);
      }
 /*
-***Decompile actuve module.
+***Decompile active module.
 */
    pprmo(PPFILE,fp);
 /*
@@ -106,8 +106,8 @@ loop:
        WPexla(FALSE);
        strcpy(olddir,jobdir);
        strcpy(jobdir,IGgenv(VARKON_TMP));
-       IGldmo();
        WPaddmess_mcwin(IGgtts(465),WP_MESSAGE);
+       IGldmo();
        strcpy(jobdir,olddir);
        sprintf(tmpnam,"%s%s%s",IGgenv(VARKON_TMP),jobnam,MODEXT);
        IGfdel(tmpnam);
