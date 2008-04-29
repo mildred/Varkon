@@ -477,13 +477,13 @@ static void  set_lightmodel(WPRWIN *rwinpt, int model);
 
    if ( mprop > gprop )
      {
-     rwinpt->xmin -= (mdy/gprop - mdx)/2.0;
-     rwinpt->xmax += (mdy/gprop - mdx)/2.0;
+     xmin -= (mdy/gprop - mdx)/2.0;
+     xmax += (mdy/gprop - mdx)/2.0;
      }
    else if ( mprop < gprop )
      {
-     rwinpt->ymin -= (gprop*mdx - mdy)/2.0;
-     rwinpt->ymax += (gprop*mdx - mdy)/2.0;
+     ymin -= (gprop*mdx - mdy)/2.0;
+     ymax += (gprop*mdx - mdy)/2.0;
      }
 /*
 ***Save viewbox in WPRWIN.

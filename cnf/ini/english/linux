@@ -399,7 +399,7 @@ varkon.act_csys_pen:             2
 !*
 varkon.background:               gray82
 varkon.buttonColor:              gray88
-varkon.selectedButtonColor:      gray70
+varkon.selectedButtonColor:      gray66
 varkon.highlightedButtonColor:   SteelBlue
 varkon.foreground:               Black
 varkon.topShadowColor:           White
