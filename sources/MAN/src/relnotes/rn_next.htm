@@ -1,0 +1,39 @@
+changequote({,})
+define({_TITLE_},{Release notes 1.19C})
+define({_SUBTITLE_},{- index})
+define({_INDEXLINK_},{<a href="index.htm">Release notes</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
+
+
+<h1>Release notes for next version of Varkon</h1>
+
+<p>
+The development of Varkon continues with main focus on the new GUI,
+trimmed surfaces and the release of the version for Microsoft
+Windows. The sources in the svn repository are updated on a regular
+basis and changes are documented here:
+</p>
+
+
+<h2>svn#100</h2>
+
+<p>
+In order to make it possible to run Varkon without write privileges
+to the installation directory VARKON_ROOT, the startup logfile (Varkon.LOG)
+is moved from VARKON_ROOT to VARKON_TMP and the default job directory is
+changed from VARKON_ROOT to the users home directory ($HOME).
+</p>
+
+<h2>svn#101</h2>
+
+<p>
+Bug (SourceForge Tracker ID = 1864384) "Trim with arcs does not work" fixed.
+This bug appeared in 1.19C as a result of the merged 2D and 3D mode. Note
+that Trim is still basically a 2D operation and only works as it should in
+the XY-plane of the BASIC coordinate system. 
+</p>
+
+
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)

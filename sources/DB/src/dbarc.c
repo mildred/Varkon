@@ -195,7 +195,7 @@
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         DBstatus DBupdate_arc(
         GMARC   *arcpek,
@@ -204,19 +204,14 @@
 
 /*      Updates an arc entity in the DB. If segments
  *      exist and segmnt <> NULL also the segments
- *      are updated. In that case the number of segments
- *      (arcpek->ns_a) must be equal to the original
- *      number and the segment adresses (segmnt->nxt_seg)
- *      must be identical to the original segments.
+ *      are updated.
  *
- *      In: arcpek => Pekare till en arc-structure.
- *          segmnt => Array med max 4 segment.
- *          la     => Arc:ens adress i GM.
+ *      In: arcpek => Ptr to DBArc.
+ *          segmnt => Array with max 4 segments.
+ *          la     => Arc adress i DB.
  *
- *      Ut: Inget.
- *
- *      FV:        0 => OK.
- *                <0 => Fel från underliggande rutiner.
+ *      Return:    0 => OK.
+ *                <0 => Error.
  *
  *      (C)microform ab 27/4/85 J. Kjellander
  *
@@ -225,46 +220,87 @@
  *      6/3/93   GMPOSTV2, J. Kjellander
  *      1997-02-12 Bug version, J.Kjellander
  *      1997-12-27 GMPOSTV3, J.Kjellander
+ *      2008-05-13 Segments updated, J.Kjellander
  *
  ******************************************************!*/
 
   {
     DBptr   la_seg;
-    DBint   i,version;
-    GMRECH *hedpek;
+    DBint   i,version,ns_old,ns_new;
+    DBArc   oldarc;
+    DBSeg   oldseg[4];
+
 /*
-***Viken post-version är det ?
+**Get the current DBArc.
 */
-    hedpek = (GMRECH *)gmgadr(la);
-    version = GMVERS(hedpek);
+    DBread_arc(&oldarc,NULL,la);
 /*
-***Ev. uppdatering av segment.
+***What DB version is it ?
 */
-    if ( segmnt != NULL  &&  arcpek->ns_a > 0 )
+    version = oldarc.hed_a.vers;
+/*
+***Update segments ?
+*/
+    if ( segmnt != NULL )
       {
-      la_seg = arcpek->sptr_a;
-      for ( i=0; i<arcpek->ns_a; ++i )
+      ns_old = oldarc.ns_a;
+      ns_new = arcpek->ns_a;
+/*
+***Is the number of segments unchanged ?
+*/
+      if ( ns_new == ns_old )
         {
-        switch ( version )
+        la_seg = arcpek->sptr_a;
+        for ( i=0; i<arcpek->ns_a; ++i )
           {
-          case GMPOSTV3:
-          case GMPOSTV2:
-          updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG));
-          break;
+          switch ( version )
+            {
+            case GMPOSTV3:
+            case GMPOSTV2:
+            updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG));
+            break;
 
-          case GMPOSTV1:
-          updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG1));
-          break;
+            case GMPOSTV1:
+            updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG1));
+            break;
 
-          default:
-          updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG0));
-          break;
+            default:
+            updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG0));
+            break;
+            }
+          la_seg = (segmnt+i)->nxt_seg;
           }
-        la_seg = (segmnt+i)->nxt_seg;
+        }
+/*
+***The number of segments has changed. Delete old segemnts
+***and create new. NOTE that this code segment assumes version
+***GMPOSTV3 or later. The only MBS procedure that can change the number
+***of segments is TRIM and that means that a module is running so
+***the arcs should be GMPOSTV3 or later. There should be no risk
+***that we are doing this on old arcs or segments.
+*/
+      else
+        {
+        DBread_arc(&oldarc,oldseg,la);
+        la_seg = oldarc.sptr_a;
+
+        for ( i=0; i<ns_old; ++i )
+          {
+          rldat1(la_seg,sizeof(DBSeg));
+          la_seg = oldseg[i].nxt_seg;
+          }
+
+        la_seg = DBNULL;
+        for ( i=arcpek->ns_a-1; i >= 0; --i)
+          {
+          (segmnt+i)->nxt_seg = la_seg;
+          if ( wrdat1((char *)&segmnt[i],&la_seg,sizeof(DBSeg)) < 0 ) return(-3);
+          }
+        arcpek->sptr_a = la_seg;
         }
       }
 /*
-***Uppdatering av arc-posten.
+***Update the DBArc.
 */
     switch ( version )
       {
@@ -281,7 +317,9 @@
       updata( (char *)arcpek, la, sizeof(GMARC0));
       break;
       }
-
+/*
+***The end.
+*/
     return(0);
   }
 
