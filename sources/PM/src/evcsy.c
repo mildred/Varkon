@@ -154,3 +154,97 @@ extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
 }
 
 /********************************************************/
+/*!******************************************************/
+
+        short    evcsud()
+
+/*      Evaluates CSYS_USRDEF().
+ *
+ *      In: extern *geop_id   => Storhetens ID.
+ *          extern *geop_pv   => Pekare till array med parametervärden.
+ *          extern  geop_pc   => Antal parametrar.
+ *          extern *geop_np   => Pekare till namnparameterblock.
+ *
+ *      Ut: Inget.
+ *
+ *      FV: Returnerar anropade rutiners status.
+ *
+ *      (C)microform ab 26/12/86 J. Kjellander
+ *
+ *      1996-05-28 Optionell Y-axel, J.Kjellander
+ *      2001-02-05 In-Param utbytta till Globla variabler, R Svedin
+ *
+ ******************************************************!*/
+
+{
+   short  status;
+   DBint   valadr;
+   int     radsiz,fltsiz;
+   PMLITVA fval;
+   STTYTBL typtbl;
+   STARRTY arrtyp;
+   DBTmat  tr;
+   
+/*
+***Beräkna div. RTS-offset.
+***radsiz = storleken på en FLOAT (4)       Normalt 32  bytes.
+***fltsiz = storleken på en FLOAT           Normalt 8   bytes.
+*/
+   strtyp(geop_pv[2].par_ty,&typtbl);
+   strarr(typtbl.arr_ty,&arrtyp);
+   strtyp(arrtyp.base_arr,&typtbl);
+   radsiz = typtbl.size_ty;
+
+   strarr(typtbl.arr_ty,&arrtyp);
+   strtyp(arrtyp.base_arr,&typtbl);
+   fltsiz = typtbl.size_ty;
+/*
+***Kopiera 4X4-matrisen till DBTmat.
+*/
+   valadr = geop_pv[2].par_va.lit.adr_va;
+
+   ingval(valadr,arrtyp.base_arr,FALSE,&fval);
+   tr.g11 = fval.lit.float_va;
+   ingval(valadr+fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g12 = fval.lit.float_va;
+   ingval(valadr+2*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g13 = fval.lit.float_va;
+   ingval(valadr+3*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g14 = fval.lit.float_va;
+
+   ingval(valadr+radsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g21 = fval.lit.float_va;
+   ingval(valadr+radsiz+fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g22 = fval.lit.float_va;
+   ingval(valadr+radsiz+2*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g23 = fval.lit.float_va;
+   ingval(valadr+radsiz+3*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g24 = fval.lit.float_va;
+
+   ingval(valadr+2*radsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g31 = fval.lit.float_va;
+   ingval(valadr+2*radsiz+fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g32 = fval.lit.float_va;
+   ingval(valadr+2*radsiz+2*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g33 = fval.lit.float_va;
+   ingval(valadr+2*radsiz+3*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g34 = fval.lit.float_va;
+
+   ingval(valadr+3*radsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g41 = fval.lit.float_va;
+   ingval(valadr+3*radsiz+fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g42 = fval.lit.float_va;
+   ingval(valadr+3*radsiz+2*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g43 = fval.lit.float_va;
+   ingval(valadr+3*radsiz+3*fltsiz,arrtyp.base_arr,FALSE,&fval);
+   tr.g44 = fval.lit.float_va;
+   
+   status = EXcsud(geop_id,
+                   geop_pv[1].par_va.lit.str_va,
+                  &tr,
+                   geop_np);     
+
+   return(status);
+}
+
+/********************************************************/

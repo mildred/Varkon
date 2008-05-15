@@ -84,7 +84,7 @@
    if ( GEnormalise_vector3D(&pv3,&pv3) != 0 )
      return(erpush("GE6032","GEmktf_3p"));
 /*
-***The yaxis as the cross product of the x- and z-axis
+***The y axis as the cross product of the x- and z-axis
 */
    GEvector_product(&pv3,pv1,pv2);
 

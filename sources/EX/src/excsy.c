@@ -230,6 +230,38 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 /********************************************************/
 /*!******************************************************/
 
+       short EXcsud(
+       DBId     *id,
+       char     *str,
+       DBTmat   *tmat,
+       V2NAPA   *pnp)
+
+/*      Skapa koordinatsystem med 1 position och vinklar.
+ *
+ *      In: id     => Pekare till identitet.
+ *          str    => Pekare till namnsträng.
+ *          p      => Pekare till origo.
+ *          v1     => Vridning runt X.
+ *          v2     => Vridning runt Y.
+ *          v3     => Vridning runt Z.
+ *          pnp    => Pekare till namnparameterblock.
+ *
+ *      Ut: Inget.
+ *
+ *      FV:      0 => Ok.
+ *          EX1382 => Kan ej beräkna koordinatsystem-data
+ *
+ *      (C)microform ab 30/9/87 J. Kjellander
+ *
+ ******************************************************!*/
+
+  {
+     return (0); 
+  }
+  
+/********************************************************/
+/*!******************************************************/
+
        short EXmoba()
 
 /*      Executes the MODE_BASIC() procedure.
