@@ -217,7 +217,7 @@
  *          v3     => Ditto Z.
  *          pc     => Pointer to active coordinate system.
  *
- *      Out: *pmat  => Transformation matrix.
+ *      Out: *pt   => Transformation matrix.
  *
  *      (C)microform ab 30/9/87 J. Kjellander
  *

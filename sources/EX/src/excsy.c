@@ -6,6 +6,7 @@
 *    EXecsy();    Create coordinatesystem
 *    EXcs3p();    Create CSYS_3P
 *    EXcs1p();    Create CSYS_1P
+*    EXcsud();    Create Csys_usrdef()
 *
 *    EXmoba();    Interface routine for MODE_BASIC
 *    EXmogl();    Interface routine for MODE_GLOBAL
@@ -59,7 +60,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 
        short EXecsy(
        DBId    *id,
-       DBCsys   *crdpek,
+       DBCsys  *crdpek,
        DBTmat  *pmat,
        V2NAPA  *pnp)
 
@@ -236,31 +237,107 @@ DBptr   lsysla;      /* DB pointer to active local system. */
        DBTmat   *tmat,
        V2NAPA   *pnp)
 
-/*      Skapa koordinatsystem med 1 position och vinklar.
+/*      Create a user defined coordinate system.
  *
- *      In: id     => Pekare till identitet.
- *          str    => Pekare till namnsträng.
- *          p      => Pekare till origo.
- *          v1     => Vridning runt X.
- *          v2     => Vridning runt Y.
- *          v3     => Vridning runt Z.
- *          pnp    => Pekare till namnparameterblock.
+ *      In: id     => Pointer to identity. 
+ *          str    => Pointer to name string.
+ *          tmat   => Pointer to 4x4 matrix.
+ *          pnp    => pointer to attributes.
  *
- *      Ut: Inget.
+ *      Out: None.
  *
  *      FV:      0 => Ok.
- *          EX1382 => Kan ej beräkna koordinatsystem-data
+ *          EX1382 => Can't calculate csys data
  *
- *      (C)microform ab 30/9/87 J. Kjellander
+ *      (C) Örebo university 26/05/2008 M. Rahayem
  *
- ******************************************************!*/
+ ********************************************************/
 
   {
-     return (0); 
+    DBVector vx,vy,vz,xy,xz,yz;
+    DBTmat   tmati;
+    DBTmat   tcsud;
+    DBTmat   tmpmat;
+    DBCsys   csy;
+
+/*
+***Extract X-axis vector from the given 4x4 matrix.
+*/
+    vx.x_gm = tmat->g11;
+    vx.y_gm = tmat->g12;
+    vx.z_gm = tmat->g13;  
+/*
+***Extract y-axis vector from the given 4x4 matrix.
+*/
+    vy.x_gm = tmat->g21;
+    vy.y_gm = tmat->g22;
+    vy.z_gm = tmat->g23;  
+/*
+***Extract z-axis vector from the given 4x4 matrix.
+*/
+    vz.x_gm = tmat->g31;
+    vz.y_gm = tmat->g32;
+    vz.z_gm = tmat->g33;         
+/*
+***Normalisation and check of axes vector lengths.
+*/
+   if ( GEnormalise_vector3D(&vx,&vx) < 0 )
+     return(erpush("GE6012","EXcsud"));  /* GE6012 To be changed later */
+
+   if ( GEnormalise_vector3D(&vy,&vy) < 0 )
+     return(erpush("GE6022","EXcsud"));  /* GE6022 To be changed later */
+     
+   if ( GEnormalise_vector3D(&vz,&vz) < 0 )
+     return(erpush("GE6022","EXcsud"));  /* GE6022 To be changed later */
+/*
+***Check if x and y axes are perpendicular to each other.
+*/
+   GEvector_product(&vx,&vy,&xy);
+   
+   if ( GEnormalise_vector3D(&xy,&xy) < 0 )
+     return(erpush("EX4332","X%Y"));   /* GE6032 X&Y NOT perp */
+/*
+***Check if x and z axes are perpendicular to each other.
+*/
+   GEvector_product(&vx,&vz,&xz);
+   
+   if ( GEnormalise_vector3D(&xz,&xz) < 0 )
+     return(erpush("EX4332","X%Z"));   /* GE6032 X&Z NOT perp */ 
+/*
+***Check if y and z axes are perpendicular to each other.
+*/
+   GEvector_product(&vy,&vz,&yz);
+   
+   if ( GEnormalise_vector3D(&yz,&yz) < 0 )
+     return(erpush("EX4332","Y%Z"));   /* GE6032 Z&Y NOT perp */                    
+/*
+***Create user defined coordinate system matrix.
+*/
+   if ( lsyspk != NULL )
+     {
+     /*GEtform_mult(tmat,&lklsyi,&tcsud);*/
+     GEtform_inv(tmat,&tmati); 
+     GEtform_mult(&tmati,&lklsys,&tmpmat);
+     V3MOME(&tmpmat,&tcsud,sizeof(DBTmat));
+     }
+   else
+     {
+     GEtform_inv(tmat,&tmati);
+     V3MOME(&tmati,&tcsud,sizeof(DBTmat));
+     }
+/*
+***Fill in the name.
+*/
+    *(str+JNLGTH) = '\0';
+    strncpy(csy.name_pl,str,JNLGTH);
+/*
+***Store in DB and visualize.
+*/
+    return(EXecsy(id,&csy,&tcsud,pnp));                                
   }
   
 /********************************************************/
-/*!******************************************************/
+/*!*************************************** ***************/
 
        short EXmoba()
 

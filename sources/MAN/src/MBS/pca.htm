@@ -1,0 +1,114 @@
+
+
+
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
+<html>
+<head>
+  <title> Varkon MBS Programmers manual - pca - Geometric procedure </title>
+  <link rel="stylesheet" href=../varkonstyle.css>
+  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
+</head>
+<body>
+<a name="top"/>
+
+<p style="float:right; margin-bottom:0; font-size:0.8em"><a href="entiindx.htm">index</a></p>
+
+<p style="margin-bottom:0; font-size:0.8em">Varkon MBS Programmers manual</p>
+
+<hr style="margin-top:2px; margin-bottom:4em"/>
+
+<h1>pca - <small>Geometric procedure</small></h1>
+  
+<h2>Description</h2>
+  
+<p>
+Low level routine to create a plane by specifying set of points stored into a one dimension matrix. The result is 4x4 matrix represents the coordinate system. The XY plane of the coordinate system is the fitted plane to set of points.
+</p>
+ 
+<h2>Syntax</h2>
+<pre>
+pca(id,npts,pts,tmat:attributes);
+</pre>
+  
+<table>
+<tr>
+<td>REF</td>
+<td>id;</td>
+</tr>
+<tr>
+<td>INTEGER</td>
+<td>npts;</td>
+</tr>
+<tr>
+<td>VECTOR</td>
+<td>pts(npts);</td>
+</tr>
+<td>FLOAT</td>
+<td>tmat(4,4);</td>
+</tr>
+</table>
+
+<h2>Principal parameters</h2>
+
+<table>
+<tr>
+<td>id </td>
+<td>- Local identity</td>
+</tr>
+<tr>
+<td>npts</td>
+<td>- Number of points</td>
+</tr>
+<tr>
+<td>pts</td>
+<td>- Array of points</td>
+</tr>
+<td>tmat</td>
+<td>- 4 by 4 transformation matrix</td>
+</tr>
+</table>
+
+<h2>Optional parameters</h2>
+
+<p>None.</p>
+
+<h2>Attributes</h2>
+
+<table>
+<tr>
+<td>PEN </td>
+<td>- Pen or colour number</td>
+</tr>
+<tr>
+<td>LEVEL</td>
+<td>- Level number</td>
+</tr>
+<tr>
+<td>BLANK</td>
+<td>- Visible(0) or invisible(1)</td>
+</tr>
+</table>
+
+</p>
+<h2>Comments</h2>
+<p>
+To visualize or use 4x4 matrix that represent the coordinate system use csys_usdef() procedure see below.
+</p>
+
+
+<h2>See also</h2>
+
+<p>
+<a href="csys_usrdef.htm">csys_usrdef()</a>
+</p>
+
+
+<hr style="margin-top:4em; margin-bottom:2px"/>
+
+<p style="margin:0;font-size:0.8em">Varkon version 1.19C svn&#35;
+102M</p>
+
+</body>
+</html>

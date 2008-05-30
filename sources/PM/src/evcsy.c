@@ -6,8 +6,9 @@
 *    This file is part of the VARKON Program Module Library.
 *    URL: http://varkon.sourceforge.net
 *
-*    evcs3p();     Evaluerar CSYS_3P
-*    evcs1p();     Evaluerar CSYS_1P
+*    evcs3p();     Evaluate CSYS_3P
+*    evcs1p();     Evaluate CSYS_1P
+*    evcsud();     Evaluate Csys_usrdef
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -22,8 +23,6 @@
 *    You should have received a copy of the GNU Library General Public
 *    License along with this library; if not, write to the Free
 *    Software Foundation, Inc., 675 Mass Ave, Cambridge, MA 02139, USA.
-*
-*    (C)Microform AB 1984-1999, Johan Kjellander, johan@microform.se
 *
 ***********************************************************************/
 
@@ -160,24 +159,19 @@ extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
 
 /*      Evaluates CSYS_USRDEF().
  *
- *      In: extern *geop_id   => Storhetens ID.
- *          extern *geop_pv   => Pekare till array med parametervärden.
- *          extern  geop_pc   => Antal parametrar.
- *          extern *geop_np   => Pekare till namnparameterblock.
+ *      In: extern *geop_id   => Entity ID.
+ *          extern *geop_pv   => Parameter values.
+ *          extern  geop_pc   => Number of actual parameters.
+ *          extern *geop_np   => Ptr to named parameter block.
  *
- *      Ut: Inget.
+ *      Return: Returns status of called routines.    
  *
- *      FV: Returnerar anropade rutiners status.
+ *      (C)Örebro university 26/5/2008  M. Rahayem
  *
- *      (C)microform ab 26/12/86 J. Kjellander
- *
- *      1996-05-28 Optionell Y-axel, J.Kjellander
- *      2001-02-05 In-Param utbytta till Globla variabler, R Svedin
- *
- ******************************************************!*/
+ *******************************************************!*/
 
 {
-   short  status;
+   short   status;
    DBint   valadr;
    int     radsiz,fltsiz;
    PMLITVA fval;
@@ -186,9 +180,9 @@ extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
    DBTmat  tr;
    
 /*
-***Beräkna div. RTS-offset.
-***radsiz = storleken på en FLOAT (4)       Normalt 32  bytes.
-***fltsiz = storleken på en FLOAT           Normalt 8   bytes.
+***Calculate RTS-offsets.
+***radsiz = size of a FLOAT(4)       Normally 32 bytes.
+***fltsiz = size of a FLOAT          Normally  8 bytes.
 */
    strtyp(geop_pv[2].par_ty,&typtbl);
    strarr(typtbl.arr_ty,&arrtyp);
@@ -199,7 +193,7 @@ extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
    strtyp(arrtyp.base_arr,&typtbl);
    fltsiz = typtbl.size_ty;
 /*
-***Kopiera 4X4-matrisen till DBTmat.
+***Copy 4x4-matrix from MBS variable to C struct DBTmat.
 */
    valadr = geop_pv[2].par_va.lit.adr_va;
 
@@ -238,12 +232,16 @@ extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
    tr.g43 = fval.lit.float_va;
    ingval(valadr+3*radsiz+3*fltsiz,arrtyp.base_arr,FALSE,&fval);
    tr.g44 = fval.lit.float_va;
-   
+/*
+***Execute.
+*/
    status = EXcsud(geop_id,
                    geop_pv[1].par_va.lit.str_va,
-                  &tr,
+                   &tr,
                    geop_np);     
-
+/*
+***The end.
+*/
    return(status);
 }
 
