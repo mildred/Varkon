@@ -284,7 +284,7 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 /*
 ***Number of points.
 */
-   npos = func_pv[0].par_va.lit.int_va;
+   npos = func_pv[1].par_va.lit.int_va;
 /*
 ***Check the number of points.
 */
@@ -292,11 +292,11 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 /*
 ***Check that declared dimension of the MBS-array is big enough.
 */
-   posadr = func_pv[1].par_va.lit.adr_va;
-   strtyp(geop_pv[1].par_ty,&typtbl);
+   posadr = func_pv[2].par_va.lit.adr_va;
+   strtyp(func_pv[2].par_ty,&typtbl);
    strarr(typtbl.arr_ty,&arrtyp);
    dekl_dim = arrtyp.up_arr - arrtyp.low_arr + 1;
-   if ( dekl_dim < npos ) return(erpush("IN5912",""));   
+   if ( dekl_dim < npos ) return(erpush("IN5892","evpcatm failed"));   
 /*
 ***Allocate memory for the points.
 */

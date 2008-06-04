@@ -169,5 +169,5 @@ VARKON Error messages for Interpreter routines
 586  2  RGB_TO_HSV, Blue value out of range
 587  2  RGB_TO_HSV, R=G=B=0
 588  2  Minimum number of points is four (4), PCA
-589  2  Number of pos > declared size, CSYS_PTS
+589  2  Number of pos > declared size, PCA
 590  2  Can't malloc for %s pos, PCA
