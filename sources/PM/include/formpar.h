@@ -1663,7 +1663,11 @@
 /*
 ***VCSYSUD = 396, CSYS_USRDEF(id,namn,tmat).
 */    
-     "-5:se.jv" 
+     "-5:se.jv", 
+/*
+***VPCATMAT = 397, status:=PCA(npts,pts,tmat).
+*/  
+     "i5:ie.nv.jv"
 /*
 ***Remember, no comma after the last parameter list definition.
 */

@@ -151,8 +151,7 @@ DBstatus GEmktf_rs(DBVector *p1, DBVector *p2, DBfloat v, DBfloat sx,
                    DBfloat sy, DBfloat sz, DBTmat *ptm);
 DBstatus GEmktf_mirr(DBVector *p1, DBVector *p2, DBVector *p3, DBTmat *ptm);
 DBstatus GEmktf_6p(DBVector *p1, DBVector *p2, DBVector *p3, DBVector *p4,
-                   DBVector *p5, DBVector *p6, DBTmat *ptm);
-
+                   DBVector *p5, DBVector *p6, DBTmat *ptm);              
 
 /* Generic entity evaluation */
 DBstatus GEposition(DBAny *gmstrp, char *datpek, DBfloat u,

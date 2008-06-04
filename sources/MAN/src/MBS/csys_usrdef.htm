@@ -18,8 +18,11 @@ the currently active coordinate system.
 <p>
 The matrix supplied is inverted and multiplied with the matrix of the currently active coordinate system
 before it is stored in the database. This means that the matrix that is returned if you fetch the coordinate
-system from the database is not the same as the matrix you initially supplied.
+system from the database is not the same as the matrix you initially supplied. See the figure below.
 </p>
+
+<img src="images/Csys_Usrded3.png"></img>
+<p class="caption">Transformation matrices order from BASIC to LOCAL and vice versa</p>
 
 <table>
 <tr>
@@ -131,7 +134,7 @@ csys_usrdef(id, name,tmat:attributes);
 </table>
 
 <h2>Example</h2>
-<pre>
+<pre class="box">
 tmat(1,1):=1.0; tmat(1,2):=0.0; tmat(1,3):=0.0; tmat(1,4):=0.0;
 tmat(2,1):=0.0; tmat(2,2):=1.0; tmat(2,3):=0.0; tmat(2,4):=0.0;
 tmat(3,1):=0.0; tmat(3,2):=0.0; tmat(3,3):=1.0; tmat(3,4):=0.0;
@@ -148,10 +151,10 @@ Directions of axes are represented by the three direction vectors in the matrix,
 </p>
 
 <h2>See also</h2>
-
 <p>
 <a href="csys_1p.htm">csys_1p()</a> and
 <a href="csys_3p.htm">csys_3p()</a>
 </p>
+
 include(../../include/svnversion.inc)
 include(../../include/footer.inc)

@@ -246,15 +246,15 @@ DBptr   lsysla;      /* DB pointer to active local system. */
  *
  *      Out: None.
  *
- *      FV:      0 => Ok.
- *          EX1382 => Can't calculate csys data
+ *      Return:     0 => Ok.
+ *             EX1382 => Can't calculate csys data
  *
  *      (C) Örebo university 26/05/2008 M. Rahayem
  *
  ********************************************************/
 
   {
-    DBVector vx,vy,vz,xy,xz,yz;
+    DBVector vx,vy,vz;
     DBTmat   tmati;
     DBTmat   tcsud;
     DBTmat   tmpmat;
@@ -282,40 +282,33 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 ***Normalisation and check of axes vector lengths.
 */
    if ( GEnormalise_vector3D(&vx,&vx) < 0 )
-     return(erpush("GE6012","EXcsud"));  /* GE6012 To be changed later */
+     return(erpush("EX4332","X"));         /* EX4332 The length of X axis vector is Zero */
 
    if ( GEnormalise_vector3D(&vy,&vy) < 0 )
-     return(erpush("GE6022","EXcsud"));  /* GE6022 To be changed later */
+     return(erpush("EX4332","Y"));         /* EX4332 The length of Y axis vector is Zero */
      
    if ( GEnormalise_vector3D(&vz,&vz) < 0 )
-     return(erpush("GE6022","EXcsud"));  /* GE6022 To be changed later */
+     return(erpush("EX4332","Z"));         /* EX4332 The length of Y axis vector is Zero */
 /*
 ***Check if x and y axes are perpendicular to each other.
-*/
-   GEvector_product(&vx,&vy,&xy);
-   
-   if ( GEnormalise_vector3D(&xy,&xy) < 0 )
-     return(erpush("EX4332","X%Y"));   /* GE6032 X&Y NOT perp */
+*/    
+   if ( GEscalar_product3D(&vx,&vy) > COMPTOL )
+     return(erpush("EX4342","X%Y"));       /* EX4332 X&Y NOT Perp. */
 /*
 ***Check if x and z axes are perpendicular to each other.
 */
-   GEvector_product(&vx,&vz,&xz);
-   
-   if ( GEnormalise_vector3D(&xz,&xz) < 0 )
-     return(erpush("EX4332","X%Z"));   /* GE6032 X&Z NOT perp */ 
+   if ( GEscalar_product3D(&vx,&vz) > COMPTOL )
+     return(erpush("EX4342","X%Z"));       /* EX4332 X&Z NOT Perp. */ 
 /*
 ***Check if y and z axes are perpendicular to each other.
 */
-   GEvector_product(&vy,&vz,&yz);
-   
-   if ( GEnormalise_vector3D(&yz,&yz) < 0 )
-     return(erpush("EX4332","Y%Z"));   /* GE6032 Z&Y NOT perp */                    
+   if ( GEscalar_product3D(&vy,&vz) > COMPTOL )
+     return(erpush("EX4342","Y%Z"));       /* EX4332 Z&Y NOT Perp. */                    
 /*
 ***Create user defined coordinate system matrix.
 */
    if ( lsyspk != NULL )
      {
-     /*GEtform_mult(tmat,&lklsyi,&tcsud);*/
      GEtform_inv(tmat,&tmati); 
      GEtform_mult(&tmati,&lklsys,&tmpmat);
      V3MOME(&tmpmat,&tcsud,sizeof(DBTmat));
@@ -331,13 +324,65 @@ DBptr   lsysla;      /* DB pointer to active local system. */
     *(str+JNLGTH) = '\0';
     strncpy(csy.name_pl,str,JNLGTH);
 /*
-***Store in DB and visualize.
+***Store csys_usrdef 4x4 matrix into DB and visualize.
 */
     return(EXecsy(id,&csy,&tcsud,pnp));                                
   }
   
 /********************************************************/
-/*!*************************************** ***************/
+/*!******************************************************/
+
+       short EXpcatm(
+       DBVector *ppts,
+       DBint     npoi,      
+       DBTmat   *tmat)
+
+/*      Create a coordinate system with array of points
+ *
+ *      In: npoi   => Number of points 
+ *          ppts   => Pointer to points.
+ *          tmat   => Pointer to the created 4x4 matrix.
+ *
+ *      Out: nothing.
+ *
+ *      Error code: EX1382 = Can't eigen data.
+ *
+ *     (C) Örebo university 26/05/2008 M. Rahayem
+ *
+ ******************************************************!*/
+
+  {
+    DBTmat  pca_mat;
+    int     i;
+    DBVector eigenvalues;
+/*
+***Transformation of points to basic.
+*/
+    if ( lsyspk != NULL )
+      {
+      for ( i=0; i<npoi; ++i )
+        {
+        GEtfpos_to_basic(&ppts[i],&lklsys,&ppts[i]);
+        }
+      }
+/*
+***Create the matrix
+*/
+
+    if (GEmktf_pca(ppts,npoi,&eigenvalues,&pca_mat) < 0 ) return(erpush("EX4352","GEmktf_pca failed"));
+
+/*
+***Store the created 4x4 matrix into DB. 
+*/
+    V3MOME(&pca_mat,&tmat,sizeof(DBTmat));
+/*
+***The end.
+*/   
+    return(0);
+  }
+  
+/********************************************************/
+/*!******************************************************/
 
        short EXmoba()
 

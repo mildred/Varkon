@@ -37,6 +37,10 @@ extern PMPARVA *geop_pv; /* ingeop.c *pv Access structure for MBS routines */
 extern short    geop_pc; /* ingeop.c parcount Number of actual parameters */
 extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
 
+extern PMPARVA *func_pv;  /* Access structure for MBS routines */
+extern short    func_pc;  /* Number of actual parameters */
+extern PMLITVA *func_vp;  /* Pointer to result value. */
+
 /*!******************************************************/
 
         short    evcs3p()
@@ -243,6 +247,94 @@ extern V2NAPA  *geop_np; /* ingeop.c *npblock Pekare till namnparameterblock.*/
 ***The end.
 */
    return(status);
+}
+
+/********************************************************/
+/*!******************************************************/
+
+        short    evpcatm()
+
+/*      Evalute PCA() function.
+ *
+ *      In:  Global param. func_pv[] => Parameter value array
+ *      Out: Global param. *func_vp  => C-pointer to result value
+ * 
+ *      Return:  Return the status of called routines
+ *
+ *
+ *     (C) Örebro university 26/5/2008  M. Rahayem
+ *
+ ******************************************************!*/
+
+{
+   
+   DBint    npos;              /* Number of points */ 
+   DBint    posadr;            /* Index to array */ 
+   DBint    dekl_dim;          /* Declared dimension */ 
+   DBVector *ppek;             /* Allocated area for the points */
+   DBint    vecsiz;            /* Size of VECTOR */ 
+   DBchar   errbuf[81];        /* Error message */ 
+   DBTmat   tr;                /* The created 4x4 transformation matrix */
+   short    i;                 /* Loop variable */
+   short    status;            /* Status from execute function */
+   STTYTBL  typtbl;            /* Parameter value type info. */ 
+   PMLITVA  val;               /* Value */
+   STARRTY  arrtyp;            /* Array type */ 
+
+/*
+***Number of points.
+*/
+   npos = func_pv[0].par_va.lit.int_va;
+/*
+***Check the number of points.
+*/
+   if ( npos < 4 ) return(erpush("IN5882","evpcatm failed"));
+/*
+***Check that declared dimension of the MBS-array is big enough.
+*/
+   posadr = func_pv[1].par_va.lit.adr_va;
+   strtyp(geop_pv[1].par_ty,&typtbl);
+   strarr(typtbl.arr_ty,&arrtyp);
+   dekl_dim = arrtyp.up_arr - arrtyp.low_arr + 1;
+   if ( dekl_dim < npos ) return(erpush("IN5912",""));   
+/*
+***Allocate memory for the points.
+*/
+   if ( (ppek=(DBVector *)v3mall(npos*sizeof(DBVector),"evpcatm")) == NULL )
+     {
+     sprintf(errbuf,"%d",npos);
+     return(erpush("IN5902",errbuf));
+     }   
+/*
+***vecsiz = size of a VECTOR.
+*/
+   strtyp(arrtyp.base_arr,&typtbl);
+   vecsiz = typtbl.size_ty;
+/*
+***Copy points from RTS to allocated area.
+*/
+   for ( i=0; i<npos; ++i )
+     {
+     ingval(posadr+i*vecsiz,arrtyp.base_arr,FALSE,&val);
+     (ppek+i)->x_gm = val.lit.vec_va.x_val;
+     (ppek+i)->y_gm = val.lit.vec_va.y_val;
+     (ppek+i)->z_gm = val.lit.vec_va.z_val;
+     }
+/*
+***Execute PCA function.
+*/
+   status = EXpcatm(ppek, npos, &tr);
+/*
+***Deallocate memory
+*/
+   v3free(ppek,"evpcatm");
+
+   return(status);     
+/*
+***The end.
+*/
+   return(status);
+
 }
 
 /********************************************************/

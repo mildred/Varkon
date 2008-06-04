@@ -1,41 +1,30 @@
+changequote({,})
+define({_TITLE_},{Varkon MBS Programmers manual})
+define({_SUBTITLE_},{- pca - Function})
+define({_INDEXLINK_},{<a href="entiindx.htm">index</a>})
+define({_STYLE_},{../varkonstyle.css})
+include(../../include/header.inc)
 
-
-
-
-
-<!DOCTYPE html PUBLIC "-//W3C//DTD HTML 4.01//EN">
-<html>
-<head>
-  <title> Varkon MBS Programmers manual - pca - Geometric procedure </title>
-  <link rel="stylesheet" href=../varkonstyle.css>
-  <meta http-equiv="Content-Type" content="text/html; charset=iso-8859-1">
-</head>
-<body>
-<a name="top"/>
-
-<p style="float:right; margin-bottom:0; font-size:0.8em"><a href="entiindx.htm">index</a></p>
-
-<p style="margin-bottom:0; font-size:0.8em">Varkon MBS Programmers manual</p>
-
-<hr style="margin-top:2px; margin-bottom:4em"/>
-
-<h1>pca - <small>Geometric procedure</small></h1>
+<h1>pca - <small>Function</small></h1>
   
 <h2>Description</h2>
   
 <p>
-Low level routine to create a plane by specifying set of points stored into a one dimension matrix. The result is 4x4 matrix represents the coordinate system. The XY plane of the coordinate system is the fitted plane to set of points.
+Low level routine to create a 4x4 matrix by using a statistical method called Principal Component Analysis(PCA) and specifying set of points "point cloud" stored into a one dimension matrix. The result is a 4x4 matrix, which might be represents a coordinate system or transformation matrix. 
+</p>
+<p>
+For more details see "Mathematics for 3D Game Programming and Computer Graphics" Authored by Eric Lengyel - second edition, pages 217--221.
 </p>
  
 <h2>Syntax</h2>
 <pre>
-pca(id,npts,pts,tmat:attributes);
+status:=pca(npts,pts,tmat);
 </pre>
   
 <table>
 <tr>
-<td>REF</td>
-<td>id;</td>
+<td>INTEGER</td>
+<td>status;</td>
 </tr>
 <tr>
 <td>INTEGER</td>
@@ -54,10 +43,6 @@ pca(id,npts,pts,tmat:attributes);
 
 <table>
 <tr>
-<td>id </td>
-<td>- Local identity</td>
-</tr>
-<tr>
 <td>npts</td>
 <td>- Number of points</td>
 </tr>
@@ -66,7 +51,7 @@ pca(id,npts,pts,tmat:attributes);
 <td>- Array of points</td>
 </tr>
 <td>tmat</td>
-<td>- 4 by 4 transformation matrix</td>
+<td>- 4x4 transformation matrix</td>
 </tr>
 </table>
 
@@ -74,41 +59,78 @@ pca(id,npts,pts,tmat:attributes);
 
 <p>None.</p>
 
-<h2>Attributes</h2>
+<h2>Return Value</h2>
+<p>
+Returns 0 if the 4x4 transformation matrix is created and -1 if the 4x4 is not created. 
+</p>
+
+<h2>Comments</h2>
+<p>
+The created 4x4 matrix will be like the following matrix:
+</p>
 
 <table>
 <tr>
-<td>PEN </td>
-<td>- Pen or colour number</td>
+<td>Xx</td>
+<td>Xy</td>
+<td>Xz</td>
+<td>Ox</td>
 </tr>
 <tr>
-<td>LEVEL</td>
-<td>- Level number</td>
+<td>Yx</td>
+<td>Yy</td>
+<td>Yz</td>
+<td>Oy</td>
 </tr>
 <tr>
-<td>BLANK</td>
-<td>- Visible(0) or invisible(1)</td>
+<td>Zx</td>
+<td>Zy</td>
+<td>Zz</td>
+<td>OZ</td>
+</tr>
+<tr>
+<td>0</td>
+<td>0</td>
+<td>0</td>
+<td>1</td>
 </tr>
 </table>
-
+<p>Since:</p>
+<table>
+<tr>
+<td>Xx, Xy, Xz</td> 
+<td>=></td> 
+<td>The unit length eigenvector components correspond to the largest eigenvalue.</td>
+</tr>
+<tr>
+<td>Yx, Yy, Yz</td>
+<td>=></td> 
+<td>The unit length eigenvector components correspond to the second largest eigen value.</td>
+</tr>
+<tr>
+<td>Zx, Zy, Zz</td> 
+<td>=></td> 
+<td>The unit length eigenvector components correspond to the smallest eigen value.</td>
+</tr>
+<tr>
+<td>Ox, Oy, Oz</td>
+<td>=></td>
+<td>The mean of set of points represents the translation transformation.</td>
+</tr>
+</table>
+<p>
+The three eigen vectors are orthogonal to each other.
 </p>
-<h2>Comments</h2>
 <p>
 To visualize or use 4x4 matrix that represent the coordinate system use csys_usdef() procedure see below.
 </p>
 
-
 <h2>See also</h2>
 
 <p>
-<a href="csys_usrdef.htm">csys_usrdef()</a>
+<a href="csys_usrdef.htm">csys_usrdef()</a> and 
+<a href="tf_us.htm">tform_usrdef</a>
 </p>
 
-
-<hr style="margin-top:4em; margin-bottom:2px"/>
-
-<p style="margin:0;font-size:0.8em">Varkon version 1.19C svn&#35;
-102M</p>
-
-</body>
-</html>
+include(../../include/svnversion.inc)
+include(../../include/footer.inc)
