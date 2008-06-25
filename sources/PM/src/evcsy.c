@@ -267,19 +267,20 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
  ******************************************************!*/
 
 {
-   
-   DBint    npos;              /* Number of points */ 
-   DBint    posadr;            /* Index to array */ 
-   DBint    dekl_dim;          /* Declared dimension */ 
-   DBVector *ppek;             /* Allocated area for the points */
-   DBint    vecsiz;            /* Size of VECTOR */ 
-   DBchar   errbuf[81];        /* Error message */ 
-   DBTmat   tr;                /* The created 4x4 transformation matrix */
-   short    i;                 /* Loop variable */
-   short    status;            /* Status from execute function */
-   STTYTBL  typtbl;            /* Parameter value type info. */ 
-   PMLITVA  val;               /* Value */
-   STARRTY  arrtyp;            /* Array type */ 
+   char      errbuf[V3STRLEN];  /* Error message buffer */
+   DBint     npos;              /* Number of points */ 
+   DBint     posadr;            /* Index to array */ 
+   DBint     dekl_dim;          /* Declared dimension */ 
+   DBVector *ppek;              /* Allocated area for the points */
+   DBint     vecsiz;            /* Size of VECTOR */ 
+   DBTmat    tr;                /* The created 4x4 transformation matrix */
+   DBfloat  *fltptr;            /* Ptr to matrix element */
+   int       i,j;               /* Loop counters */
+   int       index[2];          /* Matrix element index */
+   short     status;            /* Status from execute function */
+   STTYTBL   typtbl;            /* Parameter value type info. */ 
+   PMLITVA   val;               /* Value */
+   STARRTY   arrtyp;            /* Array type */ 
 
 /*
 ***Number of points.
@@ -288,7 +289,11 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 /*
 ***Check the number of points.
 */
-   if ( npos < 4 ) return(erpush("IN5882","evpcatm failed"));
+   if ( npos < 4 )
+     {
+     sprintf(errbuf,"%d",npos);
+     return(erpush("IN5882",errbuf));
+     }
 /*
 ***Check that declared dimension of the MBS-array is big enough.
 */
@@ -296,7 +301,7 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
    strtyp(func_pv[2].par_ty,&typtbl);
    strarr(typtbl.arr_ty,&arrtyp);
    dekl_dim = arrtyp.up_arr - arrtyp.low_arr + 1;
-   if ( dekl_dim < npos ) return(erpush("IN5892","evpcatm failed"));   
+   if ( dekl_dim < npos ) return(erpush("IN5892",""));   
 /*
 ***Allocate memory for the points.
 */
@@ -323,18 +328,40 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 /*
 ***Execute PCA function.
 */
-   status = EXpcatm(ppek, npos, &tr);
+   status=EXpcatm(ppek,npos,&tr);
 /*
 ***Deallocate memory
 */
    v3free(ppek,"evpcatm");
+/*
+***Check the status returned. If < 0 return without writing
+***the matrix (tr) to the MBS variable.
+*/
+   func_vp->lit.int_va = status;
+   
+   if ( status < 0 ) return(0);
+/*
+***Write result (tr) to MBS variable.
+*/
+   fltptr = (DBfloat *)&tr; 
 
-   return(status);     
+   for ( i=0; i<4; ++i )
+     {
+     index[0] = i+1;
+     for ( j=0; j<4; ++j )
+       {
+       index[1] = j+1;
+       val.lit.float_va = *fltptr;
+       status = inwvar(func_pv[3].par_ty, 
+                       func_pv[3].par_va.lit.adr_va,
+                       2,index,&val);
+     ++fltptr;
+       }
+     }
 /*
 ***The end.
 */
-   return(status);
-
+   return(0);
 }
 
 /********************************************************/

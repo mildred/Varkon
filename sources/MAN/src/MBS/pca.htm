@@ -10,7 +10,7 @@ include(../../include/header.inc)
 <h2>Description</h2>
   
 <p>
-Low level routine to create a 4x4 matrix by using a statistical method called Principal Component Analysis(PCA) and specifying set of points "point cloud" stored into a one dimension matrix. The result is a 4x4 matrix, which might be represents a coordinate system or transformation matrix. 
+Low level routine to create a 4x4 matrix by using a statistical method called Principal Component Analysis(PCA) and specifying a set of points (point cloud) stored in a one dimension array. The result is a 4x4 matrix, which might be used to create a coordinate system or transformation matrix. 
 </p>
 <p>
 For more details see "Mathematics for 3D Game Programming and Computer Graphics" Authored by Eric Lengyel - second edition, pages 217--221.
@@ -23,11 +23,11 @@ status:=pca(npts,pts,tmat);
   
 <table>
 <tr>
-<td>INTEGER</td>
+<td>INT</td>
 <td>status;</td>
 </tr>
 <tr>
-<td>INTEGER</td>
+<td>INT</td>
 <td>npts;</td>
 </tr>
 <tr>
@@ -61,7 +61,7 @@ status:=pca(npts,pts,tmat);
 
 <h2>Return Value</h2>
 <p>
-Returns 0 if the 4x4 transformation matrix is created and -1 if the 4x4 is not created. 
+Returns 0 if the 4x4 transformation matrix is created and -1 if the 4x4 matrix is not created. 
 </p>
 
 <h2>Comments</h2>
@@ -115,14 +115,14 @@ The created 4x4 matrix will be like the following matrix:
 <tr>
 <td>Ox, Oy, Oz</td>
 <td>=></td>
-<td>The mean of set of points represents the translation transformation.</td>
+<td>The mean of the set of points represents the translation transformation.</td>
 </tr>
 </table>
 <p>
 The three eigen vectors are orthogonal to each other.
 </p>
 <p>
-To visualize or use 4x4 matrix that represent the coordinate system use csys_usdef() procedure see below.
+To visualize or use the 4x4 matrix that represents the coordinate system, use csys_usrdef(), see below.
 </p>
 
 <h2>See also</h2>

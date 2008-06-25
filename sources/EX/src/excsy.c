@@ -352,8 +352,8 @@ DBptr   lsysla;      /* DB pointer to active local system. */
  ******************************************************!*/
 
   {
-    DBTmat  pca_mat;
-    int     i;
+    DBTmat   pca_mat;
+    int      i;
     DBVector eigenvalues;
 /*
 ***Transformation of points to basic.
@@ -368,17 +368,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 /*
 ***Create the matrix
 */
-
-    if (GEmktf_pca(ppts,npoi,&eigenvalues,&pca_mat) < 0 ) return(erpush("EX4352","GEmktf_pca failed"));
-
-/*
-***Store the created 4x4 matrix into DB. 
-*/
-    V3MOME(&pca_mat,&tmat,sizeof(DBTmat));
-/*
-***The end.
-*/   
-    return(0);
+    return(GEmktf_pca(ppts,npoi,&eigenvalues,&pca_mat));
   }
   
 /********************************************************/
