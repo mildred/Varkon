@@ -345,14 +345,13 @@ DBptr   lsysla;      /* DB pointer to active local system. */
  *
  *      Out: nothing.
  *
- *      Error code: EX1382 = Can't eigen data.
  *
  *     (C) Örebo university 26/05/2008 M. Rahayem
  *
  ******************************************************!*/
 
   {
-    DBTmat   pca_mat;
+   
     int      i;
     DBVector eigenvalues;
 /*
@@ -368,7 +367,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 /*
 ***Create the matrix
 */
-    return(GEmktf_pca(ppts,npoi,&eigenvalues,&pca_mat));
+    return(GEmktf_pca(ppts,npoi,&eigenvalues,tmat));
   }
   
 /********************************************************/

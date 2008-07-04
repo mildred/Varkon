@@ -291,8 +291,10 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 */
    if ( npos < 4 )
      {
-     sprintf(errbuf,"%d",npos);
-     return(erpush("IN5882",errbuf));
+     /*sprintf(errbuf,"%d",npos);
+     return(erpush("IN5882",errbuf));*/
+     func_vp->lit.int_va = -1;
+     return(0);
      }
 /*
 ***Check that declared dimension of the MBS-array is big enough.
@@ -358,6 +360,11 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
      ++fltptr;
        }
      }
+/*
+***Clear the error message stack from any errors created
+***by GEmktf_pca() by Gunnar Liden.
+*/
+   erinit();
 /*
 ***The end.
 */
