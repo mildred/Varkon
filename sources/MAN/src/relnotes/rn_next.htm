@@ -40,5 +40,17 @@ the XY-plane of the BASIC coordinate system.
 In order to implement a new entity which is CSYS_USRDEF(), its manual pages and skeleton of all  C functions has been added to the system. Be aware that the implementation is not finished yet.
 </p>
 
+<h2>svn#108</h2>
+
+<p>
+A bug related to interactive input of positions corrected. System crached if the user switched position method from on/end/int/cent during input in a MACRO call.
+</p>
+
+<h2>svn#109</h2>
+
+<p>
+A bug related to interactive entity delete in generic mode corrected. If the user selected an entity defined by a labled statement for delete and the entity was referenced the entity was not blanked and a system error (IG3523) was issued.
+</p>
+
 include(../../include/svnversion.inc)
 include(../../include/footer.inc)
