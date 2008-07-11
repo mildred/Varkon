@@ -353,10 +353,12 @@ DBptr   lsysla;      /* DB pointer to active local system. */
   {
    
     int      i;
+    short   status;
     DBVector eigenvalues;
+    DBTmat   tmat_inv;    
 /*
 ***Transformation of points to basic.
-*/
+
     if ( lsyspk != NULL )
       {
       for ( i=0; i<npoi; ++i )
@@ -364,10 +366,13 @@ DBptr   lsysla;      /* DB pointer to active local system. */
         GEtfpos_to_basic(&ppts[i],&lklsys,&ppts[i]);
         }
       }
+  */    
 /*
 ***Create the matrix
 */
-    return(GEmktf_pca(ppts,npoi,&eigenvalues,tmat));
+    status = GEmktf_pca(ppts,npoi,&eigenvalues,&tmat_inv);
+    GEtform_inv(&tmat_inv,tmat);
+    return(status);
   }
   
 /********************************************************/
