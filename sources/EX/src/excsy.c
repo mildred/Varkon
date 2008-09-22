@@ -265,19 +265,19 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 */
     vx.x_gm = tmat->g11;
     vx.y_gm = tmat->g12;
-    vx.z_gm = tmat->g13;  
+    vx.z_gm = tmat->g13;
 /*
 ***Extract y-axis vector from the given 4x4 matrix.
 */
     vy.x_gm = tmat->g21;
     vy.y_gm = tmat->g22;
-    vy.z_gm = tmat->g23;  
+    vy.z_gm = tmat->g23;
 /*
 ***Extract z-axis vector from the given 4x4 matrix.
 */
     vz.x_gm = tmat->g31;
     vz.y_gm = tmat->g32;
-    vz.z_gm = tmat->g33;         
+    vz.z_gm = tmat->g33;
 /*
 ***Normalisation and check of axes vector lengths.
 */
@@ -286,12 +286,12 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 
    if ( GEnormalise_vector3D(&vy,&vy) < 0 )
      return(erpush("EX4332","Y"));         /* EX4332 The length of Y axis vector is Zero */
-     
+
    if ( GEnormalise_vector3D(&vz,&vz) < 0 )
      return(erpush("EX4332","Z"));         /* EX4332 The length of Y axis vector is Zero */
 /*
 ***Check if x and y axes are perpendicular to each other.
-*/    
+*/
    if ( GEscalar_product3D(&vx,&vy) > COMPTOL )
      return(erpush("EX4342","X%Y"));       /* EX4332 X&Y NOT Perp. */
 /*
@@ -303,7 +303,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 ***Check if y and z axes are perpendicular to each other.
 */
    if ( GEscalar_product3D(&vy,&vz) > COMPTOL )
-     return(erpush("EX4342","Y%Z"));       /* EX4332 Z&Y NOT Perp. */                    
+     return(erpush("EX4342","Y%Z"));       /* EX4332 Z&Y NOT Perp. */
 /*
 ***Create user defined coordinate system matrix.
 */
@@ -326,7 +326,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 /*
 ***Store csys_usrdef 4x4 matrix into DB and visualize.
 */
-    return(EXecsy(id,&csy,&tcsud,pnp));                                
+    return(EXecsy(id,&csy,&tcsud,pnp));
   }
   
 /********************************************************/
@@ -351,11 +351,9 @@ DBptr   lsysla;      /* DB pointer to active local system. */
  ******************************************************!*/
 
   {
-   
-    int      i;
-    short   status;
+    short    status;
     DBVector eigenvalues;
-    DBTmat   tmat_inv;    
+    DBTmat   tmat_inv;
 /*
 ***Transformation of points to basic.
 
@@ -366,7 +364,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
         GEtfpos_to_basic(&ppts[i],&lklsys,&ppts[i]);
         }
       }
-  */    
+  */
 /*
 ***Create the matrix
 */
@@ -374,7 +372,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
     GEtform_inv(&tmat_inv,tmat);
     return(status);
   }
-  
+
 /********************************************************/
 /*!******************************************************/
 
