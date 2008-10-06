@@ -7,6 +7,7 @@
 *    EXcs3p();    Create CSYS_3P
 *    EXcs1p();    Create CSYS_1P
 *    EXcsud();    Create Csys_usrdef()
+*    EXpcatm();   Create a tf matrix by array of points
 *
 *    EXmoba();    Interface routine for MODE_BASIC
 *    EXmogl();    Interface routine for MODE_GLOBAL
@@ -337,7 +338,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
        DBint     npoi,      
        DBTmat   *tmat)
 
-/*      Create a coordinate system with array of points
+/*      Create a transformation matrix by array of points.
  *
  *      In: npoi   => Number of points 
  *          ppts   => Pointer to points.
@@ -351,25 +352,40 @@ DBptr   lsysla;      /* DB pointer to active local system. */
  ******************************************************!*/
 
   {
+   
     short    status;
+    DBfloat  varxy, varxz, varyz;
     DBVector eigenvalues;
     DBTmat   tmat_inv;
-/*
-***Transformation of points to basic.
 
-    if ( lsyspk != NULL )
-      {
-      for ( i=0; i<npoi; ++i )
-        {
-        GEtfpos_to_basic(&ppts[i],&lklsys,&ppts[i]);
-        }
-      }
-  */
 /*
 ***Create the matrix
 */
     status = GEmktf_pca(ppts,npoi,&eigenvalues,&tmat_inv);
     GEtform_inv(&tmat_inv,tmat);
+/*
+***Calculate the variance by check the differences between the calculated eigen values.
+*/    
+    varxy = fabs( eigenvalues.x_gm) - fabs( eigenvalues.y_gm );
+    varxz = fabs( eigenvalues.x_gm) - fabs( eigenvalues.z_gm );
+    varyz = fabs( eigenvalues.y_gm) - fabs( eigenvalues.z_gm );
+/*
+***Check if the input points are identical.    
+*/
+    if ( varxy <= 0.00001 && varxz <= 0.00001 && varyz <= 0.00001 )
+      {
+       status = -2;
+      } 
+/*
+***Check if the input points are on straight line in any orientation.    
+*/      
+    else if ( varxy <= 0.00001 || varxz <= 0.00001 || varyz <= 0.00001) 
+           {
+            status = -3;
+           } 
+/*
+*** Return status.
+*/           
     return(status);
   }
 

@@ -60,9 +60,29 @@ status:=pca(npts,pts,tmat);
 <p>None.</p>
 
 <h2>Return Value</h2>
-<p>
-Returns 0 if the 4x4 transformation matrix is created and -1 if the 4x4 matrix is not created. 
-</p>
+
+<table>
+<tr>
+<td>0</td> 
+<td>=></td> 
+<td>Operation is successful.</td>
+</tr>
+<tr>
+<td>-1</td>
+<td>=></td> 
+<td> No. of input points is less than 4.</td>
+</tr>
+<tr>
+<td>-2</td> 
+<td>=></td> 
+<td>The input points are identical.</td>
+</tr>
+<tr>
+<td>-3</td>
+<td>=></td>
+<td>The input points are are on straight line.</td>
+</tr>
+</table>
 
 <h2>Comments</h2>
 <p>
@@ -98,17 +118,17 @@ The created 4x4 matrix will be like the following matrix:
 <p>Since:</p>
 <table>
 <tr>
-<td>Xx, Xy, Xz</td> 
+<td>Xx, Yx, Zx</td> 
 <td>=></td> 
 <td>The unit length eigenvector components correspond to the largest eigenvalue.</td>
 </tr>
 <tr>
-<td>Yx, Yy, Yz</td>
+<td>Xy, Yy, Zy</td>
 <td>=></td> 
 <td>The unit length eigenvector components correspond to the second largest eigen value.</td>
 </tr>
 <tr>
-<td>Zx, Zy, Zz</td> 
+<td>Xz, Yz, Zz</td> 
 <td>=></td> 
 <td>The unit length eigenvector components correspond to the smallest eigen value.</td>
 </tr>
@@ -122,7 +142,10 @@ The created 4x4 matrix will be like the following matrix:
 The three eigen vectors are orthogonal to each other.
 </p>
 <p>
-To visualize or use the 4x4 matrix that represents the coordinate system, use csys_usrdef(), see below.
+Be aware that in the last two cases of the return value when (status = -2 or -3), the created 4x4 transformation matrix not represents some characetristics of the given data like the planarity property. In other words in case of calculate a point on the fitted plane to the given data and its normal vector, the return value of the function should be equal to 0 (status= 0).
+</p>
+<p>
+To visualize or use the 4x4 matrix that represents the coordinate system, use csys_usrdef(), in this case the fitted plane to the given data is XY - plane and the normal vector is the Z axis of the created coordinate system, see below.
 </p>
 
 <h2>See also</h2>

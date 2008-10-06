@@ -9,6 +9,7 @@
 *    evcs3p();     Evaluate CSYS_3P
 *    evcs1p();     Evaluate CSYS_1P
 *    evcsud();     Evaluate Csys_usrdef
+*    evpcatm();    Evalute PCA() function.
 *
 *    This library is free software; you can redistribute it and/or
 *    modify it under the terms of the GNU Library General Public
@@ -291,10 +292,8 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 */
    if ( npos < 4 )
      {
-     /*sprintf(errbuf,"%d",npos);
-     return(erpush("IN5882",errbuf));*/
-     func_vp->lit.int_va = -1;
-     return(0);
+      func_vp->lit.int_va = -1;
+      return(0);
      }
 /*
 ***Check that declared dimension of the MBS-array is big enough.
@@ -336,12 +335,9 @@ extern PMLITVA *func_vp;  /* Pointer to result value. */
 */
    v3free(ppek,"evpcatm");
 /*
-***Check the status returned. If < 0 return without writing
-***the matrix (tr) to the MBS variable.
+***Return value equal to status.
 */
-   func_vp->lit.int_va = status;
-   
-   if ( status < 0 ) return(0);
+   func_vp->lit.int_va = status;   
 /*
 ***Write result (tr) to MBS variable.
 */
