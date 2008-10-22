@@ -37,19 +37,19 @@ the XY-plane of the BASIC coordinate system.
 <h2>svn#102</h2>
 
 <p>
-In order to implement a new entity which is CSYS_USRDEF(), its manual pages and skeleton of all  C functions has been added to the system. Be aware that the implementation is not finished yet.
+In order to implement a new method to create a coordinate system, CSYS_USRDEF(), its manual pages and skeleton of all  C functions has been added to the system. Be aware that the implementation is not finished yet.
 </p>
 
 <h2>svn#103</h2>
 
 <p>
-The second commit of CSYS_USRDEF() procedure, its functions code are implemented.
+The final commit of CSYS_USRDEF() procedure.
 </p>
 
 <h2>svn#104</h2>
 
 <p>
-In order to implement a new MBS function which is PCA(), its manual pages and skeleton of all  C functions has been added to the system. Be aware that the implementation is not finished yet.
+In order to implement a new MBS function, PCA(), its manual pages and skeleton of all  C functions has been added to the system. Be aware that the implementation is not finished yet.
 </p>
 
 <h2>svn#105</h2>
@@ -91,19 +91,28 @@ The Fifth commit of PCA() function, errors messages are removed to be handled as
 <h2>svn#111</h2>
 
 <p>
-Tes SVN commit command.
+Test of SVN commit command.
 </p>
 
 <h2>svn#112</h2>
 
 <p>
-An other SVN commit test.
+Another SVN commit test.
 </p>
 
 <h2>svn#113</h2>
 
 <p>
-The Sixth commit of PCA() function, included its manual pages and its implemetation.
+The Sixth commit of PCA() function, included its manual pages and its implemetation. This
+is meant to be the final commit of the PCA() function.
+</p>
+
+<h2>svn#114</h2>
+
+<p>
+A bugfix related to batch mode. In batch mode, some graphics functions did not work
+properly because no graphics windows were created. Graphics windows are now created
+but invisible.
 </p>
 
 include(../../include/svnversion.inc)

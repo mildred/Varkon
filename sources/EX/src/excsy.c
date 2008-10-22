@@ -6,7 +6,7 @@
 *    EXecsy();    Create coordinatesystem
 *    EXcs3p();    Create CSYS_3P
 *    EXcs1p();    Create CSYS_1P
-*    EXcsud();    Create Csys_usrdef()
+*    EXcsud();    Create CSYS_USRDEF
 *    EXpcatm();   Create a tf matrix by array of points
 *
 *    EXmoba();    Interface routine for MODE_BASIC
@@ -335,7 +335,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 
        short EXpcatm(
        DBVector *ppts,
-       DBint     npoi,      
+       DBint     npoi,
        DBTmat   *tmat)
 
 /*      Create a transformation matrix by array of points.
@@ -352,7 +352,6 @@ DBptr   lsysla;      /* DB pointer to active local system. */
  ******************************************************!*/
 
   {
-   
     short    status;
     DBfloat  varxy, varxz, varyz;
     DBVector eigenvalues;
@@ -365,27 +364,27 @@ DBptr   lsysla;      /* DB pointer to active local system. */
     GEtform_inv(&tmat_inv,tmat);
 /*
 ***Calculate the variance by check the differences between the calculated eigen values.
-*/    
+*/
     varxy = fabs( eigenvalues.x_gm) - fabs( eigenvalues.y_gm );
     varxz = fabs( eigenvalues.x_gm) - fabs( eigenvalues.z_gm );
     varyz = fabs( eigenvalues.y_gm) - fabs( eigenvalues.z_gm );
 /*
-***Check if the input points are identical.    
+***Check if the input points are identical.
 */
     if ( varxy <= 0.00001 && varxz <= 0.00001 && varyz <= 0.00001 )
       {
-       status = -2;
-      } 
+      status = -2;
+      }
 /*
-***Check if the input points are on straight line in any orientation.    
-*/      
+***Check if the input points are on straight line in any orientation.
+*/
     else if ( varxy <= 0.00001 || varxz <= 0.00001 || varyz <= 0.00001) 
-           {
-            status = -3;
-           } 
+      {
+      status = -3;
+      }
 /*
 *** Return status.
-*/           
+*/
     return(status);
   }
 
@@ -415,7 +414,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 
     return(0);
   }
-  
+
 /********************************************************/
 /*!******************************************************/
 
@@ -467,7 +466,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 
     return(0);
   }
-  
+
 /********************************************************/
 /*!******************************************************/
 
@@ -501,7 +500,7 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 */
     return(EXmlla(la));
   }
-  
+
 /********************************************************/
 /*!******************************************************/
 
@@ -541,6 +540,6 @@ DBptr   lsysla;      /* DB pointer to active local system. */
 
     return(0);
   }
-  
+
 /********************************************************/
 
