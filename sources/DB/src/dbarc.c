@@ -3,7 +3,6 @@
 *    dbarc.c
 *    =======
 *
-*
 *    This file includes the following public functions:
 *
 *    DBinsert_arc();   Inserts an arc entity
@@ -36,8 +35,8 @@
 /*!******************************************************/
 
         DBstatus DBinsert_arc(
-        GMARC   *arcpek,
-        GMSEG   *segmnt,
+        DBArc   *arcpek,
+        DBSeg   *segmnt,
         DBId    *idpek,
         DBptr   *lapek)
 
@@ -71,33 +70,33 @@
     DBint i;
 
 /*
-***Lagra segmenten, det sista först. Länken i sista
-***segmentet = 0.
+***Store segments, last one first. Pointer in last
+***segment = 0.
 */
     *lapek = 0;
     for ( i=arcpek->ns_a-1; i >= 0; --i)
       {
       (segmnt+i)->nxt_seg = *lapek;
-      if ( wrdat1((char *)&segmnt[i],lapek,sizeof(GMSEG)) < 0 ) return(-3);
+      if ( wrdat1((char *)&segmnt[i],lapek,sizeof(DBSeg)) < 0 ) return(-3);
       }
 /*
-***Typ-specifika data.
+***Type-specific data.
 */
     arcpek->hed_a.type = ARCTYP;   /* Typ = arc */
     arcpek->hed_a.vers = GMPOSTV3; /* Version */
     arcpek->sptr_a = *lapek;       /* Pekare till 1:a segmentet */
 /*
-***Lagra själva arc-posten. 
+***Store the arc record itself.
 */
-    return(inpost((GMUNON *)arcpek,idpek,lapek,sizeof(GMARC) ));
+    return(inpost((DBAny *)arcpek,idpek,lapek,sizeof(DBArc) ));
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         DBstatus DBread_arc(
-        GMARC   *arcpek,
-        GMSEG   *segmnt,
+        DBArc   *arcpek,
+        DBSeg   *segmnt,
         DBptr    la)
 
 /*      Reads an arc entity from the DB. If segmnt <> NULL
@@ -125,24 +124,23 @@
   {
     DBint   i,version;
     DBptr   la_seg;
-    GMRECH *hedpek;
+    DBHeader *hedpek;
 
 /*
-***Fixa pekare till header och ta reda på version.
+***Get C-ptr to header and check version.
 */
-    hedpek = (GMRECH *)gmgadr(la);
+    hedpek = (DBHeader *)gmgadr(la);
     version = GMVERS(hedpek);
 /*
-***GMARC version 1 och 2 är samma sak, det är segmenten
-***som skiljer.
+***DBArc version 1 and 2 are identical but segments differ.
 */
     switch ( version )
       {
       case GMPOSTV3:
-      V3MOME(hedpek,arcpek,sizeof(GMARC));
+      V3MOME(hedpek,arcpek,sizeof(DBArc));
       break;
 /*
-***Version 1 och 2 saknar bredd.
+***Version 1 and 2 have no WIDTH.
 */
       case GMPOSTV2:
       case GMPOSTV1:
@@ -150,8 +148,8 @@
       arcpek->wdt_a = 0.0;
       break;
 /*
-***GMARC version 0 saknar pekare till aktivt koordinatsystem.
-*/ 
+***DBArc version 0 has no csys_ptr.
+*/
       default:
       V3MOME(hedpek,arcpek,sizeof(GMARC0));
       arcpek->pcsy_a = DBNULL;
@@ -159,9 +157,10 @@
       break;
       }
 /*
-***Läs segmenten. Observera att när 1:a segmentet är läst
-***kan de data som hedpek pekar på vara överskrivna av det
-***lästa segmentet pga. paging. Denna bug rättades 1997-02-12 JK.
+***Read segments. Note that when 1:st segment is read
+***the data that hedpek points to may be overwritten by the
+***segment just read because of paging.
+***This bug was fixed 1997-02-12 JK.
 */
     if ( segmnt != NULL )
       {
@@ -172,7 +171,7 @@
           {
           case GMPOSTV3:
           case GMPOSTV2:
-          rddat1( (char *) &segmnt[i], la_seg, sizeof(GMSEG));
+          rddat1( (char *) &segmnt[i], la_seg, sizeof(DBSeg));
           break;
 
           case GMPOSTV1:
@@ -190,7 +189,9 @@
         la_seg = segmnt[i].nxt_seg;
         }
       }
-
+/*
+***The end.
+*/
     return(0);
   }
 
@@ -198,8 +199,8 @@
 /********************************************************/
 
         DBstatus DBupdate_arc(
-        GMARC   *arcpek,
-        GMSEG   *segmnt,
+        DBArc   *arcpek,
+        DBSeg   *segmnt,
         DBptr    la)
 
 /*      Updates an arc entity in the DB. If segments
@@ -221,6 +222,7 @@
  *      1997-02-12 Bug version, J.Kjellander
  *      1997-12-27 GMPOSTV3, J.Kjellander
  *      2008-05-13 Segments updated, J.Kjellander
+ *      2008-12-14 Bugfix segm.ptrs, J.Kjellander
  *
  ******************************************************!*/
 
@@ -233,7 +235,7 @@
 /*
 **Get the current DBArc.
 */
-    DBread_arc(&oldarc,NULL,la);
+    DBread_arc(&oldarc,oldseg,la);
 /*
 ***What DB version is it ?
 */
@@ -247,17 +249,20 @@
       ns_new = arcpek->ns_a;
 /*
 ***Is the number of segments unchanged ?
+***A bug was fixed in this code segment 2008-12-14, JK
 */
       if ( ns_new == ns_old )
         {
-        la_seg = arcpek->sptr_a;
+        la_seg = oldarc.sptr_a;
         for ( i=0; i<arcpek->ns_a; ++i )
           {
+          segmnt[i].nxt_seg = oldseg[i].nxt_seg;
+
           switch ( version )
             {
             case GMPOSTV3:
             case GMPOSTV2:
-            updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG));
+            updata( (char *) &segmnt[i], la_seg, sizeof(DBSeg));
             break;
 
             case GMPOSTV1:
@@ -268,7 +273,7 @@
             updata( (char *) &segmnt[i], la_seg, sizeof(GMSEG0));
             break;
             }
-          la_seg = (segmnt+i)->nxt_seg;
+          la_seg = oldseg[i].nxt_seg;
           }
         }
 /*
@@ -305,7 +310,7 @@
     switch ( version )
       {
       case GMPOSTV3:
-      updata( (char *)arcpek, la, sizeof(GMARC));
+      updata( (char *)arcpek, la, sizeof(DBArc));
       break;
 
       case GMPOSTV2:
@@ -324,7 +329,7 @@
   }
 
 /********************************************************/
-/*!******************************************************/
+/********************************************************/
 
         DBstatus DBdelete_arc(DBptr la)
 
@@ -343,22 +348,22 @@
  ******************************************************!*/
 
   {
-    GMARC  arc;
-    GMSEG  segmnt[4];
+    DBArc  arc;
+    DBSeg  segmnt[4];
     DBint  i;
     DBptr  la_seg;
 
 /*
-***Läs posten.
+***Read arc from DB.
 */
     DBread_arc(&arc,segmnt,la);
 /*
-***Stryk arc-posten.
+***Release arc from DB.
 */
     switch ( arc.hed_a.vers )
       {
       case GMPOSTV3:
-      rldat1(la,sizeof(GMARC));
+      rldat1(la,sizeof(DBArc));
       break;
 
       case GMPOSTV2:
@@ -371,9 +376,9 @@
       break;
       }
 /*
-***Stryk segmenten.
+***Release segments from DB.
 */
-    la_seg = arc.sptr_a;                /* Pekare till 1:a segm. */
+    la_seg = arc.sptr_a;                /* DBptr to first segm. */
 
     for ( i=0 ; i < arc.ns_a ; ++i )
       {
@@ -381,7 +386,7 @@
         {
         case GMPOSTV3:
         case GMPOSTV2:
-        rldat1(la_seg,sizeof(GMSEG));
+        rldat1(la_seg,sizeof(DBSeg));
         break;
 
         case GMPOSTV1:
@@ -392,9 +397,11 @@
         rldat1(la_seg,sizeof(GMSEG0));
         break;
         }
-      la_seg = segmnt[i].nxt_seg;       /* Pekare till nästa segm. */
+      la_seg = segmnt[i].nxt_seg;       /* DBptr to next segm. */
       }
-
+/*
+***The end.
+*/
   return(0);
   }
 
