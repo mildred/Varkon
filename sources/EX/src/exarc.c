@@ -74,7 +74,7 @@ extern DBTmat  lklsyi;
 
   {
     DBptr   la;
-    DBfloat   dummy;
+    DBfloat dummy;
     short   status;
 
 /*

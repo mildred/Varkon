@@ -71,11 +71,12 @@ extern DBTmat lklsyi,*lsyspk;
  *      5/1/92     Status från GEintersect_pv(), J. Kjellander
  *      9/6/93     Dynamiska segment, J. Kjellander
  *      2008-05-13 3D arc, J.Kjellander
+ *      2008-12-14 Bugfix arclengths, J.Kjellander
  *
  ******************************************************!*/
 
   {
-    DBfloat  u1,u2,v,l;
+    DBfloat  u1,u2,v,l,dummy;
     DBptr    la1,la2;
     DBetype  typ1,typ2;
     short    status;
@@ -220,7 +221,16 @@ extern DBTmat lklsyi,*lsyspk;
                       &newarc,
                        newseg,
                        3);
+       if ( status < 0 )  return(status);
+/*
+***Update number of segs after trimming.
+*/
        entity1.arc_un.ns_a = newarc.ns_a;
+/*
+***Update lengths after trimming. Bugfix 2008-12-14, JK
+*/
+       status = GEarclength((DBAny *)&entity1,newseg,&dummy);
+       if ( status < 0 )  return(status);
 /*
 ***Update DB and display.
 */
