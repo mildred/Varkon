@@ -1,0 +1,61 @@
+##########################################################
+#
+#   Makefile.linux
+#   --------------
+#
+#   Top level makefile for Varkon with GNU/Linux
+#
+#  (C)2010-09-09 J.Kjellander
+#
+##########################################################
+
+
+# Varkon libraries
+
+LIBS  = IG/lib/IGlib.a \
+        PM/lib/PMlib.a \
+        EX/lib/EXlib.a \
+        DB/lib/DBlib.a \
+        WP/lib/WPlib.a \
+        GE/lib/GElib.a
+
+# X11 libraries
+
+XLIBS = -L/usr/X11R6/lib -lX11 -lXext -lXpm
+
+# OpenGL libraries. You may have to change this line
+# to reflect the location of your OpenGL libs.
+
+GLIBS = -lGL -lGLU
+
+# The TIFF library
+
+ifeq ($(DV3TIFF),TRUE)
+TIFFLIBS = -ltiff
+endif
+
+# ODBC libraries. You may have to change this line
+# to reflect the location of your ODBC libs.
+
+ifeq ($(DV3ODBC),TRUE)
+SQLLIBS = -L/usr/lib/unixODBC -lmyodbc3
+endif
+
+# If you want to use the EIGASYM() function in MBS you need
+# the Atlas math library.
+
+ifeq ($(DV3ATLAS),TRUE)
+ATLASLIBS = -L/usr/lib/atlas -llapack -lblas
+endif
+
+# The actual executable, xvarkon.
+
+XVARKON = ../bin/xvarkon
+
+# Targets
+
+$(XVARKON): $(LIBS)
+	cc $(LIBS) $(SQLLIBS) $(XLIBS) $(GLIBS) $(TIFFLIBS) $(ATLASLIBS) -lm -o $(XVARKON)
+
+
+##########################################################
