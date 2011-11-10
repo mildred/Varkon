@@ -24,6 +24,8 @@
 *
 ***********************************************************************/
 
+#include <stdint.h>
+
 /*
 ***This file includes definitions of things that are also
 ***used in other parts of the VARKON system. Many of these
@@ -52,7 +54,7 @@ typedef DBfloat v2float;        /* MBS Float */
 typedef DBint   v2addr;         /* MBS internal RTS address value */
 typedef DBint   v2bool;         /* MBS internal boolean value */
 typedef char    v2vaty;         /* MBS internal type code */
-typedef DBint   pm_ptr;         /* MBS internal PM pointer */
+typedef intptr_t pm_ptr;        /* MBS internal PM pointer */
 
 typedef struct                  /* MBS 3D vector */
 {
